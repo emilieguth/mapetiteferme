@@ -20,18 +20,10 @@
 	})
 	->get('updatePassword', function($data) {
 
-		if(OTF_DEMO) {
-			throw new \FailAction('user\User::demo.write');
-		}
-
 		throw new ViewAction($data);
 
 	})
 	->get('dropAccount', function($data) {
-
-		if(OTF_DEMO) {
-			throw new \FailAction('user\User::demo.write');
-		}
 
 		if($data->eUserOnline['canUpdate']['drop'] === FALSE) {
 			throw new NotExpectedAction('Can\'t drop account');

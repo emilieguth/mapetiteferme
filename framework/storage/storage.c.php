@@ -1,3 +1,3 @@
 <?php
-require_once LIME_DIRECTORY.'/ouvretaferme/media/media.c.php';
+require_once LIME_DIRECTORY.'/comptetaferme/media/media.c.php';
 ?>
