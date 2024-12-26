@@ -131,7 +131,7 @@ class MainTemplate extends BaseTemplate {
 			Lime::getHost() === LIME_HOST and // Uniquement sur www
 			currentDate() <= '2024-10-10'
 		) {
-			$h .= '<a href="https://blog.comptetaferme.com/" class="nav-news" target="_blank">';
+			$h .= '<a href="https://blog.comptetaferme.fr/" class="nav-news" target="_blank">';
 				$h .= '<div class="nav-news-title">'.Asset::icon('cursor-fill').' '.s("Nouveautés").'</div>';
 				$h .= '<div class="nav-news-name">'.s("5 octobre 2024").'</div>';
 			$h .= '</a>';
@@ -222,7 +222,7 @@ class MainTemplate extends BaseTemplate {
 							$h .= '<h4>'.s("Ressources").'</h4>';
 							$h .= '<a href="/presentation/faq">'.s("Foire aux questions").'</a><br/>';
 							$h .= '<a href="https://app.element.io/#/room/#comptetaferme:matrix.org" target="_blank">'.s("Signaler un problème").'</a><br/>';
-							$h .= '<a href="https://blog.comptetaferme.com/" target="_blank">'.s("Blog").'</a>';
+							$h .= '<a href="https://blog.comptetaferme.fr/" target="_blank">'.s("Blog").'</a>';
 						$h .= '</div>';
 						$h .= '<div>';
 							$h .= '<h4>'.s("Usage").'</h4>';

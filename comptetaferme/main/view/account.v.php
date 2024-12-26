@@ -12,8 +12,8 @@ new AdaptativeView('index', function($data, MainTemplate $t) {
 
 	$h = '<div class="util-buttons">';
 
-		if(Privilege::can('farm\access')) {
-			$h .= '<a href="/farm/farm:create" class="bg-secondary util-button">';
+		if(Privilege::can('company\access')) {
+			$h .= '<a href="/company/farm:create" class="bg-secondary util-button">';
 
 				$h .= '<div>';
 					$h .= '<h4>'.s("Créer une autre ferme").'</h4>';

@@ -63,7 +63,7 @@ class LegalUi {
 
 		$h .= '<div class="home-category">';
 
-			$h .= '<p>'.s("La plateforme comptetaferme.com est née du constat qu'il n'existait pas de logiciel libre, gratuit et simple d'utilisation pour permettre aux producteurs maraîchers d'organiser le travail dans leur ferme, de la planification des cultures jusqu'à la vente. Le développement du site a commencé en 2019 sur cette base, avec comme point de départ le besoin exprimé par une petite ferme en maraichage diversifié située dans le Puy-de-Dôme.").'</p>';
+			$h .= '<p>'.s("La plateforme comptetaferme.fr est née du constat qu'il n'existait pas de logiciel libre, gratuit et simple d'utilisation pour permettre aux producteurs maraîchers d'organiser le travail dans leur ferme, de la planification des cultures jusqu'à la vente. Le développement du site a commencé en 2019 sur cette base, avec comme point de départ le besoin exprimé par une petite ferme en maraichage diversifié située dans le Puy-de-Dôme.").'</p>';
 
 			$h .= '<p>'.s("Depuis 2022, la plateforme est diffusée plus largement et a été adaptée pour répondre aux besoins du plus grand nombre de fermes possible.").'</p>';
 
@@ -146,8 +146,8 @@ class LegalUi {
 			$h .= '<p>'.s("Le temps bénévole consacré à développer {siteName} est majoritairement utilisé pour implémenter de nouvelles fonctionnalités. Hormis des formations proposées de temps en temps en Auvergne, il n'est pas possible d'assurer de support individuel.").'</p>';
 			$h .= '<p>'.s("Néanmoins, vous avez accès à différentes ressources :").'</p>';
 			$h .= '<ul>';
-				$h .= '<li>'.s("Un blog pour suivre l'actualité du site").'<br/><a href="https://blog.comptetaferme.com/" class="btn btn-secondary mb-1">'.s("Voir le blog").'</a></li>';
-				$h .= '<li>'.s("Un site de démo pour voir comment est utilisée la plateforme par la ferme à l'origine de {siteName} et dont les données ont été anonymisées").'<br/><a href="https://demo.comptetaferme.com/" class="btn btn-secondary mb-1">'.s("Voir la démo").'</a></li>';
+				$h .= '<li>'.s("Un blog pour suivre l'actualité du site").'<br/><a href="https://blog.comptetaferme.fr/" class="btn btn-secondary mb-1">'.s("Voir le blog").'</a></li>';
+				$h .= '<li>'.s("Un site de démo pour voir comment est utilisée la plateforme par la ferme à l'origine de {siteName} et dont les données ont été anonymisées").'<br/><a href="https://demo.comptetaferme.fr/" class="btn btn-secondary mb-1">'.s("Voir la démo").'</a></li>';
 				$h .= '<li>'.s("Un salon de discussion ouvert à tous").'<br/><a href="https://app.element.io/#/room/#comptetaferme:matrix.org" class="btn btn-secondary mb-1">'.s("Voir le salon de discussion").'</a></li>';
 				$h .= '<li>'.s("Probablement des collègues qui utilisent l'outil et pourraient vous aider !").'</li>';
 			$h .= '</ul>';
@@ -224,7 +224,7 @@ class LegalUi {
 		$h .= '<div class="home-category">';
 
 			$h .= '<p>'.s("Votre demande de nouvelle fonctionnalité ne sera pas prise en compte. Ce ne sont pas les idées qui manquent sur {siteName} mais plutôt le temps disponible pour ajouter de nouvelles fonctionnalités. La feuille de route est déjà bien chargée, et il est d'ailleurs probable que votre besoin s'y trouve déjà.").'</p>';
-			$h .= '<p><a href="https://blog.comptetaferme.com/feuille-de-route" class="btn btn-secondary mb-1">'.s("Voir la feuille de route").'</a></p>';
+			$h .= '<p><a href="https://blog.comptetaferme.fr/feuille-de-route" class="btn btn-secondary mb-1">'.s("Voir la feuille de route").'</a></p>';
 
 			$h .= '<p>'.s("Les priorités de développement sont choisies en fonction des besoins d'un groupe de maraîchers situé en Auvergne, des affinités du développeur et du temps disponible. Si vous pensez qu'il manque des fonctionnalités structurantes pour votre ferme, <b>n'utilisez pas {siteName}</b> et privilégiez des solutions qui vous correspondront mieux.").'</p>';
 

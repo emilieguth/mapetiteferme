@@ -1,5 +1,5 @@
 ############################
-# www.dev-comptetaferme.com #
+# www.dev-comptetaferme.fr #
 ############################
 
 * * * * * php /var/www/ctf/framework/lime.php -e prod -a comptetaferme website/cron/certbot:ping

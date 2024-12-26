@@ -1,0 +1,81 @@
+/* List of farms */
+.farmer-farms {
+   display: grid;
+   grid-template-columns: 1fr 1fr 1fr;
+   grid-gap: 1rem;
+	margin: 2rem 0;
+}
+
+@media (max-width: 1199px) {
+
+	.farmer-farms {
+      grid-template-columns: 1fr 1fr;
+	}
+
+}
+
+@media (max-width: 767px) {
+
+	.farmer-farms {
+      grid-template-columns: 1fr;
+	}
+
+}
+
+.farmer-farms-item {
+	display: grid;
+	grid-template: "vignette content" 1fr / 6rem 1fr;
+	grid-column-gap: 1rem;
+	align-items: center;
+}
+
+a.farmer-farms-item {
+	text-decoration: none;
+	color: var(--secondary);
+	background: white;
+	padding: 1rem;
+	border-radius: var(--radius);
+}
+
+@media (max-width: 767px) {
+	
+	.farmer-farms-item {
+		grid-column-gap: 1rem;
+	}
+
+}
+
+div.farmer-farms-item-vignette {
+	grid-area: vignette;
+}
+
+div.farmer-farms-item-content {
+	grid-area: content;
+	transition: color .5s;
+}
+
+a.farmer-farms-item:hover div.farmer-farms-item-content {
+	color: var(--primary);
+}
+
+div.farmer-farms-item-content h4 {
+   font-size: 1.6rem;
+	margin-bottom: 0.5rem;
+   font-weight: lighter;
+}
+
+div.farmer-farms-item-infos {
+	color: var(--muted);
+	font-size: 0.9rem;
+	margin: 0.25rem 0;
+}
+
+/* Farm update */
+#farm-update .media-image-upload[data-type="farm-vignette"] {
+	border-radius: var(--radius);
+}
+
+.farm-settings-subtitle {
+	line-height: 1.7;
+	opacity: 0.7;
+}

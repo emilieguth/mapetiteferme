@@ -38,8 +38,6 @@ new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
 	echo '</div>';
 
-	echo (new \main\HomeUi())->getTraining();
-
 	echo '<h2>'.s("La philosophie du projet 👩‍🌾").'</h2>';
 
 	echo '<div class="home-story">';
@@ -67,11 +65,9 @@ new AdaptativeView('logged', function($data, MainTemplate $t) {
 
 	}
 
-	if(Privilege::can('farm\access')) {
+	if(Privilege::can('company\access')) {
 
 		echo (new \main\HomeUi())->getFarms($data->cFarmUser);
-
-		echo (new \main\HomeUi())->getTraining();
 
 		if($data->cFarmUser->notEmpty()) {
 			echo (new \main\HomeUi())->getBlog($data->eNews, TRUE);
@@ -229,35 +225,7 @@ new AdaptativeView('/presentation/formations', function($data, MainTemplate $t) 
 	$t->header = '<h4 class="home-domain">'.Lime::getDomain().'</h4>';
 	$t->header .= '<h1>'.s("Journée de formation le 29 janvier 2025 <br/>Puy-de-Dôme (63)").'</h1>';
 
-	if(currentDate() <= Setting::get('main\limitTraining')) {
-
-		echo '<div class="home-presentation">';
-
-			echo '<div>';
-				echo '<h2>'.Asset::icon('arrow-right').''.s("Présentation de la formation").'</h2>';
-				echo '<p>';
-					echo s("La formation à {siteName} se déroule sur une journée en présentiel. Elle est organisée par la FRAB AuRA et finançable VIVEA.");
-				echo '</p>';
-				echo '<h2>'.Asset::icon('arrow-right').''.s("Contenu de la formation").'</h2>';
-				echo '<ul>';
-					echo '<li>'.s("<b>Le matin.</b> Présentation des fonctionnalités et des finalités de l'outil, interactive en fonction des attentes des participants (plan de culture, temps de travail, assolement, commercialisation, analyse des données...).</small>").'</li>';
-					echo '<li>'.s("<b>L'après-midi.</b> Pour les novices, accompagnement sur la prise en main de l'outil. Pour ceux qui utilisent déjà l'outil, approfondissement sur des fonctionnalités spécifiques et échanges sur des évolutions possibles pour {siteName}.").'</li>';
-				echo '</ul>';
-				echo '<b>'.s("Une occasion idéale pour prendre en main ou se perfectionner sur {siteName}, discuter des évolutions possibles et échanger sur vos problématiques !").'</b>';
-			echo '</div>';
-
-			echo '<div>';
-				echo '<h2>'.Asset::icon('arrow-right').''.s("Une date").'</h2>';
-				echo '<ul>';
-					echo '<li class="mb-2">'.s("<b>Le 29 janvier 2025 autour d'Issoire (63)</b>").'<br/><a href="https://forms.office.com/e/xx2zWdrRVz" class="btn btn-secondary" style="margin-top: 0.5rem">'.s("Inscription pour le 29 janvier").'</a></li>';
-				echo '</ul>';
-			echo '</div>';
-
-		echo '</div>';
-
-	} else {
-		echo s("Il n'y a pas de formation à venir.");
-	}
+	echo s("Il n'y a pas de formation à venir.");
 
 	echo '<br/>';
 	echo '<br/>';

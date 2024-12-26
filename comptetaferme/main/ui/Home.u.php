@@ -14,72 +14,17 @@ class HomeUi {
 		$h = '';
 
 		if($cFarm->empty()) {
-			if((new \farm\Farm())->canCreate()) {
-				$h .= (new \farm\FarmerUi())->getNoFarms();
+			if((new \company\Company())->canCreate()) {
+				$h .= (new \company\FarmerUi())->getNoFarms();
 			} else {
 				$h .= '';
 			}
 		} else {
 
 			$h .= '<h2>'.($cFarm->count() === 1 ? s("Ma ferme") : s("Mes fermes")).'</h2>';
-			$h .= (new \farm\FarmerUi())->getMyFarms($cFarm);
+			$h .= (new \company\FarmerUi())->getMyFarms($cFarm);
 
 		}
-
-		return $h;
-
-	}
-
-	public function getTraining(bool $hide = FALSE): string {
-
-		if(currentDate() > \Setting::get('main\limitTraining')) {
-			return '';
-		}
-
-		if(\user\ConnectionLib::isLogged() and $hide) {
-
-			$eUser = \user\ConnectionLib::getOnline();
-
-			$key = 'pub-2025001-'.$eUser['id'];
-			$expires = strtotime(\Setting::get('main\limitTraining').' + 7 DAYS');
-
-			if(get_exists('training')) {
-				\Cache::redis()->set($key, 5);
-				return '';
-			}
-
-			if(\Cache::redis()->add($key, 0, $expires) === FALSE) {
-
-				$newValue = \Cache::redis()->get($key) + 1;
-
-				if($newValue > 3) {
-					return '';
-				}
-
-				\Cache::redis()->set($key, $newValue, $expires);
-
-			}
-
-		}
-
-		$h = '<div class="home-blog bg-training util-block-flat stick-xs">';
-			$h .= '<div>';
-				$h .= \Asset::image('main', 'favicon.png').'';
-			$h .= '</div>';
-			$h .= '<div>';
-				$h .= '<h4 class="mb-0 color-secondary">'.s("29 janvier 2025 dans le Puy-de-Dôme (63)").'</h4>';
-				$h .= '<h2 class="font-oswald">';
-					$h .= s("Formation sur {siteName} !");
-				$h .= '</h2>';
-				$h .= '<div>';
-					$h .= '<p>'.s("Une formation à la journée finançable VIVEA est organisée pour {siteName}. Une occasion idéale pour prendre en main ou se perfectionner sur {siteName}, discuter des évolutions possibles sur le logiciel et échanger sur vos problématiques !").'</p>';
-					$h .= '<a href="/presentation/formations" target="_blank" class="btn btn-secondary" style="margin-bottom: 0.25rem">'.\Asset::icon('chevron-right').' '.s("En savoir plus").'</a>';
-					if(\user\ConnectionLib::isLogged() and $hide) {
-						$h .= ' <a href="'.\util\HttpUi::setArgument(LIME_REQUEST, 'training', 1).'" class="btn btn-secondary" style="margin-bottom: 0.25rem">'.\Asset::icon('x-lg').' '.s("Ok, cacher ce message").'</a>';
-					}
-				$h .= '</div>';
-			$h .= '</div>';
-		$h .= '</div>';
 
 		return $h;
 
@@ -101,7 +46,7 @@ class HomeUi {
 				$h .= \Asset::image('main', 'favicon.png', ['style' => 'width: 6rem; height: 6rem']).'';
 				$h .= '<div>';
 					$h .= '<p class="font-oswald" style="font-size: 1.3rem; line-height: 1.3">'.s("Suivez le blog de {siteName} pour retrouver les annonces de nouvelles fonctionnalités, la feuille de route avec les priorités de développement pour les mois à venir  et des ressources pour faciliter la prise en main du site !").'</p>';
-					$h .= '<a href="https://blog.comptetaferme.com/" target="_blank" class="btn btn-secondary">'.\Asset::icon('chevron-right').' '.s("Découvrir le blog").'</a>';
+					$h .= '<a href="https://blog.comptetaferme.fr/" target="_blank" class="btn btn-secondary">'.\Asset::icon('chevron-right').' '.s("Découvrir le blog").'</a>';
 				$h .= '</div>';
 			$h .= '</div>';
 
@@ -127,7 +72,7 @@ class HomeUi {
 					$h .= '</h2>';
 					$h .= '<div>';
 						$h .= '<p>'.$content.'</p>';
-						$h .= '<a href="https://blog.comptetaferme.com/" target="_blank" class="btn btn-secondary">'.\Asset::icon('chevron-right').' '.s("Lire la suite").'</a>';
+						$h .= '<a href="https://blog.comptetaferme.fr/" target="_blank" class="btn btn-secondary">'.\Asset::icon('chevron-right').' '.s("Lire la suite").'</a>';
 					$h .= '</div>';
 				$h .= '</div>';
 			$h .= '</div>';

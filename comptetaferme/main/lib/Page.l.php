@@ -37,7 +37,7 @@ class PageLib {
 		if($data->isLogged) {
 
 			$data->userDeletedAt = \session\SessionLib::get('userDeletedAt');
-			$data->cFarmUser = \farm\FarmLib::getOnline();
+			$data->cFarmUser = \company\CompanyLib::getOnline();
 
 		} else {
 

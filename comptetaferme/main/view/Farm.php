@@ -57,7 +57,7 @@ class FarmTemplate extends MainTemplate {
 	}
 
 	protected function getFarmNav(): string {
-		return (new \farm\FarmUi())->getMainTabs($this->data->eFarm, $this->tab);
+		return (new \company\CompanyUi())->getMainTabs($this->data->eFarm, $this->tab);
 	}
 
 	protected function getFarmSubNav(): string {
@@ -88,7 +88,7 @@ class FarmTemplate extends MainTemplate {
 
 			$h = '';
 			if($this->data->tip) {
-				$h .= (new \farm\TipUi())->get($this->data->eFarm, $this->data->tip, $this->data->tipNavigation);
+				$h .= (new \company\TipUi())->get($this->data->eFarm, $this->data->tip, $this->data->tipNavigation);
 			}
 
 			$h .= $this->getMainTitle();
@@ -126,18 +126,18 @@ class FarmTemplate extends MainTemplate {
 			if($this->data->cFarmUser->count() > 1) {
 
 				$farm .= '<div class="nav-title-farm">';
-					$farm .= '<div>'.\farm\FarmUi::getVignette($this->data->eFarm, '4rem').'</div>';
+					$farm .= '<div>'.\company\CompanyUi::getVignette($this->data->eFarm, '4rem').'</div>';
 					$farm .= '<a data-dropdown="bottom-start" data-dropdown-hover="true">'.encode($this->data->eFarm['name']).'  '.Asset::icon('chevron-down').'</a>';
 					$farm .= '<div class="dropdown-list bg-primary">';
 						foreach($this->data->cFarmUser as $eFarm) {
-							$farm .= '<a href="'.$eFarm->getHomeUrl().'" data-ajax-navigation="never" class="dropdown-item">'.\farm\FarmUi::getVignette($eFarm, '1.75rem').'&nbsp;&nbsp;'.encode($eFarm['name']).'</a>';
+							$farm .= '<a href="'.$eFarm->getHomeUrl().'" data-ajax-navigation="never" class="dropdown-item">'.\company\CompanyUi::getVignette($eFarm, '1.75rem').'&nbsp;&nbsp;'.encode($eFarm['name']).'</a>';
 						}
 					$farm .= '</div>';
 				$farm .= '</div>';
 
 			} else {
 				$farm .= '<div class="nav-title-farm">';
-					$farm .= '<div>'.\farm\FarmUi::getVignette($this->data->eFarm, '1.75rem').'</div>';
+					$farm .= '<div>'.\company\CompanyUi::getVignette($this->data->eFarm, '1.75rem').'</div>';
 					$farm .= '<div>'.encode($this->data->eFarm['name']).'</div>';
 				$farm .= '</div>';
 			}

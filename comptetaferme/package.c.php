@@ -10,6 +10,7 @@ Package::setList([
 	'storage' => 'framework',
 	'user' => 'framework',
 	'util' => 'framework',
+	'company' => 'comptetaferme',
 ]);
 
 Package::setObservers([
@@ -18,8 +19,10 @@ Package::setObservers([
 			'sendVerifyEmail' => ['main'],
 			'signUpCreate' => ['main'],
 			'close' => ['main'],
-			'logIn' => ['session'],
+			'logIn' => ['session', 'company'],
 			'logOut' => ['session'],
+			'formLog' => ['company'],
+			'formSignUp' => ['company'],
 		],
 	],
 	'ui' => [
