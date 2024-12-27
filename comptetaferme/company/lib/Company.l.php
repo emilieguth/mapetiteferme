@@ -99,9 +99,17 @@ class CompanyLib extends CompanyCrud {
 
 		}
 
+    (new \ModuleAdministration('company\Company'))->createDatabase(CompanyLib::getDatabaseNameFromCompany($e));
+
     Company::model()->commit();
 
 	}
+
+  public static function getDatabaseNameFromCompany (Company $e): string {
+
+    return \Database::getPackages()[Company::model()->getPackage()].'_'.$e['id'];
+
+  }
 
 	public static function update(Company $e, array $properties): void {
 
@@ -125,7 +133,7 @@ class CompanyLib extends CompanyCrud {
 
 	public static function delete(Company $e): void {
 
-		throw new \Exception('Not implemented');
+    (new \ModuleAdministration('company\Company'))->dropDatabase(CompanyLib::getDatabaseNameFromCompany($e));
 
 	}
 

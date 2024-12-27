@@ -17,7 +17,7 @@ class CompanyBannerLib extends MediaLib {
 		}
 
 		// L'utilisateur n'est pas le propriétaire de la ferme
-		if($eCompany->canManage() === FALSE) {
+		if($eCompany->canWrite() === FALSE) {
 
 			// L'utilisateur n'est pas non plus admin
 			if(\Privilege::can('company\admin') === FALSE) {

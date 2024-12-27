@@ -198,11 +198,21 @@ class ModuleAdministration {
 		return $fieldsName;
 	}
 
+	public function createDatabase(string $base) {
+
+		$this->db->manager->createDatabase($base);
+
+	}
+
+	public function dropDatabase(string $base) {
+
+		$this->db->manager->dropDatabase($base);
+
+	}
+
 	public function createTable(array $autoIncrements = []) {
 
 		$fields = [];
-
-		$this->db->manager;
 
 		foreach($this->mElement->getProperties() as $name) {
 

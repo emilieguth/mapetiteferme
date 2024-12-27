@@ -14,7 +14,7 @@
 
 (new \company\CompanyPage())
 	->applyElement(function($data, \company\Company $e) {
-		$e->validate('canManage');
+		$e->validate('canWrite');
 	})
 	->update(function($data) {
 

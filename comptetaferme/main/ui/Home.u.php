@@ -15,7 +15,7 @@ class HomeUi {
 
 		if($cCompany->empty()) {
 			if((new \company\Company())->canCreate()) {
-				$h .= (new \company\FarmerUi())->getNoFarms();
+				$h .= (new \company\EmployeeUi())->getNoCompany();
 			} else {
 				$h .= '';
 			}

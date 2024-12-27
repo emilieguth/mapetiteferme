@@ -19,7 +19,7 @@ class Company extends CompanyElement {
 
 	// Peut voir les données personnelles des clients et la page de gestion d'équipe
 	public function canPersonalData(): bool {
-		return $this->canManage();
+		return $this->canWrite();
 	}
 
 

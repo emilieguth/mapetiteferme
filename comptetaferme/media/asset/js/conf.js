@@ -12,11 +12,6 @@ class ImageConf {
 			height: 50,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 50x50 pixels)"
 		},
-		'plant-vignette': {
-			width: 512,
-			height: 512,
-			error: "La résolution de votre image n'est pas suffisante (le minimum est 512x512 pixels)"
-		},
 		'gallery': {
 			width: 200,
 			height: 200,
@@ -37,16 +32,6 @@ class ImageConf {
 			height: 100,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 500x100 pixels)"
 		},
-		'product-vignette': {
-			width: 512,
-			height: 512,
-			error: "La résolution de votre image n'est pas suffisante (le minimum est 512x512 pixels)"
-		},
-		'tool-vignette': {
-			width: 256,
-			height: 256,
-			error: "La résolution de votre image n'est pas suffisante (le minimum est 256x256 pixels)"
-		},
 		'website-logo': {
 			width: 512,
 			height: 512,
@@ -56,11 +41,6 @@ class ImageConf {
 			width: 256,
 			height: 256,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 256x256 pixels)"
-		},
-		'shop-logo': {
-			width: 512,
-			height: 512,
-			error: "La résolution de votre image n'est pas suffisante (le minimum est 512x512 pixels)"
 		}
 	}
 };

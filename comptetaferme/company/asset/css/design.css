@@ -195,7 +195,7 @@ a.nav-year:hover {
 	#company-nav {
 		overflow: auto;
 		top: var(--nav-height);
-		height: calc(100vh - var(--nav-height));
+		/*height: calc(100vh - var(--nav-height));*/
 	}
 
 	.company-tabs {

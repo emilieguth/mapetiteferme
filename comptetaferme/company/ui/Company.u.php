@@ -400,7 +400,7 @@ class CompanyUi {
 				case \company\Employee::AREA :
 					$h .=  '<div>';
 						if(
-							$eCompany->canManage() and
+							$eCompany->canWrite() and
 							$firstSeries === FALSE
 						) {
 							$h .= '<a data-get="/series/series:createFrom?farm='.$eCompany['id'].'&season='.$selectedSeason.'" class="btn btn-primary" data-ajax-class="Ajax.Query">'.\Asset::icon('plus-circle').'<span class="hide-xs-down"> '.s("Nouvelle série").'</span></a>';
@@ -507,7 +507,7 @@ class CompanyUi {
 					if($cZone->notEmpty()) {
 						$h .= '<a href="'.\company\CompanyUi::urlCartography($eCompany, $selectedSeason).'" class="btn btn-primary">';
 							$h .= \Asset::icon('geo-alt-fill').' ';
-							if($eCompany->canManage()) {
+							if($eCompany->canWrite()) {
 								$h .= s("Modifier le plan de la ferme");
 							} else {
 								$h .= s("Plan de la ferme");
@@ -519,7 +519,7 @@ class CompanyUi {
 				case \company\Employee::ROTATION:
 					if($cZone->notEmpty()) {
 						$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#bed-rotation-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-						if($eCompany->canManage()) {
+						if($eCompany->canWrite()) {
 							$h .= '<a href="/company/company:updateSeries?id='.$eCompany['id'].'" class="btn btn-primary">'.\Asset::icon('gear-fill').' '.s("Configurer").'</a>';
 						}
 					}
@@ -1028,7 +1028,7 @@ class CompanyUi {
 			$h .= '<div class="util-buttons">';
 
 				$h .= '<a href="/company/company:update?id='.$eCompany['id'].'" class="bg-secondary util-button">';
-					$h .= '<h4>'.s("Les réglages de base<br/>de la ferme").'</h4>';
+					$h .= '<h4>'.s("Les réglages de base<br/>de l'entreprise").'</h4>';
 					$h .= \Asset::icon('gear-fill');
 				$h .= '</a>';
 
