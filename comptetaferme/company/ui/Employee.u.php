@@ -141,28 +141,26 @@ class EmployeeUi {
 
     if($cEmployee->notEmpty()) {
 
+
       $h .= '<div class="util-buttons">';
 
-      foreach($cEmployee as $eEmployee) {
+        foreach($cEmployee as $eEmployee) {
 
-        $properties = [];
+          $properties = [];
 
-        if($eEmployee['companyGhost'] === FALSE) {
-          $properties[] = self::p('role')->values[$eEmployee['role']];
+          $h .= '<a href="/company/employee:show?id='.$eEmployee['id'].'" class="util-button bg-secondary">';
+            $h .= '<div>';
+              $h .= '<h4>';
+                $h .= \user\UserUi::name($eEmployee['user']);
+              $h .= '</h4>';
+              $h .= '<div class="util-button-text">';
+                $h .= implode(' | ', $properties);
+              $h .= '</div>';
+            $h .= '</div>';
+            $h .= \user\UserUi::getVignette($eEmployee['user'], '4rem');
+          $h .= '</a>';
+
         }
-
-        $h .= '<a href="/company/employee:show?id='.$eEmployee['id'].'" class="util-button bg-secondary">';
-          $h .= '<div>';
-          $h .= '<h4>';
-            $h .= \user\UserUi::name($eEmployee['user']);
-          $h .= '</h4>';
-          $h .= '<div class="util-button-text">';
-            $h .= implode(' | ', $properties);
-          $h .= '</div>';
-          $h .= \user\UserUi::getVignette($eEmployee['user'], '4rem');
-        $h .= '</a>';
-
-      }
 
       $h .= '</div>';
 
@@ -227,8 +225,6 @@ class EmployeeUi {
 
       $h .= '<dt>'.s("Adresse e-mail").'</dt>';
       $h .= '<dd>'.($eEmployee['user']['visibility'] === \user\User::PUBLIC ? encode($eEmployee['user']['email']) : '<i>'.s("Utilisateur fantôme").'</i>').'</dd>';
-      $h .= '<dt>'.s("Rôle").'</dt>';
-      $h .= '<dd>'.self::p('role')->values[$eEmployee['role']].'</dd>';
 
     $h .= '</dl>';
 
