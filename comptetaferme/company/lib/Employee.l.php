@@ -118,7 +118,7 @@ class EmployeeLib extends EmployeeCrud {
 					'invite' => Invite::model()
 						->select(Invite::getSelection())
 						->whereStatus(Invite::PENDING)
-						->delegateElement('employee')
+						->delegateElement('farmer')
 				])
 				->whereStatus(Employee::INVITED);
 		} else {

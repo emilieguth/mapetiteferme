@@ -71,12 +71,28 @@ class CompanyTemplate extends MainTemplate {
 
 	protected function getMain(string $stream):string {
 
-		$h = '';
+		if($this->main) {
 
-		$h .= $this->getMainTitle();
-		$h .= $this->main;
+			$h = '';
 
-		return $h;
+			$h .= $this->getMainTitle();
+			$h .= $this->main;
+
+			return $h;
+
+		} else {
+
+			$h = '';
+			if($this->data->tip) {
+				$h .= (new \company\TipUi())->get($this->data->eCompany, $this->data->tip, $this->data->tipNavigation);
+			}
+
+			$h .= $this->getMainTitle();
+			$h .= parent::getMain($stream);
+
+			return $h;
+
+		}
 
 	}
 
@@ -105,7 +121,7 @@ class CompanyTemplate extends MainTemplate {
 
 			if($this->data->cCompanyUser->count() > 1) {
 
-				$farm .= '<div class="nav-title-company">';
+				$farm .= '<div class="nav-title-farm">';
 					$farm .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '4rem').'</div>';
 					$farm .= '<a data-dropdown="bottom-start" data-dropdown-hover="true">'.encode($this->data->eCompany['name']).'  '.Asset::icon('chevron-down').'</a>';
 					$farm .= '<div class="dropdown-list bg-primary">';
@@ -116,7 +132,7 @@ class CompanyTemplate extends MainTemplate {
 				$farm .= '</div>';
 
 			} else {
-				$farm .= '<div class="nav-title-company">';
+				$farm .= '<div class="nav-title-farm">';
 					$farm .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '1.75rem').'</div>';
 					$farm .= '<div>'.encode($this->data->eCompany['name']).'</div>';
 				$farm .= '</div>';

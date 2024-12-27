@@ -105,7 +105,7 @@ new AdaptativeView('index', function($data, DocTemplate $t) {
 			[
 				s("Plateau de semis"),
 				'young_plants_tray',
-				s("Pris en compte uniquement dans le cas d'implantation par plant autoproduit et le plateau de semis doit avoir été préalablement créé dans la <link>liste du matériel de votre ferme<link>", ['link' => $data->eCompany->empty() ? NULL : '<a href="/company/tool:manage?company='.$data->eCompany['id'].'">']),
+				s("Pris en compte uniquement dans le cas d'implantation par plant autoproduit et le plateau de semis doit avoir été préalablement créé dans la <link>liste du matériel de votre ferme<link>", ['link' => $data->eCompany->empty() ? NULL : '<a href="/company/tool:manage?farm='.$data->eCompany['id'].'">']),
 				s("Plaque de 150")
 			],
 			[

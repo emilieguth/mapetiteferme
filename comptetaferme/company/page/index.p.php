@@ -19,20 +19,5 @@
 
 		throw new ViewAction($data);
 
-	})
-	->get('/company/{id}/finances', function($data) {
-
-		throw new ViewAction($data);
-
-	})
-	->get('/company/{id}/fournisseurs', function($data) {
-
-		throw new ViewAction($data);
-
-	})
-	->get('/company/{id}/clients', function($data) {
-
-		throw new ViewAction($data);
-
 	});
 ?>

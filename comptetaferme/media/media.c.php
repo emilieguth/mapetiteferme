@@ -123,7 +123,7 @@ Setting::register('media', [
 
 	'company-banner' => [
 		'class' => 'FarmBanner',
-		'element' => 'company\Company',
+		'element' => 'farm\Company',
 		'field' => 'banner',
 		'imageFormat' => [
 			'm' => [500, 100]
@@ -135,13 +135,13 @@ Setting::register('media', [
 
 	'company-logo' => [
 		'class' => 'FarmLogo',
-		'element' => 'company\Company',
+		'element' => 'farm\Company',
 		'field' => 'logo'
 	] + getMediaLogo(),
 
 	'company-vignette' => [
 		'class' => 'FarmVignette',
-		'element' => 'company\Company',
+		'element' => 'farm\Company',
 		'field' => 'vignette'
 	] + getMediaVignette(),
 

@@ -64,15 +64,6 @@ new Lime.Instruction('main')
 	.register('updateNavSettings', function(url) {
 		qs('#company-nav [data-tab="settings"]', node => node.setAttribute('href', url));
 	})
-	.register('updateNavFinances', function(url) {
-		qs('#company-nav [data-tab="finances"]', node => node.setAttribute('href', url));
-	})
-	.register('updateNavSuppliers', function(url) {
-		qs('#company-nav [data-tab="suppliers"]', node => node.setAttribute('href', url));
-	})
-	.register('updateNavCustomers', function(url) {
-		qs('#company-nav [data-tab="customers"]', node => node.setAttribute('href', url));
-	})
 	.register('keepScroll', function() {
 
 		if(

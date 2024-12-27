@@ -14,7 +14,7 @@ body[data-template="home-main"] header {
 }
 
 body[data-template="home-employee"] header {
-   background-image: url(/asset/comptetaferme/main/image/banner-employee.jpg);
+   background-image: url(/asset/comptetaferme/main/image/banner-farmer.jpg);
 }
 
 body[data-template="home-legal"] header {
