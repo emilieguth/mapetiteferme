@@ -28,14 +28,14 @@ class InviteUi {
 
   public function checkEmployee(Invite $eInvite): string {
 
-    $eFarm = $eInvite['farm'];
+    $eCompany = $eInvite['company'];
 
     if($eInvite->isValid() === FALSE) {
 
       $h = '<div class="util-block text-center">';
       $h .= '<br/><br/>';
       $h .= '<h2>'.s("Le lien que vous avez utilisé pour activer votre compte client a expiré !").'</h2>';
-      $h .= '<h4>'.s("Merci de demander à la ferme {farm} de vous envoyer un nouveau lien.", ['farm' => '<b>'.encode($eFarm['name']).'</b>']).'</h4>';
+      $h .= '<h4>'.s("Merci de demander à l'entreprise {company} de vous envoyer un nouveau lien.", ['company' => '<b>'.encode($eCompany['name']).'</b>']).'</h4>';
       $h .= '<br/><br/>';
       $h .= '</div>';
 
@@ -50,7 +50,7 @@ class InviteUi {
       $h = '<div class="util-block text-center">';
         $h .= '<br/><br/>';
         $h .= '<h2>'.s("Vous n'êtes pas connecté·e sur {siteName} !").'</h2>';
-        $h .= '<h4>'.s("Pour créer votre compte client {company}, veuillez vous connecter sur {siteName} avec l'adresse e-mail {emailCurrent} ou créer un compte si vous n'en disposez pas.", ['company' => '<b>'.encode($eFarm['name']).'</b>', 'emailCurrent' => '<b>'.encode($eInvite['email']).'</b>']).'</h4>';
+        $h .= '<h4>'.s("Pour créer votre compte client {company}, veuillez vous connecter sur {siteName} avec l'adresse e-mail {emailCurrent} ou créer un compte si vous n'en disposez pas.", ['company' => '<b>'.encode($eCompany['name']).'</b>', 'emailCurrent' => '<b>'.encode($eInvite['email']).'</b>']).'</h4>';
         $h .= '<div>';
           $h .= '<a href="/user/signUp?invite='.$eInvite['key'].'" class="btn btn-secondary">'.s("Créer un compte").'</a> ';
           $h .= '<a href="/user/log:form?invite='.$eInvite['key'].'" class="btn btn-outline-secondary">'.s("Me connecter").'</a>';
@@ -67,7 +67,7 @@ class InviteUi {
       $h = '<div class="util-block text-center">';
         $h .= '<br/><br/>';
         $h .= '<h2>'.s("Vous devez être connecté·e sur {siteName} avec {emailExpected} pour activer votre compte client ! Vous êtes actuellement connecté avec l'adresse e-mail {emailCurrent}.", ['emailExpected' => '<b>'.encode($eInvite['email']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h2>';
-        $h .= '<h4>'.s("Merci de vous déconnecter de {siteName} et de vous reconnecter avec la bonne adresse e-mail, ou bien de demander à la ferme {farm} de vous envoyer un lien sur {emailCurrent}}.", ['farm' => '<b>'.encode($eFarm['name']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h4>';
+        $h .= '<h4>'.s("Merci de vous déconnecter de {siteName} et de vous reconnecter avec la bonne adresse e-mail, ou bien de demander à l'entreprise {company} de vous envoyer un lien sur {emailCurrent}}.", ['company' => '<b>'.encode($eCompany['name']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h4>';
         $h .= '<br/><br/>';
       $h .= '</div>';
 
@@ -85,7 +85,7 @@ class InviteUi {
       'firstColumnSize' => 40
     ]);
 
-    $h = $form->openAjax('/farm/invite:doAcceptUser', ['autocomplete' => 'off']);
+    $h = $form->openAjax('/company/invite:doAcceptUser', ['autocomplete' => 'off']);
 
     $h .= $form->hidden('key', $e['key']);
 
@@ -132,7 +132,7 @@ class InviteUi {
 
     $h = '<div class="util-block text-center">';
       $h .= '<br/><br/>';
-      $h .= '<h2>'.s("Votre compte {company} a été activé !", ['company' => '<b>'.encode($eInvite['farm']['name']).'</b>']).'</h2>';
+      $h .= '<h2>'.s("Votre compte {company} a été activé !", ['company' => '<b>'.encode($eInvite['company']['name']).'</b>']).'</h2>';
       $h .= '<h4>'.s("Vous avez désormais accès à l'ensemble des fonctionnalités.").'</h4>';
       $h .= '<div>';
         $h .= '<a href="/" class="btn btn-secondary">'.s("Découvrir l'entreprise").'</a> ';
