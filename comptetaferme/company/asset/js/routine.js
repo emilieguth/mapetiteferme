@@ -9,7 +9,7 @@ class Routine {
 			new Ajax.Query(target)
 				.url('/company/tool:getRoutinesField')
 				.body({
-					farm: wrapper.dataset.farm,
+					company: wrapper.dataset.farm,
 					action: target.value
 				})
 				.fetch()

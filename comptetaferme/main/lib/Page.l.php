@@ -37,16 +37,17 @@ class PageLib {
 		if($data->isLogged) {
 
 			$data->userDeletedAt = \session\SessionLib::get('userDeletedAt');
-			$data->cFarmUser = \company\CompanyLib::getOnline();
+			$data->cCompanyUser = \company\CompanyLib::getOnline();
+			// TODO : add the databases according to the companies selected
 
 		} else {
 
 			$data->userDeletedAt = NULL;
-			$data->cFarmUser = new \Collection();
+			$data->cCompanyUser = new \Collection();
 
 		}
 
-		$data->nFarmUser = $data->cFarmUser->count();
+		$data->nCompanyUser = $data->cCompanyUser->count();
 
 		$data->logInExternal = \user\ConnectionLib::checkLoginExternal();
 

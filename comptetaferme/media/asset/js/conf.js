@@ -22,17 +22,17 @@ class ImageConf {
 			height: 200,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 200x200 pixels)"
 		},
-		'farm-vignette': {
+		'company-vignette': {
 			width: 512,
 			height: 512,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 512x512 pixels)"
 		},
-		'farm-logo': {
+		'company-logo': {
 			width: 512,
 			height: 512,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 512x512 pixels)"
 		},
-		'farm-banner': {
+		'company-banner': {
 			width: 500,
 			height: 100,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 500x100 pixels)"

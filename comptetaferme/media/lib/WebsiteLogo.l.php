@@ -10,7 +10,7 @@ class WebsiteLogoLib extends MediaLib {
 		if(
 			$eWebsite->empty() or
 			\website\Website::model()
-				->select('logo', 'farm')
+				->select('logo', 'company')
 				->get($eWebsite) === FALSE
 		) {
 			throw new \NotExistsAction('Website');

@@ -13,7 +13,7 @@ body[data-template="home-main"] header {
    background-image: url(/asset/comptetaferme/main/image/banner.jpg);
 }
 
-body[data-template="home-farmer"] header {
+body[data-template="home-employee"] header {
    background-image: url(/asset/comptetaferme/main/image/banner-farmer.jpg);
 }
 

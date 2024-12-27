@@ -10,7 +10,7 @@ class WebsiteFaviconLib extends MediaLib {
 		if(
 			$eWebsite->empty() or
 			\website\Website::model()
-				->select('favicon', 'farm')
+				->select('favicon', 'company')
 				->get($eWebsite) === FALSE
 		) {
 			throw new \NotExistsAction('Website');

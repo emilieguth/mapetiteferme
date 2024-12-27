@@ -1,9 +1,9 @@
-#farm-nav {
+#company-nav {
 	padding: 0;
 }
 
 
-#farm-nav:last-child {
+#company-nav:last-child {
 	margin-bottom: 1rem;
 }
 
@@ -58,7 +58,7 @@ a.nav-year:hover {
 
 	@media (max-height: 991px) {
 
-		.nav-title .farm-vignette-view {
+		.nav-title .company-vignette-view {
 			width: 3rem !important;
 			height: 3rem !important;
 			min-width: 3rem !important;
@@ -104,7 +104,7 @@ a.nav-year:hover {
 		padding-right: 2rem;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title {
+	body[data-template~="farm"] main .container.company-template-main-title {
 		height: var(--nav-height);
 		background: linear-gradient(342deg, var(--background-dark) 0, var(--background-dark) 50%, #e4e4ea 100%);
 		margin-bottom: 1rem;
@@ -112,28 +112,28 @@ a.nav-year:hover {
 		position: relative;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title:not(.farm-template-main-title-with-year) {
+	body[data-template~="farm"] main .container.company-template-main-title:not(.company-template-main-title-with-year) {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title.farm-template-main-title-with-year {
+	body[data-template~="farm"] main .container.company-template-main-title.company-template-main-title-with-year {
 		display: grid;
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title > div.farm-template-main-content {
+	body[data-template~="farm"] main .container.company-template-main-title > div.company-template-main-content {
 		display: flex;
 		align-items: center;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title > div.farm-template-main-content > div {
+	body[data-template~="farm"] main .container.company-template-main-title > div.company-template-main-content > div {
 		width: 100%;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title > div.farm-template-main-content > div > *:last-child {
+	body[data-template~="farm"] main .container.company-template-main-title > div.company-template-main-content > div > *:last-child {
 		margin-bottom: 0;
 	}
 
@@ -192,25 +192,25 @@ a.nav-year:hover {
 	}
 
 
-	#farm-nav {
+	#company-nav {
 		overflow: auto;
 		top: var(--nav-height);
 		height: calc(100vh - var(--nav-height));
 	}
 
-	.farm-tabs {
+	.company-tabs {
 		margin-top: 0.5rem;
 	}
 
 	@media (min-height: 992px) {
 
-		.farm-tabs {
+		.company-tabs {
 			font-size: 1.1rem;
 		}
 
 	}
 
-	a.farm-tab {
+	a.company-tab {
 		display: block;
 		padding: 0.75rem var(--nav-padding);
 		text-decoration: none;
@@ -221,7 +221,7 @@ a.nav-year:hover {
 
 	@media (max-height: 649px) {
 
-		a.farm-tab {
+		a.company-tab {
 			padding: 0.5rem var(--nav-padding);
 		}
 
@@ -229,7 +229,7 @@ a.nav-year:hover {
 
 	@media (min-height: 650px) and (max-height: 699px) {
 
-		a.farm-tab {
+		a.company-tab {
 			padding: 0.6rem var(--nav-padding);
 		}
 
@@ -237,38 +237,38 @@ a.nav-year:hover {
 
 	@media (min-height: 992px) {
 
-		a.farm-tab {
+		a.company-tab {
 			padding: 0.75rem calc(var(--nav-padding) / 2) 0.75rem var(--nav-padding);
 		}
 
 	}
 
-	a.farm-tab:not(.farm-tab-subnav):hover {
+	a.company-tab:not(.company-tab-subnav):hover {
 		text-decoration: underline;
 	}
 
-	a.farm-tab:not(.farm-tab-subnav).selected {
+	a.company-tab:not(.company-tab-subnav).selected {
 		background-color: var(--secondary-dark);
 	}
 
-	a.farm-tab.farm-tab-subnav {
+	a.company-tab.company-tab-subnav {
 		pointer-events: none;
 	}
 
-	a.farm-tab + div.farm-subnav-wrapper {
+	a.company-tab + div.company-subnav-wrapper {
 		margin-top: -0.125rem;
 	}
 
-	a.farm-tab .farm-tab-on {
+	a.company-tab .company-tab-on {
 		display: none;
 	}
 
-	.farm-tab .farm-tab-icon svg {
+	.company-tab .company-tab-icon svg {
 		font-size: 1.2rem;
 		margin-right: 0.5rem;
 	}
 
-	.farm-tab-complement {
+	.company-tab-complement {
 		display: inline-flex;
 		align-items: center;
 		line-height: 1;
@@ -280,21 +280,21 @@ a.nav-year:hover {
 		padding: 0.5rem;
 	}
 
-	.farm-tab-complement svg {
+	.company-tab-complement svg {
 		margin-bottom: -0.125rem;
 	}
 
-	#farm-subnav {
+	#company-subnav {
 		display: none;
 	}
 
-	div.farm-subnav-wrapper {
+	div.company-subnav-wrapper {
 		display: flex;
 		flex-direction: column;
 		grid-column-gap: 1.25rem;
 	}
 
-	a.farm-subnav-item {
+	a.company-subnav-item {
 		display: block;
 		color: white;
 		padding: 0.5rem 0.5rem 0.5rem calc(1.5rem + var(--nav-padding));
@@ -302,7 +302,7 @@ a.nav-year:hover {
 
 	@media (max-height: 649px) {
 
-		a.farm-subnav-item {
+		a.company-subnav-item {
 			padding-top: 0.2rem;
 			padding-bottom: 0.2rem;
 		}
@@ -311,22 +311,22 @@ a.nav-year:hover {
 
 	@media (min-height: 650px) and (max-height: 767px) {
 
-		a.farm-subnav-item {
+		a.company-subnav-item {
 			padding-top: 0.25rem;
 			padding-bottom: 0.25rem;
 		}
 
 	}
 
-	a.farm-subnav-item.selected {
+	a.company-subnav-item.selected {
 		background-color: var(--secondary-dark);
 	}
 
-	a.farm-subnav-item:hover {
+	a.company-subnav-item:hover {
 		text-decoration: none;
 	}
 
-	a.farm-subnav-item:hover *:not(.farm-subnav-prefix) {
+	a.company-subnav-item:hover *:not(.company-subnav-prefix) {
 		text-decoration: underline;
 	}
 
@@ -351,7 +351,7 @@ a.nav-year:hover {
 		z-index: 500;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title {
+	body[data-template~="farm"] main .container.company-template-main-title {
 		background: linear-gradient(to bottom, var(--background) 0, var(--background) 50%, transparent 100%);
 		margin-top: 0;
 		padding-top: 1rem;
@@ -360,16 +360,16 @@ a.nav-year:hover {
 		justify-content: center;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title > div > *:last-child {
+	body[data-template~="farm"] main .container.company-template-main-title > div > *:last-child {
 		margin-bottom: 0;
 	}
 
-	body[data-template~="farm"] main .container.farm-template-main-title + .container {
+	body[data-template~="farm"] main .container.company-template-main-title + .container {
 		margin-top: 1.5rem;
 	}
 
-	/* Farm nav */
-	#farm-nav {
+	/* Company nav */
+	#company-nav {
 		display: flex;
 		align-items: center;
 		height: var(--farmNav);
@@ -377,13 +377,13 @@ a.nav-year:hover {
 		background-color: var(--secondary);
 	}
 
-	.nav-title .farm-vignette-view {
+	.nav-title .company-vignette-view {
 		width: 2rem !important;
 		height: 2rem !important;
 		min-width: 2rem !important;
 	}
 
-	.farm-tabs {
+	.company-tabs {
 		display: grid;
 		padding-left: var(--container-padding);
 		padding-right: var(--container-padding);
@@ -391,7 +391,7 @@ a.nav-year:hover {
 
 	@media (max-width: 575px) {
 
-		.farm-tabs {
+		.company-tabs {
 			align-items: stretch;
 			grid-template-columns: repeat(5, auto) min-content;
 		}
@@ -401,7 +401,7 @@ a.nav-year:hover {
 
 	@media (min-width: 450px) and (max-width: 575px) {
 
-		.farm-tabs {
+		.company-tabs {
 			width: 100%;
 			max-width: 450px;
 		}
@@ -411,26 +411,26 @@ a.nav-year:hover {
 
 	@media (max-width: 449px) {
 
-		.farm-tabs {
+		.company-tabs {
 			width: 100%;
 		}
 
 	}
 
 	@media (min-width: 576px) {
-		.farm-tabs {
+		.company-tabs {
 			grid-template-columns: repeat(6, auto);
 		}
 	}
 
-	#farm-subnav {
+	#company-subnav {
 		height: var(--farmSubNav);
 		min-height: var(--farmSubNav);
 		background-color: var(--secondary);
 		border-bottom: 1px solid var(--background);
 	}
 
-	div.farm-subnav-wrapper {
+	div.company-subnav-wrapper {
 		height: 100%;
 		display: flex;
 		align-items: center;
@@ -441,17 +441,17 @@ a.nav-year:hover {
 		padding-top: 0.25rem;
 	}
 
-	div.farm-subnav-wrapper > * {
+	div.company-subnav-wrapper > * {
 		display: flex;
 		align-items: center;
 		text-decoration: none;
 	}
 
-	div.farm-subnav-wrapper > .farm-subnav-separator {
+	div.company-subnav-wrapper > .company-subnav-separator {
 		margin: 0 -0.75rem;
 	}
 
-	div.farm-subnav-wrapper > .farm-subnav-text {
+	div.company-subnav-wrapper > .company-subnav-text {
 		font-size: 1.1rem;
 		line-height: 1.1;
 		font-weight: bold;
@@ -459,23 +459,23 @@ a.nav-year:hover {
 
 	@media (max-width: 575px) {
 
-		div.farm-subnav-wrapper > .farm-subnav-text {
+		div.company-subnav-wrapper > .company-subnav-text {
 			font-size: 1.2rem;
 			line-height: 1.2;
 		}
 
 	}
 
-	div.farm-subnav-wrapper > a {
+	div.company-subnav-wrapper > a {
 		align-self: stretch;
 		color: white;
 	}
 
-	body[data-touch="no"] div.farm-subnav-wrapper > a.farm-subnav-item {
+	body[data-touch="no"] div.company-subnav-wrapper > a.company-subnav-item {
 		padding-bottom: 0.25rem;
 	}
 
-	div.farm-subnav-wrapper > a.selected {
+	div.company-subnav-wrapper > a.selected {
 		border-top-left-radius: var(--radius);
 		border-top-right-radius: var(--radius);
 		background: #ececef;
@@ -487,14 +487,14 @@ a.nav-year:hover {
 
 	@media (max-width: 575px) {
 
-		div.farm-subnav-wrapper > a.selected {
+		div.company-subnav-wrapper > a.selected {
 			font-size: 1.1rem;
 			line-height: 1.2;
 		}
 
 	}
 
-	a.farm-tab {
+	a.company-tab {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -506,36 +506,36 @@ a.nav-year:hover {
 		border-radius: var(--radius);
 	}
 
-	a.farm-tab + div.farm-subnav-wrapper {
+	a.company-tab + div.company-subnav-wrapper {
 		display: none;
 	}
 
-	a.farm-tab.selected {
+	a.company-tab.selected {
 		background: var(--secondary-dark);
 	}
 
-	.farm-tab-complement {
+	.company-tab-complement {
 		display: none;
 	}
 
 	@media (min-height: 768px) and (min-width: 768px) {
 
-		.farm-tab-icon svg {
+		.company-tab-icon svg {
 			font-size: 1.1rem;
 		}
 
-		.farm-tab-icon svg {
+		.company-tab-icon svg {
 			margin-right: 0.375rem;
 		}
 
 		@media (max-width: 899px) {
 
-			.farm-tab {
+			.company-tab {
 				padding-left: .75rem;
 				padding-right: .75rem;
 			}
 
-			.farm-tab-label {
+			.company-tab-label {
 				letter-spacing: -0.1px;
 			}
 
@@ -543,7 +543,7 @@ a.nav-year:hover {
 
 		@media (min-width: 900px) {
 
-			.farm-tab {
+			.company-tab {
 				padding-left: 1rem;
 				padding-right: 1rem;
 			}
@@ -556,31 +556,31 @@ a.nav-year:hover {
 
 		@media (min-width: 576px) {
 
-			.farm-tabs {
+			.company-tabs {
 				grid-column-gap: 0.25rem;
 			}
 
 		}
 
-		a.farm-tab {
+		a.company-tab {
 			flex-direction: column;
 			line-height: 1;
 		}
 
 		@media (min-width: 575px) {
 
-			a.farm-tab {
+			a.company-tab {
 				padding-left: 0.5rem;
 				padding-right: 0.5rem;
 			}
 
 		}
 
-		.farm-tab-icon svg {
+		.company-tab-icon svg {
 			font-size: 1.2rem;
 		}
 
-		.farm-tab-icon {
+		.company-tab-icon {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
@@ -591,7 +591,7 @@ a.nav-year:hover {
 
 		@media (max-width: 575px) {
 
-			.farm-tab[data-tab="settings"] .farm-tab-icon {
+			.company-tab[data-tab="settings"] .company-tab-icon {
 				margin-bottom: 0;
 				width: 2.5rem;
 				height: 2.5rem;
@@ -599,7 +599,7 @@ a.nav-year:hover {
 
 		}
 
-		.farm-tab-label {
+		.company-tab-label {
 			font-size: 0.9rem;
 			letter-spacing: -0.1px;
 		}
@@ -608,7 +608,7 @@ a.nav-year:hover {
 
 	@media (max-width: 449px) {
 
-		.farm-tabs {
+		.company-tabs {
 			width: 100%;
 		}
 
@@ -616,15 +616,15 @@ a.nav-year:hover {
 
 	@media (max-width: 449px) {
 
-		.farm-tab-icon {
+		.company-tab-icon {
 			margin-bottom: 0.125rem;
 		}
 
-		.farm-tab-icon svg {
+		.company-tab-icon svg {
 			font-size: 1.33rem;
 		}
 
-		a.farm-tab span {
+		a.company-tab span {
 			line-height: 1.2;
 			letter-spacing: -0.2px;
 		}
@@ -633,11 +633,11 @@ a.nav-year:hover {
 
 	@media (max-width: 359px) {
 
-		.farm-tab-label {
+		.company-tab-label {
 			font-size: 0.8rem;
 		}
 
-		.farm-subnav-item {
+		.company-subnav-item {
 			font-size: 0.9rem;
 		}
 
@@ -651,25 +651,25 @@ a.nav-year:hover {
 
 }
 
-.farm-tab-disabled {
+.company-tab-disabled {
 	opacity: 0.5;
 }
 
 /* Onglets pour les saisons */
-.farm-tabs-season .farm-tabs-season-page {
+.company-tabs-season .company-tabs-season-page {
 	display: flex;
 	align-items: center;
 	height: 3rem;
 	font-weight: bold;
 }
 
-.farm-tabs-season .farm-tabs-season-page:before {
+.company-tabs-season .company-tabs-season-page:before {
 	content: ">";
 	font-size: 0.9rem;
 	margin: 0 0.75rem;
 }
 
-.farm-tabs-season .farm-tabs-season-action {
+.company-tabs-season .company-tabs-season-action {
 	flex: 1 0 auto;
 	text-align: right;
 }

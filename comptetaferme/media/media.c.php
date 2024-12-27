@@ -82,25 +82,13 @@ Setting::register('media', [
 	// Max size of an image in Mo (change also rewrite.cfg if needed : client_max_body_size 20m;)
 	'maxImageSize' => 20,
 
-	'images' => ['user-vignette', 'editor', 'plant-vignette', 'gallery', 'farm-vignette', 'farm-logo', 'farm-banner', 'product-vignette', 'tool-vignette', 'website-logo', 'website-favicon', 'shop-logo', 'pdf-content'],
+	'images' => ['user-vignette', 'editor', 'gallery', 'company-vignette', 'company-logo', 'company-banner', 'website-logo', 'website-favicon'],
 
 	'user-vignette' => [
 		'class' => 'UserVignette',
 		'element' => 'user\User',
 		'field' => 'vignette'
 	] + getMediaVignette(),
-
-	'shop-logo' => [
-		'class' => 'ShopLogo',
-		'element' => 'shop\Shop',
-		'field' => 'logo'
-	] + getMediaLogo(),
-
-	'pdf-content' => [
-		'class' => 'PdfContent',
-		'element' => 'selling\PdfContent',
-		'field' => 'hash'
-	],
 
 	'editor' => [
 		'class' => 'Editor',
@@ -121,33 +109,6 @@ Setting::register('media', [
 		'imageRequiredSize' => 50,
 	],
 
-	'plant-vignette' => [
-		'class' => 'PlantVignette',
-		'element' => 'plant\Plant',
-		'field' => 'vignette',
-	] + getMediaVignette(),
-
-	'product-vignette' => [
-		'class' => 'ProductVignette',
-		'element' => 'selling\Product',
-		'field' => 'vignette',
-	] + getMediaVignette(),
-
-	'tool-vignette' => [
-		'class' => 'ToolVignette',
-		'element' => 'farm\Tool',
-		'field' => 'vignette',
-		'imageFormat' => [
-			's' => 64,
-			'm' => 256,
-			'l' => 1024
-		],
-		'imageResizeReference' => ['l'],
-		'imageOutputType' => [IMAGETYPE_JPEG, IMAGETYPE_PNG],
-		'imageMaxLength' => 2000,
-		'imageRequiredSize' => 'm',
-	],
-
 	'gallery' => [
 		'class' => 'Gallery',
 		'element' => NULL,
@@ -160,9 +121,9 @@ Setting::register('media', [
 		'imageRequiredSize' => 200,
 	],
 
-	'farm-banner' => [
+	'company-banner' => [
 		'class' => 'FarmBanner',
-		'element' => 'farm\Farm',
+		'element' => 'farm\Company',
 		'field' => 'banner',
 		'imageFormat' => [
 			'm' => [500, 100]
@@ -172,15 +133,15 @@ Setting::register('media', [
 		'imageRequiredSize' => 'm',
 	],
 
-	'farm-logo' => [
+	'company-logo' => [
 		'class' => 'FarmLogo',
-		'element' => 'farm\Farm',
+		'element' => 'farm\Company',
 		'field' => 'logo'
 	] + getMediaLogo(),
 
-	'farm-vignette' => [
+	'company-vignette' => [
 		'class' => 'FarmVignette',
-		'element' => 'farm\Farm',
+		'element' => 'farm\Company',
 		'field' => 'vignette'
 	] + getMediaVignette(),
 
@@ -237,10 +198,10 @@ Setting::register('media', [
 		if($driver instanceof \util\XyzLib) {
 
 			if(LIME_ENV === 'dev') {
-				return 'http://media.dev-ouvretaferme.org';
+				return 'http://media.dev-comptetaferme.org';
 			}
 
-			return 'https://media.ouvretaferme.org';
+			return 'https://media.comptetaferme.org';
 
 		}
 

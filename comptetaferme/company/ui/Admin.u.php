@@ -1,12 +1,11 @@
 <?php
 namespace company;
 
-
 class AdminUi {
 
 	public function __construct() {
 
-		\Asset::css('farm', 'admin.css');
+		\Asset::css('company', 'admin.css');
 
 	}
 
@@ -16,13 +15,13 @@ class AdminUi {
 		return '';
 
 		$pages = [
-			'farm' => s("Parcourir"),
+			'company' => s("Parcourir"),
 		];
 
 		$h = '<div class="nav">';
 
 			foreach($pages as $page => $name) {
-				$h .= '<a href="/company/admin/'.($page === 'farm' ? '' : $page).'" class="nav-link '.($selection === $page ? 'active' : '').'">'.$name.'</a>';
+				$h .= '<a href="/company/admin/'.($page === 'company' ? '' : $page).'" class="nav-link '.($selection === $page ? 'active' : '').'">'.$name.'</a>';
 			}
 
 		$h .= '</div>';
@@ -35,7 +34,7 @@ class AdminUi {
 	 * Display form with default conditions
 	 *
 	 */
-	public function getFarmsForm(\Search $search, int $count) {
+	public function getCompaniesForm(\Search $search, int $count) {
 
 		$form = new \util\FormUi();
 
@@ -52,7 +51,7 @@ class AdminUi {
 				}
 
 				$h .= '<div class="form-search-end">';
-					$h .= p("{value} ferme", "{value} fermes", $count);
+					$h .= p("{value} entreprise", "{value} entreprises", $count);
 				$h .= '</div>';
 			$h .= '</div>';
 
@@ -63,18 +62,18 @@ class AdminUi {
 	}
 
 	/**
-	 * Organize the table with the farms
+	 * Organize the table with the companies
 	 *
 	 */
-	public function displayFarms(\Collection $cFarm, int $nFarm, int $page, \Search $search): string {
+	public function displayCompanies(\Collection $cCompany, int $nCompany, int $page, \Search $search): string {
 
-		if($nFarm === 0) {
-			return '<div class="util-info">'.s("Il n'y a aucune ferme à afficher...").'</div>';
+		if($nCompany === 0) {
+			return '<div class="util-info">'.s("Il n'y a aucune entreprise à afficher...").'</div>';
 		}
 
 		$h = '<div class="util-overflow-xs stick-sm">';
 
-			$h .= '<table class="tr-bordered farm-admin-table">';
+			$h .= '<table class="tr-bordered company-admin-table">';
 				$h .= '<thead>';
 					$h .= '<tr>';
 						$h .= '<th class="text-center">'.$search->linkSort('id', '#', SORT_DESC).'</th>';
@@ -87,41 +86,27 @@ class AdminUi {
 
 				$h .= '<tbody>';
 
-				foreach($cFarm as $eFarm) {
+				foreach($cCompany as $eCompany) {
 
-					$h .= '<tr id="farm-admin-'.$eFarm['id'].'" class="farm-admin-'.$eFarm['status'].'">';
-						$h .= '<td class="text-center">'.$eFarm['id'].'</td>';
-						$h .= '<td class="farm-admin-vignette">';
-							if($eFarm['vignette'] !== NULL) {
-								$h .= \Asset::image((new \media\CompanyVignetteUi())->getUrlByElement($eFarm, 's'));
+					$h .= '<tr id="company-admin-'.$eCompany['id'].'" class="company-admin-'.$eCompany['status'].'">';
+						$h .= '<td class="text-center">'.$eCompany['id'].'</td>';
+						$h .= '<td class="company-admin-vignette">';
+							if($eCompany['vignette'] !== NULL) {
+								$h .= \Asset::image((new \media\CompanyVignetteUi())->getUrlByElement($eCompany, 's'));
 							}
 						$h .= '</td>';
 						$h .= '<td>';
-							$h .= '<a href="'.FarmUi::urlPlanningWeekly($eFarm).'">'.encode($eFarm['name']).'</a>';
+							$h .= '<a href="'.CompanyUi::url($eCompany).'">'.encode($eCompany['name']).'</a>';
 						$h .= '</td>';
 						$h .= '<td>';
-							if($eFarm['place'] !== NULL) {
-								$h .= encode($eFarm['place']);
-							}
 						$h .= '</td>';
 						$h .= '<td>';
-							if($eFarm['cFarmer']->empty()) {
+							if($eCompany['cEmployee']->empty()) {
 								$h .= '-';
 							} else {
-								$h .= '<small>'.implode('<br/>', $eFarm['cFarmer']->toArray(function($eFarmer) {
+								$h .= '<small>'.implode('<br/>', $eCompany['cEmployee']->toArray(function($eEmployee) {
 
-									$h = \user\UserUi::name($eFarmer['user']);
-									$h .= ' <span class="color-muted">';
-
-									if($eFarmer['farmGhost']) {
-										$h .= s("Fantôme");
-									} else {
-										$h .= FarmerUi::p('role')->values[$eFarmer['role']];
-									}
-
-									$h .= '</span>';
-
-									return $h;
+									return \user\UserUi::name($eEmployee['user']);
 
 								})).'</small>';
 							}
@@ -133,7 +118,7 @@ class AdminUi {
 
 		$h .= '</div>';
 
-		$h .= \util\TextUi::pagination($page, $nFarm / 100);
+		$h .= \util\TextUi::pagination($page, $nCompany / 100);
 
 		return $h;
 	}

@@ -1,47 +1,35 @@
-
-
 Company:
   id: serial32
   name: text8(1, null) @collate(general)
   vignette: ?textFixed(30, 30) @charset(ascii)
-  place: ?text8(1, null)
-  placeLngLat: ?point
   url: ?url
   description: ?editor24
   logo: ?textFixed(30, 30) @charset(ascii)
   banner: ?textFixed(30, 30) @charset(ascii)
-  seasonFirst: int16(0, null)
-  seasonLast: int16(0, null)
-  rotationYears: int8(2, 5) = 4
-  rotationExclude: json = PHP([])
-  quality: ?enum(ORGANIC, NATURE_PROGRES, CONVERSION) = ORGANIC
-  defaultBedLength: ?int16(1, null)
-  defaultBedWidth: ?int16(1, null)
-  defaultAlleyWidth: ?int16(1, null)
-  calendarMonthStart: ?int8(7, 12) = 10
-  calendarMonthStop: ?int8(1, 6) = 3
-  planningDelayedMax: ?int8(1, 6) = 2
-  featureTime: bool = TRUE
-  featureStock: bool = FALSE
-  featureDocument: enum(ALL, PRIVATE, PRO, DISABLED) = PRO
-  stockNotes: ?text16
-  stockNotesUpdatedAt: ?datetime
-  stockNotesUpdatedBy: ?user\User
-  hasShops: bool = FALSE
-  hasSales: bool = FALSE
-  hasCultivations: bool = FALSE
   startedAt: int16(PHP(date('Y') - 100), PHP(date('Y') + 10))
   createdAt: datetime = SPECIAL(now)
   status: enum(ACTIVE, CLOSED) = ACTIVE
 
 Employee:
   id: serial32
-  user: ?user\User
+  user: user\User
   company: company\Company
   companyStatus: enum(ACTIVE, CLOSED) = ACTIVE
   status: enum(INVITED, IN, OUT) = INVITED
-  role: ?enum(SEASONAL, PERMANENT, OWNER, OBSERVER)
   createdAt: datetime = SPECIAL(now)
   UNIQUE: [
     ["user", "company"]
+  ]
+
+Invite:
+  id: serial32
+  company: company\Company
+  email: email
+  employee: ?company\Employee
+  expiresAt: date = SQL(NOW() + INTERVAL 3 DAY)
+  key: ?text8 = PHP(bin2hex(random_bytes(16)))
+  status: enum(PENDING, ACCEPTED) = PENDING
+  INDEX: [
+    ["email"],
+    ["key"]
   ]

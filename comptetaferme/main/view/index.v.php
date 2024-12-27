@@ -55,15 +55,11 @@ new AdaptativeView('logged', function($data, MainTemplate $t) {
 
 	$t->header = '<h1>'.s("Bienvenue, {userName}&nbsp;!", ['userName' => encode($data->eUserOnline['firstName'] ?? $data->eUserOnline['lastName'])]).'</h1>';
 
-/*	if(Privilege::can('company\access')) {
+	if(Privilege::can('company\access')) {
 
-		echo (new \main\HomeUi())->getFarms($data->cFarmUser);
+		echo (new \main\HomeUi())->getCompanies($data->cCompanyUser);
 
-		if($data->cFarmUser->notEmpty()) {
-			echo (new \main\HomeUi())->getBlog($data->eNews, TRUE);
-		}
-
-	}*/
+	}
 
 
 });
@@ -106,11 +102,11 @@ new AdaptativeView('/presentation/invitation', function($data, MainTemplate $t) 
 
 });
 
-new AdaptativeView('/presentation/producteur', function($data, MainTemplate $t) {
+new AdaptativeView('/presentation/entreprise', function($data, MainTemplate $t) {
 
-	$t->title = s("{siteName} - Pour les producteurs");
-	$t->metaDescription = s("Présentation des fonctionnalités de {siteName} pour les producteurs. Découvrez tous les outils de planification, de vente en ligne, de communication et de gestion d'équipe !");
-	$t->template = 'home-farmer';
+	$t->title = s("{siteName} - Pour les petites exploitations agricoles");
+	$t->metaDescription = s("Présentation des fonctionnalités de {siteName} pour les petites exploitations agricoles. Découvrez tous les outils de gestion comptable !");
+	$t->template = 'home-employee';
 
 	Asset::css('main', 'font-itim.css');
 
@@ -182,26 +178,6 @@ new AdaptativeView('/presentation/producteur', function($data, MainTemplate $t) 
 	echo '<ul class="home-story">';
 		echo s("L'accès à toutes les fonctionnalités de {siteName} est libre et gratuit pour les producteurs sous signe de qualité <i>Agriculture biologique</i> ou <i>Nature & Progrès</i>. Pour les autres, reportez-vous aux <link>conditions d'utilisation du service</link>.", ['link' => '<a href="/presentation/service">']);
 	echo '</ul>';
-
-});
-
-new AdaptativeView('/presentation/formations', function($data, MainTemplate $t) {
-
-	$t->title = s("{siteName} - Formations");
-	$t->metaDescription = s("Formez-vous à l'utilisation de {siteName} !");
-	$t->template = 'home-farmer';
-
-	Asset::css('main', 'font-itim.css');
-
-	Asset::css('main', 'home.css');
-
-	$t->header = '<h4 class="home-domain">'.Lime::getDomain().'</h4>';
-	$t->header .= '<h1>'.s("Journée de formation le 29 janvier 2025 <br/>Puy-de-Dôme (63)").'</h1>';
-
-	echo s("Il n'y a pas de formation à venir.");
-
-	echo '<br/>';
-	echo '<br/>';
 
 });
 

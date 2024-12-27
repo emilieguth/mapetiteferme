@@ -14,64 +14,6 @@ abstract class EmployeeElement extends \Element {
 	const IN = 'in';
 	const OUT = 'out';
 
-	const SEASONAL = 'seasonal';
-	const PERMANENT = 'permanent';
-	const OWNER = 'owner';
-	const OBSERVER = 'observer';
-
-	const DAILY = 'daily';
-	const WEEKLY = 'weekly';
-	const YEARLY = 'yearly';
-
-	const TIME = 'time';
-	const TEAM = 'team';
-	const PACE = 'pace';
-	const PERIOD = 'period';
-
-	const TOTAL = 'total';
-
-	const VARIETY = 'variety';
-	const SOIL = 'soil';
-
-	const SERIES = 'series';
-	const SEQUENCE = 'sequence';
-
-	const AREA = 'area';
-	const PLANT = 'plant';
-	const FAMILY = 'family';
-	const ROTATION = 'rotation';
-
-	const FORECAST = 'forecast';
-	const SEEDLING = 'seedling';
-	const HARVESTING = 'harvesting';
-	const WORKING_TIME = 'working-time';
-
-	const PLAN = 'plan';
-
-	const SALE = 'sale';
-	const PRODUCT = 'product';
-	const CUSTOMER = 'customer';
-	const INVOICE = 'invoice';
-	const STOCK = 'stock';
-
-	const ALL = 'all';
-	const PRIVATE = 'private';
-	const PRO = 'pro';
-	const LABEL = 'label';
-
-	const ITEM = 'item';
-	const SHOP = 'shop';
-
-	const CATALOG = 'catalog';
-	const POINT = 'point';
-
-	const REPORT = 'report';
-	const SALES = 'sales';
-	const CULTIVATION = 'cultivation';
-
-	const SETTINGS = 'settings';
-	const WEBSITE = 'website';
-
 	public static function getSelection(): array {
 		return Employee::model()->getProperties();
 	}
@@ -102,22 +44,20 @@ class EmployeeModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
-			'user' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
+			'user' => ['element32', 'user\User', 'cast' => 'element'],
 			'company' => ['element32', 'company\Company', 'cast' => 'element'],
-			'companyGhost' => ['bool', 'cast' => 'bool'],
 			'companyStatus' => ['enum', [\company\Employee::ACTIVE, \company\Employee::CLOSED], 'cast' => 'enum'],
 			'status' => ['enum', [\company\Employee::INVITED, \company\Employee::IN, \company\Employee::OUT], 'cast' => 'enum'],
-			'role' => ['enum', [\company\Employee::SEASONAL, \company\Employee::PERMANENT, \company\Employee::OWNER, \company\Employee::OBSERVER], 'null' => TRUE, 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'user', 'company', 'companyGhost', 'companyStatus', 'status', 'role', 'createdAt'
+			'id', 'user', 'company', 'companyStatus', 'status', 'createdAt'
 		]);
 
 		$this->propertiesToModule += [
 			'user' => 'user\User',
-			'company' => 'company\Farm',
+			'company' => 'company\Company',
 		];
 
 		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
@@ -130,15 +70,11 @@ class EmployeeModel extends \ModuleModel {
 
 		switch($property) {
 
-			case 'companyGhost' :
-				return FALSE;
-
 			case 'companyStatus' :
 				return Employee::ACTIVE;
 
 			case 'status' :
 				return Employee::INVITED;
-
 
 			case 'createdAt' :
 				return new \Sql('NOW()');
@@ -160,22 +96,8 @@ class EmployeeModel extends \ModuleModel {
 			case 'status' :
 				return ($value === NULL) ? NULL : (string)$value;
 
-			case 'role' :
-				return ($value === NULL) ? NULL : (string)$value;
-
 			default :
 				return parent::encode($property, $value);
-
-		}
-
-	}
-
-	public function decode(string $property, $value) {
-
-		switch($property) {
-
-			default :
-				return parent::decode($property, $value);
 
 		}
 
@@ -197,15 +119,11 @@ class EmployeeModel extends \ModuleModel {
 		return $this->where('user', ...$data);
 	}
 
-	public function whereFarm(...$data): EmployeeModel {
+	public function whereCompany(...$data): EmployeeModel {
 		return $this->where('company', ...$data);
 	}
 
-	public function whereFarmGhost(...$data): EmployeeModel {
-		return $this->where('companyGhost', ...$data);
-	}
-
-	public function whereFarmStatus(...$data): EmployeeModel {
+	public function whereCompanyStatus(...$data): EmployeeModel {
 		return $this->where('companyStatus', ...$data);
 	}
 
@@ -213,8 +131,8 @@ class EmployeeModel extends \ModuleModel {
 		return $this->where('status', ...$data);
 	}
 
-	public function whereRole(...$data): EmployeeModel {
-		return $this->where('role', ...$data);
+	public function whereCreatedAt(...$data): EmployeeModel {
+		return $this->where('createdAt', ...$data);
 	}
 
 

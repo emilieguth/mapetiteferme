@@ -18,7 +18,7 @@ class Company {
 
 		new Ajax.Query(form)
 			.method('get')
-			.url('/company/farm:calendarMonth?id='+ farmId +'&calendarMonthStart='+ form.qs('[name="calendarMonthStart"]').value +'&calendarMonthStop='+ form.qs('[name="calendarMonthStop"]').value)
+			.url('/company/company:calendarMonth?id='+ farmId +'&calendarMonthStart='+ form.qs('[name="calendarMonthStart"]').value +'&calendarMonthStop='+ form.qs('[name="calendarMonthStop"]').value)
 			.fetch();
 
 	}

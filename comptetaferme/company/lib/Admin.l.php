@@ -2,57 +2,55 @@
 namespace company;
 
 /**
- * Farms admin
+ * Companys admin
  */
 class AdminLib {
 
 	/**
-	 * Get all farms
+	 * Get all companies
 	 *
 	 */
-	public static function getFarms(int $page, \Search $search): array {
+	public static function getCompanies(int $page, \Search $search): array {
 
 		$number = 100;
 		$position = $page * $number;
 
 		if($search->get('id')) {
-			Farm::model()->whereId($search->get('id'));
+			Company::model()->whereId($search->get('id'));
 		}
 
 		if($search->get('user')) {
 
 			$cUser = \user\UserLib::getFromQuery($search->get('user'));
 
-			$cFarmOwned = FarmLib::getByUsers($cUser);
+			$cCompanyOwned = CompanyLib::getByUsers($cUser);
 
-			Farm::model()->whereId('IN', $cFarmOwned);
+			Company::model()->whereId('IN', $cCompanyOwned);
 
 		}
 
 		if($search->get('name')) {
-			Farm::model()->whereName('LIKE', '%'.$search->get('name').'%');
+			Company::model()->whereName('LIKE', '%'.$search->get('name').'%');
 		}
 
-		$properties = Farm::getSelection();
-		$properties['cFarmer'] = Employee::model()
+		$properties = Company::getSelection();
+		$properties['cEmployee'] = Employee::model()
 			->select([
-				'farmGhost',
 				'user' => ['firstName', 'lastName', 'visibility'],
-				'role'
 			])
 			->whereStatus(Employee::IN)
-			->delegateCollection('farm');
+			->delegateCollection('company');
 
 		$search->validateSort(['name', 'id']);
 
-		Farm::model()
+		Company::model()
 			->select($properties)
 			->sort($search->buildSort())
 			->option('count');
 
-		$cFarm = Farm::model()->getCollection($position, $number);
+		$cCompany = Company::model()->getCollection($position, $number);
 
-		return [$cFarm, Farm::model()->found()];
+		return [$cCompany, Company::model()->found()];
 
 	}
 	

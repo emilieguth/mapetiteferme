@@ -3,9 +3,9 @@ namespace mail;
 
 class DesignUi {
 
-	public static function format(\farm\Farm $eFarm, string $title, string $content): array {
+	public static function format(\company\Company $eCompany, string $title, string $content): array {
 
-		$html = \mail\DesignUi::getBanner($eFarm).nl2br($content);
+		$html = \mail\DesignUi::getBanner($eCompany).nl2br($content);
 		$text = decode(strip_tags($html));
 
 		return [
@@ -16,15 +16,15 @@ class DesignUi {
 
 	}
 
-	public static function getBanner(\farm\Farm $eFarm): string {
+	public static function getBanner(\company\Company $eCompany): string {
 
-		$eFarm->expects(['banner']);
+		$eCompany->expects(['banner']);
 
 		$html = '';
 
-		if($eFarm['banner'] !== NULL) {
+		if($eCompany['banner'] !== NULL) {
 
-			$url = (\LIME_ENV === 'dev') ? 'https://media.ouvretaferme.org/farm-banner/500x100/659ff8c45b5dfde6eacp.png?6' : (new \media\FarmBannerUi())->getUrlByElement($eFarm, 'm');
+			$url = (\LIME_ENV === 'dev') ? 'https://media.comptetaferme.org/company-banner/500x100/659ff8c45b5dfde6eacp.png?6' : (new \media\CompanyBannerUi())->getUrlByElement($eCompany, 'm');
 
 			$html .= '<div>';
 				$html .= \Asset::image($url, attributes: ['width: 100%; max-width: 500px; height: auto; aspect-ratio: 5']);

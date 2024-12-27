@@ -9,11 +9,11 @@ class HomeUi {
 
 	}
 
-	public function getFarms(\Collection $cFarm): string {
+	public function getCompanies(\Collection $cCompany): string {
 
 		$h = '';
 
-		if($cFarm->empty()) {
+		if($cCompany->empty()) {
 			if((new \company\Company())->canCreate()) {
 				$h .= (new \company\FarmerUi())->getNoFarms();
 			} else {
@@ -21,8 +21,8 @@ class HomeUi {
 			}
 		} else {
 
-			$h .= '<h2>'.($cFarm->count() === 1 ? s("Ma ferme") : s("Mes fermes")).'</h2>';
-			$h .= (new \company\FarmerUi())->getMyFarms($cFarm);
+			$h .= '<h2>'.($cCompany->count() === 1 ? s("Mon entreprise") : s("Mes entreprises")).'</h2>';
+			$h .= (new \company\EmployeeUi())->getMyCompanies($cCompany);
 
 		}
 
@@ -96,7 +96,7 @@ class HomeUi {
 
 	}
 
-	public function getFarmer(\user\Role $eRole): string {
+	public function getCompany(\user\Role $eRole): string {
 
 		$class = $eRole->empty() ? '' : ($eRole['fqn'] === 'farmer' ? 'selected' : 'other');
 

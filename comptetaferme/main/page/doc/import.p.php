@@ -1,9 +1,9 @@
 <?php
 (new Page(function($data) {
 
-		$cFarmer = \company\FarmerLib::getOnline();
+		$cEmployee = \company\EmployeeLib::getOnline();
 
-		$data->eFarm = $cFarmer->notEmpty() ? $cFarmer->first()['farm'] : new \company\Company();
+		$data->eCompany = $cEmployee->notEmpty() ? $cEmployee->first()['company'] : new \company\Company();
 
 	}))
 	->get('index', fn($data) => throw new ViewAction($data));

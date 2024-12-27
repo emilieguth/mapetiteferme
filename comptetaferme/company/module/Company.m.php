@@ -7,15 +7,6 @@ abstract class CompanyElement extends \Element {
 
 	private static ?CompanyModel $model = NULL;
 
-	const ORGANIC = 'organic';
-	const NATURE_PROGRES = 'nature-progres';
-	const CONVERSION = 'conversion';
-
-	const ALL = 'all';
-	const PRIVATE = 'private';
-	const PRO = 'pro';
-	const DISABLED = 'disabled';
-
 	const ACTIVE = 'active';
 	const CLOSED = 'closed';
 
@@ -51,86 +42,24 @@ class CompanyModel extends \ModuleModel {
 			'id' => ['serial32', 'cast' => 'int'],
 			'name' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'vignette' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
-			'place' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
-			'placeLngLat' => ['point', 'null' => TRUE, 'cast' => 'json'],
 			'url' => ['url', 'null' => TRUE, 'cast' => 'string'],
 			'description' => ['editor24', 'null' => TRUE, 'cast' => 'string'],
 			'logo' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
 			'banner' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
-			'seasonFirst' => ['int16', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
-			'seasonLast' => ['int16', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
-			'rotationYears' => ['int8', 'min' => 2, 'max' => 5, 'cast' => 'int'],
-			'rotationExclude' => ['json', 'cast' => 'array'],
-			'quality' => ['enum', [\company\Company::ORGANIC, \company\Company::NATURE_PROGRES, \company\Company::CONVERSION], 'null' => TRUE, 'cast' => 'enum'],
-			'defaultBedLength' => ['int16', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'int'],
-			'defaultBedWidth' => ['int16', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'int'],
-			'defaultAlleyWidth' => ['int16', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'int'],
-			'calendarMonthStart' => ['int8', 'min' => 7, 'max' => 12, 'null' => TRUE, 'cast' => 'int'],
-			'calendarMonthStop' => ['int8', 'min' => 1, 'max' => 6, 'null' => TRUE, 'cast' => 'int'],
-			'planningDelayedMax' => ['int8', 'min' => 1, 'max' => 6, 'null' => TRUE, 'cast' => 'int'],
-			'featureTime' => ['bool', 'cast' => 'bool'],
-			'featureStock' => ['bool', 'cast' => 'bool'],
-			'featureDocument' => ['enum', [\company\Company::ALL, \company\Company::PRIVATE, \company\Company::PRO, \company\Company::DISABLED], 'cast' => 'enum'],
-			'stockNotes' => ['text16', 'null' => TRUE, 'cast' => 'string'],
-			'stockNotesUpdatedAt' => ['datetime', 'null' => TRUE, 'cast' => 'string'],
-			'stockNotesUpdatedBy' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
-			'hasShops' => ['bool', 'cast' => 'bool'],
-			'hasSales' => ['bool', 'cast' => 'bool'],
-			'hasCultivations' => ['bool', 'cast' => 'bool'],
 			'startedAt' => ['int16', 'min' => date('Y') - 100, 'max' => date('Y') + 10, 'cast' => 'int'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'status' => ['enum', [\company\Company::ACTIVE, \company\Company::CLOSED], 'cast' => 'enum'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name', 'vignette', 'place', 'placeLngLat', 'url', 'description', 'logo', 'banner', 'seasonFirst', 'seasonLast', 'rotationYears', 'rotationExclude', 'quality', 'defaultBedLength', 'defaultBedWidth', 'defaultAlleyWidth', 'calendarMonthStart', 'calendarMonthStop', 'planningDelayedMax', 'featureTime', 'featureStock', 'featureDocument', 'stockNotes', 'stockNotesUpdatedAt', 'stockNotesUpdatedBy', 'hasShops', 'hasSales', 'hasCultivations', 'startedAt', 'createdAt', 'status'
+			'id', 'name', 'vignette', 'url', 'description', 'logo', 'banner', 'startedAt', 'createdAt', 'status'
 		]);
-
-		$this->propertiesToModule += [
-			'stockNotesUpdatedBy' => 'user\User',
-		];
 
 	}
 
 	public function getDefaultValue(string $property) {
 
 		switch($property) {
-
-			case 'rotationYears' :
-				return 4;
-
-			case 'rotationExclude' :
-				return [];
-
-			case 'quality' :
-				return Company::ORGANIC;
-
-			case 'calendarMonthStart' :
-				return 10;
-
-			case 'calendarMonthStop' :
-				return 3;
-
-			case 'planningDelayedMax' :
-				return 2;
-
-			case 'featureTime' :
-				return TRUE;
-
-			case 'featureStock' :
-				return FALSE;
-
-			case 'featureDocument' :
-				return Company::PRO;
-
-			case 'hasShops' :
-				return FALSE;
-
-			case 'hasSales' :
-				return FALSE;
-
-			case 'hasCultivations' :
-				return FALSE;
 
 			case 'createdAt' :
 				return new \Sql('NOW()');
@@ -149,18 +78,6 @@ class CompanyModel extends \ModuleModel {
 
 		switch($property) {
 
-			case 'placeLngLat' :
-				return $value === NULL ? NULL : new \Sql($this->pdo()->api->getPoint($value));
-
-			case 'rotationExclude' :
-				return $value === NULL ? NULL : json_encode($value, JSON_UNESCAPED_UNICODE);
-
-			case 'quality' :
-				return ($value === NULL) ? NULL : (string)$value;
-
-			case 'featureDocument' :
-				return ($value === NULL) ? NULL : (string)$value;
-
 			case 'status' :
 				return ($value === NULL) ? NULL : (string)$value;
 
@@ -171,22 +88,6 @@ class CompanyModel extends \ModuleModel {
 
 	}
 
-	public function decode(string $property, $value) {
-
-		switch($property) {
-
-			case 'placeLngLat' :
-				return $value === NULL ? NULL : json_encode(json_decode($value, TRUE)['coordinates']);
-
-			case 'rotationExclude' :
-				return $value === NULL ? NULL : json_decode($value, TRUE);
-
-			default :
-				return parent::decode($property, $value);
-
-		}
-
-	}
 
 	public function select(...$fields): CompanyModel {
 		return parent::select(...$fields);
@@ -208,14 +109,6 @@ class CompanyModel extends \ModuleModel {
 		return $this->where('vignette', ...$data);
 	}
 
-	public function wherePlace(...$data): CompanyModel {
-		return $this->where('place', ...$data);
-	}
-
-	public function wherePlaceLngLat(...$data): CompanyModel {
-		return $this->where('placeLngLat', ...$data);
-	}
-
 	public function whereUrl(...$data): CompanyModel {
 		return $this->where('url', ...$data);
 	}
@@ -230,86 +123,6 @@ class CompanyModel extends \ModuleModel {
 
 	public function whereBanner(...$data): CompanyModel {
 		return $this->where('banner', ...$data);
-	}
-
-	public function whereSeasonFirst(...$data): CompanyModel {
-		return $this->where('seasonFirst', ...$data);
-	}
-
-	public function whereSeasonLast(...$data): CompanyModel {
-		return $this->where('seasonLast', ...$data);
-	}
-
-	public function whereRotationYears(...$data): CompanyModel {
-		return $this->where('rotationYears', ...$data);
-	}
-
-	public function whereRotationExclude(...$data): CompanyModel {
-		return $this->where('rotationExclude', ...$data);
-	}
-
-	public function whereQuality(...$data): CompanyModel {
-		return $this->where('quality', ...$data);
-	}
-
-	public function whereDefaultBedLength(...$data): CompanyModel {
-		return $this->where('defaultBedLength', ...$data);
-	}
-
-	public function whereDefaultBedWidth(...$data): CompanyModel {
-		return $this->where('defaultBedWidth', ...$data);
-	}
-
-	public function whereDefaultAlleyWidth(...$data): CompanyModel {
-		return $this->where('defaultAlleyWidth', ...$data);
-	}
-
-	public function whereCalendarMonthStart(...$data): CompanyModel {
-		return $this->where('calendarMonthStart', ...$data);
-	}
-
-	public function whereCalendarMonthStop(...$data): CompanyModel {
-		return $this->where('calendarMonthStop', ...$data);
-	}
-
-	public function wherePlanningDelayedMax(...$data): CompanyModel {
-		return $this->where('planningDelayedMax', ...$data);
-	}
-
-	public function whereFeatureTime(...$data): CompanyModel {
-		return $this->where('featureTime', ...$data);
-	}
-
-	public function whereFeatureStock(...$data): CompanyModel {
-		return $this->where('featureStock', ...$data);
-	}
-
-	public function whereFeatureDocument(...$data): CompanyModel {
-		return $this->where('featureDocument', ...$data);
-	}
-
-	public function whereStockNotes(...$data): CompanyModel {
-		return $this->where('stockNotes', ...$data);
-	}
-
-	public function whereStockNotesUpdatedAt(...$data): CompanyModel {
-		return $this->where('stockNotesUpdatedAt', ...$data);
-	}
-
-	public function whereStockNotesUpdatedBy(...$data): CompanyModel {
-		return $this->where('stockNotesUpdatedBy', ...$data);
-	}
-
-	public function whereHasShops(...$data): CompanyModel {
-		return $this->where('hasShops', ...$data);
-	}
-
-	public function whereHasSales(...$data): CompanyModel {
-		return $this->where('hasSales', ...$data);
-	}
-
-	public function whereHasCultivations(...$data): CompanyModel {
-		return $this->where('hasCultivations', ...$data);
 	}
 
 	public function whereStartedAt(...$data): CompanyModel {

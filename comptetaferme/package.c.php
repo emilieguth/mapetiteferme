@@ -6,12 +6,12 @@ Package::setList([
 	'editor' => 'framework',
 	'example' => 'framework',
 	'language' => 'framework',
-	'mail' => 'framework',
 	'session' => 'framework',
 	'storage' => 'framework',
 	'user' => 'framework',
 	'util' => 'framework',
 	'company' => 'comptetaferme',
+	'mail' => 'comptetaferme',
 	'media' => 'comptetaferme',
 ]);
 

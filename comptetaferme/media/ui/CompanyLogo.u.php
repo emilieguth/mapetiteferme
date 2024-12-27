@@ -1,10 +1,12 @@
 <?php
 namespace media;
 
-class FarmVignetteUi extends MediaUi {
+class CompanyLogoUi extends MediaUi {
+
+	protected bool $crop = FALSE;
 
 	protected function getCameraContent(\Element $eElement, int|string|null $size = NULL, int|string|null $width = NULL, int|string|null $height = NULL): string {
-		return \farm\FarmUi::getVignette($eElement, $size);
+		return \company\CompanyUi::getLogo($eElement, $size);
 	}
 
 }

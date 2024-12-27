@@ -12,7 +12,7 @@
 				'user' => GET('user'),
 			], REQUEST('sort', default: 'id-'));
 
-			list($data->cFarm, $data->nFarm) = \company\AdminLib::getFarms($data->page, $data->search);
+			list($data->cCompany, $data->nCompany) = \company\AdminLib::getCompanies($data->page, $data->search);
 
 			throw new ViewAction($data);
 

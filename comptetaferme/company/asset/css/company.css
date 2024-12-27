@@ -1,5 +1,5 @@
-/* List of farms */
-.farmer-farms {
+/* List of companies */
+.farmer-companies {
    display: grid;
    grid-template-columns: 1fr 1fr 1fr;
    grid-gap: 1rem;
@@ -8,7 +8,7 @@
 
 @media (max-width: 1199px) {
 
-	.farmer-farms {
+	.farmer-companies {
       grid-template-columns: 1fr 1fr;
 	}
 
@@ -16,20 +16,20 @@
 
 @media (max-width: 767px) {
 
-	.farmer-farms {
+	.farmer-companies {
       grid-template-columns: 1fr;
 	}
 
 }
 
-.farmer-farms-item {
+.farmer-companies-item {
 	display: grid;
 	grid-template: "vignette content" 1fr / 6rem 1fr;
 	grid-column-gap: 1rem;
 	align-items: center;
 }
 
-a.farmer-farms-item {
+a.farmer-companies-item {
 	text-decoration: none;
 	color: var(--secondary);
 	background: white;
@@ -39,43 +39,43 @@ a.farmer-farms-item {
 
 @media (max-width: 767px) {
 	
-	.farmer-farms-item {
+	.farmer-companies-item {
 		grid-column-gap: 1rem;
 	}
 
 }
 
-div.farmer-farms-item-vignette {
+div.farmer-companies-item-vignette {
 	grid-area: vignette;
 }
 
-div.farmer-farms-item-content {
+div.farmer-companies-item-content {
 	grid-area: content;
 	transition: color .5s;
 }
 
-a.farmer-farms-item:hover div.farmer-farms-item-content {
+a.farmer-companies-item:hover div.farmer-companies-item-content {
 	color: var(--primary);
 }
 
-div.farmer-farms-item-content h4 {
+div.farmer-companies-item-content h4 {
    font-size: 1.6rem;
 	margin-bottom: 0.5rem;
    font-weight: lighter;
 }
 
-div.farmer-farms-item-infos {
+div.farmer-companies-item-infos {
 	color: var(--muted);
 	font-size: 0.9rem;
 	margin: 0.25rem 0;
 }
 
-/* Farm update */
-#farm-update .media-image-upload[data-type="farm-vignette"] {
+/* Company update */
+#company-update .media-image-upload[data-type="company-vignette"] {
 	border-radius: var(--radius);
 }
 
-.farm-settings-subtitle {
+.company-settings-subtitle {
 	line-height: 1.7;
 	opacity: 0.7;
 }

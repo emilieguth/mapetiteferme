@@ -12,17 +12,14 @@ new AdaptativeView('index', function($data, MainTemplate $t) {
 
 	$h = '<div class="util-buttons">';
 
-		if(Privilege::can('company\access')) {
-			$h .= '<a href="/company/farm:create" class="bg-secondary util-button">';
+		$h .= '<a href="/company/company:create" class="bg-secondary util-button">';
 
-				$h .= '<div>';
-					$h .= '<h4>'.s("Créer une autre ferme").'</h4>';
-				$h .= '</div>';
-				$h .= \Asset::icon('house-door-fill');
+			$h .= '<div>';
+				$h .= '<h4>'.s("Créer une autre entreprise").'</h4>';
+			$h .= '</div>';
+			$h .= \Asset::icon('house-door-fill');
 
-			$h .= '</a>';
-
-		}
+		$h .= '</a>';
 
 		$h .= '<a href="/user/settings:updateUser" class="bg-secondary util-button">';
 

@@ -1,8 +1,6 @@
 <?php
 namespace company;
 
-use company\EmployeeElement;
-
 class Employee extends EmployeeElement {
 
 	public static function getSelection(): array {
@@ -13,34 +11,6 @@ class Employee extends EmployeeElement {
 				'email', 'firstName', 'lastName', 'visibility', 'vignette', 'createdAt'
 			],
 		] + parent::getSelection();
-
-	}
-
-	public function canRead(): bool {
-
-		$this->expects(['farm']);
-		return $this['farm']->canWrite();
-
-	}
-
-	public function canWrite(): bool {
-
-		$this->expects(['farm']);
-		return $this['farm']->canManage();
-
-	}
-
-	public function canUpdateRole(): bool {
-
-		$this->expects(['user', 'farm', 'farmGhost']);
-		$eUserOnline = \user\ConnectionLib::getOnline();
-
-		return (
-			$this->canWrite() and
-			$this['farmGhost'] === FALSE and
-			$eUserOnline->notEmpty() and
-			($eUserOnline['id'] !== $this['user']['id'])
-		);
 
 	}
 
@@ -70,12 +40,12 @@ class Employee extends EmployeeElement {
 					return TRUE;
 				}
 
-				$this->expects(['farm']);
+				$this->expects(['company']);
 
 				// On vérifie qu'on est sur la même ferme
 				return Employee::model()
 					->whereId($id)
-					->whereFarm($this['farm']['id'])
+					->whereCompany($this['company']['id'])
 					->exists();
 
 			},
@@ -88,7 +58,7 @@ class Employee extends EmployeeElement {
 
 			'email.duplicate' => function(string $email): bool {
 
-				$this->expects(['farm']);
+				$this->expects(['company']);
 
 				$eUser = \user\UserLib::getByEmail($email);
 
@@ -98,7 +68,7 @@ class Employee extends EmployeeElement {
 
 				return Employee::model()
 					->whereUser($eUser)
-					->whereFarm($this['farm'])
+					->whereCompany($this['company'])
 					->exists() === FALSE;
 
 			},
@@ -107,14 +77,6 @@ class Employee extends EmployeeElement {
 				$this['email'] = $email;
 				return TRUE;
 			},
-
-			'status.can' => function(string $status): bool {
-
-				$this->expects(['farmGhost']);
-
-				return $this['farmGhost'];
-
-			}
 
 		]);
 
