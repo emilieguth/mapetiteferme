@@ -122,7 +122,7 @@ Setting::register('media', [
 	],
 
 	'company-banner' => [
-		'class' => 'FarmBanner',
+		'class' => 'companyBanner',
 		'element' => 'company\Company',
 		'field' => 'banner',
 		'imageFormat' => [
@@ -205,6 +205,7 @@ Setting::register('media', [
 
 		}
 
+		return null;
 
 	}
 

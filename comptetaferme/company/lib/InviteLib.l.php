@@ -70,7 +70,7 @@ class InviteLib extends InviteCrud {
 			return FALSE;
 		}
 
-		// Le cas où le Farmer est associé à un utilisateur existant est géré à part
+		// Le cas où le companyer est associé à un utilisateur existant est géré à part
 		if(
 			$bypassExistingUser === FALSE and
 			$e['company']['user']->notEmpty()

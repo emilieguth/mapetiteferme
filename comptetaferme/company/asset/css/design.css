@@ -372,8 +372,8 @@ a.nav-year:hover {
 	#company-nav {
 		display: flex;
 		align-items: center;
-		height: var(--farmNav);
-		min-height: var(--farmNav);
+		height: var(--companyNav);
+		min-height: var(--companyNav);
 		background-color: var(--secondary);
 	}
 
@@ -424,8 +424,8 @@ a.nav-year:hover {
 	}
 
 	#company-subnav {
-		height: var(--farmSubNav);
-		min-height: var(--farmSubNav);
+		height: var(--companySubNav);
+		min-height: var(--companySubNav);
 		background-color: var(--secondary);
 		border-bottom: 1px solid var(--background);
 	}

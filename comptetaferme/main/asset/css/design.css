@@ -31,10 +31,10 @@
 @media (max-height: 767px), (max-width: 767px) {
 
 	:root {
-		--farmNav: 5rem;
+		--companyNav: 5rem;
 		--mainNav: 3rem;
-		--farmSubNav: 2.75rem;
-		--mainSticky: calc(var(--farmNav) + var(--farmSubNav));
+		--companySubNav: 2.75rem;
+		--mainSticky: calc(var(--companyNav) + var(--companySubNav));
 	}
 
 }
@@ -44,10 +44,10 @@
 	@media (min-width: 768px) and (max-width: 1199px) {
 
 		:root {
-			--farmNav: 4rem;
+			--companyNav: 4rem;
 			--mainNav: 3rem;
-			--farmSubNav: 2.5rem;
-			--mainSticky: calc(var(--mainNav) + var(--farmNav) + var(--farmSubNav));
+			--companySubNav: 2.5rem;
+			--mainSticky: calc(var(--mainNav) + var(--companyNav) + var(--companySubNav));
 		}
 
 	}
@@ -64,7 +64,7 @@
 }
 
 :root {
-	--nav: calc(var(--mainNav) + var(--farmNav) + var(--farmSubNav));
+	--nav: calc(var(--mainNav) + var(--companyNav) + var(--companySubNav));
 }
 
 .color-selling {

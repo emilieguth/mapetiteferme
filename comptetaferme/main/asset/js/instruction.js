@@ -1,18 +1,18 @@
 new Lime.Instruction('main')
-	.register('updateHeader', function(tab, subTab, farmHtml, subNavHtml) {
+	.register('updateHeader', function(tab, subTab, companyHtml, subNavHtml) {
 
-		const farmNav = qs('#company-nav');
+		const companyNav = qs('#company-nav');
 
-		if(farmNav) {
+		if(companyNav) {
 
-			farmNav.qsa('[data-tab].selected', node => node.classList.remove('selected'));
-			farmNav.qsa('.company-subnav-item.selected', node => node.classList.remove('selected'));
+			companyNav.qsa('[data-tab].selected', node => node.classList.remove('selected'));
+			companyNav.qsa('.company-subnav-item.selected', node => node.classList.remove('selected'));
 
-			farmNav.qsa('[data-tab].selected', node => node.classList.remove('selected'));
-			farmNav.qs('[data-tab="'+ tab +'"]', node => node.classList.add('selected'));
+			companyNav.qsa('[data-tab].selected', node => node.classList.remove('selected'));
+			companyNav.qs('[data-tab="'+ tab +'"]', node => node.classList.add('selected'));
 
 			if(subTab !== null) {
-				farmNav.qs('[data-sub-tab="'+ subTab +'"]', node => node.classList.add('selected'));
+				companyNav.qs('[data-sub-tab="'+ subTab +'"]', node => node.classList.add('selected'));
 			}
 
 			const seasonNav = qs('#company-subnav');
@@ -20,11 +20,11 @@ new Lime.Instruction('main')
 			if(seasonNav) {
 				seasonNav.renderOuter(subNavHtml);
 			} else {
-				farmNav.renderAdjacentHTML('afterend', subNavHtml);
+				companyNav.renderAdjacentHTML('afterend', subNavHtml);
 			}
 
 		} else {
-			qs('header').renderInner(farmHtml + subNavHtml);
+			qs('header').renderInner(companyHtml + subNavHtml);
 		}
 
 

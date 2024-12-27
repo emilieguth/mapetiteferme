@@ -82,9 +82,6 @@ class CompanyTemplate extends MainTemplate {
 
 		} else {
 
-			if($this->data->tip) {
-				$h .= (new \company\TipUi())->get($this->data->eCompany, $this->data->tip, $this->data->tipNavigation);
-			}
 			$h .= $this->getMainTitle();
 			$h .= parent::getMain($stream);
 
@@ -115,30 +112,30 @@ class CompanyTemplate extends MainTemplate {
 
 	protected function getNav(): string {
 
-		$farm = '<div class="nav-title">';
+		$company = '<div class="nav-title">';
 
 			if($this->data->cCompanyUser->count() > 1) {
 
-				$farm .= '<div class="nav-title-company">';
-					$farm .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '4rem').'</div>';
-					$farm .= '<a data-dropdown="bottom-start" data-dropdown-hover="true">'.encode($this->data->eCompany['name']).'  '.Asset::icon('chevron-down').'</a>';
-					$farm .= '<div class="dropdown-list bg-primary">';
+				$company .= '<div class="nav-title-company">';
+					$company .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '4rem').'</div>';
+					$company .= '<a data-dropdown="bottom-start" data-dropdown-hover="true">'.encode($this->data->eCompany['name']).'  '.Asset::icon('chevron-down').'</a>';
+					$company .= '<div class="dropdown-list bg-primary">';
 						foreach($this->data->cCompanyUser as $eCompany) {
-							$farm .= '<a href="'.$eCompany->getHomeUrl().'" data-ajax-navigation="never" class="dropdown-item">'.\company\CompanyUi::getVignette($eCompany, '1.75rem').'&nbsp;&nbsp;'.encode($eCompany['name']).'</a>';
+							$company .= '<a href="'.$eCompany->getHomeUrl().'" data-ajax-navigation="never" class="dropdown-item">'.\company\CompanyUi::getVignette($eCompany, '1.75rem').'&nbsp;&nbsp;'.encode($eCompany['name']).'</a>';
 						}
-					$farm .= '</div>';
-				$farm .= '</div>';
+					$company .= '</div>';
+				$company .= '</div>';
 
 			} else {
-				$farm .= '<div class="nav-title-company">';
-					$farm .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '1.75rem').'</div>';
-					$farm .= '<div>'.encode($this->data->eCompany['name']).'</div>';
-				$farm .= '</div>';
+				$company .= '<div class="nav-title-company">';
+					$company .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '1.75rem').'</div>';
+					$company .= '<div>'.encode($this->data->eCompany['name']).'</div>';
+				$company .= '</div>';
 			}
 
-		$farm .= '</div>';
+		$company .= '</div>';
 
-		return $this->getDefaultNav($farm);
+		return $this->getDefaultNav($company);
 
 	}
 
