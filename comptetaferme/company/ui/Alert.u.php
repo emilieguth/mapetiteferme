@@ -39,13 +39,13 @@ class AlertUi {
 			'Company.updatedFeatures' => s("Les fonctionnalités activées et désactivées pour votre fermes ont bien été mises à jour !"),
 			'Company.closed' => s("La ferme a bien été supprimée !"),
 
-			'Employee::userCreated' => s("L'utilisateur a bien été créé et peut désormais être ajouté dans l'équipe de la ferme !"),
+			'Employee::userCreated' => s("L'utilisateur a bien été créé et peut désormais être ajouté dans l'équipe de l'entreprise !"),
 			'Employee::userUpdated' => s("L'utilisateur a bien été mis à jour !"),
 			'Employee::userDeleted' => s("L'utilisateur a bien été supprimé !"),
-			'Employee::created' => s("L'utilisateur a bien été ajouté à l'équipe de la ferme !"),
-			'Employee::deleted' => s("L'utilisateur a bien été retiré de l'équipe de la ferme !"),
+			'Employee::created' => s("L'utilisateur a bien été ajouté à l'équipe de l'entreprise !"),
+			'Employee::deleted' => s("L'utilisateur a bien été retiré de l'équipe de l'entreprise !"),
 
-			'Invite::customerCreated' => s("Le client a bien été invité à créer un compte client sur {siteName} !"),
+			'Invite::created' => s("L'utilisateur a bien été invité à rejoindre l'équipe de l'entreprise' !"),
 			'Invite::extended' => s("L'invitation a bien été prolongée et un e-mail avec un nouveau lien a été envoyé à la personne !"),
 			'Invite::deleted' => s("L'invitation à rejoindre la ferme a bien été supprimée !"),
 

@@ -6,7 +6,7 @@ class EmployeeLib extends EmployeeCrud {
 	private static ?\Collection $cEmployeeOnline = NULL;
 
 	public static function getPropertiesCreate(): array {
-		return ['id', 'role', 'email'];
+		return ['id', 'email'];
 	}
 
 	public static function getOnline(): \Collection {

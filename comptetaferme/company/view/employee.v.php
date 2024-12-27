@@ -7,7 +7,7 @@ new AdaptativeView('manage', function($data, CompanyTemplate $t) {
 
   $t->mainTitle = (new \company\EmployeeUi())->getManageTitle($data->eCompany);
 
-  echo (new \company\EmployeeUi())->getManage($data->eCompany, $data->cEmployee, $data->cEmployeeInvite);
+  echo (new \company\EmployeeUi())->getManage($data->eCompany, $data->cEmployee, $data->cInvite);
 
 });
 

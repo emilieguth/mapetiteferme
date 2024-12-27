@@ -126,7 +126,7 @@ class EmployeeUi {
     $h .= '</h1>';
 
     $h .= '<div>';
-      $h .= '<a href="/company/employee:create?company='.$eCompany['id'].'" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter un utilisateur dans l'équipe").'</a>';
+      $h .= '<a href="/company/invite:create?company='.$eCompany['id'].'" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter un utilisateur dans l'équipe").'</a>';
     $h .= '</div>';
 
     $h .= '</div>';
@@ -135,7 +135,7 @@ class EmployeeUi {
 
   }
 
-  public function getManage(Company $eCompany, \Collection $cEmployee, \Collection $cEmployeeInvite): string {
+  public function getManage(Company $eCompany, \Collection $cEmployee, \Collection $cInvite): string {
 
     $h = '';
 
@@ -164,35 +164,34 @@ class EmployeeUi {
 
       $h .= '</div>';
 
-      if($cEmployeeInvite->notEmpty()) {
+      if($cInvite->notEmpty()) {
 
         $h .= '<h3>'.s("Les invitations en cours").'</h3>';
 
         $h .= '<div class="util-buttons">';
 
-          foreach($cEmployeeInvite as $eEmployee) {
+          foreach($cInvite as $eInvite) {
 
             $h .= '<div class="util-button bg-primary">';
               $h .= '<div>';
                 $h .= '<div>';
-                  if($eEmployee['invite']->empty()) {
+                  if($eInvite->empty()) {
                     $h .= \Asset::icon('exclamation-triangle-fill').' '.s("Invitation expirée");
-                  } else if($eEmployee['invite']->isValid() === FALSE) {
-                    $h .= s("Invitation expirée pour {value}", '<b>'.encode($eEmployee['invite']['email']).'</b>');
+                  } else if($eInvite->isValid() === FALSE) {
+                    $h .= s("Invitation expirée pour {value}", '<b>'.encode($eInvite['email']).'</b>');
                   } else {
-                    $h .= s("Invitation envoyée à {value}", '<b>'.encode($eEmployee['invite']['email']).'</b>');
+                    $h .= s("Invitation envoyée à {value}", '<b>'.encode($eInvite['email']).'</b>');
                   }
                 $h .= '</div>';
                 $h .= '<div class="mt-1">';
-                  $h .= '<a data-ajax="/company/employee:doDeleteInvite" post-id="'.$eEmployee['id'].'" class="btn btn-transparent">';
+                  $h .= '<a data-ajax="/company/invite:doDelete" post-id="'.$eInvite['id'].'" class="btn btn-transparent">';
                     $h .= s("Supprimer");
                   $h .= '</a> ';
-                  $h .= '<a data-ajax="/company/invite:doExtends" post-id="'.$eEmployee['invite']['id'].'" data-confirm="'.s("Voulez-vous vraiment renvoyer un mail d'invitation à cette personne ?").'" class="btn btn-transparent">';
+                  $h .= '<a data-ajax="/company/invite:doExtend" post-id="'.$eInvite['id'].'" data-confirm="'.s("Voulez-vous vraiment renvoyer un mail d'invitation à cette personne ?").'" class="btn btn-transparent">';
                     $h .= s("Renvoyer l'invitation");
                   $h .= '</a>';
                 $h .= '</div>';
               $h .= '</div>';
-              $h .= \user\UserUi::getVignette($eEmployee['user'], '4rem');
             $h .= '</div>';
 
           }
@@ -271,13 +270,13 @@ class EmployeeUi {
     $h .= $form->hidden('company', $eEmployee['company']['id']);
 
     $description = '<div class="util-block-help">';
-      $description .= '<p>'.s("En invitant un utilisateur à rejoindre l'équipe de votre ferme, vous lui permettrez d'accéder à un grand nombre de données sur votre ferme.").'</p>';
-      $description .= '<p>'.s("Pour inviter un utilisateur, saisissez son adresse e-mail. Il recevra un e-mail lui donnant les instructions à suivre, et devra les réaliser dans un délai de trois jours.").'</p>';
+      $description .= '<p>'.s("En invitant un utilisateur à rejoindre l'équipe de votre entreprise, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise.").'</p>';
+      $description .= '<p>'.s("Pour inviter un utilisateur, saisissez son adresse e-mail. Un e-mail avec les instructions à suivre lui sera envoyé. Ces instructions devront être réalisées dans un délai de trois jours.").'</p>';
     $description .= '</div>';
 
     $h .= $form->group(content: $description);
 
-    $h .= $form->dynamicGroups($eEmployee, ['email*', 'role*']);
+    $h .= $form->dynamicGroups($eEmployee, ['email*']);
 
     $h .= $form->group(
       content: $form->submit(s("Ajouter"))

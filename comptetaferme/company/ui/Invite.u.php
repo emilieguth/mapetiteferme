@@ -79,6 +79,44 @@ class InviteUi {
 
   }
 
+  public function create(Invite $eInvite): \Panel {
+
+    return new \Panel(
+      title: s("Inviter un utilisateur dans l'équipe"),
+      body: $this->createForm($eInvite, 'panel'),
+      close: 'reload'
+    );
+
+  }
+
+  protected function createForm(Invite $eInvite, string $origin): string {
+
+    $form = new \util\FormUi();
+
+    $h = $form->openAjax('/company/invite:doCreate', ['data-ajax-origin' => $origin]);
+
+    $h .= $form->asteriskInfo();
+
+    $h .= $form->hidden('company', $eInvite['company']['id']);
+
+    $description = '<div class="util-block-help">';
+    $description .= '<p>'.s("En invitant un utilisateur à rejoindre l'équipe de votre entreprise, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise.").'</p>';
+    $description .= '<p>'.s("Pour inviter un utilisateur, saisissez son adresse e-mail. Un e-mail avec les instructions à suivre lui sera envoyé. Ces instructions devront être réalisées dans un délai de trois jours.").'</p>';
+    $description .= '</div>';
+
+    $h .= $form->group(content: $description);
+
+    $h .= $form->dynamicGroups($eInvite, ['email*']);
+
+    $h .= $form->group(
+      content: $form->submit(s("Ajouter"))
+    );
+
+    $h .= $form->close();
+
+    return $h;
+
+  }
   public function signUp(Invite $e): string {
 
     $form = new \util\FormUi([

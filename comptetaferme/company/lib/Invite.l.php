@@ -16,6 +16,15 @@ class InviteLib extends InviteCrud {
 
 	}
 
+	public static function getByCompany(Company $eCompany): \Collection {
+
+		return Invite::model()
+			->select(Invite::getSelection())
+			->whereCompany($eCompany)
+			->getCollection();
+
+	}
+
 	public static function extends(Invite $e): void {
 
 		$e->offsetUnset('id');
@@ -29,7 +38,6 @@ class InviteLib extends InviteCrud {
 	public static function create(Invite $e): void {
 
 		$e->expects([
-			'type',
 			'company' => ['name']
 		]);
 
