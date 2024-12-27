@@ -11,7 +11,7 @@ new AdaptativeView('planning', function($data, FarmTemplate $t) {
 
 	switch($period) {
 
-		case \company\Farmer::DAILY :
+		case \company\Employee::DAILY :
 
 			$t->template = 'farm farm-planning-daily';
 			$t->mainContainer = FALSE;
@@ -28,7 +28,7 @@ new AdaptativeView('planning', function($data, FarmTemplate $t) {
 
 			break;
 
-		case \company\Farmer::WEEKLY :
+		case \company\Employee::WEEKLY :
 
 			$t->template = 'farm farm-planning-weekly';
 			$t->canonical = \company\CompanyUi::urlPlanningWeekly($data->eFarm, $data->week);
@@ -47,7 +47,7 @@ new AdaptativeView('planning', function($data, FarmTemplate $t) {
 
 			break;
 
-		case \company\Farmer::YEARLY :
+		case \company\Employee::YEARLY :
 
 			$t->template = 'farm farm-planning-yearly';
 
@@ -145,7 +145,7 @@ new AdaptativeView('series', function($data, FarmTemplate $t) {
 	$uiSeries = new \series\SeriesUi();
 	$uiFarm = new \company\CompanyUi();
 
-	if(OTF_DEMO and $view === \company\Farmer::AREA) {
+	if(OTF_DEMO and $view === \company\Employee::AREA) {
 		echo '<div class="util-block bg-demo color-white">';
 			echo '<h4>'.s("Bienvenue sur la démo !").'</h4>';
 			echo '<p>'.s("Cette ferme est en libre service partagé entre tous les utilisateurs de {siteName} pour vous aider à découvrir les fonctionnalités de notre site. N'hésitez pas à parcourir toutes les pages et faire toutes sortes d'actions ! Les données de cette ferme sont automatiquement remises à zéro toutes les nuits.").'</p>';
@@ -164,16 +164,16 @@ new AdaptativeView('series', function($data, FarmTemplate $t) {
 
 	} else {
 
-		if($view !== \company\Farmer::FORECAST) {
+		if($view !== \company\Employee::FORECAST) {
 			echo $uiFarm->getCultivationSeriesSearch($view, $data->eFarm, $data->season, $data->search, $data->cSupplier);
 		}
 
 		echo match($view)  {
-			\company\Farmer::AREA => (new \series\CultivationUi())->displayByArea($data->season, $data->eFarm, $data->ccCultivation, $data->ccForecast),
-			\company\Farmer::FORECAST => (new \series\CultivationUi())->displayByForecast($data->eFarm, $data->season, $data->ccForecast),
-			\company\Farmer::SEEDLING => (new \series\CultivationUi())->displayBySeedling($data->season, $data->eFarm, $data->items, $data->cSupplier, $data->search->get('supplier')),
-			\company\Farmer::HARVESTING => (new \series\CultivationUi())->displayByHarvesting($data->ccCultivation),
-			\company\Farmer::WORKING_TIME => (new \series\CultivationUi())->displayByWorkingTime($data->eFarm, $data->ccCultivation)
+			\company\Employee::AREA => (new \series\CultivationUi())->displayByArea($data->season, $data->eFarm, $data->ccCultivation, $data->ccForecast),
+			\company\Employee::FORECAST => (new \series\CultivationUi())->displayByForecast($data->eFarm, $data->season, $data->ccForecast),
+			\company\Employee::SEEDLING => (new \series\CultivationUi())->displayBySeedling($data->season, $data->eFarm, $data->items, $data->cSupplier, $data->search->get('supplier')),
+			\company\Employee::HARVESTING => (new \series\CultivationUi())->displayByHarvesting($data->ccCultivation),
+			\company\Employee::WORKING_TIME => (new \series\CultivationUi())->displayByWorkingTime($data->eFarm, $data->ccCultivation)
 		};
 
 
@@ -276,11 +276,11 @@ new AdaptativeView('soil', function($data, FarmTemplate $t) {
 
 		switch($view) {
 
-			case \company\Farmer::PLAN :
+			case \company\Employee::PLAN :
 				echo (new \map\ZoneUi())->getList($data->eFarm, $data->cZone, $data->season);
 				break;
 
-			case \company\Farmer::ROTATION :
+			case \company\Employee::ROTATION :
 				echo (new \company\CompanyUi())->getRotationSearch($data->search, $data->selectedSeasons);
 				echo (new \map\ZoneUi())->getList($data->eFarm, $data->cZone, $data->season, $data->search);
 				break;
@@ -716,7 +716,7 @@ new AdaptativeView('/ferme/{id}/etiquettes', function($data, FarmTemplate $t) {
 
 	$t->package('main')->updateNavSelling($t->canonical);
 
-	$t->mainTitle = (new \company\CompanyUi())->getSellingSalesTitle($data->eFarm, \company\Farmer::LABEL);
+	$t->mainTitle = (new \company\CompanyUi())->getSellingSalesTitle($data->eFarm, \company\Employee::LABEL);
 
 	echo (new \selling\SaleUi())->getLabels($data->eFarm, $data->cSale);
 
@@ -730,7 +730,7 @@ new AdaptativeView('analyzeReport', function($data, FarmTemplate $t) {
 	$t->title = s("Analyse des séries de {value}", $data->eFarm['name']);
 	$t->canonical = \company\CompanyUi::urlAnalyzeReport($data->eFarm, $data->season);
 
-	$t->package('main')->updateNavAnalyze($t->canonical, \company\Farmer::REPORT);
+	$t->package('main')->updateNavAnalyze($t->canonical, \company\Employee::REPORT);
 
 	$t->mainYear = (new \company\CompanyUi())->getSeasonsTabs($data->eFarm, fn($season) => \company\CompanyUi::urlAnalyzeReport($data->eFarm, season: $season), $data->season);;
 	$t->mainTitle = (new \company\CompanyUi())->getAnalyzeReportTitle($data->eFarm, $data->season);
@@ -748,7 +748,7 @@ new AdaptativeView('analyzeWorkingTime', function($data, FarmTemplate $t) {
 	$t->title = s("Analyse du planning de {value}", $data->eFarm['name']);
 	$t->canonical = \company\CompanyUi::urlAnalyzeWorkingTime($data->eFarm, $data->year, $data->category);
 
-	$t->package('main')->updateNavAnalyze($t->canonical, \company\Farmer::WORKING_TIME);
+	$t->package('main')->updateNavAnalyze($t->canonical, \company\Employee::WORKING_TIME);
 
 	if($data->years === []) {
 
@@ -766,10 +766,10 @@ new AdaptativeView('analyzeWorkingTime', function($data, FarmTemplate $t) {
 		$uiAnalyze = new \series\AnalyzeUi();
 
 		echo match($data->category) {
-			\company\Farmer::TIME => $uiAnalyze->getBestActions($data->eFarm, $data->year, $data->month, $data->week, $data->globalTime, $data->cTimesheetAction, $data->cccTimesheetActionMonthly, $data->cTimesheetCategory, $data->ccTimesheetCategoryMonthly, $data->cTimesheetPlant, $data->ccTimesheetPlantMonthly, $data->cTimesheetSeries, $data->ccTimesheetSeriesMonthly, $data->monthly),
-			\company\Farmer::TEAM => $uiAnalyze->getWorkingTime($data->eFarm, $data->year, $data->ccWorkingTimeMonthly, $data->workingTimeWeekly, $data->ccTimesheetAction),
-			\company\Farmer::PACE => $uiAnalyze->getPace($data->eFarm, $data->years, $data->year, $data->cAction, $data->ccPlant, $data->ccPlantCompare, $data->yearCompare),
-			\company\Farmer::PERIOD => $uiAnalyze->getPeriod($data->year, $data->cWorkingTimeMonth, $data->cWorkingTimeMonthBefore),
+			\company\Employee::TIME => $uiAnalyze->getBestActions($data->eFarm, $data->year, $data->month, $data->week, $data->globalTime, $data->cTimesheetAction, $data->cccTimesheetActionMonthly, $data->cTimesheetCategory, $data->ccTimesheetCategoryMonthly, $data->cTimesheetPlant, $data->ccTimesheetPlantMonthly, $data->cTimesheetSeries, $data->ccTimesheetSeriesMonthly, $data->monthly),
+			\company\Employee::TEAM => $uiAnalyze->getWorkingTime($data->eFarm, $data->year, $data->ccWorkingTimeMonthly, $data->workingTimeWeekly, $data->ccTimesheetAction),
+			\company\Employee::PACE => $uiAnalyze->getPace($data->eFarm, $data->years, $data->year, $data->cAction, $data->ccPlant, $data->ccPlantCompare, $data->yearCompare),
+			\company\Employee::PERIOD => $uiAnalyze->getPeriod($data->year, $data->cWorkingTimeMonth, $data->cWorkingTimeMonthBefore),
 		};
 
 	}
@@ -795,7 +795,7 @@ new AdaptativeView('analyzeSelling', function($data, FarmTemplate $t) {
 
 	$t->js()->replaceHistory($t->canonical);
 
-	$t->package('main')->updateNavAnalyze($t->canonical, \company\Farmer::SALES);
+	$t->package('main')->updateNavAnalyze($t->canonical, \company\Employee::SALES);
 
 	if($data->years === []) {
 
@@ -813,17 +813,17 @@ new AdaptativeView('analyzeSelling', function($data, FarmTemplate $t) {
 		$t->mainTitle = (new \company\CompanyUi())->getAnalyzeSellingTitle($data->eFarm, $data->years, $data->year, $data->month, $data->week, $data->category);
 
 		echo match($data->category) {
-			\company\Farmer::ITEM => $uiAnalyze->getTurnover($data->eFarm, $data->cSaleTurnover, $data->year, $data->month, $data->week),
+			\company\Employee::ITEM => $uiAnalyze->getTurnover($data->eFarm, $data->cSaleTurnover, $data->year, $data->month, $data->week),
 			default => ''
 		};
 
 		echo '<br/>';
 
 		echo match($data->category) {
-			\company\Farmer::ITEM => $uiAnalyze->getBestSeller($data->eFarm, $data->cItemProduct, $data->cItemProductMonthly, $data->cPlant, $data->cccItemPlantMonthly, $data->year, $data->cItemProductCompare, $data->cPlantCompare, $data->yearCompare, $data->years, $data->monthly, $data->month, $data->week, $data->search),
-			\company\Farmer::CUSTOMER => $uiAnalyze->getBestCustomers($data->ccItemCustomer, $data->ccItemCustomerMonthly, $data->year, $data->month, $data->week, $data->monthly, $data->search),
-			\company\Farmer::SHOP => $data->cShop->empty() ? $uiAnalyze->getEmptyShop() : $uiAnalyze->getShop($data->eFarm, $data->cShop, $data->eShop, $data->cSaleTurnover, $data->cItemProduct, $data->cItemProductMonthly, $data->cPlant, $data->cccItemPlantMonthly, $data->ccItemCustomer, $data->year, $data->monthly),
-			\company\Farmer::PERIOD => $uiAnalyze->getPeriod($data->year, $data->cItemMonth, $data->cItemMonthBefore, $data->cItemWeek, $data->cItemWeekBefore),
+			\company\Employee::ITEM => $uiAnalyze->getBestSeller($data->eFarm, $data->cItemProduct, $data->cItemProductMonthly, $data->cPlant, $data->cccItemPlantMonthly, $data->year, $data->cItemProductCompare, $data->cPlantCompare, $data->yearCompare, $data->years, $data->monthly, $data->month, $data->week, $data->search),
+			\company\Employee::CUSTOMER => $uiAnalyze->getBestCustomers($data->ccItemCustomer, $data->ccItemCustomerMonthly, $data->year, $data->month, $data->week, $data->monthly, $data->search),
+			\company\Employee::SHOP => $data->cShop->empty() ? $uiAnalyze->getEmptyShop() : $uiAnalyze->getShop($data->eFarm, $data->cShop, $data->eShop, $data->cSaleTurnover, $data->cItemProduct, $data->cItemProductMonthly, $data->cPlant, $data->cccItemPlantMonthly, $data->ccItemCustomer, $data->year, $data->monthly),
+			\company\Employee::PERIOD => $uiAnalyze->getPeriod($data->year, $data->cItemMonth, $data->cItemMonthBefore, $data->cItemWeek, $data->cItemWeekBefore),
 		};
 
 	}
@@ -841,12 +841,12 @@ new AdaptativeView('analyzeCultivation', function($data, FarmTemplate $t) {
 
 	$t->js()->replaceHistory($t->canonical);
 
-	$t->package('main')->updateNavAnalyze($t->canonical, \company\Farmer::CULTIVATION);
+	$t->package('main')->updateNavAnalyze($t->canonical, \company\Employee::CULTIVATION);
 
 	$actions = match($data->category) {
-		\company\Farmer::PLANT => '<a '.attr('onclick', 'Lime.Search.toggle("#analyze-plant-search")').' class="btn btn-primary">'.\Asset::icon('search').' '.s("Filtrer").'</a>',
-		\company\Farmer::FAMILY => '<a '.attr('onclick', 'Lime.Search.toggle("#analyze-family-search")').' class="btn btn-primary">'.\Asset::icon('search').' '.s("Filtrer").'</a>',
-		\company\Farmer::ROTATION => '<a href="/company/farm:updateSeries?id='.$data->eFarm['id'].'" class="btn btn-primary">'.\Asset::icon('gear-fill').' '.s("Configurer").'</a>',
+		\company\Employee::PLANT => '<a '.attr('onclick', 'Lime.Search.toggle("#analyze-plant-search")').' class="btn btn-primary">'.\Asset::icon('search').' '.s("Filtrer").'</a>',
+		\company\Employee::FAMILY => '<a '.attr('onclick', 'Lime.Search.toggle("#analyze-family-search")').' class="btn btn-primary">'.\Asset::icon('search').' '.s("Filtrer").'</a>',
+		\company\Employee::ROTATION => '<a href="/company/farm:updateSeries?id='.$data->eFarm['id'].'" class="btn btn-primary">'.\Asset::icon('gear-fill').' '.s("Configurer").'</a>',
 		default => ''
 	};
 
@@ -856,10 +856,10 @@ new AdaptativeView('analyzeCultivation', function($data, FarmTemplate $t) {
 	$t->mainTitle = (new \company\CompanyUi())->getAnalyzeCultivationTitle($data->eFarm, $data->seasons, $data->season, $data->category, $actions);
 
 	echo match($data->category) {
-		\company\Farmer::AREA => $uiAnalyze->getArea($data->eFarm, $data->seasons, $data->season, $data->area),
-		\company\Farmer::PLANT => $uiAnalyze->getPlant($data->season, $data->ccCultivationPlant, $data->search),
-		\company\Farmer::FAMILY => $uiAnalyze->getFamily($data->eFarm, $data->season, $data->area, $data->ccCultivationFamily, $data->search),
-		\company\Farmer::ROTATION => $uiAnalyze->getRotation($data->eFarm, $data->selectedSeasons, $data->area, $data->cFamily, $data->cBed, $data->rotations),
+		\company\Employee::AREA => $uiAnalyze->getArea($data->eFarm, $data->seasons, $data->season, $data->area),
+		\company\Employee::PLANT => $uiAnalyze->getPlant($data->season, $data->ccCultivationPlant, $data->search),
+		\company\Employee::FAMILY => $uiAnalyze->getFamily($data->eFarm, $data->season, $data->area, $data->ccCultivationFamily, $data->search),
+		\company\Employee::ROTATION => $uiAnalyze->getRotation($data->eFarm, $data->selectedSeasons, $data->area, $data->cFamily, $data->cBed, $data->rotations),
 	};
 
 

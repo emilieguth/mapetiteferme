@@ -105,7 +105,7 @@ class UserUi {
 	 *
 	 * @return string
 	 */
-	public function signUp(User $e, Role $eRole, ?string $redirect = NULL): string {
+	public function signUp(User $e, ?string $redirect = NULL): string {
 
 		$form = new \util\FormUi([
 			'firstColumnSize' => 40
@@ -116,8 +116,6 @@ class UserUi {
 			$h .= implode('', self::notify('signUpForm', $form));
 
 			$h .= $form->hidden('redirect', $redirect);
-
-			$h .= $form->hidden('role', $eRole['id']);
 
 			$h .= $form->dynamicGroups($e, ['firstName', 'lastName', 'email']);
 
@@ -131,16 +129,10 @@ class UserUi {
 				$form->password('passwordBis')
 			);
 
-			if($eRole['fqn'] === 'farmer') {
-
-				$h .= $form->group(
-					s("J'accepte les <link>conditions d'utilisation du service</link>", ['link' => '<a href="/presentation/service" target="_blank">']),
-					$form->inputCheckbox('tos', 1, ['id' => 'tos'])
-				);
-
-			} else {
-				$h .= $form->hidden('tos', 1);
-			}
+			$h .= $form->group(
+				s("J'accepte les <link>conditions d'utilisation du service</link>", ['link' => '<a href="/presentation/service" target="_blank">']),
+				$form->inputCheckbox('tos', 1, ['id' => 'tos'])
+			);
 
 			$h .= $form->group(
 				content: $form->submit(s("S'inscrire"))

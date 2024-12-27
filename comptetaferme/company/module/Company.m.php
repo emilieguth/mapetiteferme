@@ -25,7 +25,7 @@ abstract class CompanyElement extends \Element {
 
 	public static function model(): CompanyModel {
 		if(self::$model === NULL) {
-			self::$model = new FarmModel();
+			self::$model = new CompanyModel();
 		}
 		return self::$model;
 	}
@@ -37,7 +37,7 @@ abstract class CompanyElement extends \Element {
 }
 
 
-class FarmModel extends \ModuleModel {
+class CompanyModel extends \ModuleModel {
 
 	protected string $module = 'company\Company';
 	protected string $package = 'company';
@@ -188,139 +188,139 @@ class FarmModel extends \ModuleModel {
 
 	}
 
-	public function select(...$fields): FarmModel {
+	public function select(...$fields): CompanyModel {
 		return parent::select(...$fields);
 	}
 
-	public function where(...$data): FarmModel {
+	public function where(...$data): CompanyModel {
 		return parent::where(...$data);
 	}
 
-	public function whereId(...$data): FarmModel {
+	public function whereId(...$data): CompanyModel {
 		return $this->where('id', ...$data);
 	}
 
-	public function whereName(...$data): FarmModel {
+	public function whereName(...$data): CompanyModel {
 		return $this->where('name', ...$data);
 	}
 
-	public function whereVignette(...$data): FarmModel {
+	public function whereVignette(...$data): CompanyModel {
 		return $this->where('vignette', ...$data);
 	}
 
-	public function wherePlace(...$data): FarmModel {
+	public function wherePlace(...$data): CompanyModel {
 		return $this->where('place', ...$data);
 	}
 
-	public function wherePlaceLngLat(...$data): FarmModel {
+	public function wherePlaceLngLat(...$data): CompanyModel {
 		return $this->where('placeLngLat', ...$data);
 	}
 
-	public function whereUrl(...$data): FarmModel {
+	public function whereUrl(...$data): CompanyModel {
 		return $this->where('url', ...$data);
 	}
 
-	public function whereDescription(...$data): FarmModel {
+	public function whereDescription(...$data): CompanyModel {
 		return $this->where('description', ...$data);
 	}
 
-	public function whereLogo(...$data): FarmModel {
+	public function whereLogo(...$data): CompanyModel {
 		return $this->where('logo', ...$data);
 	}
 
-	public function whereBanner(...$data): FarmModel {
+	public function whereBanner(...$data): CompanyModel {
 		return $this->where('banner', ...$data);
 	}
 
-	public function whereSeasonFirst(...$data): FarmModel {
+	public function whereSeasonFirst(...$data): CompanyModel {
 		return $this->where('seasonFirst', ...$data);
 	}
 
-	public function whereSeasonLast(...$data): FarmModel {
+	public function whereSeasonLast(...$data): CompanyModel {
 		return $this->where('seasonLast', ...$data);
 	}
 
-	public function whereRotationYears(...$data): FarmModel {
+	public function whereRotationYears(...$data): CompanyModel {
 		return $this->where('rotationYears', ...$data);
 	}
 
-	public function whereRotationExclude(...$data): FarmModel {
+	public function whereRotationExclude(...$data): CompanyModel {
 		return $this->where('rotationExclude', ...$data);
 	}
 
-	public function whereQuality(...$data): FarmModel {
+	public function whereQuality(...$data): CompanyModel {
 		return $this->where('quality', ...$data);
 	}
 
-	public function whereDefaultBedLength(...$data): FarmModel {
+	public function whereDefaultBedLength(...$data): CompanyModel {
 		return $this->where('defaultBedLength', ...$data);
 	}
 
-	public function whereDefaultBedWidth(...$data): FarmModel {
+	public function whereDefaultBedWidth(...$data): CompanyModel {
 		return $this->where('defaultBedWidth', ...$data);
 	}
 
-	public function whereDefaultAlleyWidth(...$data): FarmModel {
+	public function whereDefaultAlleyWidth(...$data): CompanyModel {
 		return $this->where('defaultAlleyWidth', ...$data);
 	}
 
-	public function whereCalendarMonthStart(...$data): FarmModel {
+	public function whereCalendarMonthStart(...$data): CompanyModel {
 		return $this->where('calendarMonthStart', ...$data);
 	}
 
-	public function whereCalendarMonthStop(...$data): FarmModel {
+	public function whereCalendarMonthStop(...$data): CompanyModel {
 		return $this->where('calendarMonthStop', ...$data);
 	}
 
-	public function wherePlanningDelayedMax(...$data): FarmModel {
+	public function wherePlanningDelayedMax(...$data): CompanyModel {
 		return $this->where('planningDelayedMax', ...$data);
 	}
 
-	public function whereFeatureTime(...$data): FarmModel {
+	public function whereFeatureTime(...$data): CompanyModel {
 		return $this->where('featureTime', ...$data);
 	}
 
-	public function whereFeatureStock(...$data): FarmModel {
+	public function whereFeatureStock(...$data): CompanyModel {
 		return $this->where('featureStock', ...$data);
 	}
 
-	public function whereFeatureDocument(...$data): FarmModel {
+	public function whereFeatureDocument(...$data): CompanyModel {
 		return $this->where('featureDocument', ...$data);
 	}
 
-	public function whereStockNotes(...$data): FarmModel {
+	public function whereStockNotes(...$data): CompanyModel {
 		return $this->where('stockNotes', ...$data);
 	}
 
-	public function whereStockNotesUpdatedAt(...$data): FarmModel {
+	public function whereStockNotesUpdatedAt(...$data): CompanyModel {
 		return $this->where('stockNotesUpdatedAt', ...$data);
 	}
 
-	public function whereStockNotesUpdatedBy(...$data): FarmModel {
+	public function whereStockNotesUpdatedBy(...$data): CompanyModel {
 		return $this->where('stockNotesUpdatedBy', ...$data);
 	}
 
-	public function whereHasShops(...$data): FarmModel {
+	public function whereHasShops(...$data): CompanyModel {
 		return $this->where('hasShops', ...$data);
 	}
 
-	public function whereHasSales(...$data): FarmModel {
+	public function whereHasSales(...$data): CompanyModel {
 		return $this->where('hasSales', ...$data);
 	}
 
-	public function whereHasCultivations(...$data): FarmModel {
+	public function whereHasCultivations(...$data): CompanyModel {
 		return $this->where('hasCultivations', ...$data);
 	}
 
-	public function whereStartedAt(...$data): FarmModel {
+	public function whereStartedAt(...$data): CompanyModel {
 		return $this->where('startedAt', ...$data);
 	}
 
-	public function whereCreatedAt(...$data): FarmModel {
+	public function whereCreatedAt(...$data): CompanyModel {
 		return $this->where('createdAt', ...$data);
 	}
 
-	public function whereStatus(...$data): FarmModel {
+	public function whereStatus(...$data): CompanyModel {
 		return $this->where('status', ...$data);
 	}
 

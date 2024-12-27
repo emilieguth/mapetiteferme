@@ -15,7 +15,7 @@
 	}))
 	->get(['/ferme/{id}/itineraires', '/ferme/{id}/itineraires/{status}'], function($data) {
 
-		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Farmer::SEQUENCE);
+		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Employee::SEQUENCE);
 
 		$data->sequences = \production\SequenceLib::countByFarm($data->eFarm);
 
@@ -50,23 +50,23 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Farmer::SALE);
+		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Employee::SALE);
 
 		switch($data->route) {
 
 			case '/ferme/{id}/ventes' :
 				$data->type = NULL;
-				\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Farmer::ALL);
+				\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Employee::ALL);
 				break;
 
 			case '/ferme/{id}/ventes/particuliers' :
 				$data->type = \selling\Sale::PRIVATE;
-				\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Farmer::PRIVATE);
+				\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Employee::PRIVATE);
 				break;
 
 			case '/ferme/{id}/ventes/professionnels' :
 				$data->type = \selling\Sale::PRO;
-				\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Farmer::PRO);
+				\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Employee::PRO);
 				break;
 
 		}
@@ -97,7 +97,7 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Farmer::CUSTOMER);
+		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Employee::CUSTOMER);
 
 		$data->page = GET('page', 'int');
 
@@ -116,7 +116,7 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Farmer::PRODUCT);
+		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Employee::PRODUCT);
 
 		$data->cCategory = \selling\CategoryLib::getByFarm($data->eFarm, index: 'id');
 
@@ -156,7 +156,7 @@
 		$data->eFarm->validate('canSelling');
 		$data->eFarm['stockNotesUpdatedBy'] = \user\UserLib::getById($data->eFarm['stockNotesUpdatedBy']);
 
-		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Farmer::STOCK);
+		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Employee::STOCK);
 
 		$data->search = new Search(sort: GET('sort'));
 
@@ -174,7 +174,7 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewShop', $data->eFarm, \company\Farmer::SHOP);
+		\company\FarmerLib::setView('viewShop', $data->eFarm, \company\Employee::SHOP);
 
 		// Liste des boutiques
 		$data->cShop = \shop\ShopLib::getForList($data->eFarm);
@@ -207,7 +207,7 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewShop', $data->eFarm, \company\Farmer::CATALOG);
+		\company\FarmerLib::setView('viewShop', $data->eFarm, \company\Employee::CATALOG);
 
 		$data->products = \shop\ProductLib::countCatalogsByFarm($data->eFarm);
 		$data->cCatalog = \shop\CatalogLib::getByFarm($data->eFarm, index: 'id');
@@ -251,7 +251,7 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewShop', $data->eFarm, \company\Farmer::POINT);
+		\company\FarmerLib::setView('viewShop', $data->eFarm, \company\Employee::POINT);
 
 		$data->ccPoint = \shop\PointLib::getByFarm($data->eFarm);
 		$data->pointsUsed = \shop\PointLib::getUsedByFarm($data->eFarm);
@@ -263,7 +263,7 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Farmer::INVOICE);
+		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Employee::INVOICE);
 
 		$data->page = GET('page', 'int');
 
@@ -295,8 +295,8 @@
 
 		$data->eFarm->validate('canSelling');
 
-		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Farmer::SALE);
-		\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Farmer::LABEL);
+		\company\FarmerLib::setView('viewSelling', $data->eFarm, \company\Employee::SALE);
+		\company\FarmerLib::setView('viewSellingSales', $data->eFarm, \company\Employee::LABEL);
 
 		$data->cSale = \selling\SaleLib::getByFarmForLabel($data->eFarm);
 
@@ -311,17 +311,17 @@
 
 		switch($view) {
 
-			case \company\Farmer::DAILY :
+			case \company\Employee::DAILY :
 				$period = GET('period', 'string', currentWeek());
 				$subPeriod = NULL;
 				break;
 
-			case \company\Farmer::WEEKLY :
+			case \company\Employee::WEEKLY :
 				$period = GET('period', 'string', currentWeek());
 				$subPeriod = NULL;
 				break;
 
-			case \company\Farmer::YEARLY :
+			case \company\Employee::YEARLY :
 				$period = GET('period', 'string', date('Y'));
 				$subPeriod = GET('subPeriod', 'string', date('n'));
 				break;
@@ -371,7 +371,7 @@
 
 		switch(Setting::get('main\viewPlanning')) {
 
-			case \company\Farmer::DAILY :
+			case \company\Employee::DAILY :
 
 				$data->date = date('Y-m-d', strtotime(date('Y-m-d', strtotime($period)).' + '.($subPeriod - 1).' DAYS'));
 				$data->week = $period;
@@ -406,7 +406,7 @@
 				\series\TimesheetLib::fillTimesByDate($data->eFarm, $data->cUserFarm, $data->week);
 				break;
 
-			case \company\Farmer::WEEKLY :
+			case \company\Employee::WEEKLY :
 
 				$data->week = $period;
 
@@ -425,7 +425,7 @@
 				$data->eUserTime['cAbsence'] = $data->cUserFarm[$data->eUserTime['id']]['cAbsence'] ?? new Collection();
 				break;
 
-			case \company\Farmer::YEARLY :
+			case \company\Employee::YEARLY :
 
 				$data->week = NULL;
 				$data->year = (int)$period;
@@ -482,28 +482,28 @@
 		$view = GET('view');
 
 		if(
-			$view === \company\Farmer::WORKING_TIME and
+			$view === \company\Employee::WORKING_TIME and
 			$data->eFarm->hasFeatureTime() === FALSE
 		) {
-			$view = \company\Farmer::AREA;
+			$view = \company\Employee::AREA;
 		}
 
 		if(
-			$view === \company\Farmer::FORECAST and
+			$view === \company\Employee::FORECAST and
 			$data->eFarm->canAnalyze() === FALSE
 		) {
-			$view = \company\Farmer::AREA;
+			$view = \company\Employee::AREA;
 		}
 
-		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Farmer::SERIES);
+		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Employee::SERIES);
 		\company\FarmerLib::setView('viewSeries', $data->eFarm, $view);
 
 		if(get_exists('harvestExpected')) {
-			\company\FarmerLib::setView('viewPlanningHarvestExpected', $data->eFarm, GET('harvestExpected', [\company\Farmer::TOTAL, \company\Farmer::WEEKLY], \company\Farmer::TOTAL));
+			\company\FarmerLib::setView('viewPlanningHarvestExpected', $data->eFarm, GET('harvestExpected', [\company\Employee::TOTAL, \company\Employee::WEEKLY], \company\Employee::TOTAL));
 		}
 
 		if(get_exists('field')) {
-			\company\FarmerLib::setView('viewPlanningField', $data->eFarm, GET('field', [\company\Farmer::VARIETY, \company\Farmer::SOIL], \company\Farmer::SOIL));
+			\company\FarmerLib::setView('viewPlanningField', $data->eFarm, GET('field', [\company\Employee::VARIETY, \company\Employee::SOIL], \company\Employee::SOIL));
 		}
 
 		$data->cSeriesImportPerennial = \series\SeriesLib::getImportPerennial($data->eFarm, $data->season);
@@ -527,13 +527,13 @@
 
 		switch(Setting::get('main\viewSeries')) {
 
-			case \company\Farmer::AREA :
+			case \company\Employee::AREA :
 				$data->search->set('tool', get_exists('tool') ? \company\ToolLib::getOneByFarm($data->eFarm, GET('tool')) : new \company\Tool());
 				$data->ccCultivation = \series\CultivationLib::getForArea($data->eFarm, $data->season, $data->search);
 				$data->ccForecast = \plant\ForecastLib::getReadOnlyByFarm($data->eFarm, $data->season);
 				break;
 
-			case \company\Farmer::FORECAST :
+			case \company\Employee::FORECAST :
 				if(get_exists('help')) {
 					\Cache::redis()->delete('help-forecast-'.$data->eFarm['id']);
 				}
@@ -541,16 +541,16 @@
 				$data->ccForecast = \plant\ForecastLib::getByFarm($data->eFarm, $data->season, $cccCultivation);
 				break;
 
-			case \company\Farmer::SEEDLING :
+			case \company\Employee::SEEDLING :
 				$data->cSupplier = \company\SupplierLib::getByFarm($data->eFarm);
 				$data->items = \series\CultivationLib::getForSeedling($data->eFarm, $data->season, $data->search);
 				break;
 
-			case \company\Farmer::HARVESTING :
+			case \company\Employee::HARVESTING :
 				$data->ccCultivation = \series\CultivationLib::getForHarvesting($data->eFarm, $data->season, $data->search);
 				break;
 
-			case \company\Farmer::WORKING_TIME :
+			case \company\Employee::WORKING_TIME :
 				$data->ccCultivation = \series\CultivationLib::getWorkingTimeByFarm($data->eFarm, $data->season, $data->search);
 				break;
 
@@ -590,8 +590,8 @@
 	})
 	->get(['/ferme/{id}/assolement', '/ferme/{id}/assolement/{season}'], function($data) {
 
-		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Farmer::SOIL);
-		\company\FarmerLib::setView('viewSoil', $data->eFarm, \company\Farmer::PLAN);
+		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Employee::SOIL);
+		\company\FarmerLib::setView('viewSoil', $data->eFarm, \company\Employee::PLAN);
 
 		$data->season = \company\FarmerLib::getDynamicSeason($data->eFarm, GET('season', 'int'));
 		\map\SeasonLib::setOnline($data->season);
@@ -610,8 +610,8 @@
 	})
 	->get(['/ferme/{id}/rotation', '/ferme/{id}/rotation/{season}'], function($data) {
 
-		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Farmer::SOIL);
-		\company\FarmerLib::setView('viewSoil', $data->eFarm, \company\Farmer::ROTATION);
+		\company\FarmerLib::setView('viewCultivation', $data->eFarm, \company\Employee::SOIL);
+		\company\FarmerLib::setView('viewSoil', $data->eFarm, \company\Employee::ROTATION);
 
 		$data->season = \company\FarmerLib::getDynamicSeason($data->eFarm, GET('season', 'int'));
 		\map\SeasonLib::setOnline($data->season);
@@ -646,7 +646,7 @@
 			throw new RedirectAction(\company\CompanyUi::urlAnalyzeCultivation($data->eFarm));
 		}
 
-		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Farmer::WORKING_TIME);
+		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Employee::WORKING_TIME);
 
 		$data->years = \series\AnalyzeLib::getYears($data->eFarm);
 
@@ -667,7 +667,7 @@
 
 			switch($data->category) {
 
-				case \company\Farmer::TIME :
+				case \company\Employee::TIME :
 
 					$data->monthly = get_exists('monthly');
 
@@ -698,13 +698,13 @@
 
 					break;
 
-				case \company\Farmer::TEAM :
+				case \company\Employee::TEAM :
 					$data->ccWorkingTimeMonthly = \series\AnalyzeLib::getMonthlyWorkingTime($data->eFarm, $data->year);
 					$data->workingTimeWeekly = \series\AnalyzeLib::getWeeklyWorkingTime($data->eFarm, $data->year);
 					$data->ccTimesheetAction = \series\AnalyzeLib::getActionTimesheetByUser($data->eFarm, $data->year);
 					break;
 
-				case \company\Farmer::PACE :
+				case \company\Employee::PACE :
 					$data->cAction = \company\ActionLib::getByFarmWithPace($data->eFarm);
 					$data->ccPlant = \series\CultivationLib::getPaceByFarm($data->eFarm, $data->year, $data->cAction);
 
@@ -717,7 +717,7 @@
 					}
 					break;
 
-				case \company\Farmer::PERIOD :
+				case \company\Employee::PERIOD :
 					$data->cWorkingTimeMonth = \series\AnalyzeLib::getFarmMonths($data->eFarm, $data->year);
 					$data->cWorkingTimeMonthBefore = \series\AnalyzeLib::getFarmMonths($data->eFarm, $data->year - 1);
 					break;
@@ -748,7 +748,7 @@
 			$data->season = ($currentSeason >= $data->eFarm['seasonFirst'] and $currentSeason <= $data->eFarm['seasonLast']) ? $currentSeason : $data->eFarm['seasonLast'];
 		}
 
-		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Farmer::REPORT);
+		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Employee::REPORT);
 
 		$data->search = new Search([
 			'plant' => get_exists('plant') ? \plant\PlantLib::getById(GET('plant')) : NULL,
@@ -765,7 +765,7 @@
 		'/ferme/{id}/analyses/ventes/{year}/{category}/compare/{compare}',
 		], function($data) {
 
-		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Farmer::SALES);
+		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Employee::SALES);
 
 		$data->years = \selling\AnalyzeLib::getYears($data->eFarm);
 
@@ -785,8 +785,8 @@
 			$data->category = GET('category', 'string', Setting::get('main\viewSellingCategory'));
 
 			if(
-				$data->category === \company\Farmer::CUSTOMER or
-				$data->category === \company\Farmer::SHOP
+				$data->category === \company\Employee::CUSTOMER or
+				$data->category === \company\Employee::SHOP
 			) {
 				$data->eFarm->validate('canPersonalData');
 			}
@@ -802,7 +802,7 @@
 
 			switch($data->category) {
 
-				case \company\Farmer::ITEM :
+				case \company\Employee::ITEM :
 
 					$data->yearCompare = GET('compare', '?int');
 
@@ -847,7 +847,7 @@
 
 					break;
 
-				case \company\Farmer::CUSTOMER :
+				case \company\Employee::CUSTOMER :
 
 					$data->ccItemCustomer = \selling\AnalyzeLib::getFarmCustomers($data->eFarm, $data->year, $data->month, $data->week, $data->search);
 
@@ -860,7 +860,7 @@
 					}
 					break;
 
-				case \company\Farmer::SHOP :
+				case \company\Employee::SHOP :
 
 					$data->cShop = \shop\ShopLib::getByFarm($data->eFarm);
 
@@ -895,7 +895,7 @@
 
 					break;
 
-				case \company\Farmer::PERIOD :
+				case \company\Employee::PERIOD :
 					$data->cItemMonth = \selling\AnalyzeLib::getFarmMonths($data->eFarm, $data->year);
 					$data->cItemMonthBefore = \selling\AnalyzeLib::getFarmMonths($data->eFarm, $data->year - 1);
 					$data->cItemWeek = \selling\AnalyzeLib::getFarmWeeks($data->eFarm, $data->year);
@@ -921,7 +921,7 @@
 
 		$data->eFarm->validate('canAnalyze');
 
-		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Farmer::CULTIVATION);
+		\company\FarmerLib::setView('viewAnalyze', $data->eFarm, \company\Employee::CULTIVATION);
 
 		$data->seasons = $data->eFarm->getSeasons();
 
@@ -938,11 +938,11 @@
 
 		switch($data->category) {
 
-			case \company\Farmer::AREA :
+			case \company\Employee::AREA :
 				$data->area = \plant\AnalyzeLib::getArea($data->eFarm, $data->seasons);
 				break;
 
-			case \company\Farmer::PLANT :
+			case \company\Employee::PLANT :
 
 				$data->search = new Search([
 					'cycle' => \series\Series::GET('cycle', 'cycle'),
@@ -952,7 +952,7 @@
 				$data->ccCultivationPlant = \plant\AnalyzeLib::getPlants($data->eFarm, $data->season, $data->search);
 				break;
 
-			case \company\Farmer::FAMILY :
+			case \company\Employee::FAMILY :
 
 				$data->area = \plant\AnalyzeLib::getArea($data->eFarm, $data->seasons);
 
@@ -964,7 +964,7 @@
 				$data->ccCultivationFamily = \plant\AnalyzeLib::getFamilies($data->eFarm, $data->season, $data->search);
 				break;
 
-			case \company\Farmer::ROTATION :
+			case \company\Employee::ROTATION :
 
 				$data->selectedSeasons = $data->eFarm->getRotationSeasons($data->season);
 				$data->selectedSeasons = array_reverse($data->selectedSeasons);
@@ -997,7 +997,7 @@
 
 		$data->eFarm->validate('canManage');
 
-		\company\FarmerLib::setView('viewSettings', $data->eFarm, \company\Farmer::SETTINGS);
+		\company\FarmerLib::setView('viewSettings', $data->eFarm, \company\Employee::SETTINGS);
 
 		$data->eFarm['website'] = \website\WebsiteLib::getByFarm($data->eFarm);
 

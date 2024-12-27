@@ -37,7 +37,7 @@ class CompanyLib extends CompanyCrud {
 	public static function getByUser(\user\User $eUser): \Collection {
 
 		return Company::model()
-			->join(Farmer::model(), 'm1.id = m2.farm')
+			->join(Employee::model(), 'm1.id = m2.company')
 			->select(Company::getSelection())
 			->where('m2.user', $eUser)
 			->where('m1.status', Company::ACTIVE)
@@ -49,7 +49,7 @@ class CompanyLib extends CompanyCrud {
 
 		return Company::model()
 			->select(Company::getSelection())
-			->join(Farmer::model(), 'm1.id = m2.farm')
+			->join(Employee::model(), 'm1.id = m2.company')
 			->where('m2.user', 'IN', $cUser)
 			->where('m2.role', $role, if: ($role !== NULL))
 			->where('m1.status', Company::ACTIVE)
@@ -94,14 +94,14 @@ class CompanyLib extends CompanyCrud {
 
 		if(isset($e['owner'])) {
 
-			$eFarmer = new Farmer([
+			$eFarmer = new Employee([
 				'user' => $e['owner'],
 				'farm' => $e,
-				'status' => Farmer::IN,
-				'role' => Farmer::OWNER
+				'status' => Employee::IN,
+				'role' => Employee::OWNER
 			]);
 
-			Farmer::model()->insert($eFarmer);
+			Employee::model()->insert($eFarmer);
 
 			$ePresence = new \hr\Presence([
 				'farm' => $e,
@@ -112,8 +112,6 @@ class CompanyLib extends CompanyCrud {
 			\hr\Presence::model()->insert($ePresence);
 
 		}
-
-		\selling\ConfigurationLib::createForFarm($e);
 
 		\company\ActionLib::duplicateForFarm($e);
 		\plant\PlantLib::duplicateForFarm($e);
@@ -145,7 +143,7 @@ class CompanyLib extends CompanyCrud {
 
 		if(in_array('status', $properties)) {
 
-			Farmer::model()
+			Employee::model()
 				->whereFarm($e)
 				->update([
 					'farmStatus' => $e['status']

@@ -188,11 +188,6 @@ Route::register([
 			'priority' => 5,
 			'route' => ['minify', '{version}', '{filename}'],
 		],
-		'/outil/{id@int}' => [
-			'request' => 'company/tool',
-			'priority' => 5,
-			'route' => ['outil', '{id@int}'],
-		],
 		'/presentation/faq' => [
 			'request' => 'main/index',
 			'priority' => 5,
@@ -237,36 +232,6 @@ Route::register([
 	'HEAD' => [
 	],
 	'POST' => [
-		'/@module/company/Method/doQuick' => [
-			'request' => 'company/method',
-			'priority' => 5,
-			'route' => ['@module', 'company', 'Method', 'doQuick'],
-		],
-		'/@module/company/Method/quick' => [
-			'request' => 'company/method',
-			'priority' => 5,
-			'route' => ['@module', 'company', 'Method', 'quick'],
-		],
-		'/@module/company/Supplier/doQuick' => [
-			'request' => 'company/supplier',
-			'priority' => 5,
-			'route' => ['@module', 'company', 'Supplier', 'doQuick'],
-		],
-		'/@module/company/Supplier/quick' => [
-			'request' => 'company/supplier',
-			'priority' => 5,
-			'route' => ['@module', 'company', 'Supplier', 'quick'],
-		],
-		'/@module/company/Tool/doQuick' => [
-			'request' => 'company/tool',
-			'priority' => 5,
-			'route' => ['@module', 'company', 'Tool', 'doQuick'],
-		],
-		'/@module/company/Tool/quick' => [
-			'request' => 'company/tool',
-			'priority' => 5,
-			'route' => ['@module', 'company', 'Tool', 'quick'],
-		],
 	],
 	'PUT' => [
 	],

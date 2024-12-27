@@ -21,25 +21,14 @@ switch(LIME_ENV) {
     Asset::setVersion(hash_file('crc32', LIME_DIRECTORY.'/.git/FETCH_HEAD'));
 
     Database::setPackages([
+      'company' => 'comptetaferme',
       'dev' => 'comptetaferme',
-      'shop' => 'comptetaferme',
+      'mail' => 'comptetaferme',
+      'media' => 'comptetaferme',
       'util' => 'comptetaferme',
       'session' => 'comptetaferme',
-      'mail' => 'comptetaferme',
       'user' => 'comptetaferme',
-      'media' => 'comptetaferme',
-      'payment' => 'comptetaferme',
       'storage' => 'comptetaferme',
-      'plant' => 'comptetaferme',
-      'gallery' => 'comptetaferme',
-      'production' => 'comptetaferme',
-      'farm' => 'comptetaferme',
-      'map' => 'comptetaferme',
-      'series' => 'comptetaferme',
-      'analyze' => 'comptetaferme',
-      'hr' => 'comptetaferme',
-      'selling' => 'comptetaferme',
-      'website' => 'comptetaferme',
     ]);
 
     break;
@@ -49,7 +38,10 @@ switch(LIME_ENV) {
     Database::setDebug(get_exists('sql'));
 
     Database::setPackages([
+      'company' => 'dev_comptetaferme',
       'dev' => 'dev_comptetaferme',
+      'mail' => 'dev_comptetaferme',
+      'media' => 'dev_comptetaferme',
       'util' => 'dev_comptetaferme',
       'session' => 'dev_comptetaferme',
       'user' => 'dev_comptetaferme',

@@ -6,11 +6,13 @@ Package::setList([
 	'editor' => 'framework',
 	'example' => 'framework',
 	'language' => 'framework',
+	'mail' => 'framework',
 	'session' => 'framework',
 	'storage' => 'framework',
 	'user' => 'framework',
 	'util' => 'framework',
 	'company' => 'comptetaferme',
+	'media' => 'comptetaferme',
 ]);
 
 Package::setObservers([
@@ -23,6 +25,9 @@ Package::setObservers([
 			'logOut' => ['session'],
 			'formLog' => ['company'],
 			'formSignUp' => ['company'],
+		],
+		'lime' => [
+			'loadConf' => ['media'],
 		],
 	],
 	'ui' => [

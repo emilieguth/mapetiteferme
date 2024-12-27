@@ -34,13 +34,13 @@ class AdminLib {
 		}
 
 		$properties = Farm::getSelection();
-		$properties['cFarmer'] = Farmer::model()
+		$properties['cFarmer'] = Employee::model()
 			->select([
 				'farmGhost',
 				'user' => ['firstName', 'lastName', 'visibility'],
 				'role'
 			])
-			->whereStatus(Farmer::IN)
+			->whereStatus(Employee::IN)
 			->delegateCollection('farm');
 
 		$search->validateSort(['name', 'id']);

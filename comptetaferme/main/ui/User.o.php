@@ -7,24 +7,15 @@ class UserObserverUi {
 
 		$title = s("Bienvenue sur {siteName} !");
 
-		$role = match($eUser['role']['fqn']) {
-
-			'customer' => s("Vous pouvez désormais commander en ligne les produits de vos producteurs locaux préférés !"),
-			'farmer' => s("Vous pouvez désormais créer la page de votre ferme pour commencer à utiliser le service !"),
-
-			default => ''
-
-		};
-
 		$text = s("Bonjour,
 
 {how}
-{role}
+Vous pouvez désormais créer la page de votre entreprise pour commencer à utiliser le service !
 
 {url}
 
 À tout de suite sur {siteName},
-L'équipe", ['how' => \user\UserUi::getSignUpType($eUser), 'role' => $role, 'url' => \Lime::getUrl()]);
+L'équipe", ['how' => \user\UserUi::getSignUpType($eUser), 'url' => \Lime::getUrl()]);
 
 		return [
 			$title,

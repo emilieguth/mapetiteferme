@@ -125,11 +125,11 @@ class UserLib extends UserCrud {
 
 		$eUser->expects(['role']);
 
-		$can = $eUser['role']['can'];
+		/*$can = $eUser['role']['can'];
 
 		foreach($can as $package => $privileges) {
 			\Privilege::register($package, $privileges, TRUE);
-		}
+		}*/
 
 	}
 

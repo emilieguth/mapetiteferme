@@ -1,10 +1,10 @@
 <?php
-Privilege::register('farm', [
+Privilege::register('company', [
 	'admin' => FALSE,
 	'access' => FALSE,
 ]);
 
-Setting::register('farm', [
+Setting::register('company', [
 	'seasonBegin' => '01-01',
 	'categoriesLimit' => 5,
 	'newSeason' => 10

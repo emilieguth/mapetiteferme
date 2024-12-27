@@ -65,7 +65,7 @@ class Company extends CompanyElement {
 	public function canAnalyze(): bool {
 		return (
 			$this->canManage() or
-			$this->isRole(Farmer::OBSERVER)
+			$this->isRole(Employee::OBSERVER)
 		);
 	}
 
@@ -73,7 +73,7 @@ class Company extends CompanyElement {
 	public function canPlanning(): bool {
 		return (
 			$this->canManage() or
-			$this->isRole(Farmer::OBSERVER) === FALSE
+			$this->isRole(Employee::OBSERVER) === FALSE
 		);
 	}
 
@@ -86,7 +86,7 @@ class Company extends CompanyElement {
 	public function canSelling(): bool {
 		return (
 			$this->canManage() or
-			$this->isRole(Farmer::PERMANENT)
+			$this->isRole(Employee::PERMANENT)
 		);
 	}
 
@@ -94,7 +94,7 @@ class Company extends CompanyElement {
 	public function canTask(): bool {
 		return (
 			$this->canManage() or
-			$this->isRole(Farmer::PERMANENT)
+			$this->isRole(Employee::PERMANENT)
 		);
 	}
 
@@ -102,14 +102,14 @@ class Company extends CompanyElement {
 	public function canWork(): bool {
 		return (
 			$this->canManage() or
-			$this->isRole(Farmer::SEASONAL) or
-			$this->isRole(Farmer::PERMANENT)
+			$this->isRole(Employee::SEASONAL) or
+			$this->isRole(Employee::PERMANENT)
 		);
 	}
 
 	// Peut gérer la ferme
 	public function canManage(): bool {
-		return $this->isRole(Farmer::OWNER);
+		return $this->isRole(Employee::OWNER);
 
 	}
 
@@ -143,7 +143,7 @@ class Company extends CompanyElement {
 	}
 
 	public function canRemote(): bool {
-		return $this->canRead() or GET('key') === \Setting::get('selling\remoteKey');
+		return $this->canRead();
 	}
 
 	public function canShop(): bool {
@@ -154,28 +154,6 @@ class Company extends CompanyElement {
 			$this['legalEmail'] !== NULL and
 			$this['legalName'] !== NULL
 		);
-
-	}
-
-	public function selling(): \selling\Configuration {
-
-		if(array_key_exists($this['id'], self::$selling) === FALSE) {
-			self::$selling[$this['id']] = \selling\ConfigurationLib::getByFarm($this);
-		}
-
-		return self::$selling[$this['id']];
-
-	}
-
-	public function getSelling(string $name) {
-
-		return $this->selling()[$name];
-
-	}
-
-	public function validateSellingComplete() {
-
-		$this->selling()->isComplete() ?: throw new \FailAction('selling\Configuration::notComplete', ['company' => $this]);
 
 	}
 
@@ -195,115 +173,28 @@ class Company extends CompanyElement {
 
 	}
 
-	public function hasFeatureDocument(string $type): bool {
 
-		$this->expects(['featureDocument']);
-
-		return match($type) {
-			\selling\Sale::PRO => $this->hasFeatureDocumentPro(),
-			\selling\Sale::PRIVATE => $this->hasFeatureDocumentPrivate(),
-		};
-
-	}
-
-	public function hasFeatureDocumentPro(): bool {
-
-		$this->expects(['featureDocument']);
-
-		return in_array($this['featureDocument'], [Company::ALL, Company::PRO]);
-
-	}
-
-	public function hasFeatureDocumentPrivate(): bool {
-
-		$this->expects(['featureDocument']);
-
-		return in_array($this['featureDocument'], [Company::ALL, Company::PRIVATE]);
-
-	}
-
-	public function getFarmer(): Farmer {
+	public function getEmployee(): Employee {
 
 		$this->expects(['id']);
 
-		return FarmerLib::getOnline()[$this['id']] ?? new Farmer();
+		return EmployeeLib::getOnline()[$this['id']] ?? new Employee();
 
 	}
 
 	public function getHomeUrl(): string {
 
 		if($this->canPlanning()) {
-			return FarmUi::urlPlanningWeekly($this);
+			return CompanyUi::urlPlanningWeekly($this);
 		} else {
-			return FarmUi::urlCultivation($this, Farmer::SERIES, Farmer::AREA);
+			return CompanyUi::urlCultivation($this, Employee::SERIES, Employee::AREA);
 		}
 
 	}
 
 	public function build(array $properties, array $input, array $callbacks = [], ?string $for = NULL): array {
 
-		return parent::build($properties, $input, $callbacks + [
-
-			'rotationExclude.prepare' => function(mixed &$plants): bool {
-
-				$this->expects(['id']);
-
-				$plants = (array)($plants ?? []);
-
-				$plants = \plant\Plant::model()
-					->select('id')
-					->whereId('IN', $plants)
-					->whereFarm($this)
-					->getColumn('id');
-
-				return TRUE;
-
-			},
-
-			'place.required' => function(?string $place) use ($input) {
-
-				$required = $input['placeRequired'] ?? FALSE;
-
-				if($required) {
-					return ($place !== NULL);
-				} else {
-					return TRUE;
-				}
-
-			},
-
-			'placeLngLat.check' => function(?array &$placeLngLat) {
-
-				$this->expects(['place']);
-
-				if($this['place'] !== NULL) {
-
-					if(
-						$placeLngLat === NULL or
-						Farm::model()->check('placeLngLat', $placeLngLat) === FALSE
-					) {
-						Farm::fail('place.check');
-					}
-
-				} else {
-					$placeLngLat = NULL;
-				}
-
-				return TRUE;
-
-			},
-
-			'defaultBedWidth.size' => function(?int $defaultBedWidth) {
-
-				if($defaultBedWidth === NULL) {
-					return TRUE;
-				}
-
-				return ($defaultBedWidth >= 5);
-
-			}
-
-		]);
+		return parent::build($properties, $input, $callbacks);
 
 	}
 

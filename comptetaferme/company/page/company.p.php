@@ -60,7 +60,7 @@
 		$data->increment = POST('increment', 'int');
 		\company\CompanyLib::updateSeasonFirst($data->e, $data->increment);
 
-		throw new RedirectAction(\company\CompanyUi::urlCultivationSeries($data->e, \company\Farmer::AREA, season: $data->e['seasonFirst'] + $data->increment));
+		throw new RedirectAction(\company\CompanyUi::urlCultivationSeries($data->e, \company\Employee::AREA, season: $data->e['seasonFirst'] + $data->increment));
 
 	})
 	->write('doSeasonLast', function($data) {
@@ -68,14 +68,10 @@
 		$data->increment = POST('increment', 'int');
 		\company\CompanyLib::updateSeasonLast($data->e, $data->increment);
 
-		throw new RedirectAction(\company\CompanyUi::urlCultivationSeries($data->e, \company\Farmer::AREA, season: $data->e['seasonLast'] + $data->increment));
+		throw new RedirectAction(\company\CompanyUi::urlCultivationSeries($data->e, \company\Employee::AREA, season: $data->e['seasonLast'] + $data->increment));
 
 	})
 	->write('doClose', function($data) {
-
-		if(OTF_DEMO) {
-			throw new \FailAction('company\Company::demo.delete');
-		}
 
 		$data->e['status'] = \company\Company::CLOSED;
 
@@ -90,8 +86,6 @@
 		$data->year = GET('year', default: $data->e['seasonLast']);
 
 		\company\FarmerLib::register($data->e);
-
-		$data->hasMarket = \selling\AnalyzeLib::hasExportMarket($data->eFarm, $data->year);
 
 		throw new \ViewAction($data);
 

@@ -34,7 +34,7 @@ class SignUpLib {
 
 		$fw = new \FailWatch;
 
-		$eUser->build(['role', 'email', 'birthdate', 'firstName', 'lastName'], $input);
+		$eUser->build(['email', 'birthdate', 'firstName', 'lastName'], $input);
 
 		if($eUser->offsetExists('id') === FALSE) {
 

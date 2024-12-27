@@ -6,18 +6,14 @@
 			throw new ViewAction($data, path: ':anonymous');
 		}
 
-		$data->cCustomerPro = \selling\CustomerLib::getProByUser($data->eUserOnline);
-		$data->cCustomerPrivate = \selling\CustomerLib::getPrivateByUser($data->eUserOnline);
+		$data->cCustomerPro = 0;
+		$data->cCustomerPrivate = 0;
 
-		$data->cShop = \shop\ShopLib::getByCustomers($data->cCustomerPrivate);
+		$data->cShop = 0;
 
-		if($data->cCustomerPrivate->notEmpty()) {
-			$data->cSale = \selling\SaleLib::getByCustomers($data->cCustomerPrivate, limit: 5);
-		} else {
-			$data->cSale = new Collection();
-		}
+		$data->cSale = new Collection();
 
-		$data->eNews = \website\NewsLib::getLastForBlog();
+		$data->eNews = [];
 
 		throw new ViewAction($data, path: ':logged');
 

@@ -55,17 +55,7 @@ new AdaptativeView('logged', function($data, MainTemplate $t) {
 
 	$t->header = '<h1>'.s("Bienvenue, {userName}&nbsp;!", ['userName' => encode($data->eUserOnline['firstName'] ?? $data->eUserOnline['lastName'])]).'</h1>';
 
-	if($data->eUserOnline['role']['fqn'] === 'customer') {
-
-		$t->header .= '<div class="util-info">'.s("Vous êtes connecté sur l'espace client qui vous relie à tous les producteurs auxquels vous avez l'habitude de commander sur {value}.", '<a href="'.Lime::getUrl().'">'.s("{siteName}").'</a>').'</div>';
-
-		if($data->cCustomerPrivate->notEmpty()) {
-			$t->header .= (new \selling\OrderUi())->getPrivate($data->cCustomerPrivate);
-		}
-
-	}
-
-	if(Privilege::can('company\access')) {
+/*	if(Privilege::can('company\access')) {
 
 		echo (new \main\HomeUi())->getFarms($data->cFarmUser);
 
@@ -73,16 +63,15 @@ new AdaptativeView('logged', function($data, MainTemplate $t) {
 			echo (new \main\HomeUi())->getBlog($data->eNews, TRUE);
 		}
 
-	}
+	}*/
 
-	echo (new \selling\CustomerUi())->getHome($data->cCustomerPro, $data->cShop, $data->cSale);
 
 });
 
 new AdaptativeView('signUp', function($data, MainTemplate $t) {
 
 	$t->title = s("Inscription sur {siteName}");
-	$t->metaDescription = s("Inscrivez-vous comme producteur sur {siteName} pour profiter de fonctionnalités de la plateforme !");
+	$t->metaDescription = s("Inscrivez-vous sur {siteName} pour profiter de fonctionnalités de la plateforme !");
 	$t->template = 'home-legal';
 
 	Asset::css('main', 'font-itim.css');
@@ -95,29 +84,13 @@ new AdaptativeView('signUp', function($data, MainTemplate $t) {
 		$t->header .= '<a href="" class="btn btn-primary">'.s("Connectez-vous !").'</a>';
 	$t->header .= '</div>';
 
-	$t->header .= '<h1>'.s("Je m'inscris sur {siteName} !").'</h1>';
-	$t->header .= '<div class="home-user-types">';
-		if($data->chooseRole) {
-			$t->header .= (new \main\HomeUi())->getCustomer($data->eRole);
-			$t->header .= (new \main\HomeUi())->getFarmer($data->eRole);
-		} else {
-			$t->header .= match($data->eRole['fqn']) {
-				'customer' => (new \main\HomeUi())->getCustomer($data->eRole),
-				'farmer' => (new \main\HomeUi())->getFarmer($data->eRole)
-			};
-		}
-	$t->header .= '</div>';
-
-	if($data->eRole->notEmpty()) {
+	$t->header .= '<h1>'.s("Je crée mon compte entreprise sur {siteName} !").'</h1>';
 
 		echo '<h2>'.s("Mes informations").'</h2>';
 
-		if($data->eRole['fqn'] === 'farmer') {
-			echo '<div class="util-info">'.s("Renseignez quelques informations qui vous permettront ensuite de vous connecter sur {siteName}. Vous pourrez créer votre ferme ou rejoindre une ferme existante juste après cette étape !").'</div>';
-		}
+		echo '<div class="util-info">'.s("Renseignez quelques informations qui vous permettront ensuite de vous connecter sur {siteName}. Vous pourrez créer votre entreprise ou rejoindre une entreprise existante juste après cette étape !").'</div>';
 
-		echo (new \user\UserUi())->signUp($data->eUserOnline, $data->eRole, REQUEST('redirect'));
-	}
+		echo (new \user\UserUi())->signUp($data->eUserOnline, REQUEST('redirect'));
 
 
 });

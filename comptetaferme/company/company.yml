@@ -34,100 +34,14 @@ Company:
   createdAt: datetime = SPECIAL(now)
   status: enum(ACTIVE, CLOSED) = ACTIVE
 
-Farmer:
+Employee:
   id: serial32
   user: ?user\User
-  farm: company\Company
-  farmGhost: bool = FALSE
-  farmStatus: enum(ACTIVE, CLOSED) = ACTIVE
+  company: company\Company
+  companyStatus: enum(ACTIVE, CLOSED) = ACTIVE
   status: enum(INVITED, IN, OUT) = INVITED
   role: ?enum(SEASONAL, PERMANENT, OWNER, OBSERVER)
-  viewPlanning: enum(DAILY, WEEKLY, YEARLY) = WEEKLY
-  viewPlanningYear: ?int16(0, null)
-  viewPlanningCategory: enum(TIME, TEAM, PACE, PERIOD) = TIME
-  viewPlanningHarvestExpected: enum(TOTAL, WEEKLY) = TOTAL
-  viewPlanningField: enum(VARIETY, SOIL) = SOIL
-  viewPlanningSearch: ?json
-  viewPlanningUser: ?user\User
-  viewCultivation: enum(SERIES, SOIL, SEQUENCE) = SERIES
-  viewCultivationCategory: enum(AREA, PLANT, FAMILY, ROTATION) = AREA
-  viewSeries: enum(AREA, FORECAST, SEEDLING, HARVESTING, WORKING_TIME) = AREA
-  viewSoil: enum(PLAN, ROTATION) = PLAN
-  viewSelling: enum(SALE, PRODUCT, CUSTOMER, INVOICE, STOCK) = SALE
-  viewSellingSales: enum(ALL, PRIVATE, PRO, LABEL) = ALL
-  viewSellingCategory: enum(ITEM, CUSTOMER, SHOP, PERIOD) = ITEM
-  viewSellingCategoryCurrent: ?selling\Category
-  viewShop: enum(SHOP, CATALOG, POINT) = SHOP
-  viewShopCatalogCurrent: ?shop\Catalog
-  viewAnalyze: enum(WORKING_TIME, REPORT, SALES, CULTIVATION) = WORKING_TIME
-  viewAnalyzeYear: ?int16(0, null)
-  viewSettings: enum(SETTINGS, WEBSITE) = SETTINGS
-  viewSeason: ?int16(0, null)
-  viewShopCurrent: ?shop\Shop
   createdAt: datetime = SPECIAL(now)
   UNIQUE: [
-    ["user", "farm"]
+    ["user", "company"]
   ]
-
-Invite:
-  id: serial32
-  farm: company\Company
-  email: email
-  type: enum(FARMER, CUSTOMER)
-  customer: ?selling\Customer
-  farmer: ?company\Farmer
-  expiresAt: date = SQL(NOW() + INTERVAL 3 DAY)
-  key: ?text8 = PHP(bin2hex(random_bytes(16)))
-  status: enum(PENDING, ACCEPTED) = PENDING
-  INDEX: [
-    ["customer"],
-    ["email"],
-    ["key"]
-  ]
-
-Method:
-  id: serial32
-  name: text8(1, null) @collate(general)
-  action: company\Action
-  farm: company\Company
-  INDEX: [
-    ["farm", "action"],
-    ["action"]
-  ]
-
-Supplier:
-  id: serial32
-  name: text8(1, 50) @collate(general)
-  farm: company\Company
-  createdAt: date = SPECIAL(now)
-
-Tip:
-  id: serial32
-  user: user\User
-  list: json = PHP([])
-  shown: int16(0, null) = 0
-  clicked: int16(0, null) = 0
-  closed: int16(0, null) = 0
-  unmatched: int16(0, null) = 0
-  lastSeniority: int16(0, null) = 0
-  pickPosition: int16(0, null) = 0
-  UNIQUE: [
-    ["user"]
-  ]
-
-Tool:
-  id: serial32
-  name: text8(1, 40) @collate(general)
-  farm: company\Company
-  action: ?company\Action
-  vignette: ?textFixed(30, 30) @charset(ascii)
-  stock: ?int16(0, null)
-  routineName: ?text8
-  routineValue: ?json
-  comment: ?text16
-  status: enum(ACTIVE, INACTIVE) = ACTIVE
-  createdAt: datetime = SPECIAL(now)
-  UNIQUE: [
-    ["farm", "name"]
-  ]
-
