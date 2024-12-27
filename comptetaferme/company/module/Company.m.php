@@ -45,12 +45,18 @@ class CompanyModel extends \ModuleModel {
 			'url' => ['url', 'null' => TRUE, 'cast' => 'string'],
 			'logo' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
 			'banner' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
+			'siret' => ['text8', 'min' => 14, 'max' => 14, 'null' => TRUE, 'cast' => 'string'],
+			'nafCode' => ['text8', 'min' => 6, 'max' => 6, 'null' => TRUE, 'cast' => 'string'],
+			'addressLine1' => ['text16', 'null' => TRUE, 'cast' => 'string'],
+			'addressLine2' => ['text16', 'null' => TRUE, 'cast' => 'string'],
+			'postalCode' => ['text8', 'null' => TRUE, 'cast' => 'string'],
+			'city' => ['text8', 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'status' => ['enum', [\company\Company::ACTIVE, \company\Company::CLOSED], 'cast' => 'enum'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'createdAt', 'status'
+			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'siret', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'createdAt', 'status'
 		]);
 
 	}
@@ -116,6 +122,30 @@ class CompanyModel extends \ModuleModel {
 
 	public function whereBanner(...$data): CompanyModel {
 		return $this->where('banner', ...$data);
+	}
+
+	public function whereSiret(...$data): CompanyModel {
+		return $this->where('siret', ...$data);
+	}
+
+	public function whereNafCode(...$data): CompanyModel {
+		return $this->where('nafCode', ...$data);
+	}
+
+	public function whereAddressLine1(...$data): CompanyModel {
+		return $this->where('addressLine1', ...$data);
+	}
+
+	public function whereAddressLine2(...$data): CompanyModel {
+		return $this->where('addressLine2', ...$data);
+	}
+
+	public function wherePostalCode(...$data): CompanyModel {
+		return $this->where('postalCode', ...$data);
+	}
+
+	public function whereCity(...$data): CompanyModel {
+		return $this->where('city', ...$data);
 	}
 
 	public function whereCreatedAt(...$data): CompanyModel {

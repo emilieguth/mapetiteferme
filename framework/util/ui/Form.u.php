@@ -693,7 +693,7 @@ class FormUi {
 
 		\Asset::css('util', 'form.css');
 
-		return '<div class="form-asterisk" title="'.s("Champ obligatoire").'">'.\Asset::icon('asterisk').'</div>';
+		return '<div class="form-asterisk" title="'.s("Champ obligatoire").'"><sup>'.\Asset::icon('asterisk').'</sup></div>';
 	}
 
 	/**

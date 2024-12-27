@@ -6,11 +6,11 @@ class CompanyLib extends CompanyCrud {
 	private static ?\Collection $cCompanyOnline = NULL;
 
 	public static function getPropertiesCreate(): array {
-		return ['name'];
+		return ['name', 'nafCode', 'siret', 'addressLine1', 'addressLine2', 'postalCode', 'city'];
 	}
 
 	public static function getPropertiesUpdate(): array {
-		return ['name'];
+		return ['name', 'nafCode', 'siret', 'addressLine1', 'addressLine2', 'postalCode', 'city'];
 	}
 
 	public static function getOnline(): \Collection {

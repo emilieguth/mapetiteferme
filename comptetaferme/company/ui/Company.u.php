@@ -79,7 +79,10 @@ class CompanyUi {
 
 			$h .= $form->asteriskInfo();
 
-			$h .= $form->dynamicGroups($eCompany, ['name*']);
+			$h .= $form-> group(self::p('siret'), $form->text('siret', null, ['oninput' => 'Company.getCompanyDataBySiret(this)']));
+
+			$h .= $form->dynamicGroups($eCompany, ['name*', 'addressLine1', 'addressLine2', 'postalCode', 'city']);
+			$h .= $form->hidden('nafCode', null);
 
 			$h .= $form->group(
 				content: $form->submit(s("Créer mon entreprise"))
@@ -107,7 +110,8 @@ class CompanyUi {
 				self::p('vignette')->label,
 				(new \media\CompanyVignetteUi())->getCamera($eCompany, size: '10rem')
 			);
-			$h .= $form->dynamicGroups($eCompany, ['name', 'url']);
+			$h .= $form-> group(self::p('siret'), $form->text('siret', $eCompany['siret'], ['oninput' => 'Company.getCompanyDataBySiret(this)']));
+			$h .= $form->dynamicGroups($eCompany, ['nafCode', 'name', 'url', 'addressLine1', 'addressLine2', 'postalCode', 'city']);
 
 			$h .= $form->group(
 				content: $form->submit(s("Modifier"))
@@ -312,7 +316,7 @@ class CompanyUi {
 		$h = '<nav id="company-subnav">';
 			$h .= '<div class="company-subnav-wrapper">';
 
-				foreach($this->getSuppliersCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+				foreach($this->getCustomersCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 					$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
 				}
 
@@ -448,11 +452,17 @@ class CompanyUi {
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Company::model()->describer($property, [
-			'name' => s("Nom de l'entreprise"),
-			'vignette' => s("Photo de présentation"),
-			'url' => s("Site internet"),
-			'logo' => s("Logo de l'entreprise"),
+			'addressLine1' => s("Adresse (ligne 1)"),
+			'addressLine2' => s("Adresse (ligne 2)"),
 			'banner' => s("Bandeau à afficher en haut des e-mails envoyés à vos clients"),
+			'city' => s("Ville"),
+			'logo' => s("Logo de l'entreprise"),
+			'nafCode' => s("Code NAF de l'entreprise (APE)"),
+			'name' => s("Nom de l'entreprise"),
+			'postalCode' => s("Code postal"),
+			'siret' => s("SIRET de l'entreprise*"),
+			'url' => s("Site internet"),
+			'vignette' => s("Photo de présentation"),
 		]);
 
 		return $d;
