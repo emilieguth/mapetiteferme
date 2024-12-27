@@ -24,7 +24,7 @@ class DesignUi {
 
 		if($eCompany['banner'] !== NULL) {
 
-			$url = (\LIME_ENV === 'dev') ? 'https://media.comptetaferme.org/company-banner/500x100/659ff8c45b5dfde6eacp.png?6' : (new \media\CompanyBannerUi())->getUrlByElement($eCompany, 'm');
+			$url = (\LIME_ENV === 'dev') ? 'https://media.comptetaferme.fr/company-banner/500x100/659ff8c45b5dfde6eacp.png?6' : (new \media\CompanyBannerUi())->getUrlByElement($eCompany, 'm');
 
 			$html .= '<div>';
 				$html .= \Asset::image($url, attributes: ['width: 100%; max-width: 500px; height: auto; aspect-ratio: 5']);

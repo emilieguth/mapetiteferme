@@ -73,10 +73,24 @@ class CompanyTemplate extends MainTemplate {
 
 		$h = '';
 
-		$h .= $this->getMainTitle();
-		$h .= $this->main;
+		if($this->main) {
 
-		return $h;
+			$h .= $this->getMainTitle();
+			$h .= $this->main;
+
+			return $h;
+
+		} else {
+
+			if($this->data->tip) {
+				$h .= (new \company\TipUi())->get($this->data->eCompany, $this->data->tip, $this->data->tipNavigation);
+			}
+			$h .= $this->getMainTitle();
+			$h .= parent::getMain($stream);
+
+			return $h;
+
+		}
 
 	}
 

@@ -134,13 +134,13 @@ Setting::register('media', [
 	],
 
 	'company-logo' => [
-		'class' => 'FarmLogo',
+		'class' => 'CompanyLogo',
 		'element' => 'company\Company',
 		'field' => 'logo'
 	] + getMediaLogo(),
 
 	'company-vignette' => [
-		'class' => 'FarmVignette',
+		'class' => 'CompanyVignette',
 		'element' => 'company\Company',
 		'field' => 'vignette'
 	] + getMediaVignette(),
@@ -198,10 +198,10 @@ Setting::register('media', [
 		if($driver instanceof \util\XyzLib) {
 
 			if(LIME_ENV === 'dev') {
-				return 'http://media.dev-comptetaferme.org';
+				return 'http://media.dev-comptetaferme.fr';
 			}
 
-			return 'https://media.comptetaferme.org';
+			return 'https://media.comptetaferme.fr';
 
 		}
 
