@@ -7,7 +7,7 @@
 	margin-bottom: 1rem;
 }
 
-.nav-title-farm {
+.nav-title-company {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -66,7 +66,7 @@ a.nav-year:hover {
 
 	}
 
-	body[data-template~="farm"] {
+	body[data-template~="company"] {
 		display: grid;
 		grid-template:
 			"nav main" var(--nav-height)
@@ -76,13 +76,13 @@ a.nav-year:hover {
 
 	@media (min-width: 2000px) {
 
-		body[data-template~="farm"] {
+		body[data-template~="company"] {
 			padding: 0 calc((100vw - 1800px) / 2);
 		}
 
 	}
 
-	body[data-template~="farm"] header {
+	body[data-template~="company"] header {
 		grid-area: header;
 		position: fixed;
 		width: var(--nav-width);
@@ -92,19 +92,19 @@ a.nav-year:hover {
 		box-shadow: 0 0 1rem #8888;
 	}
 
-	body[data-template~="farm"] main  {
+	body[data-template~="company"] main  {
 		grid-area: main;
 		background-color: var(--background-light);
 	}
 
-	body[data-template~="farm"] main .container {
+	body[data-template~="company"] main .container {
 		margin-left: 0;
 		margin-right: 0;
 		padding-left: 2rem;
 		padding-right: 2rem;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title {
+	body[data-template~="company"] main .container.company-template-main-title {
 		height: var(--nav-height);
 		background: linear-gradient(342deg, var(--background-dark) 0, var(--background-dark) 50%, #e4e4ea 100%);
 		margin-bottom: 1rem;
@@ -112,77 +112,77 @@ a.nav-year:hover {
 		position: relative;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title:not(.company-template-main-title-with-year) {
+	body[data-template~="company"] main .container.company-template-main-title:not(.company-template-main-title-with-year) {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title.company-template-main-title-with-year {
+	body[data-template~="company"] main .container.company-template-main-title.company-template-main-title-with-year {
 		display: grid;
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title > div.company-template-main-content {
+	body[data-template~="company"] main .container.company-template-main-title > div.company-template-main-content {
 		display: flex;
 		align-items: center;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title > div.company-template-main-content > div {
+	body[data-template~="company"] main .container.company-template-main-title > div.company-template-main-content > div {
 		width: 100%;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title > div.company-template-main-content > div > *:last-child {
+	body[data-template~="company"] main .container.company-template-main-title > div.company-template-main-content > div > *:last-child {
 		margin-bottom: 0;
 	}
 
-	body[data-template~="farm"] footer  {
+	body[data-template~="company"] footer  {
 		grid-area: footer;
 	}
 
-	body[data-template~="farm"] nav {
+	body[data-template~="company"] nav {
 		grid-area: nav;
 		position: fixed;
 		top: 0;
 		width: var(--nav-width);
 	}
 
-	body[data-template~="farm"] nav .nav-wrapper.container {
+	body[data-template~="company"] nav .nav-wrapper.container {
 		padding: 0 var(--nav-padding);
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
 
-	body[data-template~="farm"] nav .nav-wrapper {
+	body[data-template~="company"] nav .nav-wrapper {
 		display: block;
 		height: var(--nav-height);
 		min-height: var(--nav-height);
 	}
 
-	body[data-template~="farm"] nav .nav-actions {
+	body[data-template~="company"] nav .nav-actions {
 		position: absolute;
 		top: 0;
 		left: 0;
 	}
 
-	body[data-template~="farm"] nav .nav-actions .nav-item {
+	body[data-template~="company"] nav .nav-actions .nav-item {
 		padding: 1rem var(--nav-padding);
 	}
 
-	body[data-template~="farm"] nav .nav-actions .nav-user .media-vignette-image {
+	body[data-template~="company"] nav .nav-actions .nav-user .media-vignette-image {
 		border: 1px solid white;
 		width: 2rem;
 		height: 2rem;
 		min-width: 2rem;
 	}
 
-	body[data-template~="farm"] .nav-title {
+	body[data-template~="company"] .nav-title {
 		justify-content: center;
 	}
 
-	body[data-template~="farm"] .nav-title-farm {
+	body[data-template~="company"] .nav-title-company {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -195,7 +195,7 @@ a.nav-year:hover {
 	#company-nav {
 		overflow: auto;
 		top: var(--nav-height);
-		/*height: calc(100vh - var(--nav-height));*/
+		height: calc(100vh - var(--nav-height));
 	}
 
 	.company-tabs {
@@ -342,16 +342,16 @@ a.nav-year:hover {
 
 @media (max-width: 1199px), (max-height: 599px) {
 
-	body[data-template~="farm"] header {
+	body[data-template~="company"] header {
 		background: linear-gradient(to bottom, var(--background-light) 0, white 100%);
 	}
 
-	body[data-template~="farm"] header {
+	body[data-template~="company"] header {
 		position: sticky;
 		z-index: 500;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title {
+	body[data-template~="company"] main .container.company-template-main-title {
 		background: linear-gradient(to bottom, var(--background) 0, var(--background) 50%, transparent 100%);
 		margin-top: 0;
 		padding-top: 1rem;
@@ -360,11 +360,11 @@ a.nav-year:hover {
 		justify-content: center;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title > div > *:last-child {
+	body[data-template~="company"] main .container.company-template-main-title > div > *:last-child {
 		margin-bottom: 0;
 	}
 
-	body[data-template~="farm"] main .container.company-template-main-title + .container {
+	body[data-template~="company"] main .container.company-template-main-title + .container {
 		margin-top: 1.5rem;
 	}
 

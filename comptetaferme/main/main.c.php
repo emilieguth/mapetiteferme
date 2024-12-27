@@ -6,5 +6,10 @@ Setting::register('main', [
 
 	'robotsDisallow' => '',
 
+	'viewSettings' => 'settings',
+	'viewFinances' => 'settings',
+	'viewSuppliers' => 'settings',
+	'viewCustomers' => 'settings',
+
 ]);
 ?>

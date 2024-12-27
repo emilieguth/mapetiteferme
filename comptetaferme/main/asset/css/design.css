@@ -242,7 +242,7 @@ body[data-template~="default"] header {
 
 @media (min-height: 768px) and (min-width: 768px) {
 
-	body[data-template~="farm"] header {
+	body[data-template~="company"] header {
 		top: var(--mainNav);
 	}
 
@@ -256,13 +256,13 @@ body[data-template~="default"] header {
 
 @media (max-height: 767px), (max-width: 767px) {
 
-	body[data-template~="farm"] header {
+	body[data-template~="company"] header {
 		top: 0;
 	}
 
 }
 
-body[data-template~="farm"] main > div.container:not(:first-child) {
+body[data-template~="company"] main > div.container:not(:first-child) {
 	margin-top: 0;
 }
 

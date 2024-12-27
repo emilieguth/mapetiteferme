@@ -1,5 +1,5 @@
 /* List of companies */
-.farmer-companies {
+.employee-companies {
    display: grid;
    grid-template-columns: 1fr 1fr 1fr;
    grid-gap: 1rem;
@@ -8,7 +8,7 @@
 
 @media (max-width: 1199px) {
 
-	.farmer-companies {
+	.employee-companies {
       grid-template-columns: 1fr 1fr;
 	}
 
@@ -16,20 +16,20 @@
 
 @media (max-width: 767px) {
 
-	.farmer-companies {
+	.employee-companies {
       grid-template-columns: 1fr;
 	}
 
 }
 
-.farmer-companies-item {
+.employee-companies-item {
 	display: grid;
 	grid-template: "vignette content" 1fr / 6rem 1fr;
 	grid-column-gap: 1rem;
 	align-items: center;
 }
 
-a.farmer-companies-item {
+a.employee-companies-item {
 	text-decoration: none;
 	color: var(--secondary);
 	background: white;
@@ -39,32 +39,32 @@ a.farmer-companies-item {
 
 @media (max-width: 767px) {
 	
-	.farmer-companies-item {
+	.employee-companies-item {
 		grid-column-gap: 1rem;
 	}
 
 }
 
-div.farmer-companies-item-vignette {
+div.employee-companies-item-vignette {
 	grid-area: vignette;
 }
 
-div.farmer-companies-item-content {
+div.employee-companies-item-content {
 	grid-area: content;
 	transition: color .5s;
 }
 
-a.farmer-companies-item:hover div.farmer-companies-item-content {
+a.employee-companies-item:hover div.employee-companies-item-content {
 	color: var(--primary);
 }
 
-div.farmer-companies-item-content h4 {
+div.employee-companies-item-content h4 {
    font-size: 1.6rem;
 	margin-bottom: 0.5rem;
    font-weight: lighter;
 }
 
-div.farmer-companies-item-infos {
+div.employee-companies-item-infos {
 	color: var(--muted);
 	font-size: 0.9rem;
 	margin: 0.25rem 0;
