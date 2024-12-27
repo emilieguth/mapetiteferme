@@ -79,7 +79,7 @@ class CompanyUi {
 
 			$h .= $form->asteriskInfo();
 
-			$h .= $form->dynamicGroups($eCompany, ['name*', 'startedAt*']);
+			$h .= $form->dynamicGroups($eCompany, ['name*']);
 
 			$h .= $form->group(
 				content: $form->submit(s("Créer mon entreprise"))
@@ -107,7 +107,7 @@ class CompanyUi {
 				self::p('vignette')->label,
 				(new \media\CompanyVignetteUi())->getCamera($eCompany, size: '10rem')
 			);
-			$h .= $form->dynamicGroups($eCompany, ['name', 'description', 'startedAt', 'url']);
+			$h .= $form->dynamicGroups($eCompany, ['name', 'url']);
 
 			$h .= $form->group(
 				content: $form->submit(s("Modifier"))
@@ -450,8 +450,6 @@ class CompanyUi {
 		$d = Company::model()->describer($property, [
 			'name' => s("Nom de l'entreprise"),
 			'vignette' => s("Photo de présentation"),
-			'description' => s("Présentation de l'entreprise"),
-			'startedAt' => s("Année de création"),
 			'url' => s("Site internet"),
 			'logo' => s("Logo de l'entreprise"),
 			'banner' => s("Bandeau à afficher en haut des e-mails envoyés à vos clients"),

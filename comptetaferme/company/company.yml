@@ -3,10 +3,8 @@ Company:
   name: text8(1, null) @collate(general)
   vignette: ?textFixed(30, 30) @charset(ascii)
   url: ?url
-  description: ?editor24
   logo: ?textFixed(30, 30) @charset(ascii)
   banner: ?textFixed(30, 30) @charset(ascii)
-  startedAt: int16(PHP(date('Y') - 100), PHP(date('Y') + 10))
   createdAt: datetime = SPECIAL(now)
   status: enum(ACTIVE, CLOSED) = ACTIVE
 

@@ -14,7 +14,6 @@ class AlertUi {
 			'Company::disabled' => s("Vous avez désactivé cette fonctionnalité sur votre ferme."),
 			'Company::demo.delete' => s("Vous ne pouvez pas supprimer la démo !"),
 			'Company::name.check' => s("Merci de renseigner le nom de la ferme !"),
-			'Company::startedAt.check' => s("Merci de renseigner l'année de création de la ferme !"),
 			'Employee::demo.write' => s("Vous ne pouvez pas modifier l'équipe sur la démo !"),
 			'Employee::user.check' => s("Vous n'avez pas sélectionné d'utilisateur."),
 			'Employee::email.check' => s("Cette adresse e-mail est invalide."),

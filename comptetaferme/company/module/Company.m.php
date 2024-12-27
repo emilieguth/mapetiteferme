@@ -43,16 +43,14 @@ class CompanyModel extends \ModuleModel {
 			'name' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'vignette' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
 			'url' => ['url', 'null' => TRUE, 'cast' => 'string'],
-			'description' => ['editor24', 'null' => TRUE, 'cast' => 'string'],
 			'logo' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
 			'banner' => ['textFixed', 'min' => 30, 'max' => 30, 'charset' => 'ascii', 'null' => TRUE, 'cast' => 'string'],
-			'startedAt' => ['int16', 'min' => date('Y') - 100, 'max' => date('Y') + 10, 'cast' => 'int'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'status' => ['enum', [\company\Company::ACTIVE, \company\Company::CLOSED], 'cast' => 'enum'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name', 'vignette', 'url', 'description', 'logo', 'banner', 'startedAt', 'createdAt', 'status'
+			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'createdAt', 'status'
 		]);
 
 	}
@@ -88,7 +86,6 @@ class CompanyModel extends \ModuleModel {
 
 	}
 
-
 	public function select(...$fields): CompanyModel {
 		return parent::select(...$fields);
 	}
@@ -113,20 +110,12 @@ class CompanyModel extends \ModuleModel {
 		return $this->where('url', ...$data);
 	}
 
-	public function whereDescription(...$data): CompanyModel {
-		return $this->where('description', ...$data);
-	}
-
 	public function whereLogo(...$data): CompanyModel {
 		return $this->where('logo', ...$data);
 	}
 
 	public function whereBanner(...$data): CompanyModel {
 		return $this->where('banner', ...$data);
-	}
-
-	public function whereStartedAt(...$data): CompanyModel {
-		return $this->where('startedAt', ...$data);
 	}
 
 	public function whereCreatedAt(...$data): CompanyModel {
