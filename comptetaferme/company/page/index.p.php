@@ -3,7 +3,7 @@
 
 		\user\ConnectionLib::checkLogged();
 
-		$data->eCompany = \company\CompanyLib::getById(GET('id'))->validate('canWrite');
+		$data->eCompany = \company\CompanyLib::getById(GET('id'));
 
 		\company\EmployeeLib::register($data->eCompany);
 

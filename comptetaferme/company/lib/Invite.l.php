@@ -25,6 +25,12 @@ class InviteLib extends InviteCrud {
 
 	}
 
+	public static function deleteByEmail(string $email): void {
+
+		Invite::model()
+			->whereEmail($email)
+			->delete();
+	}
 	public static function extends(Invite $e): void {
 
 		$e->offsetUnset('id');
@@ -42,10 +48,6 @@ class InviteLib extends InviteCrud {
 		]);
 
 		Invite::model()->beginTransaction();
-
-			Invite::model()
-				->whereCompany($e['company'])
-				->delete();
 
 		$e['email'] = mb_strtolower($e['email']);
 

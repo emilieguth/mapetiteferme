@@ -5,7 +5,7 @@ new AdaptativeView('create', function($data, PanelTemplate $t) {
 
 });
 
-new AdaptativeView('update', function($data, CompanyTemplate $t) {
+new AdaptativeView('/company/{company}/company:update', function($data, CompanyTemplate $t) {
 
 	$t->title = s("Réglages de base de {value}", $data->e['name']);
 	$t->tab = 'settings';

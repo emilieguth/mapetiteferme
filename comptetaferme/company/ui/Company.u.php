@@ -13,7 +13,7 @@ class CompanyUi {
 	}
 
 	public static function url(Company $eCompany): string {
-		return '/company/'.$eCompany['id'];
+		return $eCompany['id'];
 	}
 
 	public static function urlSettings(Company $eCompany): string {
@@ -211,7 +211,7 @@ class CompanyUi {
 
 			$h .= '<div class="util-buttons">';
 
-				$h .= '<a href="/company/company:update?id='.$eCompany['id'].'" class="bg-secondary util-button">';
+				$h .= '<a href="'.CompanyUi::url($eCompany).'/company:update?id='.$eCompany['id'].'" class="bg-secondary util-button">';
 					$h .= '<h4>'.s("Les réglages de base<br/>de l'entreprise").'</h4>';
 					$h .= \Asset::icon('gear-fill');
 				$h .= '</a>';
@@ -221,7 +221,7 @@ class CompanyUi {
 					$h .= \Asset::icon('people-fill');
 				$h .= '</a>';
 
-				$h .= '<a href="/company/company:updateFeature?id='.$eCompany['id'].'" class="bg-secondary util-button">';
+				$h .= '<a href="'.CompanyUi::url($eCompany).'/company:updateFeature?id='.$eCompany['id'].'" class="bg-secondary util-button">';
 					$h .= '<h4>'.s("Activer ou désactiver des fonctionnalités").'</h4>';
 					$h .= \Asset::icon('toggle2-on');
 				$h .= '</a>';

@@ -33,11 +33,10 @@ class AlertUi {
 
 		return match($fqn) {
 
-			'Company.created' => s("La ferme a bien été créée, à vous de jouer !"),
-			'Company.updated' => s("La ferme a bien été mise à jour !"),
-			'Company.updatedRotation' => s("La configuration des rotations de culture a bien été mise à jour !"),
+			'Company.created' => s("L'entreprise a bien été créée, à vous de jouer !"),
+			'Company.updated' => s("L'entreprise a bien été mise à jour !"),
 			'Company.updatedFeatures' => s("Les fonctionnalités activées et désactivées pour votre fermes ont bien été mises à jour !"),
-			'Company.closed' => s("La ferme a bien été supprimée !"),
+			'Company.closed' => s("L'entreprise a bien été supprimée !"),
 
 			'Employee::userCreated' => s("L'utilisateur a bien été créé et peut désormais être ajouté dans l'équipe de l'entreprise !"),
 			'Employee::userUpdated' => s("L'utilisateur a bien été mis à jour !"),
@@ -45,9 +44,9 @@ class AlertUi {
 			'Employee::created' => s("L'utilisateur a bien été ajouté à l'équipe de l'entreprise !"),
 			'Employee::deleted' => s("L'utilisateur a bien été retiré de l'équipe de l'entreprise !"),
 
-			'Invite::created' => s("L'utilisateur a bien été invité à rejoindre l'équipe de l'entreprise' !"),
+			'Invite::created' => s("L'utilisateur a bien été invité à rejoindre l'équipe de l'entreprise !"),
 			'Invite::extended' => s("L'invitation a bien été prolongée et un e-mail avec un nouveau lien a été envoyé à la personne !"),
-			'Invite::deleted' => s("L'invitation à rejoindre la ferme a bien été supprimée !"),
+			'Invite::deleted' => s("L'invitation à rejoindre l'entreprise a bien été supprimée !"),
 
 			default => null
 

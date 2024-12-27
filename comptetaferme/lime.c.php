@@ -1,7 +1,7 @@
 <?php
 Lime::setUrls([
-  'dev' => 'http://www.dev-comptetaferme.fr',
-  'prod' => 'https://www.comptetaferme.fr'
+  'dev' => 'http://app.dev-comptetaferme.fr',
+  'prod' => 'https://app.comptetaferme.fr'
 ]);
 
 Lime::setApps(['framework', 'comptetaferme']);

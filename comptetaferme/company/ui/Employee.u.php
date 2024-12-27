@@ -8,7 +8,7 @@ class EmployeeUi {
   }
 
   public static function urlManage(Company $eCompany): string {
-    return '/company/employee:manage?company='.$eCompany['id'].'';
+    return CompanyUi::url($eCompany).'/employee:manage';
   }
 
   public function getMyCompanies(\Collection $cCompany): string {
@@ -126,7 +126,7 @@ class EmployeeUi {
     $h .= '</h1>';
 
     $h .= '<div>';
-      $h .= '<a href="/company/invite:create?company='.$eCompany['id'].'" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter un utilisateur dans l'équipe").'</a>';
+      $h .= '<a href="'.CompanyUi::url($eCompany).'/invite:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter un utilisateur dans l'équipe").'</a>';
     $h .= '</div>';
 
     $h .= '</div>';
@@ -148,7 +148,7 @@ class EmployeeUi {
 
           $properties = [];
 
-          $h .= '<a href="/company/employee:show?id='.$eEmployee['id'].'" class="util-button bg-secondary">';
+          $h .= '<a href="'.CompanyUi::url($eCompany).'/employee:show?id='.$eEmployee['id'].'" class="util-button bg-secondary">';
             $h .= '<div>';
               $h .= '<h4>';
                 $h .= \user\UserUi::name($eEmployee['user']);
@@ -237,11 +237,11 @@ class EmployeeUi {
 
       $h .= '<div>';
 
-      $h .= '<a href="/company/employee:update?id='.$eEmployee['id'].'" class="btn btn-primary">';
+      $h .= '<a href="'.CompanyUi::url($eEmployee['company']).'/employee:update?id='.$eEmployee['id'].'" class="btn btn-primary">';
         $h .= s("Configurer l'utilisateur");
       $h .= '</a> ';
 
-      $h .= '<a data-ajax="/company/employee:doDelete" post-id="'.$eEmployee['id'].'" class="btn btn-primary" data-confirm="'.s("Souhaitez-vous réellement retirer cet utilisateur de la ferme ?").'">';
+      $h .= '<a data-ajax="'.CompanyUi::url($eEmployee['company']).'/employee:doDelete" post-id="'.$eEmployee['id'].'" class="btn btn-primary" data-confirm="'.s("Souhaitez-vous réellement retirer cet utilisateur de la ferme ?").'">';
         $h .= s("Sortir de l'équipe");
       $h .= '</a>';
 

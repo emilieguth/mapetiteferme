@@ -23,7 +23,7 @@
 
 		throw new ViewAction($data);
 
-	})
+	}, page: '/company/{company}/company:update')
 	->doUpdate(fn() => throw new ReloadAction('company', 'Company.updated'))
 	->write('doClose', function($data) {
 
