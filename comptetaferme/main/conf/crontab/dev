@@ -9,11 +9,11 @@
 0 * * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme selling/cron/invoice
 0 * * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme storage/cron/buffer
 0 0 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme user/cron/seniority
-0 0 1 10 * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme farm/cron/newSeason
+0 0 1 10 * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme company/cron/newSeason
 0 12 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme mail/cron/clean
 0 2 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme media/cron/clean
 0 3 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme hr/cron/calculate
-0 4 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme farm/cron/demo
+0 4 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme company/cron/demo
 0 6 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme cron/sitemap
 0 6 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme user/cron/close
 0 6 * * * php /var/www/ctf/framework/lime.php -e dev -a comptetaferme user/cron/log
