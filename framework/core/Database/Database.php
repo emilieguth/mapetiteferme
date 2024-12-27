@@ -203,6 +203,19 @@ class Database extends PDO {
 		self::$bases = [];
 	}
 
+
+	/**
+	 * Link packages to bases
+	 *
+	 * [
+	 *		'Cache' => 'cache',
+	 *	]
+	 *
+	 */
+	public static function addPackages(array $packages): void {
+		self::$packages += $packages;
+	}
+
 	/**
 	 * Link packages to bases
 	 *

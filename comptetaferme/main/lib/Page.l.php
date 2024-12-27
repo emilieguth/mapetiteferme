@@ -38,12 +38,23 @@ class PageLib {
 
 			$data->userDeletedAt = \session\SessionLib::get('userDeletedAt');
 			$data->cCompanyUser = \company\CompanyLib::getOnline();
-			// TODO : add the databases according to the companies selected
+			$data->eCompany = \company\CompanyLib::getById(GET('company'));
+
+			if ($data->eCompany->empty() === FALSE) {
+
+				if (LIME_ENV === 'prod') {
+					\Database::addPackages(['journal' => 'company_'.GET('company')]);
+				} else {
+					\Database::addPackages(['journal' => 'dev_comptetaferme_'.GET('company')]);
+				}
+
+			}
 
 		} else {
 
 			$data->userDeletedAt = NULL;
 			$data->cCompanyUser = new \Collection();
+			$data->eCompany = NULL;
 
 		}
 

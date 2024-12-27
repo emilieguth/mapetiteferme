@@ -13,7 +13,7 @@ class CompanyUi {
 	}
 
 	public static function url(Company $eCompany): string {
-		return $eCompany['id'];
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.$eCompany['id'];
 	}
 
 	public static function urlSettings(Company $eCompany): string {
@@ -221,11 +221,6 @@ class CompanyUi {
 					$h .= \Asset::icon('people-fill');
 				$h .= '</a>';
 
-				$h .= '<a href="'.CompanyUi::url($eCompany).'/company:updateFeature?id='.$eCompany['id'].'" class="bg-secondary util-button">';
-					$h .= '<h4>'.s("Activer ou désactiver des fonctionnalités").'</h4>';
-					$h .= \Asset::icon('toggle2-on');
-				$h .= '</a>';
-
 			$h .= '</div>';
 
 		$h .= '</div>';
@@ -236,7 +231,7 @@ class CompanyUi {
 
 			$h .= '<div class="util-buttons">';
 
-				$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Êtes-vous sûr de vouloir supprimer cette entreprise ?").'" class="bg-danger util-button">';
+				$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Êtes-vous sûr·e de vouloir supprimer cette entreprise ?").'" class="bg-danger util-button">';
 
 					$h .= '<h4>'.s("Supprimer l'entreprise").'</h4>';
 					$h .= \Asset::icon('trash');
