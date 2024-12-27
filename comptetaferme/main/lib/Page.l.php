@@ -43,10 +43,12 @@ class PageLib {
 			if ($data->eCompany->empty() === FALSE) {
 
 				if (LIME_ENV === 'prod') {
-					\Database::addPackages(['journal' => 'company_'.GET('company')]);
+					$base = 'comptetaferme_'.$data->eCompany['id'];
 				} else {
-					\Database::addPackages(['journal' => 'dev_comptetaferme_'.GET('company')]);
+					$base = 'dev_comptetaferme_'.$data->eCompany['id'];
 				}
+				\Database::addPackages(['journal' => $base]);
+				\Database::addBase($base, 'ctf-default');
 
 			}
 
