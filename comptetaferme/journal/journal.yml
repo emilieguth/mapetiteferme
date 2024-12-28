@@ -15,7 +15,7 @@ Operation:
   # Compte concerné par l'opération
   account: journal\Account
   accountLabel: ?text8(1, null)
-  date: ?date(PHP(toDate('NOW - 1 YEARS')), PHP(toDate('NOW + 1 YEARS')))
+  date: ?date(PHP(toDate('NOW - 2 YEARS')), PHP(toDate('NOW + 1 YEARS')))
   # Libellé de l'opération
   description: text24(1, null)
   document: ?journal\Document

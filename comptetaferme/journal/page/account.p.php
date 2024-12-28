@@ -13,10 +13,11 @@
 	->post('query', function($data) {
 
 		$company = GET('company');
+		$query = POST('query');
 
 		$data->eCompany = \company\CompanyLib::getById($company);
 
-		$data->cAccount = \journal\AccountLib::getAll();
+		$data->cAccount = \journal\AccountLib::getAll($query);
 
 		throw new \ViewAction($data);
 

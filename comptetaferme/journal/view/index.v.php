@@ -9,6 +9,9 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->mainTitle = (new \journal\JournalUi())->getJournalTitle($data->eCompany);
 	$t->mainTitleClass = 'hide-lateral-down';
 
-	echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation);
+	echo '<div class="journal-operation-list">';
+		echo '<a href="'.\company\CompanyUi::urlJournal($data->eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
+		echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation, $data->cOperationGrouped, $data->cAccount);
+	echo '</div>';
 
 });

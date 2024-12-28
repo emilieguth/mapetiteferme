@@ -7,6 +7,8 @@
 		$data->eCompany = \company\CompanyLib::getById($company);
 
 		$data->cOperation = \journal\OperationLib::getAll();
+		$data->cOperationGrouped = \journal\OperationLib::getGrouped();
+		$data->cAccount = \journal\AccountLib::getAll();
 
 		throw new ViewAction($data);
 

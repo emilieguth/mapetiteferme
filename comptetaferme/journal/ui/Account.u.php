@@ -51,12 +51,14 @@ class AccountUi {
 
 	}
 
-	public static function getAutocomplete(Account $eAccount): array {
+	public static function getAutocomplete(int $company, Account $eAccount): array {
 
 		\Asset::css('media', 'media.css');
 
 		return [
 			'value' => $eAccount['id'],
+			'class' => encode($eAccount['class']),
+			'company' => $company,
 			'itemHtml' => encode($eAccount['class'].' '.$eAccount['description']),
 			'itemText' => encode($eAccount['class'].' '.$eAccount['description'])
 		];
@@ -74,8 +76,8 @@ class AccountUi {
 		$d->group += ['wrapper' => 'customer'];
 
 		$d->autocompleteUrl = \company\CompanyUi::urlJournal($company).'/account:query';
-		$d->autocompleteResults = function(Account $e) {
-			return self::getAutocomplete($e);
+		$d->autocompleteResults = function(Account $e) use ($company) {
+			return self::getAutocomplete($company, $e);
 		};
 
 	}

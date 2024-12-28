@@ -13,7 +13,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 new JsonView('query', function($data, AjaxTemplate $t) {
 
-	$results = $data->cAccount->makeArray(fn($eAccount) => \journal\AccountUi::getAutocomplete($eAccount));
+	$results = $data->cAccount->makeArray(function($eAccount) use ($data) { return \journal\AccountUi::getAutocomplete($data->eCompany['id'], $eAccount); });
 
 	$t->push('results', $results);
 

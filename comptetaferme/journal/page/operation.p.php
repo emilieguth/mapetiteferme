@@ -6,7 +6,11 @@
 ))
 	->create(function($data) {
 
-		$data->e['cAccount'] = \journal\AccountLib::getAll();
+		$data->e->merge([
+			'company' => GET('company', 'int'),
+			'account' => get_exists('account') ? \journal\AccountLib::getById(GET('account', 'int')) : new \journal\Account(),
+			'accountLabel' => GET('accountLabel') ?? '',
+		]);
 
 		throw new ViewAction($data);
 

@@ -11,13 +11,9 @@ class JournalUi {
 
 		$h = '<div class="util-action">';
 
-		$h .= '<h1>';
-			$h .= s("Journal d'écritures");
-		$h .= '</h1>';
-
-		$h .= '<div>';
-			$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
-		$h .= '</div>';
+			$h .= '<h1>';
+				$h .= s("Journal d'écritures");
+			$h .= '</h1>';
 
 		$h .= '</div>';
 
@@ -25,7 +21,7 @@ class JournalUi {
 
 	}
 
-	public function getJournal(\company\Company $eCompany, \Collection $cOperation): string {
+	public function getJournal(\company\Company $eCompany, \Collection $cOperation, \Collection $cOperationGrouped, \Collection $cAccount): string {
 
 		if ($cOperation->empty() === true) {
 			return '<div class="util-info">'.s("Aucune opération n'a encore été enregistrée").'</div>';
@@ -33,56 +29,79 @@ class JournalUi {
 
 		$h = '';
 
-		$h = '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
 			$h .= '<table class="sale-item-table tr-bordered tr-even">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
-						$h .= '<th>'.s("Date de l'opération").'</th>';
-						$h .= '<th>'.s("Classe de compte").'</th>';
-						$h .= '<th>'.s("Numéro de compte").'</th>';
+						$h .= '<th class="text-end">'.s("Date de l'opération").'</th>';
 						$h .= '<th>'.s("Description").'</th>';
-						$h .= '<th>'.s("Crédit").'</th>';
-						$h .= '<th>'.s("Débit").'</th>';
+						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
+						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
+						$h .= '<th class="text-end">'.s("Solde (D-C)").'</th>';
 						$h .= '<th>'.s("Lettrage").'</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
 				$h .= '<tbody>';
 
+					$lastAccount = new Account();
 					foreach($cOperation as $eOperation) {
+
+						if ($lastAccount->empty() === true or $lastAccount['id'] !== $eOperation['account']['id']) {
+							$lastAccount = $eOperation['account'];
+							$h .= '<tr>';
+								$h .= '<td>';
+									$h .= '<strong>'.$eOperation['accountLabel'].'</strong>';
+								$h .= '</td>';
+								$h .= '<td>';
+									$h .= '<strong>'.$lastAccount['description'].'</strong>';
+								$h .= '</td>';
+								$h .= '<td class="text-end">';
+									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
+								$h .= '</td>';
+								$h .= '<td class="text-end">';
+									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit']).'</strong>';
+								$h .= '</td>';
+								$h .= '<td class="text-end">';
+									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit'] - $cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
+								$h .= '</td>';
+								$h .= '<td></td>';
+							$h .= '</tr>';
+						}
 						$h .= '<tr>';
 
-							$h .= '<td>';
+							$h .= '<td class="text-end">';
 								$h .= \util\DateUi::numeric($eOperation['date']);
-							$h .= '</td>';
-
-							$h .= '<td>';
-								$h .= $eOperation['account']['class'];
-							$h .= '</td>';
-
-							$h .= '<td>';
-								$h .= $eOperation['accountLabel'];
 							$h .= '</td>';
 
 							$h .= '<td>';
 								$h .= encode($eOperation['description']);
 							$h .= '</td>';
 
-							$h .= '<td>';
+							$h .= '<td class="text-end">';
 								$h .= match($eOperation['type']) {
-									Operation::CREDIT => \util\TextUi::number($eOperation['amount'], 2),
-									default => \util\TextUi::number(0, 2),
+									Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
+									default => \util\TextUi::money(0),
 								};
 							$h .= '</td>';
 
-							$h .= '<td>';
-								$h .= match($eOperation['type']) {
-									Operation::DEBIT => \util\TextUi::number($eOperation['amount'], 2),
-									default => \util\TextUi::number(0, 2),
-								};
-							$h .= '</td>';
+						$h .= '<td class="text-end">';
+						$h .= match($eOperation['type']) {
+							Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
+							default => \util\TextUi::money(0),
+						};
+						$h .= '</td>';
+
+						$balance = match($eOperation['type']) {
+							Operation::CREDIT => $eOperation['amount'],
+							Operation::DEBIT => -$eOperation['amount'],
+							default => 0,
+						};
+						$h .= '<td class="text-end">';
+							$h .= \util\TextUi::money($balance);
+						$h .= '</td>';
 
 							$h .= '<td>';
 								$h .= encode($eOperation['lettering']);

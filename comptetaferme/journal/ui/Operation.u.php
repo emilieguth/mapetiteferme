@@ -10,6 +10,7 @@ class OperationUi {
 
 	public function create(\company\Company $eCompany, Operation $eOperation): \Panel {
 
+		\Asset::js('journal', 'operation.js');
 		$form = new \util\FormUi();
 
 		$h = '';
@@ -17,6 +18,8 @@ class OperationUi {
 		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/operation:doCreate', ['id' => 'journal-operation-create', 'autocomplete' => 'off']);
 
 		$h .= $form->asteriskInfo();
+
+		$h .= $form->hidden('company', $eCompany['id']);
 
 		$h .= $form->dynamicGroup($eOperation, 'account*', function($d) {
 			$d->autocompleteDispatch = '#journal-operation-create';
@@ -32,7 +35,7 @@ class OperationUi {
 
 		return new \Panel(
 			id: 'panel-journal-operation-create',
-			title: s("Ajouter une opération"),
+			title: s("Ajouter une écriture"),
 			body: $h
 		);
 
@@ -72,6 +75,12 @@ class OperationUi {
 					];
 				};
 				(new AccountUi())->query($d, GET('company', '?int'));
+				break;
+
+			case 'amount' :
+				$d->append = function(\util\FormUi $form, Operation $e) {
+					return $form->addon(s("€"));
+				};
 				break;
 
 		}

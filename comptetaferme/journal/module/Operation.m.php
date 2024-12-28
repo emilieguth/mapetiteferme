@@ -42,7 +42,7 @@ class OperationModel extends \ModuleModel {
 			'id' => ['serial32', 'cast' => 'int'],
 			'account' => ['element32', 'journal\Account', 'cast' => 'element'],
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
-			'date' => ['date', 'min' => toDate('NOW - 1 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'null' => TRUE, 'cast' => 'string'],
+			'date' => ['date', 'min' => toDate('NOW - 2 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'null' => TRUE, 'cast' => 'string'],
 			'description' => ['text24', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
 			'document' => ['element32', 'journal\Document', 'null' => TRUE, 'cast' => 'element'],
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
