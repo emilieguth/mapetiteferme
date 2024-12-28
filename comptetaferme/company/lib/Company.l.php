@@ -4,7 +4,7 @@ namespace company;
 class CompanyLib extends CompanyCrud {
 
 	private static ?\Collection $cCompanyOnline = NULL;
-	private static array $specificPackages = ['journal'];
+	private static array $specificPackages = ['journal', 'accounting'];
 
 	public static function getPropertiesCreate(): array {
 		return ['name', 'nafCode', 'siret', 'addressLine1', 'addressLine2', 'postalCode', 'city'];
@@ -101,6 +101,7 @@ class CompanyLib extends CompanyCrud {
 		}
 
 		self::createSpecificDatabaseAndTables($e);
+		\accounting\FinancialYearLib::createDefault();
 
     Company::model()->commit();
 

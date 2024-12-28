@@ -1,9 +1,3 @@
-# Compte
-Account:
-  id: serial32
-  class: text8(1, null)
-  description: text8(1, null)
-
 # Pièce comptable
 Document:
   id: serial32
@@ -13,7 +7,7 @@ Document:
 Operation:
   id: serial32
   # Compte concerné par l'opération
-  account: journal\Account
+  account: accounting\Account
   accountLabel: ?text8(1, null)
   date: ?date(PHP(toDate('NOW - 2 YEARS')), PHP(toDate('NOW + 1 YEARS')))
   # Libellé de l'opération

@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace accounting;
 
 abstract class AccountElement extends \Element {
 
@@ -27,9 +27,9 @@ abstract class AccountElement extends \Element {
 
 class AccountModel extends \ModuleModel {
 
-	protected string $module = 'journal\Account';
-	protected string $package = 'journal';
-	protected string $table = 'journalAccount';
+	protected string $module = 'accounting\Account';
+	protected string $package = 'accounting';
+	protected string $table = 'accountingAccount';
 
 	public function __construct() {
 
@@ -162,7 +162,7 @@ abstract class AccountCrud extends \ModuleCrud {
 
 class AccountPage extends \ModulePage {
 
-	protected string $module = 'journal\Account';
+	protected string $module = 'accounting\Account';
 
 	public function __construct(
 	   ?\Closure $start = NULL,

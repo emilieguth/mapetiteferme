@@ -24,6 +24,10 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
+	public static function urlAccounting(int|Company $company): string {
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/accounting';
+	}
+
 	/**
 	 * Display a field to search companies
 	 *
@@ -207,9 +211,14 @@ class CompanyUi {
 
 			$h .= '<div class="util-buttons">';
 
-				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/account" class="bg-secondary util-button">';
+				$h .= '<a href="'.CompanyUi::urlAccounting($eCompany).'/account" class="bg-secondary util-button">';
 					$h .= '<h4>'.s("Les réglages de base<br/>de la comptabilité").'</h4>';
 					$h .= \Asset::icon('gear-fill');
+				$h .= '</a>';
+
+				$h .= '<a href="'.CompanyUi::urlAccounting($eCompany).'/financialYear" class="bg-secondary util-button">';
+					$h .= '<h4>'.s("Les exercices comptables").'</h4>';
+					$h .= \Asset::icon('calendar3');
 				$h .= '</a>';
 
 			$h .= '</div>';

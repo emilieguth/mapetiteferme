@@ -1,20 +1,20 @@
 <?php
-namespace journal;
+namespace accounting;
 
 class AccountUi {
 
 	public function __construct() {
-		\Asset::css('journal', 'journal.css');
+		\Asset::css('accounting', 'accounting.css');
 	}
 
 	public function getManageTitle(\company\Company $eCompany): string {
 
 		$h = '<div class="util-action">';
 
-			$h .= '<h1>';
-				$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
-				$h .= s("Les comptes");
-			$h .= '</h1>';
+		$h .= '<h1>';
+		$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
+		$h .= s("Les comptes");
+		$h .= '</h1>';
 
 		$h .= '</div>';
 
@@ -34,13 +34,13 @@ class AccountUi {
 
 			$h .= '<div class="util-overflow-sm">';
 
-				$h .= '<ul class="list-unstyled">';
+			$h .= '<ul class="list-unstyled">';
 
-					foreach($cAccount as $eAccount) {
-						$h .= '<li class="ml-'.(strlen($eAccount['class']) - 2).'">'.$eAccount['class'].'.&nbsp;'.$eAccount['description'].'</li>';
-					}
+			foreach($cAccount as $eAccount) {
+				$h .= '<li class="ml-'.(strlen($eAccount['class']) - 2).'">'.$eAccount['class'].'.&nbsp;'.$eAccount['description'].'</li>';
+			}
 
-				$h .= '</ul>';
+			$h .= '</ul>';
 
 			$h .= '</div>';
 
@@ -75,7 +75,7 @@ class AccountUi {
 		$d->multiple = $multiple;
 		$d->group += ['wrapper' => 'customer'];
 
-		$d->autocompleteUrl = \company\CompanyUi::urlJournal($company).'/account:query';
+		$d->autocompleteUrl = \company\CompanyUi::urlAccounting($company).'/account:query';
 		$d->autocompleteResults = function(Account $e) use ($company) {
 			return self::getAutocomplete($company, $e);
 		};

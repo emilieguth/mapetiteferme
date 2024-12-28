@@ -10,6 +10,7 @@ Package::setList([
 	'storage' => 'framework',
 	'user' => 'framework',
 	'util' => 'framework',
+	'accounting' => 'comptetaferme',
 	'company' => 'comptetaferme',
 	'journal' => 'comptetaferme',
 	'mail' => 'comptetaferme',

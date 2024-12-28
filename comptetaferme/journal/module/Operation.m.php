@@ -40,7 +40,7 @@ class OperationModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
-			'account' => ['element32', 'journal\Account', 'cast' => 'element'],
+			'account' => ['element32', 'accounting\Account', 'cast' => 'element'],
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
 			'date' => ['date', 'min' => toDate('NOW - 2 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'null' => TRUE, 'cast' => 'string'],
 			'description' => ['text24', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
@@ -55,7 +55,7 @@ class OperationModel extends \ModuleModel {
 		]);
 
 		$this->propertiesToModule += [
-			'account' => 'journal\Account',
+			'account' => 'accounting\Account',
 			'document' => 'journal\Document',
 		];
 

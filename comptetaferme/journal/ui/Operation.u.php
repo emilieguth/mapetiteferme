@@ -96,8 +96,8 @@ class OperationUi {
 
 			case 'type':
 				$d->values = [
-					Operation::CREDIT => s("Crédit"),
-					Operation::DEBIT => s("Débit"),
+					OperationElement::CREDIT => s("Crédit"),
+					OperationElement::DEBIT => s("Débit"),
 				];
 				break;
 
@@ -108,7 +108,7 @@ class OperationUi {
 					return [
 					];
 				};
-				(new AccountUi())->query($d, GET('company', '?int'));
+				(new \accounting\AccountUi())->query($d, GET('company', '?int'));
 				break;
 
 			case 'amount' :

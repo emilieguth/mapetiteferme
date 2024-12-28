@@ -5,11 +5,11 @@
 		$company = GET('company');
 
 		$data->eCompany = \company\CompanyLib::getById($company);
-		$data->cAccount = \journal\AccountLib::getAll();
+		$data->cAccount = \accounting\AccountLib::getAll();
 
-	throw new ViewAction($data);
+		throw new ViewAction($data);
 
-})
+	})
 	->post('query', function($data) {
 
 		$company = GET('company');
@@ -17,7 +17,7 @@
 
 		$data->eCompany = \company\CompanyLib::getById($company);
 
-		$data->cAccount = \journal\AccountLib::getAll($query);
+		$data->cAccount = \accounting\AccountLib::getAll($query);
 
 		throw new \ViewAction($data);
 

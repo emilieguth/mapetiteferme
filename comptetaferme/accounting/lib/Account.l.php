@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace accounting;
 
 class AccountLib extends AccountCrud {
 

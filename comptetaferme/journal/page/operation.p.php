@@ -8,7 +8,7 @@
 
 		$data->e->merge([
 			'company' => GET('company', 'int'),
-			'account' => get_exists('account') ? \journal\AccountLib::getById(GET('account', 'int')) : new \journal\Account(),
+			'account' => get_exists('account') ? \accounting\AccountLib::getById(GET('account', 'int')) : new \accounting\Account(),
 			'accountLabel' => GET('accountLabel') ?? '',
 		]);
 
@@ -21,7 +21,7 @@
 	->update(function($data) {
 
 		$data->e->merge([
-			'account' => \journal\AccountLib::getById($data->e['id']),
+			'account' => \accounting\AccountLib::getById($data->e['id']),
 		]);
 		throw new ViewAction($data);
 

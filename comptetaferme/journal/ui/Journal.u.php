@@ -58,8 +58,7 @@ class JournalUi {
 
 	}
 
-
-	public function getJournal(\company\Company $eCompany, \Collection $cOperation, \Collection $cOperationGrouped, \Collection $cAccount): string {
+	public function getJournal(\company\Company $eCompany, \Collection $cOperation, \Collection $cOperationGrouped, \accounting\FinancialYear $eFinancialYearSelected): string {
 
 		if ($cOperation->empty() === true) {
 			return '<div class="util-info">'.s("Aucune opération n'a encore été enregistrée").'</div>';
@@ -84,7 +83,7 @@ class JournalUi {
 
 				$h .= '<tbody>';
 
-					$lastAccount = new Account();
+					$lastAccount = new \accounting\Account();
 					foreach($cOperation as $eOperation) {
 
 						if ($lastAccount->empty() === true or $lastAccount['id'] !== $eOperation['account']['id']) {
@@ -147,7 +146,13 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
-								$h .= $this->getUpdate($eCompany, $eOperation, 'btn-outline-secondary');
+								if (
+									$eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
+									&& currentDate() <= $eFinancialYearSelected['endDate']
+									&& currentDate() >= $eFinancialYearSelected['startDate']
+								) {
+									$h .= $this->getUpdate($eCompany, $eOperation, 'btn-outline-secondary');
+								}
 							$h .= '</td>';
 
 						$h .= '</tr>';

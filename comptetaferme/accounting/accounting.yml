@@ -1,0 +1,12 @@
+# Classes de compte
+Account:
+  id: serial32
+  class: text8(1, null)
+  description: text8(1, null)
+
+# Exercices comptables
+FinancialYear:
+  id: serial32
+  startDate: date
+  endDate: date
+  status: enum(OPEN, CLOSE) = OPEN

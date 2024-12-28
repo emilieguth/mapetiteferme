@@ -8,7 +8,13 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	$t->mainTitle = (new \journal\JournalUi())->getJournalTitle($data->eCompany);
 
+	$t->mainYear = (new \accounting\FinancialYearUi())->getFinancialYearTabs(
+		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlJournal($data->eCompany).'/?financialYear='.$eFinancialYear['id']; },
+		$data->cFinancialYear,
+		$data->eFinancialYearSelected,
+);
+
 	echo (new \journal\JournalUi())->getSearch($data->search);
-	echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation, $data->cOperationGrouped, $data->cAccount);
+	echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation, $data->cOperationGrouped, $data->eFinancialYearSelected);
 
 });
