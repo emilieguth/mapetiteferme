@@ -12,17 +12,23 @@
 			'accountLabel' => GET('accountLabel') ?? '',
 		]);
 
+		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+
 		throw new ViewAction($data);
 
 	})
 	->doCreate(function($data) {
+
 		throw new ReloadAction('journal', 'Operation::created');
+
 	})
 	->update(function($data) {
 
 		$data->e->merge([
 			'account' => \accounting\AccountLib::getById($data->e['id']),
 		]);
+		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+
 		throw new ViewAction($data);
 
 	})

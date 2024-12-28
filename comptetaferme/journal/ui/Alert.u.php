@@ -11,7 +11,7 @@ class AlertUi {
 
 		return match($fqn) {
 
-			'Company::disabled' => s("Vous avez désactivé cette fonctionnalité sur votre entreprise."),
+			'Operation::date.check' => s("La date doit correspondre à l'exercice fiscal actuellement ouvert."),
 
 			default => null
 

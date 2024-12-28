@@ -8,7 +8,7 @@ class OperationUi {
 		\Asset::js('journal', 'journal.js');
 	}
 
-	public function create(\company\Company $eCompany, Operation $eOperation): \Panel {
+	public function create(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
 
 		\Asset::js('journal', 'operation.js');
 		$form = new \util\FormUi();
@@ -25,7 +25,9 @@ class OperationUi {
 			$d->autocompleteDispatch = '#journal-operation-create';
 		});
 
-		$h .= $form->dynamicGroups($eOperation, ['accountLabel*', 'date*', 'description*', 'amount*', 'type*', 'lettering']);
+		$h .= $form->dynamicGroups($eOperation, ['accountLabel*']);
+		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
+		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 
 		$h .= $form->group(
 			content: $form->submit(s("Ajouter l'entrée"))
@@ -41,7 +43,7 @@ class OperationUi {
 
 	}
 
-	public function update(\company\Company $eCompany, Operation $eOperation): \Panel {
+	public function update(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
 
 		\Asset::js('journal', 'operation.js');
 		$form = new \util\FormUi();
@@ -59,7 +61,9 @@ class OperationUi {
 			$d->autocompleteDispatch = '#journal-operation-create';
 		});
 
-		$h .= $form->dynamicGroups($eOperation, ['accountLabel*', 'date*', 'description*', 'amount*', 'type*', 'lettering']);
+		$h .= $form->dynamicGroups($eOperation, ['accountLabel*']);
+		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
+		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 
 		$h .= $form->group(
 			content: $form->submit(s("Modifier la ligne"))
