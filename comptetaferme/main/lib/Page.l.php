@@ -41,15 +41,7 @@ class PageLib {
 			$data->eCompany = \company\CompanyLib::getById(GET('company'));
 
 			if ($data->eCompany->empty() === FALSE) {
-
-				if (LIME_ENV === 'prod') {
-					$base = 'comptetaferme_'.$data->eCompany['id'];
-				} else {
-					$base = 'dev_comptetaferme_'.$data->eCompany['id'];
-				}
-				\Database::addPackages(['journal' => $base]);
-				\Database::addBase($base, 'ctf-default');
-
+				\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 			}
 
 		} else {

@@ -12,7 +12,7 @@ new AdaptativeView('index', function($data, MainTemplate $t) {
 
 	$h = '<div class="util-buttons">';
 
-		$h .= '<a href="/company/company:create" class="bg-secondary util-button">';
+		$h .= '<a href="/company/public:create" class="bg-secondary util-button">';
 
 			$h .= '<div>';
 				$h .= '<h4>'.s("Créer une autre entreprise").'</h4>';

@@ -4,6 +4,7 @@ namespace company;
 class CompanyLib extends CompanyCrud {
 
 	private static ?\Collection $cCompanyOnline = NULL;
+	private static array $specificPackages = ['journal'];
 
 	public static function getPropertiesCreate(): array {
 		return ['name', 'nafCode', 'siret', 'addressLine1', 'addressLine2', 'postalCode', 'city'];
@@ -99,13 +100,58 @@ class CompanyLib extends CompanyCrud {
 
 		}
 
-    (new \ModuleAdministration('company\Company'))->createDatabase(CompanyLib::getDatabaseNameFromCompany($e));
+		self::createSpecificDatabaseAndTables($e);
 
     Company::model()->commit();
 
 	}
 
-  public static function getDatabaseNameFromCompany (Company $e): string {
+	public static function connectSpecificDatabaseAndServer(Company $eCompany): void {
+
+		$base = self::getDatabaseName($eCompany);
+
+		foreach(self::$specificPackages as $package) {
+			\Database::addPackages([$package => $base]);
+		}
+
+		\Database::addBase($base, 'ctf-default');
+
+	}
+
+	public static function getDatabaseName(Company $eCompany): string {
+
+		if (LIME_ENV === 'prod') {
+			return'comptetaferme_'.$eCompany['id'];
+		}
+
+		return 'dev_comptetaferme_'.$eCompany['id'];
+	}
+
+	public static function createSpecificDatabaseAndTables(Company $eCompany): void {
+
+		// Create database
+		(new \ModuleAdministration('company\Company'))->createDatabase(CompanyLib::getDatabaseNameFromCompany($eCompany));
+
+		// Connect database
+		self::connectSpecificDatabaseAndServer($eCompany);
+
+		// Create packages tables
+		$libModule = new \dev\ModuleLib();
+		$libModule->load();
+
+		$classes = $libModule->getClasses();
+
+		foreach($classes as $class) {
+
+			list($package) = explode('\\', $class);
+			if (in_array($package, self::$specificPackages)) {
+				(new \ModuleAdministration($class))->init();
+			}
+
+		}
+	}
+
+  public static function getDatabaseNameFromCompany(Company $e): string {
 
     return \Database::getPackages()[Company::model()->getPackage()].'_'.$e['id'];
 
