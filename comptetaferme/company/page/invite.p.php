@@ -13,9 +13,9 @@
   })
   ->create(function($data) {
 
-    throw new ViewAction($data, ':create');
+    throw new ViewAction($data);
 
-  }, page: '/company/{id}/invite:create')
+  })
   ->doCreate(fn($data) => throw new RedirectAction(\company\CompanyUi::url($data->e['company']).'/employee:manage?success=company:Invite::created'))
   ->write('doDeleteInvite', function($data) {
 
@@ -47,7 +47,7 @@
     $data->eInvite = \company\InviteLib::getByKey(GET('key'));
 
     if($data->eInvite->empty()) {
-      throw new ViewAction($data, ':check');
+      throw new ViewAction($data);
     }
 
     $data->eInvite['company'] = \company\CompanyLib::getById($data->eInvite['company']);

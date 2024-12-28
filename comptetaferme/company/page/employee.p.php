@@ -1,8 +1,8 @@
 <?php
 (new Page())
-  ->get('/company/{id}/employee:manage', function($data) {
+  ->get('manage', function($data) {
 
-    $company = GET('id');
+    $company = GET('company');
 
     $data->eCompany = \company\CompanyLib::getById($company);
 
@@ -13,10 +13,10 @@
 
     $data->cUser = $data->cEmployee->getColumnCollection('user');
 
-    throw new ViewAction($data, ':manage');
+    throw new ViewAction($data);
 
   })
-  ->get('/company/{id}/employee:show', function($data) {
+  ->get('show', function($data) {
 
     $data->eEmployee = \company\EmployeeLib::getById(GET('id'));
     $data->eCompany = \company\CompanyLib::getById($data->eEmployee['company']);
@@ -24,7 +24,7 @@
     \company\EmployeeLib::register($data->eCompany);
 
 
-    throw new ViewAction($data, ':show');
+    throw new ViewAction($data);
 
   });
 
@@ -102,7 +102,7 @@
     ]);
 
   })
-  ->update(page: '/company/{company}/employee:update')
+  ->update()
   ->doUpdate(fn($data) => throw new ViewAction($data))
   ->doDelete(fn($data) => throw new RedirectAction(\company\CompanyUi::url($data->e['company']).'/employee:manage?company='.$data->e['company']['id'].'&success=company:Employee::deleted'));
 ?>

@@ -1081,12 +1081,12 @@ table.util-block tbody:last-child tr:last-child td:last-child {
 	margin-bottom: 1rem;
 	border-radius: var(--radius);
 }
-
 .util-block-help {
-	padding: 1rem;
+	padding: 1.25rem 1rem  1rem;
 	background-color: var(--info);
 	line-height: 1.5;
 	position: relative;
+	min-height: 4rem;
 }
 
 .util-block-help {
@@ -1101,8 +1101,13 @@ table.util-block tbody:last-child tr:last-child td:last-child {
 	align-items: center;
 }
 
+.util-block-help h4:first-child {
+	margin-top: -0.5rem;
+}
+
 .util-block-help a {
 	text-decoration: underline;
+	color: var(--text);
 }
 
 .util-block-help:before {
@@ -1113,8 +1118,8 @@ table.util-block tbody:last-child tr:last-child td:last-child {
 	color: white;
 	top: 1rem;
 	left: 1rem;
-	width: 2.5rem;
-	height: 2.5rem;
+	width: 2.25rem;
+	height: 2.25rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;

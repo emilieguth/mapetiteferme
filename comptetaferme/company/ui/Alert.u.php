@@ -33,10 +33,9 @@ class AlertUi {
 
 		return match($fqn) {
 
-			'Company.created' => s("L'entreprise a bien été créée, à vous de jouer !"),
-			'Company.updated' => s("L'entreprise a bien été mise à jour !"),
-			'Company.updatedFeatures' => s("Les fonctionnalités activées et désactivées pour votre fermes ont bien été mises à jour !"),
-			'Company.closed' => s("L'entreprise a bien été supprimée !"),
+			'Company::created' => s("L'entreprise a bien été créée, à vous de jouer !"),
+			'Company::updated' => s("L'entreprise a bien été mise à jour !"),
+			'Company::closed' => s("L'entreprise a bien été supprimée !"),
 
 			'Employee::userCreated' => s("L'utilisateur a bien été créé et peut désormais être ajouté dans l'équipe de l'entreprise !"),
 			'Employee::userUpdated' => s("L'utilisateur a bien été mis à jour !"),

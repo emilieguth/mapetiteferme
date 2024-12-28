@@ -35,7 +35,7 @@ new AdaptativeView('create', function($data, PanelTemplate $t) {
   return (new \company\EmployeeUi())->create($data->e, $data->eEmployeeLink);
 });
 
-new AdaptativeView('/company/{company}/employee:update', function($data, PanelTemplate $t) {
+new AdaptativeView('update', function($data, PanelTemplate $t) {
   return (new \company\EmployeeUi())->update($data->e);
 });
 

@@ -37,7 +37,7 @@ switch(LIME_ENV) {
 
     Database::setDebug(get_exists('sql'));
 
-    Database::setPackages([
+    Database::addPackages([
       'company' => 'dev_comptetaferme',
       'dev' => 'dev_comptetaferme',
       'mail' => 'dev_comptetaferme',

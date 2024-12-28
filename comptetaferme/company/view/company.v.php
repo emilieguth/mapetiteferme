@@ -1,11 +1,22 @@
 <?php
-new AdaptativeView('create', function($data, PanelTemplate $t) {
+new AdaptativeView('configuration', function($data, CompanyTemplate $t) {
 
-	return (new \company\CompanyUi())->create();
+	$t->tab = 'settings';
+	$t->subNav = (new \company\CompanyUi())->getSettingsSubNav($data->eCompany);
+
+	$t->title = s("Configuration pour {value}", $data->eCompany['name']);
+	$t->canonical = \company\CompanyUi::urlSettings($data->eCompany);
+
+	$t->package('main')->updateNavSettings($t->canonical);
+
+	$t->mainTitle = '<h1>'.s("Paramétrage").'</h1>';
+	$t->mainTitleClass = 'hide-lateral-down';
+
+	echo (new \company\CompanyUi())->getSettings($data->eCompany);
 
 });
 
-new AdaptativeView('/company/{company}/company:update', function($data, CompanyTemplate $t) {
+new AdaptativeView('update', function($data, CompanyTemplate $t) {
 
 	$t->title = s("Réglages de base de {value}", $data->e['name']);
 	$t->tab = 'settings';

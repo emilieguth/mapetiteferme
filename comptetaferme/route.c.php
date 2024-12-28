@@ -3,55 +3,10 @@ Route::register([
 	'DELETE' => [
 	],
 	'GET' => [
-		'/company/{company}/company:update' => [
-			'request' => 'company/company',
-			'priority' => 5,
-			'route' => ['company', '{company}', 'company:update'],
-		],
-		'/company/{company}/employee:update' => [
-			'request' => 'company/employee',
-			'priority' => 5,
-			'route' => ['company', '{company}', 'employee:update'],
-		],
-		'/company/{id}' => [
+		'/company' => [
 			'request' => 'company/index',
 			'priority' => 5,
-			'route' => ['company', '{id}'],
-		],
-		'/company/{id}/clients' => [
-			'request' => 'company/index',
-			'priority' => 5,
-			'route' => ['company', '{id}', 'clients'],
-		],
-		'/company/{id}/configuration' => [
-			'request' => 'company/index',
-			'priority' => 5,
-			'route' => ['company', '{id}', 'configuration'],
-		],
-		'/company/{id}/employee:manage' => [
-			'request' => 'company/employee',
-			'priority' => 5,
-			'route' => ['company', '{id}', 'employee:manage'],
-		],
-		'/company/{id}/employee:show' => [
-			'request' => 'company/employee',
-			'priority' => 5,
-			'route' => ['company', '{id}', 'employee:show'],
-		],
-		'/company/{id}/finances' => [
-			'request' => 'company/index',
-			'priority' => 5,
-			'route' => ['company', '{id}', 'finances'],
-		],
-		'/company/{id}/fournisseurs' => [
-			'request' => 'company/index',
-			'priority' => 5,
-			'route' => ['company', '{id}', 'fournisseurs'],
-		],
-		'/company/{id}/invite:create' => [
-			'request' => 'company/invite',
-			'priority' => 5,
-			'route' => ['company', '{id}', 'invite:create'],
+			'route' => ['company'],
 		],
 		'/minify/{version}/{filename}' => [
 			'request' => 'dev/minify',

@@ -13,23 +13,15 @@ class CompanyUi {
 	}
 
 	public static function url(Company $eCompany): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.$eCompany['id'];
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.$eCompany['id'].'/company';
 	}
 
 	public static function urlSettings(Company $eCompany): string {
 		return self::url($eCompany).'/configuration';
 	}
 
-	public static function urlFinances(Company $eCompany): string {
-		return self::url($eCompany).'/finances';
-	}
-
-	public static function urlSuppliers(Company $eCompany): string {
-		return self::url($eCompany).'/fournisseurs';
-	}
-
-	public static function urlCustomers(Company $eCompany): string {
-		return self::url($eCompany).'/clients';
+	public static function urlJournal(int|Company $company): string {
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
 	/**
@@ -75,7 +67,7 @@ class CompanyUi {
 
 		$h = '';
 
-		$h .= $form->openAjax('/company/company:doCreate', ['id' => 'company-create', 'autocomplete' => 'off']);
+		$h .= $form->openAjax('/company/public:doCreate', ['id' => 'company-create', 'autocomplete' => 'off']);
 
 			$h .= $form->asteriskInfo();
 
@@ -102,7 +94,7 @@ class CompanyUi {
 
 		$form = new \util\FormUi();
 
-		$h = $form->openAjax('/company/company:doUpdate', ['id' => 'company-update', 'autocomplete' => 'off']);
+		$h = $form->openAjax(CompanyUi::url($eCompany).'/company:doUpdate', ['id' => 'company-update', 'autocomplete' => 'off']);
 
 			$h .= $form->hidden('id', $eCompany['id']);
 
@@ -131,27 +123,11 @@ class CompanyUi {
 
 			$h .= '<div class="company-tabs">';
 
-				$h .= '<a href="'.CompanyUi::urlFinances($eCompany).'" class="company-tab '.($tab === 'finances' ? 'selected' : '').'" data-tab="finances">';
-					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('piggy-bank').'</span>';
-						$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('piggy-bank-fill').'</span>';
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/" class="company-tab '.($tab === 'journal' ? 'selected' : '').'" data-tab="finances">';
+					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('journal-bookmark').'</span>';
+						$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('journal-bookmark-fill').'</span>';
 						$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Finances");
-					$h .= '</span>';
-				$h .= '</a>';
-
-				$h .= '<a href="'.CompanyUi::urlSuppliers($eCompany).'" class="company-tab '.($tab === 'suppliers' ? 'selected' : '').'" data-tab="suppliers">';
-					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('building-down').'</span>';
-						$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('building-fill-down').'</span>';
-						$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Fournisseurs");
-					$h .= '</span>';
-				$h .= '</a>';
-
-				$h .= '<a href="'.CompanyUi::urlCustomers($eCompany).'" class="company-tab '.($tab === 'customers' ? 'selected' : '').'" data-tab="customers">';
-					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-person').'</span>';
-						$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-person-fill').'</span>';
-						$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Clients");
+						$h .= s("Journal");
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -227,6 +203,21 @@ class CompanyUi {
 
 		$h .= '<div class="util-block-optional">';
 
+		$h .= '<h2>'.s("Les paramètres de comptabilité").'</h2>';
+
+			$h .= '<div class="util-buttons">';
+
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/account" class="bg-secondary util-button">';
+					$h .= '<h4>'.s("Les réglages de base<br/>de la comptabilité").'</h4>';
+					$h .= \Asset::icon('gear-fill');
+				$h .= '</a>';
+
+			$h .= '</div>';
+
+		$h .= '</div>';
+
+		$h .= '<div class="util-block-optional">';
+
 			$h .= '<h2>😭</h2>';
 
 			$h .= '<div class="util-buttons">';
@@ -246,14 +237,14 @@ class CompanyUi {
 
 	}
 
-	public function getFinancesSubNav(Company $eCompany): string {
+	public function getJournalSubNav(Company $eCompany): string {
 
-		$selectedView = \Setting::get('main\viewFinances');
+		$selectedView = \Setting::get('main\viewJournal');
 
 		$h = '<nav id="company-subnav">';
 			$h .= '<div class="company-subnav-wrapper">';
 
-			foreach($this->getFinancesCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+			foreach($this->getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
 			}
 
@@ -264,70 +255,12 @@ class CompanyUi {
 
 	}
 
-	protected static function getFinancesCategories(Company $eCompany): array {
+	protected static function getJournalCategories(Company $eCompany): array {
 
 		return [
 			'finances' => [
-				'url' => CompanyUi::urlFinances($eCompany),
+				'url' => CompanyUi::urlJournal($eCompany),
 				'label' => s("Finances")
-			]
-		];
-
-	}
-
-	public function getSuppliersSubNav(Company $eCompany): string {
-
-		$selectedView = \Setting::get('main\viewSuppliers');
-
-		$h = '<nav id="company-subnav">';
-			$h .= '<div class="company-subnav-wrapper">';
-
-				foreach($this->getSuppliersCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
-					$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
-				}
-
-			$h .= '</div>';
-		$h .= '</nav>';
-
-		return $h;
-
-	}
-
-	protected static function getSuppliersCategories(Company $eCompany): array {
-
-		return [
-			'suppliers' => [
-				'url' => CompanyUi::urlSuppliers($eCompany),
-				'label' => s("Fournisseurs")
-			]
-		];
-
-	}
-
-	public function getCustomersSubNav(Company $eCompany): string {
-
-		$selectedView = \Setting::get('main\viewCustomers');
-
-		$h = '<nav id="company-subnav">';
-			$h .= '<div class="company-subnav-wrapper">';
-
-				foreach($this->getCustomersCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
-					$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
-				}
-
-			$h .= '</div>';
-		$h .= '</nav>';
-
-		return $h;
-
-	}
-
-	protected static function getCustomersCategories(Company $eCompany): array {
-
-		return [
-			'customers' => [
-				'url' => CompanyUi::urlCustomers($eCompany),
-				'label' => s("Clients")
 			]
 		];
 

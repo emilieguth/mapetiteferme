@@ -1,0 +1,25 @@
+# Compte
+Account:
+  id: serial32
+  class: text8(1, null)
+  description: text8(1, null)
+
+# Pièce comptable
+Document:
+  id: serial32
+  number: text8(1, null)
+  document: int32(1, null)
+
+Operation:
+  id: serial32
+  # Compte concerné par l'opération
+  account: journal\Account
+  accountLabel: ?text8(1, null)
+  date: ?date(PHP(toDate('NOW - 1 YEARS')), PHP(toDate('NOW + 1 YEARS')))
+  # Libellé de l'opération
+  description: text24(1, null)
+  document: ?journal\Document
+  # Une opération est toujours HT
+  amount: decimal(8, 2)
+  type: enum(DEBIT, CREDIT)
+  lettering: ?text8(1, null)

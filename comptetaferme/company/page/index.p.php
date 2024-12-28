@@ -3,34 +3,14 @@
 
 		\user\ConnectionLib::checkLogged();
 
-		$data->eCompany = \company\CompanyLib::getById(GET('id'));
+		$data->eCompany = \company\CompanyLib::getById(GET('company'));
 
 		\company\EmployeeLib::register($data->eCompany);
 
 		$data->tipNavigation = 'close';
 
 	}))
-	->get('/company/{id}', function($data) {
-
-		throw new ViewAction($data);
-
-	})
-	->get('/company/{id}/configuration', function($data) {
-
-		throw new ViewAction($data);
-
-	})
-	->get('/company/{id}/finances', function($data) {
-
-		throw new ViewAction($data);
-
-	})
-	->get('/company/{id}/fournisseurs', function($data) {
-
-		throw new ViewAction($data);
-
-	})
-	->get('/company/{id}/clients', function($data) {
+	->get('/company', function($data) {
 
 		throw new ViewAction($data);
 

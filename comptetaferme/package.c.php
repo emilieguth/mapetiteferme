@@ -11,6 +11,7 @@ Package::setList([
 	'user' => 'framework',
 	'util' => 'framework',
 	'company' => 'comptetaferme',
+	'journal' => 'comptetaferme',
 	'mail' => 'comptetaferme',
 	'media' => 'comptetaferme',
 ]);

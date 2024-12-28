@@ -1,17 +1,4 @@
 <?php
-(new \company\CompanyPage(
-		function($data) {
-			\user\ConnectionLib::checkLogged();
-		}
-	))
-	->getCreateElement(fn($data) => new \company\Company([
-		'owner' => \user\ConnectionLib::getOnline()
-	]))
-	->create()
-	->doCreate(function($data) {
-		throw new RedirectAction(\company\CompanyUi::url($data->e).'?success=company:Company.created');
-	});
-
 (new \company\CompanyPage())
 	->applyElement(function($data, \company\Company $e) {
 		$e->validate('canWrite');
@@ -23,15 +10,22 @@
 
 		throw new ViewAction($data);
 
-	}, page: '/company/{company}/company:update')
-	->doUpdate(fn() => throw new ReloadAction('company', 'Company.updated'))
+	})
+	->doUpdate(fn() => throw new ReloadAction('company', 'Company::updated'))
 	->write('doClose', function($data) {
 
 		$data->e['status'] = \company\Company::CLOSED;
 
 		\company\CompanyLib::update($data->e, ['status']);
 
-		throw new RedirectAction('/?success=company:Company.closed');
+		throw new RedirectAction('/?success=company:Company::closed');
+
+	});
+
+(new \company\CompanyPage())
+	->get('configuration', function($data) {
+
+		throw new ViewAction($data, ':configuration');
 
 	});
 ?>

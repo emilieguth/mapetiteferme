@@ -7,7 +7,7 @@ Setting::register('main', [
 	'robotsDisallow' => '',
 
 	'viewSettings' => 'settings',
-	'viewFinances' => 'settings',
+	'viewJournal' => 'settings',
 	'viewSuppliers' => 'settings',
 	'viewCustomers' => 'settings',
 
