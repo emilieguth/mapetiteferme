@@ -7,11 +7,8 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->canonical = \company\CompanyUi::urlJournal($data->eCompany);
 
 	$t->mainTitle = (new \journal\JournalUi())->getJournalTitle($data->eCompany);
-	$t->mainTitleClass = 'hide-lateral-down';
 
-	echo '<div class="journal-operation-list">';
-		echo '<a href="'.\company\CompanyUi::urlJournal($data->eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
-		echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation, $data->cOperationGrouped, $data->cAccount);
-	echo '</div>';
+	echo (new \journal\JournalUi())->getSearch($data->search);
+	echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation, $data->cOperationGrouped, $data->cAccount);
 
 });

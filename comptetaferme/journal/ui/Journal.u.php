@@ -15,11 +15,49 @@ class JournalUi {
 				$h .= s("Journal d'écritures");
 			$h .= '</h1>';
 
+			$h .= '<div>';
+				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
+				$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
+			$h .= '</div>';
+
 		$h .= '</div>';
 
 		return $h;
 
 	}
+
+
+	public function getSearch(\Search $search): string {
+
+		$h = '<div id="journal-search" class="util-block-search stick-xs '.($search->empty(['ids']) ? 'hide' : '').'">';
+
+			$form = new \util\FormUi();
+			$url = LIME_REQUEST_PATH;
+
+			$statuses = OperationUi::p('type')->values;
+
+			$h .= $form->openAjax($url, ['method' => 'get', 'id' => 'form-search']);
+
+				$h .= '<div>';
+						$h .= $form->month('date', $search->get('date'), ['placeholder' => s("Mois")]);
+						$h .= $form->text('accountLabel', $search->get('accountLabel'), ['placeholder' => s("Numéro de compte")]);
+						$h .= $form->text('description', $search->get('description'), ['placeholder' => s("Description")]);
+						$h .= $form->select('type', $statuses, $search->get('type'), ['placeholder' => s("Type")]);
+						$h .= $form->text('lettering', $search->get('lettering'), ['placeholder' => s("Lettrage")]);
+					$h .= '</div>';
+					$h .= '<div>';
+						$h .= $form->submit(s("Chercher"), ['class' => 'btn btn-secondary']);
+						$h .= '<a href="'.$url.'" class="btn btn-secondary">'.\Asset::icon('x-lg').'</a>';
+				$h .= '</div>';
+
+			$h .= $form->close();
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
 
 	public function getJournal(\company\Company $eCompany, \Collection $cOperation, \Collection $cOperationGrouped, \Collection $cAccount): string {
 
