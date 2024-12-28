@@ -41,6 +41,40 @@ class OperationUi {
 
 	}
 
+	public function update(\company\Company $eCompany, Operation $eOperation): \Panel {
+
+		\Asset::js('journal', 'operation.js');
+		$form = new \util\FormUi();
+
+		$h = '';
+
+		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/operation:doUpdate', ['id' => 'journal-operation-create', 'autocomplete' => 'off']);
+
+		$h .= $form->asteriskInfo();
+
+		$h .= $form->hidden('company', $eCompany['id']);
+		$h .= $form->hidden('id', $eOperation['id']);
+
+		$h .= $form->dynamicGroup($eOperation, 'account*', function($d) {
+			$d->autocompleteDispatch = '#journal-operation-create';
+		});
+
+		$h .= $form->dynamicGroups($eOperation, ['accountLabel*', 'date*', 'description*', 'amount*', 'type*', 'lettering']);
+
+		$h .= $form->group(
+			content: $form->submit(s("Modifier la ligne"))
+		);
+
+		$h .= $form->close();
+
+		return new \Panel(
+			id: 'panel-journal-operation-create',
+			title: s("Modifier une ligne"),
+			body: $h
+		);
+
+	}
+
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Operation::model()->describer($property, [

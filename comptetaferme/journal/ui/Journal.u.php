@@ -68,6 +68,7 @@ class JournalUi {
 									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit'] - $cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
 								$h .= '</td>';
 								$h .= '<td></td>';
+								$h .= '<td></td>';
 							$h .= '</tr>';
 						}
 						$h .= '<tr>';
@@ -107,6 +108,8 @@ class JournalUi {
 								$h .= encode($eOperation['lettering']);
 							$h .= '</td>';
 
+							$h .= '<td>';
+								$h .= $this->getUpdate($eCompany, $eOperation, 'btn-outline-secondary');
 							$h .= '</td>';
 
 						$h .= '</tr>';
@@ -120,6 +123,30 @@ class JournalUi {
 
 	}
 
+	protected function getUpdate(\company\Company $eCompany, Operation $eOperation, string $btn): string {
+
+		$primaryList = '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update?id='.$eOperation['id'].'" class="dropdown-item">'.s("Modifier la ligne").'</a>';;
+
+		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update" post-id="'.$eOperation['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de la ligne ?").'">'.s("Supprimer la ligne").'</a>';
+
+		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
+		$h .= '<div class="dropdown-list">';
+		$h .= '<div class="dropdown-title">'.s("Opération #{id}", ['id' => $eOperation['id']]).'</div>';
+
+		$h .= $primaryList;
+
+		if($secondaryList) {
+
+			$h .= '<div class="dropdown-divider"></div>';
+			$h .= $secondaryList;
+
+		}
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
 }
 
 ?>

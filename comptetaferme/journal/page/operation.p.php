@@ -17,5 +17,16 @@
 	})
 	->doCreate(function($data) {
 		throw new ReloadAction('journal', 'Operation::created');
+	})
+	->update(function($data) {
+
+		$data->e->merge([
+			'account' => \journal\AccountLib::getById($data->e['id']),
+		]);
+		throw new ViewAction($data);
+
+	})
+	->doUpdate(function($data) {
+		throw new ReloadAction('journal', 'Operation::updated');
 	});
 ?>

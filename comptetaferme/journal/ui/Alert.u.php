@@ -24,6 +24,7 @@ class AlertUi {
 		return match($fqn) {
 
 			'Operation::created' => s("L'opération a bien été enregistrée."),
+			'Operation::updated' => s("La ligne a bien été mise à jour."),
 
 			default => null
 
