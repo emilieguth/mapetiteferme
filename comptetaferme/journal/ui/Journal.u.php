@@ -72,10 +72,11 @@ class JournalUi {
 
 				$h .= '<thead>';
 					$h .= '<tr>';
+						$h .= '<th class="center">#</th>';
 						$h .= '<th class="text-end">'.s("Date de l'opération").'</th>';
 						$h .= '<th>'.s("Description").'</th>';
-						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
 						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
+						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
 						$h .= '<th class="text-end">'.s("Solde (D-C)").'</th>';
 						$h .= '<th>'.s("Lettrage").'</th>';
 					$h .= '</tr>';
@@ -89,17 +90,20 @@ class JournalUi {
 						if ($lastAccount->empty() === true or $lastAccount['id'] !== $eOperation['account']['id']) {
 							$lastAccount = $eOperation['account'];
 							$h .= '<tr>';
-								$h .= '<td>';
+
+								$h .= '<td class="td-min-content text-center">';
+								$h .= '</td>';
+								$h .= '<td class="text-end">';
 									$h .= '<strong>'.$eOperation['accountLabel'].'</strong>';
 								$h .= '</td>';
 								$h .= '<td>';
 									$h .= '<strong>'.$lastAccount['description'].'</strong>';
 								$h .= '</td>';
 								$h .= '<td class="text-end">';
-									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
+									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit']).'</strong>';
 								$h .= '</td>';
 								$h .= '<td class="text-end">';
-									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit']).'</strong>';
+									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
 								$h .= '</td>';
 								$h .= '<td class="text-end">';
 									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit'] - $cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
@@ -109,6 +113,10 @@ class JournalUi {
 							$h .= '</tr>';
 						}
 						$h .= '<tr>';
+
+							$h .= '<td class="td-min-content text-center">';
+								$h .= $eOperation['id'];
+							$h .= '</td>';
 
 							$h .= '<td class="text-end">';
 								$h .= \util\DateUi::numeric($eOperation['date']);
@@ -120,21 +128,21 @@ class JournalUi {
 
 							$h .= '<td class="text-end">';
 								$h .= match($eOperation['type']) {
+									Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
+									default => \util\TextUi::money(0),
+								};
+							$h .= '</td>';
+
+							$h .= '<td class="text-end">';
+								$h .= match($eOperation['type']) {
 									Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
 									default => \util\TextUi::money(0),
 								};
 							$h .= '</td>';
 
-						$h .= '<td class="text-end">';
-						$h .= match($eOperation['type']) {
-							Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
-							default => \util\TextUi::money(0),
-						};
-						$h .= '</td>';
-
 						$balance = match($eOperation['type']) {
-							Operation::CREDIT => $eOperation['amount'],
-							Operation::DEBIT => -$eOperation['amount'],
+							Operation::CREDIT => -$eOperation['amount'],
+							Operation::DEBIT => $eOperation['amount'],
 							default => 0,
 						};
 						$h .= '<td class="text-end">';
@@ -168,13 +176,13 @@ class JournalUi {
 
 	protected function getUpdate(\company\Company $eCompany, Operation $eOperation, string $btn): string {
 
-		$primaryList = '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update?id='.$eOperation['id'].'" class="dropdown-item">'.s("Modifier la ligne").'</a>';;
+		$primaryList = '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update?id='.$eOperation['id'].'" class="dropdown-item">'.s("Modifier").'</a>';;
 
-		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update" post-id="'.$eOperation['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de la ligne ?").'">'.s("Supprimer la ligne").'</a>';
+		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update" post-id="'.$eOperation['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de cette écriture ?").'">'.s("Supprimer").'</a>';
 
 		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
 		$h .= '<div class="dropdown-list">';
-		$h .= '<div class="dropdown-title">'.s("Opération #{id}", ['id' => $eOperation['id']]).'</div>';
+		$h .= '<div class="dropdown-title">'.s("Écriture #{id}", ['id' => $eOperation['id']]).'</div>';
 
 		$h .= $primaryList;
 

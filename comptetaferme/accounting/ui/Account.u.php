@@ -68,7 +68,7 @@ class AccountUi {
 
 	public function query(\PropertyDescriber $d, int $company, bool $multiple = FALSE) {
 
-		$d->prepend = \Asset::icon('person-bounding-box');
+		$d->prepend = \Asset::icon('journal-text');
 		$d->field = 'autocomplete';
 
 		$d->placeholder ??= s("Commencez à saisir la classe...");

@@ -30,7 +30,7 @@ class OperationUi {
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 
 		$h .= $form->group(
-			content: $form->submit(s("Ajouter l'entrée"))
+			content: $form->submit(s("Ajouter l'écriture"))
 		);
 
 		$h .= $form->close();
@@ -66,14 +66,14 @@ class OperationUi {
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 
 		$h .= $form->group(
-			content: $form->submit(s("Modifier la ligne"))
+			content: $form->submit(s("Modifier l'écriture"))
 		);
 
 		$h .= $form->close();
 
 		return new \Panel(
 			id: 'panel-journal-operation-create',
-			title: s("Modifier une ligne"),
+			title: s("Modifier une écriture"),
 			body: $h
 		);
 
