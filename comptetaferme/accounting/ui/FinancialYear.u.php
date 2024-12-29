@@ -170,6 +170,7 @@ class FinancialYearUi {
 		return substr($eFinancialYear['startDate'], 0, 4).' - '.substr($eFinancialYear['endDate'], 0, 4);
 
 	}
+
 	public function getFinancialYearTabs(\Closure $url, \Collection $cFinancialYear, \accounting\FinancialYear $eFinancialYearSelected): string {
 
 		$h = ' <a data-dropdown="bottom-start" data-dropdown-hover="true" data-dropdown-offset-x="2" class="nav-year">';
