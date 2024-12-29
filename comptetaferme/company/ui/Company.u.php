@@ -267,9 +267,9 @@ class CompanyUi {
 	protected static function getJournalCategories(Company $eCompany): array {
 
 		return [
-			'finances' => [
-				'url' => CompanyUi::urlJournal($eCompany),
-				'label' => s("Finances")
+			'journal' => [
+				'url' => CompanyUi::urlJournal($eCompany).'/',
+				'label' => s("Journal")
 			]
 		];
 

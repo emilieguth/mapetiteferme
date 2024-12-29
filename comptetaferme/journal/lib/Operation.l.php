@@ -31,11 +31,11 @@ class OperationLib extends OperationCrud {
 			->whereType($search->get('type'), if: $search->get('type'));
 
 	}
-	public static function getAll(\Search $search = new \Search()): \Collection {
+	public static function getAll(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
 		return self::applySearch($search)
 			->select(Operation::getSelection() + ['account' => ['class', 'description']])
-			->sort(['accountLabel' => SORT_ASC, 'date' => SORT_DESC])
+			->sort($hasSort === TRUE ? $search->buildSort() : ['accountLabel' => SORT_ASC, 'date' => SORT_DESC])
 			->getCollection(NULL, NULL, 'id');
 
 	}

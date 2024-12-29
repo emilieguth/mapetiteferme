@@ -20,12 +20,13 @@
 			'type' => GET('type'),
 			'lettering' => GET('lettering'),
 		], GET('sort'));
+		$hasSort = get_exists('sort') === TRUE;
 		$data->search = clone $search;
 		// Ne pas ouvrir le bloc de recherche
 		$search->set('financialYear', $data->eFinancialYearSelected);
 
-		$data->cOperation = \journal\OperationLib::getAll($search);
-		$data->cOperationGrouped = \journal\OperationLib::getGrouped($search);
+		$data->cOperation = \journal\OperationLib::getAll($search, $hasSort);
+		$data->cOperationGrouped = $hasSort ? new \Collection() : \journal\OperationLib::getGrouped($search);
 		$data->cAccount = \accounting\AccountLib::getAll();
 
 		throw new ViewAction($data);

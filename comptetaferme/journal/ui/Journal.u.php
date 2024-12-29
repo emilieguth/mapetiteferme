@@ -27,12 +27,12 @@ class JournalUi {
 	}
 
 
-	public function getSearch(\Search $search): string {
+	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected): string {
 
 		$h = '<div id="journal-search" class="util-block-search stick-xs '.($search->empty(['ids']) ? 'hide' : '').'">';
 
 			$form = new \util\FormUi();
-			$url = LIME_REQUEST_PATH;
+			$url = LIME_REQUEST_PATH.'?financialYear='.$eFinancialYearSelected['id'];
 
 			$statuses = OperationUi::p('type')->values;
 
@@ -58,7 +58,13 @@ class JournalUi {
 
 	}
 
-	public function getJournal(\company\Company $eCompany, \Collection $cOperation, \Collection $cOperationGrouped, \accounting\FinancialYear $eFinancialYearSelected): string {
+	public function getJournal(
+		\company\Company $eCompany,
+		\Collection $cOperation,
+		\Collection $cOperationGrouped,
+		\accounting\FinancialYear $eFinancialYearSelected,
+		\Search $search = new \Search()
+	): string {
 
 		if ($cOperation->empty() === true) {
 			return '<div class="util-info">'.s("Aucune opération n'a encore été enregistrée").'</div>';
@@ -68,17 +74,29 @@ class JournalUi {
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="sale-item-table tr-bordered tr-even">';
+			$h .= '<table class="tr-bordered tr-even">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
-						$h .= '<th class="center">#</th>';
-						$h .= '<th class="text-end">'.s("Date de l'opération").'</th>';
-						$h .= '<th>'.s("Description").'</th>';
+						$h .= '<th class="center">';
+							$label = s("#");
+							$h .= ($search ? $search->linkSort('id', $label) : $label);
+						$h .= '</th>';
+						$h .= '<th class="text-end">';
+							$label = s("Date de l'opération");
+							$h .= ($search ? $search->linkSort('date', $label) : $label);
+						$h .= '</th>';
+						$h .= '<th>';
+							$label = s("Description");
+							$h .= ($search ? $search->linkSort('description', $label) : $label);
+						$h .= '</th>';
 						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
 						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
 						$h .= '<th class="text-end">'.s("Solde (D-C)").'</th>';
-						$h .= '<th>'.s("Lettrage").'</th>';
+						$h .= '<th>';
+							$label = s("Lettrage");
+							$h .= ($search ? $search->linkSort('lettering', $label) : $label);
+						$h .= '</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
@@ -89,28 +107,31 @@ class JournalUi {
 
 						if ($lastAccount->empty() === true or $lastAccount['id'] !== $eOperation['account']['id']) {
 							$lastAccount = $eOperation['account'];
-							$h .= '<tr>';
 
-								$h .= '<td class="td-min-content text-center">';
-								$h .= '</td>';
-								$h .= '<td class="text-end">';
-									$h .= '<strong>'.$eOperation['accountLabel'].'</strong>';
-								$h .= '</td>';
-								$h .= '<td>';
-									$h .= '<strong>'.$lastAccount['description'].'</strong>';
-								$h .= '</td>';
-								$h .= '<td class="text-end">';
-									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit']).'</strong>';
-								$h .= '</td>';
-								$h .= '<td class="text-end">';
-									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
-								$h .= '</td>';
-								$h .= '<td class="text-end">';
-									$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit'] - $cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
-								$h .= '</td>';
-								$h .= '<td></td>';
-								$h .= '<td></td>';
-							$h .= '</tr>';
+							if ($cOperationGrouped->offsetExists($lastAccount['id']) === TRUE) {
+								$h .= '<tr>';
+
+									$h .= '<td class="td-min-content text-center">';
+									$h .= '</td>';
+									$h .= '<td class="text-end">';
+										$h .= '<strong>'.$eOperation['accountLabel'].'</strong>';
+									$h .= '</td>';
+									$h .= '<td>';
+										$h .= '<strong>'.$lastAccount['description'].'</strong>';
+									$h .= '</td>';
+									$h .= '<td class="text-end">';
+										$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit']).'</strong>';
+									$h .= '</td>';
+									$h .= '<td class="text-end">';
+										$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
+									$h .= '</td>';
+									$h .= '<td class="text-end">';
+										$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit'] - $cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
+									$h .= '</td>';
+									$h .= '<td></td>';
+									$h .= '<td></td>';
+								$h .= '</tr>';
+							}
 						}
 						$h .= '<tr>';
 

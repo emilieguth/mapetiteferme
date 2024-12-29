@@ -14,7 +14,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYearSelected,
 );
 
-	echo (new \journal\JournalUi())->getSearch($data->search);
-	echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation, $data->cOperationGrouped, $data->eFinancialYearSelected);
+	echo (new \journal\JournalUi())->getSearch($data->search, $data->eFinancialYearSelected);
+	echo (new \journal\JournalUi())->getJournal($data->eCompany, $data->cOperation, $data->cOperationGrouped, $data->eFinancialYearSelected, $data->search);
 
 });
