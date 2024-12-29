@@ -68,7 +68,7 @@ class DateLib {
 	 * @param string $date The date
 	 * @param string $format Date format
 	 */
-	public static function isValid(string $date): string {
+	public static function isValid(string $date): bool {
 
 		return checkdate(substr($date, 5, 2), substr($date, 8, 2), substr($date, 0, 4));
 

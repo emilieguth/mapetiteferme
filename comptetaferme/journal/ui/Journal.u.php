@@ -12,7 +12,7 @@ class JournalUi {
 		$h = '<div class="util-action">';
 
 			$h .= '<h1>';
-				$h .= s("Journal d'écritures");
+				$h .= s("Le journal comptable");
 			$h .= '</h1>';
 
 			$h .= '<div>';
@@ -25,7 +25,6 @@ class JournalUi {
 		return $h;
 
 	}
-
 
 	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected): string {
 

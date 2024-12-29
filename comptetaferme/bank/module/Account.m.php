@@ -1,5 +1,5 @@
 <?php
-namespace accounting;
+namespace bank;
 
 abstract class AccountElement extends \Element {
 
@@ -27,9 +27,9 @@ abstract class AccountElement extends \Element {
 
 class AccountModel extends \ModuleModel {
 
-	protected string $module = 'accounting\Account';
-	protected string $package = 'accounting';
-	protected string $table = 'accountingAccount';
+	protected string $module = 'bank\Account';
+	protected string $package = 'bank';
+	protected string $table = 'bankAccount';
 
 	public function __construct() {
 
@@ -37,28 +37,17 @@ class AccountModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
-			'class' => ['text8', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
-			'description' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
-			'visible' => ['bool', 'cast' => 'bool'],
+			'bankId' => ['text8', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
+			'accountId' => ['text8', 'min' => 1, 'max' => NULL, 'unique' => TRUE, 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'class', 'description', 'visible'
+			'id', 'bankId', 'accountId'
 		]);
 
-	}
-
-	public function getDefaultValue(string $property) {
-
-		switch($property) {
-
-			case 'visible' :
-				return TRUE;
-
-			default :
-				return parent::getDefaultValue($property);
-
-		}
+		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
+			['accountId']
+		]);
 
 	}
 
@@ -74,16 +63,12 @@ class AccountModel extends \ModuleModel {
 		return $this->where('id', ...$data);
 	}
 
-	public function whereClass(...$data): AccountModel {
-		return $this->where('class', ...$data);
+	public function whereBankId(...$data): AccountModel {
+		return $this->where('bankId', ...$data);
 	}
 
-	public function whereDescription(...$data): AccountModel {
-		return $this->where('description', ...$data);
-	}
-
-	public function whereVisible(...$data): AccountModel {
-		return $this->where('visible', ...$data);
+	public function whereAccountId(...$data): AccountModel {
+		return $this->where('accountId', ...$data);
 	}
 
 
@@ -181,7 +166,7 @@ abstract class AccountCrud extends \ModuleCrud {
 
 class AccountPage extends \ModulePage {
 
-	protected string $module = 'accounting\Account';
+	protected string $module = 'bank\Account';
 
 	public function __construct(
 	   ?\Closure $start = NULL,

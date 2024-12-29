@@ -1,0 +1,20 @@
+Account:
+  id: serial32
+  bankId: text8(1, null)
+  accountId: text8(1, null)
+  UNIQUE: [
+    ["accountId"]
+  ]
+
+Cashflow:
+  id: serial32
+  date: ?date(PHP(toDate('NOW - 2 YEARS')), PHP(toDate('NOW + 1 YEARS')))
+  type: enum(DEBIT, CREDIT, OTHER)
+  amount: decimal(8, 2)
+  fitid: ?text8(1, null)
+  name: ?text24(1, null)
+  memo: ?text24(1, null) @collate(general)
+  account: bank\Account
+  UNIQUE: [
+    ["fitid"]
+  ]

@@ -8,6 +8,7 @@ Setting::register('main', [
 
 	'viewSettings' => 'settings',
 	'viewJournal' => 'journal',
+	'viewBank' => 'bank',
 
 ]);
 ?>

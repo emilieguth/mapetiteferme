@@ -24,6 +24,10 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
+	public static function urlBank(int|Company $company): string {
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/bank';
+	}
+
 	public static function urlAccounting(int|Company $company): string {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/accounting';
 	}
@@ -127,7 +131,15 @@ class CompanyUi {
 
 			$h .= '<div class="company-tabs">';
 
-				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/" class="company-tab '.($tab === 'journal' ? 'selected' : '').'" data-tab="finances">';
+				$h .= '<a href="'.CompanyUi::urlBank($eCompany).'/" class="company-tab '.($tab === 'bank' ? 'selected' : '').'" data-tab="bank">';
+					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('piggy-bank').'</span>';
+					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('piggy-bank-fill').'</span>';
+					$h .= '<span class="company-tab-label hide-xs-down">';
+					$h .= s("Banque");
+					$h .= '</span>';
+				$h .= '</a>';
+
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/" class="company-tab '.($tab === 'journal' ? 'selected' : '').'" data-tab="journal">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('journal-bookmark').'</span>';
 						$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('journal-bookmark-fill').'</span>';
 						$h .= '<span class="company-tab-label hide-xs-down">';
@@ -251,13 +263,13 @@ class CompanyUi {
 		$selectedView = \Setting::get('main\viewJournal');
 
 		$h = '<nav id="company-subnav">';
-			$h .= '<div class="company-subnav-wrapper">';
+		$h .= '<div class="company-subnav-wrapper">';
 
-			foreach($this->getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
-				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
-			}
+		foreach($this->getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+			$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
+		}
 
-			$h .= '</div>';
+		$h .= '</div>';
 		$h .= '</nav>';
 
 		return $h;
@@ -270,6 +282,35 @@ class CompanyUi {
 			'journal' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/',
 				'label' => s("Journal")
+			]
+		];
+
+	}
+
+	public function getBankSubNav(Company $eCompany): string {
+
+		$selectedView = \Setting::get('main\viewBank');
+
+		$h = '<nav id="company-subnav">';
+			$h .= '<div class="company-subnav-wrapper">';
+
+				foreach($this->getBankCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+					$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
+				}
+
+			$h .= '</div>';
+		$h .= '</nav>';
+
+		return $h;
+
+	}
+
+	protected static function getBankCategories(Company $eCompany): array {
+
+		return [
+			'journal' => [
+				'url' => CompanyUi::urlBank($eCompany).'/',
+				'label' => s("Banque")
 			]
 		];
 

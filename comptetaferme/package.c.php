@@ -11,6 +11,7 @@ Package::setList([
 	'user' => 'framework',
 	'util' => 'framework',
 	'accounting' => 'comptetaferme',
+	'bank' => 'comptetaferme',
 	'company' => 'comptetaferme',
 	'journal' => 'comptetaferme',
 	'mail' => 'comptetaferme',

@@ -8,9 +8,8 @@ class AccountLib extends AccountCrud {
 		return Account::model()
 			->select(['name' => new \Sql('CONCAT(class, ". ", description)')] + Account::getSelection())
 			->sort('class')
-			->where('class LIKE "%'.$query.'%" OR LOWER(description) LIKE "%'.strtolower($query).'%"', if: $query !== '')
+			->whereClass('class LIKE "%'.$query.'%" OR description LIKE "%'.strtolower($query).'%"', if: $query !== '')
 			->getCollection(NULL, NULL, 'id');
-
 	}
 
 }
