@@ -2,12 +2,15 @@
 (new \journal\OperationPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
+		$company = GET('company');
+
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 	}
 ))
 	->create(function($data) {
 
 		$data->e->merge([
-			'company' => GET('company', 'int'),
+			'company' => $data->eCompany['id'],
 			'account' => get_exists('account') ? \accounting\AccountLib::getById(GET('account', 'int')) : new \accounting\Account(),
 			'accountLabel' => GET('accountLabel') ?? '',
 		]);

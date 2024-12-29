@@ -33,7 +33,7 @@ class EmployeeUi {
       $h .= '<p>'.s("Vous êtes chef d'entreprise et vous venez de vous inscrire sur {siteName}. Pour commencer à utiliser tous les outils numériques développés pour vous sur la plateforme, configurez maintenant votre entreprise en renseignant quelques informations de base !").'</p>';
     $h .= '</div>';
     $h .= '<div class="util-buttons">';
-      $h .= '<a href="/company/company:create" class="bg-secondary util-button">';
+      $h .= '<a href="/company/public:create" class="bg-secondary util-button">';
         $h .= '<div>';
           $h .= '<h4>'.s("Démarrer la création de mon entreprise").'</h4>';
         $h .= '</div>';
@@ -109,7 +109,7 @@ class EmployeeUi {
   public function create(Employee $eEmployee, Employee $eEmployeeLink): \Panel {
 
     return new \Panel(
-      title: s("Inviter un utilisateur dans l'équipe"),
+      title: s("Inviter une personne dans l'équipe"),
       body: $this->createForm($eEmployee, $eEmployeeLink, 'panel'),
       close: 'reload'
     );
@@ -126,7 +126,7 @@ class EmployeeUi {
     $h .= '</h1>';
 
     $h .= '<div>';
-      $h .= '<a href="'.CompanyUi::url($eCompany).'/invite:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter un utilisateur dans l'équipe").'</a>';
+      $h .= '<a href="'.CompanyUi::url($eCompany).'/invite:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter une personne dans l'équipe").'</a>';
     $h .= '</div>';
 
     $h .= '</div>';

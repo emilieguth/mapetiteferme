@@ -1,7 +1,7 @@
 <?php
 (new \company\CompanyPage())
 	->applyElement(function($data, \company\Company $e) {
-		$e->validate('canWrite');
+		$e->validate('canManage');
 	})
 	->update(function($data) {
 

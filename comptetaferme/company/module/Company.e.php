@@ -17,12 +17,6 @@ class Company extends CompanyElement {
 		return ($this['status'] === Company::ACTIVE);
 	}
 
-	// Peut voir les données personnelles des clients et la page de gestion d'équipe
-	public function canPersonalData(): bool {
-		return $this->canWrite();
-	}
-
-
 	public function getEmployee(): Employee {
 
 		$this->expects(['id']);
@@ -30,6 +24,29 @@ class Company extends CompanyElement {
 		return EmployeeLib::getOnline()[$this['id']] ?? new Employee();
 
 	}
+
+
+	// Peut gérer l'entreprise
+	public function canManage(): bool {
+		if($this->empty()) {
+			return FALSE;
+		}
+
+		if($this['status'] === CompanyElement::CLOSED) {
+			return FALSE;
+		}
+
+		$eEmployee = $this->getEmployee();
+
+		return $eEmployee->notEmpty();
+
+	}
+
+	// Peut voir les données personnelles des clients et la page de gestion d'équipe
+	public function canPersonalData(): bool {
+		return $this->canWrite();
+	}
+
 
 	public function getHomeUrl(): string {
 

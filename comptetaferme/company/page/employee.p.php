@@ -1,10 +1,12 @@
 <?php
-(new Page())
+(new Page(function($data) {
+
+	$data->eCompany = \company\CompanyLib::getById(INPUT('company'))->validate('canManage');
+
+	\user\ConnectionLib::checkLogged();
+
+}))
   ->get('manage', function($data) {
-
-    $company = GET('company');
-
-    $data->eCompany = \company\CompanyLib::getById($company);
 
     \company\EmployeeLib::register($data->eCompany);
 
@@ -19,22 +21,16 @@
   ->get('show', function($data) {
 
     $data->eEmployee = \company\EmployeeLib::getById(GET('id'));
-    $data->eCompany = \company\CompanyLib::getById($data->eEmployee['company']);
+
+	  if(\company\EmployeeLib::isEmployee($data->eEmployee['user'], $data->eCompany, NULL) === FALSE) {
+		  throw new NotAllowedAction('Not an employee');
+	  }
 
     \company\EmployeeLib::register($data->eCompany);
 
-
     throw new ViewAction($data);
 
-  });
-
-(new Page(function($data) {
-
-  $data->eCompany = \company\CompanyLib::getById(INPUT('company'));
-
-  \user\ConnectionLib::checkLogged();
-
-}))
+  })
   ->get('createUser', fn($data) => throw new ViewAction($data))
   ->post('doCreateUser', function($data) {
 
@@ -85,6 +81,10 @@
   ->post('doDeleteUser', function($data) {
 
     $eUser = \user\UserLib::getById(POST('user'));
+
+	  if(\company\EmployeeLib::isEmployee($eUser, $data->eCompany, NULL) === FALSE) {
+		  throw new NotAllowedAction('Not an employee');
+	  }
 
     throw new ReloadAction('company', 'Employee::userDeleted');
 

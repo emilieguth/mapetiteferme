@@ -4,7 +4,7 @@
 
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company);
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
 
 		throw new ViewAction($data);

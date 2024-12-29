@@ -9,5 +9,5 @@
 	]))
 	->create()
 	->doCreate(function($data) {
-		throw new RedirectAction(\company\CompanyUi::url($data->e).'?success=company:Company::created');
+		throw new RedirectAction(\company\CompanyUi::urlSettings($data->e).'?success=company:Company::created');
 	});

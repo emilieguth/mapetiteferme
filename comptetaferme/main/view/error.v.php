@@ -3,7 +3,7 @@ new AdaptativeView('403', function($data, MainTemplate $t) {
 
 	$h = '<div class="text-center">';
 		$h .= '<br/><br/>';
-		$h .= '<h2>'.s("Vous n'êtes pas autorisé à afficher cette page !").'</h2>';
+		$h .= '<h2>'.s("Vous n'êtes pas autorisé·e à afficher cette page !").'</h2>';
 		$h .= '<h4>'.s("Essayez de revenir à la page précédente pour continuer votre navigation.").'</h4>';
 		$h .= '<br/><br/>';
 	$h .= '</div>';

@@ -4,7 +4,7 @@
 
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company);
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 
 		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
 
@@ -13,17 +13,19 @@
 			? \accounting\FinancialYearLib::getById(GET('financialYear'))
 			: $data->eFinancialYearCurrent;
 
-		$data->search = new Search([
+		$search = new Search([
 			'date' => GET('date'),
 			'accountLabel' => GET('accountLabel'),
 			'description' => GET('description'),
 			'type' => GET('type'),
 			'lettering' => GET('lettering'),
-			'financialYear' => $data->eFinancialYearSelected
 		], GET('sort'));
+		$data->search = clone $search;
+		// Ne pas ouvrir le bloc de recherche
+		$search->set('financialYear', $data->eFinancialYearSelected);
 
-		$data->cOperation = \journal\OperationLib::getAll($data->search);
-		$data->cOperationGrouped = \journal\OperationLib::getGrouped($data->search);
+		$data->cOperation = \journal\OperationLib::getAll($search);
+		$data->cOperationGrouped = \journal\OperationLib::getGrouped($search);
 		$data->cAccount = \accounting\AccountLib::getAll();
 
 		throw new ViewAction($data);

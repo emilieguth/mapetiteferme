@@ -19,9 +19,9 @@ Setting::register('user', [
 
 	'passwordSizeMin' => 8,
 	'nameSizeMax' => 50,
-	'signUpRoles' => [],
+	'signUpRoles' => ['employee'],
 
-	'statsRoles' => ['employee', 'customer'],
+	'statsRoles' => ['employee'],
 
 	// Number of days for saving logs
 	'keepLogs' => 90,
