@@ -28,6 +28,7 @@ class AlertUi {
 
 			'FinancialYear::created' => s("L'exercice comptable a bien été créé."),
 			'FinancialYear::updated' => s("L'exercice comptable a bien été mis à jour."),
+			'FinancialYear::closed' => s("L'exercice comptable a bien été clôturé et le suivant créé."),
 
 			default => null
 

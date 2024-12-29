@@ -38,5 +38,11 @@
 
 		throw new ReloadAction('accounting', 'FinancialYear::updated');
 
+	})
+	->write('close', function($data) {
+
+		\accounting\FinancialYearLib::closeFinancialYear($data->e);
+
+		throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear?success=accounting:FinancialYear::closed');
 	});
 ?>

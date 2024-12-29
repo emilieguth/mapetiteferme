@@ -22,6 +22,18 @@ class FinancialYearUi {
 
 	}
 
+	protected function getAction(\company\Company $eCompany, FinancialYear $eFinancialYear, string $btn): string {
+
+		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
+		$h .= '<div class="dropdown-list">';
+			$h .= '<div class="dropdown-title">'.s("Exercice {year}", ['year' => self::getYear($eFinancialYear)]).'</div>';
+			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:close" post-id="'.$eFinancialYear['id'].'" class="dropdown-item" data-confirm="'.s("Action irréversible ! Souhaitez-vous confirmer la clôture de cet exercice comptable ? Le suivant sera créé automatiquement.").'">'.s("Clôturer").'</a>';;
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
 	public function getManage(\company\Company $eCompany, \Collection $cFinancialYear): string {
 
 		if ($cFinancialYear->empty() === true) {
@@ -32,7 +44,7 @@ class FinancialYearUi {
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="sale-item-table tr-bordered tr-even">';
+			$h .= '<table class="financialYear-item-table tr-bordered tr-even">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
@@ -40,6 +52,7 @@ class FinancialYearUi {
 						$h .= '<th>'.s("Date de début").'</th>';
 						$h .= '<th>'.s("Date de fin").'</th>';
 						$h .= '<th class="text-center">'.s("Statut").'</th>';
+						$h .= '<th class="td-min-content"></th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
@@ -68,9 +81,14 @@ class FinancialYearUi {
 
 						$h .= '<td class="text-center">';
 							$h .= match($eFinancialYear['status']) {
-								FinancialYear::OPEN => s("En cours"),
-								FinancialYear::CLOSE => s("Clôturé"),
+								FinancialYearElement::OPEN => s("En cours"),
+								FinancialYearElement::CLOSE => s("Clôturé"),
 							};
+						$h .= '</td>';
+						$h .= '<td>';
+							if ($eFinancialYear['status'] === FinancialYearElement::OPEN) {
+								$h .= self::getAction($eCompany, $eFinancialYear, 'btn-outline-primary');
+							}
 						$h .= '</td>';
 
 						$h .= '</tr>';
@@ -155,7 +173,7 @@ class FinancialYearUi {
 	public function getFinancialYearTabs(\Closure $url, \Collection $cFinancialYear, \accounting\FinancialYear $eFinancialYearSelected): string {
 
 		$h = ' <a data-dropdown="bottom-start" data-dropdown-hover="true" data-dropdown-offset-x="2" class="nav-year">';
-		$h .= s("Exercice {year}", ['year' => self::getYear($eFinancialYearSelected).'  '.\Asset::icon('chevron-down')]);
+			$h .= s("Exercice {year}", ['year' => self::getYear($eFinancialYearSelected).'  '.\Asset::icon('chevron-down')]);
 		$h .= '</a>';
 
 		$h .= '<div class="dropdown-list bg-primary">';

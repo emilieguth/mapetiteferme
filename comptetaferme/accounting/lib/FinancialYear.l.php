@@ -6,6 +6,30 @@ class FinancialYearLib extends FinancialYearCrud {
 		return ['startDate', 'endDate'];
 	}
 
+	public static function closeFinancialYear(FinancialYear $eFinancialYear): void {
+
+		if ($eFinancialYear['status'] == FinancialYearElement::CLOSE) {
+			throw new \NotExpectedAction('Financial year already closed');
+		}
+
+		$eFinancialYear['status'] = FinancialYearElement::CLOSE;
+		self::update($eFinancialYear, ['status']);
+
+		$eFinancialYearLast = FinancialYear::model()
+			->select(FinancialYear::getSelection())
+			->sort(['endDate' => SORT_DESC])
+			->get();
+
+		$eFinancialYearNew = new FinancialYear([
+			'status' => FinancialYearElement::OPEN,
+			'startDate' => date('Y-m-d', strtotime($eFinancialYearLast['endDate'].' +1 day')),
+			'endDate' => date('Y-m-d', strtotime($eFinancialYearLast['endDate'].' +1 year'))
+		]);
+
+		self::create($eFinancialYearNew);
+
+	}
+
 	public static function getFinancialYearSurroundingDate(string $date, int $excludedId): FinancialYear {
 
 		$eFinancialYear = new FinancialYear();
