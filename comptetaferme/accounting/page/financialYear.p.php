@@ -14,6 +14,9 @@
 (new \accounting\FinancialYearPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
+		$company = GET('company');
+
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 	}
 ))
 	->create(function($data) {

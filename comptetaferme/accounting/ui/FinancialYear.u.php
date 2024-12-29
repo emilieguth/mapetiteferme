@@ -98,7 +98,6 @@ class FinancialYearUi {
 
 			$h .= $form->hidden('company', $eCompany['id']);
 
-
 			$h .= $form->dynamicGroups($eFinancialYear, ['startDate*', 'endDate*']);
 
 			$h .= $form->group(
@@ -126,6 +125,7 @@ class FinancialYearUi {
 			$h .= $form->asteriskInfo();
 
 			$h .= $form->hidden('company', $eCompany['id']);
+			$h .= $form->hidden('id', $eFinancialYear['id']);
 
 			$h .= $form->dynamicGroups($eFinancialYear, ['startDate*', 'endDate*']);
 

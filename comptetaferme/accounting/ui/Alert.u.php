@@ -11,7 +11,10 @@ class AlertUi {
 
 		return match($fqn) {
 
-			'Company::disabled' => s("Vous avez désactivé cette fonctionnalité sur votre entreprise."),
+			'FinancialYear::startDate.check' => s("Cette date est incluse dans un autre exercice."),
+			'FinancialYear::endDate.check' => s("Cette date est incluse dans un autre exercice."),
+			'FinancialYear::startDate.loseOperations' => s("En modifiant cette date, certaines écritures ne seront plus rattachées à un exercice existant."),
+			'FinancialYear::endDate.loseOperations' => s("En modifiant cette date, certaines écritures ne seront plus rattachées à un exercice existant."),
 
 			default => null
 

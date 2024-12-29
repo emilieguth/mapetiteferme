@@ -39,11 +39,26 @@ class AccountModel extends \ModuleModel {
 			'id' => ['serial32', 'cast' => 'int'],
 			'class' => ['text8', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
 			'description' => ['text8', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
+			'visible' => ['bool', 'cast' => 'bool'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'class', 'description'
+			'id', 'class', 'description', 'visible'
 		]);
+
+	}
+
+	public function getDefaultValue(string $property) {
+
+		switch($property) {
+
+			case 'visible' :
+				return TRUE;
+
+			default :
+				return parent::getDefaultValue($property);
+
+		}
 
 	}
 
@@ -65,6 +80,10 @@ class AccountModel extends \ModuleModel {
 
 	public function whereDescription(...$data): AccountModel {
 		return $this->where('description', ...$data);
+	}
+
+	public function whereVisible(...$data): AccountModel {
+		return $this->where('visible', ...$data);
 	}
 
 

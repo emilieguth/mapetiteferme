@@ -10,6 +10,15 @@ class OperationLib extends OperationCrud {
 		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'lettering'];
 	}
 
+	public static function countByOldDatesButNotNewDate(\accounting\FinancialYear $eFinancialYear, string $newStartDate, string $newEndDate): int {
+
+		return Operation::model()
+			->whereDate('BETWEEN', new \Sql(\accounting\FinancialYear::model()->format($eFinancialYear['startDate']).' AND '.\accounting\FinancialYear::model()->format($eFinancialYear['endDate'])))
+			->whereDate('NOT BETWEEN', new \Sql(\accounting\FinancialYear::model()->format($newStartDate).' AND '.\accounting\FinancialYear::model()->format($newEndDate)))
+			->count();
+
+	}
+
 	public static function applySearch(\Search $search = new \Search()): OperationModel {
 
 		return Operation::model()
@@ -33,7 +42,7 @@ class OperationLib extends OperationCrud {
 
 	public static function getGrouped(\Search $search = new \Search()): \Collection {
 		return self::applySearch($search)
-			->select(['account', 'credit' => new \Sql('SUM(IF(type = "credit", amount, 0))'), 'debit' => new \Sql('SUM(IF(type = "debit", amount, 0))')])
+			->select(['account', 'credit' => new \Sql('SUM(IF(type = "'.OperationElement::CREDIT.'", amount, 0))'), 'debit' => new \Sql('SUM(IF(type = "'.OperationElement::DEBIT.'", amount, 0))')])
 			->group('account')
 			->getCollection(NULL, NULL, 'account');
 
