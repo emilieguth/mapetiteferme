@@ -192,6 +192,16 @@ class MainTemplate extends BaseTemplate {
 			$h .= '<a href="'.Lime::getUrl().'/main/account" class="dropdown-item" target="_blank">'.s("Mon compte").'</a>';
 		}
 
+		$h .= '<form method="post" action="'.Lime::getUrl().'/user/log:out">';
+			$h .= '<button type="submit" class="dropdown-item">'.s("Me déconnecter").'</button>';
+
+			if(Lime::getHost() === LIME_HOST) {
+				$h .= '<input type="hidden" name="redirect" value="'.Lime::getProtocol().'://'.SERVER('HTTP_HOST').'"/>';
+			} else {
+				$h .= '<input type="hidden" name="redirect" value="'.Lime::getUrl().'"/>';
+			}
+		$h .='</form>';
+
 		if(Privilege::can('user\admin')) {
 			$h .= '<div class="dropdown-divider"></div>';
 			$h .= '<a href="'.Lime::getUrl().'/user/admin/" class="dropdown-item">'.\Asset::icon('server').' '.s("Administrer").'</a>';
