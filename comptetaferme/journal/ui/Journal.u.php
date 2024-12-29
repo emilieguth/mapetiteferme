@@ -199,7 +199,7 @@ class JournalUi {
 
 		$primaryList = '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update?id='.$eOperation['id'].'" class="dropdown-item">'.s("Modifier").'</a>';;
 
-		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:update" post-id="'.$eOperation['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de cette écriture ?").'">'.s("Supprimer").'</a>';
+		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:doDelete" post-id="'.$eOperation['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de cette écriture ?").'">'.s("Supprimer").'</a>';
 
 		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
 		$h .= '<div class="dropdown-list">';

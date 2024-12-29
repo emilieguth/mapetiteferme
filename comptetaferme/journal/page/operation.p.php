@@ -37,5 +37,8 @@
 	})
 	->doUpdate(function($data) {
 		throw new ReloadAction('journal', 'Operation::updated');
+	})
+	->doDelete(function($data) {
+		throw new ReloadAction('journal', 'Operation::deleted');
 	});
 ?>

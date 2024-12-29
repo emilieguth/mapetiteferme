@@ -13,7 +13,7 @@ class AccountUi {
 
 		$h .= '<h1>';
 		$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
-		$h .= s("Les comptes");
+		$h .= s("Les classes de comptes");
 		$h .= '</h1>';
 
 		$h .= '</div>';
@@ -34,13 +34,47 @@ class AccountUi {
 
 			$h .= '<div class="util-overflow-sm">';
 
-			$h .= '<ul class="list-unstyled">';
+			$h .= '<table class="tr-bordered tr-even">';
 
-			foreach($cAccount as $eAccount) {
-				$h .= '<li class="ml-'.(strlen($eAccount['class']) - 2).'">'.$eAccount['class'].'.&nbsp;'.$eAccount['description'].'</li>';
-			}
+				$h .= '<thead>';
+					$h .= '<tr>';
+						$h .= '<th>';
+							$h .= s("Classe");
+						$h .= '</th>';
+						$h .= '<th>';
+							$h .= s("Libellé");
+						$h .= '</th>';
+					$h .= '</tr>';
+				$h .= '</thead>';
 
-			$h .= '</ul>';
+				$h .= '<tbody>';
+
+				foreach($cAccount as $eAccount) {
+
+					$classNumber = strlen($eAccount['class']) - 2;
+
+					$h .= '<tr>';
+
+						$h .= '<td>';
+							$h .= '<span class="ml-'.$classNumber.'">';
+								$h .= $classNumber === 0 ? '<b>' : '';
+									$h .= encode($eAccount['class']);
+								$h .= $classNumber === 0 ? '</b>' : '';
+							$h .= '</span>';
+						$h .= '</td>';
+
+						$h .= '<td>';
+							$h .= '<span class="ml-'.$classNumber.'">';
+								$h .= $classNumber === 0 ? '<b>' : '';
+									$h .= encode($eAccount['description']).'</span>';
+								$h .= $classNumber === 0 ? '</b>' : '';
+						$h .= '</td>';
+
+					$h .= '</tr>';
+				}
+
+				$h .= '<tbody>';
+			$h .= '<table class="tr-bordered tr-even">';
 
 			$h .= '</div>';
 
