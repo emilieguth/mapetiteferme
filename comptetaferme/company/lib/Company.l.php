@@ -150,6 +150,15 @@ class CompanyLib extends CompanyCrud {
 			}
 
 		}
+
+		// Copy Account content from package main to package accounting
+		$cAccount = \main\Account::model()
+			->select(\main\Account::getSelection())
+			->getCollection();
+		foreach($cAccount as $eAccount) {
+			unset($eAccount['id']);
+			\accounting\Account::model()->insert($eAccount);
+		}
 	}
 
   public static function getDatabaseNameFromCompany(Company $e): string {
