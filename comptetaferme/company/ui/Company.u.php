@@ -24,6 +24,10 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
+	public static function urlStatement(int|Company $company): string {
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/statement';
+	}
+
 	public static function urlBank(int|Company $company): string {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/bank';
 	}
@@ -135,7 +139,7 @@ class CompanyUi {
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('piggy-bank').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('piggy-bank-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
-					$h .= s("Banque");
+						$h .= s("Banque");
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -143,11 +147,21 @@ class CompanyUi {
 
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/" class="company-tab '.($tab === 'journal' ? 'selected' : '').'" data-tab="journal">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('journal-bookmark').'</span>';
-						$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('journal-bookmark-fill').'</span>';
-						$h .= '<span class="company-tab-label hide-xs-down">';
+					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('journal-bookmark-fill').'</span>';
+					$h .= '<span class="company-tab-label hide-xs-down">';
 						$h .= s("Journal");
 					$h .= '</span>';
 				$h .= '</a>';
+
+				$h .= '<a href="'.CompanyUi::urlStatement($eCompany).'" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
+					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-spreadsheet').'</span>';
+					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-spreadsheet-fill').'</span>';
+					$h .= '<span class="company-tab-label hide-xs-down">';
+						$h .= s("Bilans (à venir)");
+					$h .= '</span>';
+				$h .= '</a>';
+
+				$h .= $this->getStatementMenu($eCompany, prefix: $prefix, tab: $tab);
 
 				$h .= '<a href="'.CompanyUi::urlSettings($eCompany).'" class="company-tab '.($tab === 'settings' ? 'selected' : '').'" data-tab="settings">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('gear').'</span>';
@@ -330,6 +344,51 @@ class CompanyUi {
 			'url' => CompanyUi::urlBank($eCompany).'/import',
 			'label' => s("Imports")
 		]
+		];
+
+	}
+
+	public function getStatementMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
+
+		$selectedView = ($tab === 'statement') ? \Setting::get('main\viewStatement') : NULL;
+
+		$h = '<div class="company-subnav-wrapper">';
+
+		foreach($this->getStatementCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+
+			$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
+			$h .= $prefix.'<span>'.$label.'</span>';
+			$h .= '</a>';
+		}
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+
+	public function getStatementSubNav(Company $eCompany): string {
+
+		$h = '<nav id="company-subnav">';
+		$h .= $this->getStatementMenu($eCompany, tab: 'statement');
+		$h .= '</nav>';
+
+		return $h;
+
+	}
+
+	protected static function getStatementCategories(Company $eCompany): array {
+
+		return [
+			'cashflow' => [
+				'url' => CompanyUi::urlStatement($eCompany).'/balance',
+				'label' => s("Bilan comptable")
+			],
+			'import' => [
+				'url' => CompanyUi::urlStatement($eCompany).'/profitLoss',
+				'label' => s("Compte de résultat")
+			]
 		];
 
 	}
