@@ -28,7 +28,9 @@
 
 		// Ne pas ouvrir le bloc de recherche pour ces champs
 		$search->set('financialYear', $data->eFinancialYearSelected);
-		$search->set('import', GET('import'));
+		if (GET('import')) {
+			$search->set('import', GET('import'));
+		}
 
 		$data->cCashflow = \bank\CashflowLib::getAll($search, $hasSort);
 

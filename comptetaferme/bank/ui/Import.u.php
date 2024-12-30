@@ -12,7 +12,7 @@ class ImportUi {
 		$h = '<div class="util-action">';
 
 		$h .= '<h1>';
-		$h .= s("Les imports de relevés bancaires");
+		$h .= s("Historique des imports de relevés bancaires");
 		$h .= '</h1>';
 
 		$h .= '<div>';
@@ -46,7 +46,7 @@ class ImportUi {
 
 		if ($cImport->empty() === true) {
 			return '<div class="util-info">'.
-				s("Aucun import bancaire n'a encore été réalisé pour l'exercice {year}", ['year' => \accounting\FinancialYearUi::getYear($eFinancialYearSelected)]).
+				s("Aucun import bancaire n'a été réalisé pour l'exercice {year}", ['year' => \accounting\FinancialYearUi::getYear($eFinancialYearSelected)]).
 				'</div>';
 		}
 
@@ -57,9 +57,6 @@ class ImportUi {
 
 				$h .= '<div class="util-grid-header util-grid-icon text-center">';
 					$h .= \Asset::icon('calendar-week');
-				$h .= '</div>';
-				$h .= '<div class="flow-timeline-action util-grid-header">';
-					$h .= s("Détails");
 				$h .= '</div>';
 
 			$h .= '</div>';

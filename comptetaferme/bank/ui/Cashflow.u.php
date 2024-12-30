@@ -43,7 +43,9 @@ class CashflowUi {
 	): string {
 
 		if ($cCashflow->empty() === true) {
-			return '<div class="util-info">'.s("Aucun import bancaire n'a encore été réalisé").'</div>';
+			return '<div class="util-info">'.
+				s("Aucun import bancaire n'a été réalisé pour l'exercice {year}", ['year' => \accounting\FinancialYearUi::getYear($eFinancialYearSelected)]).
+			'</div>';
 		}
 
 		$h = '';
