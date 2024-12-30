@@ -36,6 +36,8 @@ class CompanyTemplate extends MainTemplate {
 		try {
 
 			$subTab = match($this->tab) {
+				'bank' => \Setting::get('main\viewBank'),
+				'journal' => \Setting::get('main\viewJournal'),
 				default => NULL,
 			};
 

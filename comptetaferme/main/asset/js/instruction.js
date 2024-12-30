@@ -40,8 +40,8 @@ new Lime.Instruction('main')
 		}
 
 	})
-	.register('updateNavCultivation', function(url) {
-		qs('#company-nav [data-tab="cultivation"]', node => node.setAttribute('href', url));
+	.register('updateNavBank', function(url) {
+		qs('#company-nav [data-tab="bank"]', node => node.setAttribute('href', url));
 	})
 	.register('updateNavShop', function(url) {
 		qs('#company-nav [data-tab="shop"]', node => node.setAttribute('href', url));

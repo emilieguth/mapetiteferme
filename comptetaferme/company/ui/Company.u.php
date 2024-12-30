@@ -131,13 +131,15 @@ class CompanyUi {
 
 			$h .= '<div class="company-tabs">';
 
-				$h .= '<a href="'.CompanyUi::urlBank($eCompany).'/" class="company-tab '.($tab === 'bank' ? 'selected' : '').'" data-tab="bank">';
+				$h .= '<a href="'.CompanyUi::urlBank($eCompany).'/cashflow" class="company-tab '.($tab === 'bank' ? 'selected' : '').'" data-tab="bank">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('piggy-bank').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('piggy-bank-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
 					$h .= s("Banque");
 					$h .= '</span>';
 				$h .= '</a>';
+
+				$h .= $this->getBankMenu($eCompany, prefix: $prefix, tab: $tab);
 
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/" class="company-tab '.($tab === 'journal' ? 'selected' : '').'" data-tab="journal">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('journal-bookmark').'</span>';
@@ -287,18 +289,30 @@ class CompanyUi {
 
 	}
 
+	public function getBankMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
+
+		$selectedView = ($tab === 'bank') ? \Setting::get('main\viewBank') : NULL;
+
+		$h = '<div class="company-subnav-wrapper">';
+
+			foreach($this->getBankCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+
+				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
+					$h .= $prefix.'<span>'.$label.'</span>';
+				$h .= '</a>';
+			}
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+
 	public function getBankSubNav(Company $eCompany): string {
 
-		$selectedView = \Setting::get('main\viewBank');
-
 		$h = '<nav id="company-subnav">';
-			$h .= '<div class="company-subnav-wrapper">';
-
-				foreach($this->getBankCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
-					$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
-				}
-
-			$h .= '</div>';
+			$h .= $this->getBankMenu($eCompany, tab: 'bank');
 		$h .= '</nav>';
 
 		return $h;
@@ -308,10 +322,14 @@ class CompanyUi {
 	protected static function getBankCategories(Company $eCompany): array {
 
 		return [
-			'journal' => [
-				'url' => CompanyUi::urlBank($eCompany).'/',
-				'label' => s("Banque")
-			]
+			'cashflow' => [
+				'url' => CompanyUi::urlBank($eCompany).'/cashflow',
+				'label' => s("Flux financiers")
+			],
+			'import' => [
+			'url' => CompanyUi::urlBank($eCompany).'/import',
+			'label' => s("Imports")
+		]
 		];
 
 	}

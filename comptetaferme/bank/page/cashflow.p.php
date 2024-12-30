@@ -1,29 +1,36 @@
 <?php
-(new \bank\CashflowPage(
+(new Page(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
-		$company = INPUT('company');
+		$company = GET('company');
 
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+
+		\Setting::set('main\viewBank', 'cashflow');
 	}
 ))
-->get('import', function($data) {
+	->get('index', function($data) {
 
-	throw new ViewAction($data);
+		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
 
-})
-->post('doImport', function($data) {
+		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+		$data->eFinancialYearSelected = get_exists('financialYear')
+			? \accounting\FinancialYearLib::getById(GET('financialYear'))
+			: $data->eFinancialYearCurrent;
 
-	$fw = new FailWatch();
+		$search = new Search([
+			'date' => GET('date'),
+			'fitid' => GET('fitid'),
+			'memo' => GET('memo'),
+		], GET('sort'));
+		$hasSort = get_exists('sort') === TRUE;
+		$data->search = clone $search;
+		// Ne pas ouvrir le bloc de recherche
+		$search->set('financialYear', $data->eFinancialYearSelected);
 
-	\bank\ImportLib::importBankStatement();
+		$data->cCashflow = \bank\CashflowLib::getAll($search, $hasSort);
 
-	if($fw->ok()) {
-		throw new RedirectAction(\company\CompanyUi::urlBank($data->eCompany).'/?success=bank:Cashflow::imported');
-	} else {
-		throw new RedirectAction(\company\CompanyUi::urlBank($data->eCompany).'/cashflow:import?error='.$fw->getLast());
-	}
+		throw new ViewAction($data);
 
-});
-
+	});
 ?>

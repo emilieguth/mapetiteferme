@@ -15,13 +15,18 @@ class CashflowLib extends CashflowCrud {
 			->getCollection();
 	}
 
-	public static function insertMultiple(array $cashflows): void {
+	public static function insertMultiple(array $cashflows): array {
+
+		$alreadyImported = [];
+		$imported = [];
+		$invalidDate = [];
 
 		foreach($cashflows as $cashflow) {
 
 			$isAlreadyImportedTransaction = (Cashflow::model()->whereFitid($cashflow['fitid'])->count() > 0);
 
 			if ($isAlreadyImportedTransaction === true) {
+				$alreadyImported[] = $cashflow['fitid'];
 				continue;
 			}
 
@@ -33,6 +38,7 @@ class CashflowLib extends CashflowCrud {
 			$date = substr($cashflow['date'], 0, 4).'-'.substr($cashflow['date'], 4, 2).'-'.substr($cashflow['date'], 6, 2);
 
 			if (\util\DateLib::isValid($date) === FALSE) {
+				$invalidDate[] = $cashflow['fitid'];
 				continue;
 			}
 
@@ -47,8 +53,11 @@ class CashflowLib extends CashflowCrud {
 			);
 
 			Cashflow::model()->insert($eCashflow);
+			$imported[] = $cashflow['fitid'];
 
 		}
+
+		return ['alreadyImported' => $alreadyImported, 'invalidDate' => $invalidDate, 'imported' => $imported];
 
 	}
 

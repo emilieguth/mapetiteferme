@@ -138,7 +138,7 @@ class CashflowUi {
 		$h .= '</div>';
 
 
-		$h .= $form->openUrl(\company\CompanyUi::urlBank($eCompany).'/cashflow:doImport', ['id' => 'cashflow-import', 'binary' => TRUE, 'method' => 'post']);
+		$h .= $form->openUrl(\company\CompanyUi::urlBank($eCompany).'/import:doImport', ['id' => 'cashflow-import', 'binary' => TRUE, 'method' => 'post']);
 			$h .= $form->hidden('company', $eCompany['id']);
 			$h .= '<label class="btn btn-primary">';
 				$h .= $form->file('ofx', ['onchange' => 'this.form.submit()', 'accept' => '.ofx']);

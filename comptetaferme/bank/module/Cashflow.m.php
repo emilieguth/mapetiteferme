@@ -48,14 +48,16 @@ class CashflowModel extends \ModuleModel {
 			'name' => ['text24', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
 			'memo' => ['text24', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'account' => ['element32', 'bank\Account', 'cast' => 'element'],
+			'import' => ['element32', 'bank\Import', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account'
+			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import'
 		]);
 
 		$this->propertiesToModule += [
 			'account' => 'bank\Account',
+			'import' => 'bank\Import',
 		];
 
 		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
@@ -116,6 +118,10 @@ class CashflowModel extends \ModuleModel {
 
 	public function whereAccount(...$data): CashflowModel {
 		return $this->where('account', ...$data);
+	}
+
+	public function whereImport(...$data): CashflowModel {
+		return $this->where('import', ...$data);
 	}
 
 

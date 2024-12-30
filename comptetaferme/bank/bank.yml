@@ -15,6 +15,18 @@ Cashflow:
   name: ?text24(1, null)
   memo: ?text24(1, null) @collate(general)
   account: bank\Account
+  import: bank\Import
   UNIQUE: [
     ["fitid"]
   ]
+
+Import:
+  id: serial32
+  filename: text8(1, null)
+  startDate: datetime
+  endDate: datetime
+  result: json = PHP([])
+  status: enum(PROCESSING, FULL, PARTIAL, NONE, ERROR)
+  account: bank\Account
+  createdAt: datetime = SPECIAL(now)
+  processedAt: ?datetime

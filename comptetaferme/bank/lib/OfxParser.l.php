@@ -23,6 +23,19 @@ class OfxParserLib {
 
 	}
 
+	protected static function extractDate(string $date): string {
+		return substr($date, 0, 4).'-'.substr($date, 4, 2).'-'.substr($date, 6, 2).' '.substr($date, 8, 2).':'.substr($date, 10, 2).':'.substr($date, 12, 2);
+	}
+
+	public static function extractImport(\SimpleXMLElement $xmlElement): array {
+
+		return [
+			'startDate' => self::extractDate($xmlElement->BANKMSGSRSV1->STMTTRNRS->STMTRS->BANKTRANLIST->DTSTART),
+			'endDate' => self::extractDate($xmlElement->BANKMSGSRSV1->STMTTRNRS->STMTRS->BANKTRANLIST->DTEND),
+		];
+
+	}
+
 	public static function extractAccount(\SimpleXMLElement $xmlElement): Account {
 
 		$bankId = $xmlElement->BANKMSGSRSV1->STMTTRNRS->STMTRS->BANKACCTFROM->BANKID;
@@ -36,7 +49,7 @@ class OfxParserLib {
 
 	}
 
-	public static function extractOperations(\SimpleXMLElement $xmlElement, Account $eAccount): array {
+	public static function extractOperations(\SimpleXMLElement $xmlElement, Account $eAccount, Import $eImport): array {
 
 		$cashflows = [];
 
@@ -50,6 +63,7 @@ class OfxParserLib {
 				'name' => (string) $operation->NAME,
 				'memo' => (string) $operation->MEMO,
 				'account' => $eAccount,
+				'import' => $eImport,
 			];
 
 		}
