@@ -185,26 +185,6 @@ class FinancialYearUi {
 			$h .= '<a href="'.$url($eFinancialYear).'" class="dropdown-item '.($eFinancialYear['id'] === $eFinancialYearSelected['id'] ? 'selected' : '').'">'.s("Exercice {year}", ['year' => self::getYear($eFinancialYear)]).'</a>';
 		}
 
-		/*$h .= '<div class="dropdown-divider"></div>';
-
-		$newLast = $eFarm['seasonLast'] + 1;
-		$newFirst = $eFarm['seasonFirst'] - 1;
-
-		if($newLast > date('Y') + 10) {
-			$alert = s("Il n'est pas possible d'ajouter des saisons plus de dix ans en avance !");
-			$h .= '<div class="dropdown-item farm-tab-disabled" data-alert="'.$alert.'" title="'.$alert.'">';
-			$h .= s("Ajouter la saison {year}", ['year' => $newLast]);
-			$h .= '</div> ';
-		} else {
-			$h .= '<a data-ajax="/farm/farm:doSeasonLast" post-id="'.$eFarm['id'].'" post-increment="1" class="dropdown-item">';
-			$h .= s("Ajouter la saison {year}", ['year' => $newLast]);
-			$h .= '</a> ';
-		}
-
-		$h .= '<a data-ajax="/farm/farm:doSeasonFirst" post-id="'.$eFarm['id'].'" post-increment="-1" class="dropdown-item">';
-		$h .= s("Ajouter la saison {year}", ['year' => $newFirst]);
-		$h .= '</a> ';*/
-
 		$h .= '</div>';
 
 		return $h;

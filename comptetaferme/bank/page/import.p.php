@@ -19,7 +19,8 @@
 			: $data->eFinancialYearCurrent;
 
 
-		$data->cImport = \bank\ImportLib::getAll();
+		$data->imports = \bank\ImportLib::formatCurrentFinancialYearImports($data->eFinancialYearSelected);
+		$data->cImport = \bank\ImportLib::getAll($data->eFinancialYearSelected);
 
 		throw new ViewAction($data);
 

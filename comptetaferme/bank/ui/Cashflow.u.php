@@ -54,10 +54,6 @@ class CashflowUi {
 
 				$h .= '<thead>';
 					$h .= '<tr>';
-						$h .= '<th>';
-							$label = s("#");
-							$h .= ($search ? $search->linkSort('fitid', $label) : $label);
-						$h .= '</th>';
 						$h .= '<th class="text-end">';
 							$label = s("Date");
 							$h .= ($search ? $search->linkSort('date', $label) : $label);
@@ -81,7 +77,7 @@ class CashflowUi {
 
 							$h .= '<tr>';
 
-								$h .= '<td class="td-min-content" colspan="6">';
+								$h .= '<td class="td-min-content" colspan="5">';
 									$h .= '<strong>'.mb_ucfirst(\util\DateUi::textual($eCashflow['date'], \util\DateUi::MONTH_YEAR)).'</strong>';
 								$h .= '</td>';
 
@@ -89,10 +85,6 @@ class CashflowUi {
 					}
 
 					$h .= '<tr>';
-
-						$h .= '<td class="td-min-content">';
-							$h .= $eCashflow['fitid'];
-						$h .= '</td>';
 
 						$h .= '<td class="text-end">';
 							$h .= \util\DateUi::numeric($eCashflow['date']);

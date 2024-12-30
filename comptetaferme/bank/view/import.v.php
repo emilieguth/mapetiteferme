@@ -17,12 +17,12 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->mainTitle = (new \bank\ImportUi())->getImportTitle($data->eCompany);
 
 	$t->mainYear = (new \accounting\FinancialYearUi())->getFinancialYearTabs(
-		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlJournal($data->eCompany).'/?financialYear='.$eFinancialYear['id']; },
+		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlBank($data->eCompany).'/import?financialYear='.$eFinancialYear['id']; },
 		$data->cFinancialYear,
 		$data->eFinancialYearSelected,
 	);
 
-	echo (new \bank\ImportUi())->getImport($data->eCompany, $data->cImport, $data->eFinancialYearSelected);
+	echo (new \bank\ImportUi())->getImport($data->eCompany, $data->cImport, $data->imports, $data->eFinancialYearSelected);
 
 });
 

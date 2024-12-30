@@ -6,6 +6,7 @@ class CashflowLib extends CashflowCrud {
 	public static function getAll(\Search $search, bool $hasSort): \Collection {
 		return Cashflow::model()
 			->select(Cashflow::getSelection())
+			->whereImport('=', $search->get('import'), if: $search->has('import'))
 			->whereDate('LIKE', '%'.$search->get('date').'%', if: $search->get('date'))
 			->whereDate('>=', $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
 			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))

@@ -25,8 +25,10 @@
 		], GET('sort'));
 		$hasSort = get_exists('sort') === TRUE;
 		$data->search = clone $search;
-		// Ne pas ouvrir le bloc de recherche
+
+		// Ne pas ouvrir le bloc de recherche pour ces champs
 		$search->set('financialYear', $data->eFinancialYearSelected);
+		$search->set('import', GET('import'));
 
 		$data->cCashflow = \bank\CashflowLib::getAll($search, $hasSort);
 
