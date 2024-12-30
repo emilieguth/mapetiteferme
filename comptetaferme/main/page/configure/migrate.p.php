@@ -2,17 +2,37 @@
 (new Page())
 	->cli('index', function($data) {
 
-		$cDate = \shop\Date::model()
-			->select(\shop\Date::getSelection())
-			->getCollection();
+		$cCompany = \company\CompanyLib::getList();
 
-		foreach($cDate as $eDate) {
+		foreach($cCompany as $eCompany) {
+			d($eCompany['id']);
 
-			\shop\Date::model()->update($eDate, [
-				'products' => \shop\Product::model()
-					->whereDate($eDate)
-					->count()
-			]);
+			\company\CompanyLib::connectSpecificDatabaseAndServer($eCompany);
+
+			$databaseName = \company\CompanyLib::getDatabaseNameFromCompany($eCompany);
+			\Database::addBase($databaseName, 'ctf-default');
+
+			$packagesToAdd = [];
+			foreach(\company\CompanyLib::$specificPackages as $package) {
+				$packagesToAdd[$package] = $databaseName;
+			}
+			$packages = \Database::getPackages();
+			\Database::setPackages(array_merge($packages, $packagesToAdd));
+
+
+			// Recrée les modules puis crée ou recrée toutes les tables
+			$libModule = new \dev\ModuleLib();
+			$libModule->load();
+
+			$classes = $libModule->getClasses();
+			foreach($classes as $class) {
+				$libModule->buildModule($class);
+				try {
+					(new \ModuleAdministration($class))->init();
+					(new \ModuleAdministration($class))->rebuild([]);
+				} catch (\Exception $e) {
+				}
+			}
 
 		}
 
