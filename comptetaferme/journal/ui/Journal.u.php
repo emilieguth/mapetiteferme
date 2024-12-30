@@ -77,10 +77,6 @@ class JournalUi {
 
 				$h .= '<thead>';
 					$h .= '<tr>';
-						$h .= '<th class="center">';
-							$label = s("#");
-							$h .= ($search ? $search->linkSort('id', $label) : $label);
-						$h .= '</th>';
 						$h .= '<th class="text-end">';
 							$label = s("Date de l'opération");
 							$h .= ($search ? $search->linkSort('date', $label) : $label);
@@ -110,8 +106,6 @@ class JournalUi {
 							if ($cOperationGrouped->offsetExists($lastAccount['id']) === TRUE) {
 								$h .= '<tr>';
 
-									$h .= '<td class="td-min-content text-center">';
-									$h .= '</td>';
 									$h .= '<td class="text-end">';
 										$h .= '<strong>'.$eOperation['accountLabel'].'</strong>';
 									$h .= '</td>';
@@ -133,10 +127,6 @@ class JournalUi {
 							}
 						}
 						$h .= '<tr>';
-
-							$h .= '<td class="td-min-content text-center">';
-								$h .= $eOperation['id'];
-							$h .= '</td>';
 
 							$h .= '<td class="text-end">';
 								$h .= \util\DateUi::numeric($eOperation['date']);
@@ -202,7 +192,6 @@ class JournalUi {
 
 		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
 		$h .= '<div class="dropdown-list">';
-		$h .= '<div class="dropdown-title">'.s("Écriture #{id}", ['id' => $eOperation['id']]).'</div>';
 
 		$h .= $primaryList;
 

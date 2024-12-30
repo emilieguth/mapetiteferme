@@ -240,7 +240,7 @@ class CompanyUi {
 			$h .= '<div class="util-buttons">';
 
 				$h .= '<a href="'.CompanyUi::urlAccounting($eCompany).'/account" class="bg-secondary util-button">';
-					$h .= '<h4>'.s("Les réglages de base<br/>de la comptabilité").'</h4>';
+					$h .= '<h4>'.s("Les classes de compte").'</h4>';
 					$h .= \Asset::icon('gear-fill');
 				$h .= '</a>';
 
