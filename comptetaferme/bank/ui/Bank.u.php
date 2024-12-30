@@ -12,7 +12,7 @@ class BankUi {
 		$h = '<div class="util-action">';
 
 			$h .= '<h1>';
-				$h .= s("Les flux de trésorerie");
+				$h .= s("Les flux financiers");
 			$h .= '</h1>';
 
 			$h .= '<div>';
