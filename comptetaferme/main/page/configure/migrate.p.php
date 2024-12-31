@@ -27,10 +27,15 @@
 			$classes = $libModule->getClasses();
 			foreach($classes as $class) {
 				$libModule->buildModule($class);
+				list($package) = explode('\\', $class);
+				if (in_array($package, \company\CompanyLib::$specificPackages) === false) {
+					continue;
+				}
+				echo $class."\n";
 				try {
 					(new \ModuleAdministration($class))->init();
-					(new \ModuleAdministration($class))->rebuild([]);
 				} catch (\Exception $e) {
+					(new \ModuleAdministration($class))->rebuild([]);
 				}
 			}
 

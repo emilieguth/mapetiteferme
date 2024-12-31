@@ -7,6 +7,8 @@ Class AlertUi {
 
 		return match($fqn) {
 
+			'Cashflow::accountsCheck' => s("Veuillez sélectionner au moins une classe de compte !"),
+
 			'Import::ofxSize' => s("Votre import ne peut pas excéder 1 Mo, merci de réduire la taille de votre fichier."),
 			'Import::ofxError' => s("Une erreur est survenue lors de l'import de votre fichier, merci de réessayer."),
 			'Import::nothingImported' => s("Aucun mouvement n'a été importé, n'avez-vous pas déjà importé ce fichier ?"),
@@ -19,6 +21,8 @@ Class AlertUi {
 	public static function getSuccess(string $fqn): ?string {
 
 		return match($fqn) {
+
+			'Cashflow::allocated' => s("L'imputation a bien été réalisée !"),
 
 			'Import::full' => s("L'import de votre relevé bancaire a bien été effectué !"),
 			'Import::partial' => s("L'import de votre relevé bancaire a bien été partiellement effectué, consultez l'import pour plus de détails."),

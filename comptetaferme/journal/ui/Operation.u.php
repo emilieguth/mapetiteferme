@@ -5,7 +5,6 @@ class OperationUi {
 
 	public function __construct() {
 		\Asset::css('journal', 'journal.css');
-		\Asset::js('journal', 'journal.js');
 	}
 
 	public function create(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
@@ -40,6 +39,40 @@ class OperationUi {
 			title: s("Ajouter une écriture"),
 			body: $h
 		);
+
+	}
+
+	public function getFieldsCreate(\util\FormUi $form, \bank\Cashflow $eCashflow, Operation $eOperation, \accounting\FinancialYear $eFinancialYear, string $suffix, array $defaultValues): string {
+
+		$h = '<div class="operation-write">';
+
+			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix.'*', function($d) {
+				$d->autocompleteDispatch = '#journal-operation-create';
+			});
+
+			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix.'*');
+			$h .= $form->group(
+				self::p('date')->label.' '.\util\FormUi::asterisk(),
+				$form->date('date'.$suffix.'*', $defaultValues['date'] ?? '', ['disabled' => true, 'min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+			);
+			$h .= $form->group(
+				self::p('description')->label.' '.\util\FormUi::asterisk(),
+				$form->text('description'.$suffix.'*', $defaultValues['description'] ?? '')
+			);
+			$h .= $form->group(
+				self::p('amount')->label.' '.\util\FormUi::asterisk(),
+					$form->inputGroup($form->number('amount'.$suffix.'*', $defaultValues['amount'] ?? '', ['step' => 0.01, 'data-type' => 'amount', 'onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')']).$form->addon('€ '))
+			);
+			$h .= $form->group(
+				self::p('type')->label.' '.\util\FormUi::asterisk(),
+				$form->radio('type'.$suffix.'*', Operation::DEBIT, self::p('type')->values[Operation::DEBIT], $defaultValues['type'] ?? '').
+				$form->radio('type'.$suffix.'*', Operation::CREDIT, self::p('type')->values[Operation::CREDIT], $defaultValues['type'] ?? '')
+			);
+			$h .= $form->dynamicGroup($eOperation, 'lettering'.$suffix);
+
+		$h .= '</div>';
+
+		return $h;
 
 	}
 

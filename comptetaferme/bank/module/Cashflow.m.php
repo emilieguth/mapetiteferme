@@ -11,6 +11,9 @@ abstract class CashflowElement extends \Element {
 	const CREDIT = 'credit';
 	const OTHER = 'other';
 
+	const WAITING = 'waiting';
+	const ALLOCATED = 'allocated';
+
 	public static function getSelection(): array {
 		return Cashflow::model()->getProperties();
 	}
@@ -49,10 +52,11 @@ class CashflowModel extends \ModuleModel {
 			'memo' => ['text24', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'account' => ['element32', 'bank\Account', 'cast' => 'element'],
 			'import' => ['element32', 'bank\Import', 'cast' => 'element'],
+			'status' => ['enum', [\bank\Cashflow::WAITING, \bank\Cashflow::ALLOCATED], 'cast' => 'enum'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import'
+			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status'
 		]);
 
 		$this->propertiesToModule += [
@@ -66,11 +70,28 @@ class CashflowModel extends \ModuleModel {
 
 	}
 
+	public function getDefaultValue(string $property) {
+
+		switch($property) {
+
+			case 'status' :
+				return Cashflow::WAITING;
+
+			default :
+				return parent::getDefaultValue($property);
+
+		}
+
+	}
+
 	public function encode(string $property, $value) {
 
 		switch($property) {
 
 			case 'type' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			case 'status' :
 				return ($value === NULL) ? NULL : (string)$value;
 
 			default :
@@ -122,6 +143,10 @@ class CashflowModel extends \ModuleModel {
 
 	public function whereImport(...$data): CashflowModel {
 		return $this->where('import', ...$data);
+	}
+
+	public function whereStatus(...$data): CashflowModel {
+		return $this->where('status', ...$data);
 	}
 
 

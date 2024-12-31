@@ -62,5 +62,37 @@ class CashflowLib extends CashflowCrud {
 
 	}
 
+	public static function prepareAllocate(Cashflow $eCashflow, array $input): \Collection {
+
+		$accounts = var_filter($input['account'] ?? [], 'array');
+
+		$fw = new \FailWatch();
+
+		if($accounts === []) {
+			Cashflow::fail('accountsCheck');
+			return new \Collection();
+		}
+
+		$cOperation = new \Collection();
+
+		foreach($accounts as $index => $account) {
+
+			$eOperation = new \journal\Operation();
+			$eOperation['index'] = $index;
+
+			$eOperation->buildIndex(['account', 'accountLabel', 'description', 'amount', 'type', 'lettering'], $input, $index);
+			$eOperation['cashflow'] = $eCashflow;
+			$eOperation['date'] = $eCashflow['date'];
+			$cOperation->append($eOperation);
+
+		}
+
+		if($fw->ko()) {
+			return new \Collection();
+		}
+
+		return $cOperation;
+	}
+
 }
 ?>

@@ -17,3 +17,4 @@ Operation:
   amount: decimal(8, 2)
   type: enum(DEBIT, CREDIT)
   lettering: ?text8(1, null)
+  cashflow: ?bank\Cashflow

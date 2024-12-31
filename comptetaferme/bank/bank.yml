@@ -16,6 +16,7 @@ Cashflow:
   memo: ?text24(1, null) @collate(general)
   account: bank\Account
   import: bank\Import
+  status: enum(WAITING, ALLOCATED) = WAITING
   UNIQUE: [
     ["fitid"]
   ]

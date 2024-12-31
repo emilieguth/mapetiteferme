@@ -26,7 +26,7 @@ class JournalUi {
 
 	}
 
-	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected): string {
+	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected, \bank\Cashflow $eCashflow): string {
 
 		$h = '<div id="journal-search" class="util-block-search stick-xs '.($search->empty(['ids']) ? 'hide' : '').'">';
 
@@ -52,6 +52,20 @@ class JournalUi {
 			$h .= $form->close();
 
 		$h .= '</div>';
+
+		if ($eCashflow->exists() === TRUE) {
+			$h .= '<div class="util-block-search stick-xs">';
+				$h .= s(
+					"Vous visualisez actuellement les écritures correspondant au flux du {date}, \"{memo}\" d'un {type} de {amount}.",
+					[
+						'date' => \util\DateUi::numeric($eCashflow['date']),
+						'memo' => encode($eCashflow['memo']),
+						'type' => mb_strtolower(\bank\CashflowUi::p('type')->values[$eCashflow['type']]),
+						'amount' => \util\TextUi::money($eCashflow['amount']),
+					]
+				);
+			$h .= '</div>';
+		}
 
 		return $h;
 
@@ -166,8 +180,8 @@ class JournalUi {
 							$h .= '<td>';
 								if (
 									$eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
-									&& currentDate() <= $eFinancialYearSelected['endDate']
-									&& currentDate() >= $eFinancialYearSelected['startDate']
+									&& $eOperation['date'] <= $eFinancialYearSelected['endDate']
+									&& $eOperation['date'] >= $eFinancialYearSelected['startDate']
 								) {
 									$h .= $this->getUpdate($eCompany, $eOperation, 'btn-outline-secondary');
 								}

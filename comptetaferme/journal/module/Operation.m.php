@@ -48,15 +48,17 @@ class OperationModel extends \ModuleModel {
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'type' => ['enum', [\journal\Operation::DEBIT, \journal\Operation::CREDIT], 'cast' => 'enum'],
 			'lettering' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
+			'cashflow' => ['element32', 'bank\Cashflow', 'null' => TRUE, 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'lettering'
+			'id', 'account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'lettering', 'cashflow'
 		]);
 
 		$this->propertiesToModule += [
 			'account' => 'accounting\Account',
 			'document' => 'journal\Document',
+			'cashflow' => 'bank\Cashflow',
 		];
 
 	}
@@ -117,6 +119,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereLettering(...$data): OperationModel {
 		return $this->where('lettering', ...$data);
+	}
+
+	public function whereCashflow(...$data): OperationModel {
+		return $this->where('cashflow', ...$data);
 	}
 
 

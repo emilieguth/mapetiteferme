@@ -13,6 +13,7 @@ Package::setList([
 	'accounting' => 'comptetaferme',
 	'bank' => 'comptetaferme',
 	'company' => 'comptetaferme',
+	'dropbox' => 'comptetaferme',
 	'journal' => 'comptetaferme',
 	'mail' => 'comptetaferme',
 	'media' => 'comptetaferme',

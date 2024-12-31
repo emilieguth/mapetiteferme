@@ -25,6 +25,11 @@
 		// Ne pas ouvrir le bloc de recherche
 		$search->set('financialYear', $data->eFinancialYearSelected);
 
+		$data->eCashflow = \bank\CashflowLib::getById(GET('cashflow'));
+		if($data->eCashflow->exists() === TRUE) {
+			$search->set('cashflow', GET('cashflow'));
+		}
+
 		$data->cOperation = \journal\OperationLib::getAll($search, $hasSort);
 		$data->cOperationGrouped = $hasSort ? new \Collection() : \journal\OperationLib::getGrouped($search);
 		$data->cAccount = \accounting\AccountLib::getAll();
