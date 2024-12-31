@@ -13,10 +13,11 @@ Cashflow:
   amount: decimal(8, 2)
   fitid: ?text8(1, null)
   name: ?text24(1, null)
-  memo: ?text24(1, null) @collate(general)
+  memo: ?text8(1, null) @collate(general)
   account: bank\Account
   import: bank\Import
   status: enum(WAITING, ALLOCATED) = WAITING
+  thirdParty: ?text8(1, null) @collate(general)
   UNIQUE: [
     ["fitid"]
   ]

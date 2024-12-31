@@ -34,4 +34,20 @@ new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 	$t->js()->eval('Cashflow.showOrHideDeleteOperation()');
 
 });
+
+new JsonView('thirdPartyQuery', function($data, AjaxTemplate $t) {
+
+	$results = $data->cCashflow->makeArray(function($eCashflow) use ($data) { return \bank\CashflowUi::getAutocomplete($data->eCompany['id'], $eCashflow); });
+	if ($data->cCashflow->count() === 0) {
+		$results[] = [
+			'value' => encode($data->query),
+			'company' => $data->eCompany['id'],
+			'itemHtml' => encode($data->query),
+			'itemText' => encode($data->query)
+		];
+	}
+
+	$t->push('results', $results);
+
+});
 ?>

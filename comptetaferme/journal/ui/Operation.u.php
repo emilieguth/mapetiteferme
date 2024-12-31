@@ -24,7 +24,7 @@ class OperationUi {
 			$d->autocompleteDispatch = '#journal-operation-create';
 		});
 
-		$h .= $form->dynamicGroups($eOperation, ['accountLabel*']);
+		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
 		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 
@@ -50,7 +50,7 @@ class OperationUi {
 				$d->autocompleteDispatch = '#journal-operation-create';
 			});
 
-			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix.'*');
+			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);
 			$h .= $form->group(
 				self::p('date')->label.' '.\util\FormUi::asterisk(),
 				$form->date('date'.$suffix.'*', $defaultValues['date'] ?? '', ['disabled' => true, 'min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
@@ -94,7 +94,7 @@ class OperationUi {
 			$d->autocompleteDispatch = '#journal-operation-create';
 		});
 
-		$h .= $form->dynamicGroups($eOperation, ['accountLabel*']);
+		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
 		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 

@@ -121,7 +121,7 @@ class JournalUi {
 								$h .= '<tr>';
 
 									$h .= '<td class="text-end">';
-										$h .= '<strong>'.$eOperation['accountLabel'].'</strong>';
+										$h .= '<strong>'.$eOperation['account']['class'].($eOperation['accountLabel'] ? ' ('.$eOperation['accountLabel'].')' : '').'</strong>';
 									$h .= '</td>';
 									$h .= '<td>';
 										$h .= '<strong>'.$lastAccount['description'].'</strong>';

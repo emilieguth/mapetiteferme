@@ -70,9 +70,21 @@
 
 		\journal\Operation::model()->insert($cOperation);
 
-		\bank\Cashflow::model()->update($data->eCashflow, ['status' => \bank\CashflowElement::ALLOCATED]);
+		\bank\Cashflow::model()->update(
+			$data->eCashflow,
+			['memo' => POST('memo'), 'thirdParty' => POST('thirdParty'), 'status' => \bank\CashflowElement::ALLOCATED]
+		);
 
 		throw new ReloadAction('bank', 'Cashflow::allocated');
+
+	})
+	->post('thirdPartyQuery', function($data) {
+
+		$data->query = POST('query');
+
+		$data->cCashflow = \bank\CashflowLib::getByThirdParty($data->query);
+
+		throw new \ViewAction($data);
 
 	});
 ?>

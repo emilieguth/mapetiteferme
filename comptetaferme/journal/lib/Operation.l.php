@@ -28,7 +28,7 @@ class OperationLib extends OperationCrud {
 			->whereAccountLabel('LIKE', '%'.$search->get('accountLabel').'%', if: $search->get('accountLabel'))
 			->whereDescription('LIKE', '%'.$search->get('description').'%', if: $search->get('description'))
 			->whereLettering('LIKE', '%'.$search->get('lettering').'%', if: $search->get('lettering'))
-			->whereCashflow('LIKE', '%'.$search->get('cashflow').'%', if: $search->get('cashflow'))
+			->whereCashflow('=', $search->get('cashflow'), if: $search->get('cashflow'))
 			->whereType($search->get('type'), if: $search->get('type'));
 
 	}

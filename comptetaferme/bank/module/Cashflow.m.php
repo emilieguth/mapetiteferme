@@ -49,14 +49,15 @@ class CashflowModel extends \ModuleModel {
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'fitid' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'unique' => TRUE, 'cast' => 'string'],
 			'name' => ['text24', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
-			'memo' => ['text24', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
+			'memo' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'account' => ['element32', 'bank\Account', 'cast' => 'element'],
 			'import' => ['element32', 'bank\Import', 'cast' => 'element'],
 			'status' => ['enum', [\bank\Cashflow::WAITING, \bank\Cashflow::ALLOCATED], 'cast' => 'enum'],
+			'thirdParty' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status'
+			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status', 'thirdParty'
 		]);
 
 		$this->propertiesToModule += [
@@ -147,6 +148,10 @@ class CashflowModel extends \ModuleModel {
 
 	public function whereStatus(...$data): CashflowModel {
 		return $this->where('status', ...$data);
+	}
+
+	public function whereThirdParty(...$data): CashflowModel {
+		return $this->where('thirdParty', ...$data);
 	}
 
 

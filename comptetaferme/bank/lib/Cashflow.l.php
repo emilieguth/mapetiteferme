@@ -87,11 +87,35 @@ class CashflowLib extends CashflowCrud {
 
 		}
 
+		// Ajout de la transaction sur le compte 512 (compte 5121)
+		$eOperationBank = new \journal\Operation();
+		$eAccountBank = new Account();
+		$eOperationBank['cashflow'] = $eCashflow;
+		$eOperationBank['date'] = $eCashflow['date'];
+		\accounting\Account::model()
+			->select(\accounting\Account::getSelection())
+			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
+			->get($eAccountBank);
+		$eOperationBank['account'] = $eAccountBank;
+		$eOperationBank['accountLabel'] = \Setting::get('accounting\bankAccountLabel');
+		$eOperationBank['description'] = $eCashflow['memo'];
+		$eOperationBank['type'] = $eCashflow['type'];
+		$eOperationBank['amount'] = $eCashflow['amount'];
+		$cOperation->append($eOperationBank);
+
+
 		if($fw->ko()) {
 			return new \Collection();
 		}
 
 		return $cOperation;
+	}
+
+	public static function getByThirdParty(string $thirdParty): \Collection {
+		return Cashflow::model()
+			->whereThirdParty('LIKE', '%'.$thirdParty.'%')
+			->sort(['thirdParty' => SORT_ASC])
+			->getCollection(NULL, NULL, 'thirdParty');
 	}
 
 }
