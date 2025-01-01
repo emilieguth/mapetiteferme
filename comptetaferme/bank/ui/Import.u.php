@@ -16,7 +16,7 @@ class ImportUi {
 		$h .= '</h1>';
 
 		$h .= '<div>';
-		$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/import:import" class="btn btn-primary">'.\Asset::icon('file-earmark-plus').' '.s("Importer").'</a>';
+		$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/import:import" class="btn btn-primary">'.\Asset::icon('file-earmark-plus').' '.s("Importer un relevé .ofx").'</a>';
 		$h .= '</div>';
 
 		$h .= '</div>';

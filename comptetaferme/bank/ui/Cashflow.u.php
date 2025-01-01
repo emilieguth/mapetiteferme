@@ -150,7 +150,7 @@ class CashflowUi {
 	}
 	protected function getUpdate(\company\Company $eCompany, Cashflow $eCashflow, string $btn): string {
 
-		$primaryList = '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Imputer").'</a>';;
+		$primaryList = '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des transactions").'</a>';;
 
 		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:doDelete" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de cette transaction ?").'">'.s("Supprimer").'</a>';
 
@@ -228,7 +228,7 @@ class CashflowUi {
 				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre ligne");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';
-			$buttons .= $form->submit(s("Imputer la transaction"));
+			$buttons .= $form->submit(s("Attribuer des écritures"));
 
 			$h .= $form->group(content: $buttons);
 
@@ -236,7 +236,7 @@ class CashflowUi {
 
 		return new \Panel(
 			id: 'panel-cashflow-allocate',
-			title: s("Imputer une transaction"),
+			title: s("Attribuer des écritures"),
 			body: $h
 		);
 
@@ -368,7 +368,7 @@ class CashflowUi {
 
 			case 'status' :
 				$d->values = [
-					CashflowElement::ALLOCATED => s("Imputée"),
+					CashflowElement::ALLOCATED => s("Attribuée"),
 					CashflowElement::WAITING => s("Attente"),
 				];
 				$d->shortValues = [

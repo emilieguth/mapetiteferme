@@ -1,7 +1,7 @@
 <?php
 new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
-	$t->title = s("Les flux financiers de {company}", ['company' => $data->eCompany['name']]);
+	$t->title = s("Les transactions bancaires de {company}", ['company' => $data->eCompany['name']]);
 	$t->tab = 'bank';
 	$t->subNav = (new \company\CompanyUi())->getBankSubNav($data->eCompany);
 	$t->canonical = \company\CompanyUi::urlBank($data->eCompany).'/cashflow';
