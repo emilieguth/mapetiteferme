@@ -3,10 +3,42 @@ namespace accounting;
 
 class AccountLib extends AccountCrud {
 
+	public static function getByIdsWithVatAccount(array $ids): \Collection {
+
+		return Account::model()
+			->select([
+					'name' => new \Sql('CONCAT(class, ". ", description)')] +
+				Account::getSelection() +
+				['vatAccount' => ['class', 'vatRate', 'description']
+				])
+			->whereId('IN', $ids)
+			->getCollection(NULL, NULL, 'id');
+
+	}
+
+	public static function getByIdWithVatAccount(int $id): Account {
+
+		$eAccount = new Account();
+		Account::model()
+			->select([
+					'name' => new \Sql('CONCAT(class, ". ", description)')] +
+				Account::getSelection() +
+				['vatAccount' => ['class', 'vatRate']
+				])
+			->whereId('=', $id)
+			->get($eAccount);
+
+		return $eAccount;
+	}
+
 	public static function getAll($query = ''): \Collection {
 
 		return Account::model()
-			->select(['name' => new \Sql('CONCAT(class, ". ", description)')] + Account::getSelection())
+			->select([
+				'name' => new \Sql('CONCAT(class, ". ", description)')] +
+				Account::getSelection() +
+				['vatAccount' => ['class', 'vatRate']
+			])
 			->sort('class')
 			->where('class LIKE "%'.$query.'%" OR description LIKE "%'.strtolower($query).'%"', if: $query !== '')
 			->getCollection(NULL, NULL, 'id');

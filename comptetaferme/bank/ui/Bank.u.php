@@ -4,7 +4,6 @@ namespace bank;
 class BankUi {
 
 	public function __construct() {
-		\Asset::css('bank', 'bank.css');
 	}
 
 	public function getBankTitle(\company\Company $eCompany): string {

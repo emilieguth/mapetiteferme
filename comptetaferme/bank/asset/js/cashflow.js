@@ -1,4 +1,15 @@
+document.delegateEventListener('autocompleteSelect', '#bank-cashflow-allocate', function(e) {
+    if (e.target.getAttribute('id') === 'bank-cashflow-allocate') {
+        Cashflow.refreshAllocate(e);
+    }
+});
+
 class Cashflow {
+
+    static refreshAllocate(event) {
+        event.detail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', event.detail.vatRate);
+
+    }
 
     static sumAmounts() {
 
@@ -11,7 +22,7 @@ class Cashflow {
 
         const sum = this.sumAmounts();
 
-        qs('#cashflow-create-operation-list [name="amount[' + index + ']*"]').setAttribute('value', Math.round(parseFloat(totalAmount) - sum), 2);
+        qs('#cashflow-create-operation-list [name="amount[' + index + ']*"]').setAttribute('value', abs(Math.round(parseFloat(totalAmount) - sum)), 2);
 
     }
 
@@ -37,7 +48,7 @@ class Cashflow {
 
         if (sum !== parseFloat(totalAmount)) {
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
-            qs('#cashflow-allocate-difference-value').innerHTML = Math.round(Math.abs(parseFloat(totalAmount) - sum), 2);
+            qs('#cashflow-allocate-difference-value').innerHTML = Math.round(Math.abs(abs(parseFloat(totalAmount)) - sum), 2);
         } else {
             qs('#cashflow-allocate-difference-warning').classList.add('hide');
         }

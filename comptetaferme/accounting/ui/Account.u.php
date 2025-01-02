@@ -44,6 +44,12 @@ class AccountUi {
 						$h .= '<th>';
 							$h .= s("Libellé");
 						$h .= '</th>';
+						$h .= '<th>';
+							$h .= s("Compte de TVA");
+						$h .= '</th>';
+						$h .= '<th>';
+							$h .= s("Taux de TVA");
+						$h .= '</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
@@ -70,6 +76,18 @@ class AccountUi {
 								$h .= $classNumber === 0 ? '</b>' : '';
 						$h .= '</td>';
 
+						$h .= '<td>';
+							$h .= ($eAccount['vatAccount']->exists() === TRUE ? encode($eAccount['vatAccount']['class']) : '');
+						$h .= '</td>';
+
+						$h .= '<td>';
+							if ($eAccount['vatAccount']->exists() === TRUE) {
+								$h .= encode($eAccount['vatAccount']['vatRate']).'%';
+							} else {
+								$h .= $eAccount['vatRate'] ? $eAccount['vatRate'].'%' : '';
+							}
+						$h .= '</td>';
+
 					$h .= '</tr>';
 				}
 
@@ -89,9 +107,17 @@ class AccountUi {
 
 		\Asset::css('media', 'media.css');
 
+		$vatRate = 0.0;
+		if ($eAccount['vatRate'] !== NULL) {
+			$vatRate = $eAccount['vatRate'];
+		} else if ($eAccount['vatAccount']->exists() === TRUE) {
+			$vatRate = $eAccount['vatAccount']['vatRate'];
+		}
+
 		return [
 			'value' => $eAccount['id'],
 			'class' => encode($eAccount['class']),
+			'vatRate' => $vatRate,
 			'company' => $company,
 			'itemHtml' => encode($eAccount['class'].' '.$eAccount['description']),
 			'itemText' => encode($eAccount['class'].' '.$eAccount['description'])

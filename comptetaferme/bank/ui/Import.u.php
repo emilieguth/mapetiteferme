@@ -4,7 +4,6 @@ namespace bank;
 class ImportUi {
 
 	public function __construct() {
-		\Asset::css('bank', 'bank.css');
 	}
 
 	public function getImportTitle(\company\Company $eCompany): string {

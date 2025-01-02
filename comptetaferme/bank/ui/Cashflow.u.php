@@ -4,7 +4,6 @@ namespace bank;
 class CashflowUi {
 
 	public function __construct() {
-		\Asset::css('bank', 'bank.css');
 	}
 
 
@@ -122,7 +121,7 @@ class CashflowUi {
 							};
 						$h .= '</td>';
 
-					$h .= '<td class="td-min-content">';
+					$h .= '<td class="td-min-content text-center">';
 						$h .= '<a class="cashflow-status-label cashflow-status-'.$eCashflow['status'].'" href="'.\company\CompanyUi::urlJournal($eCompany).'/?cashflow='.$eCashflow['id'].'">';
 							$h .= CashflowUi::p('status')->values[$eCashflow['status']];
 						$h .= '</a>';
@@ -150,7 +149,7 @@ class CashflowUi {
 	}
 	protected function getUpdate(\company\Company $eCompany, Cashflow $eCashflow, string $btn): string {
 
-		$primaryList = '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des transactions").'</a>';;
+		$primaryList = '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des écritures").'</a>';;
 
 		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:doDelete" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de cette transaction ?").'">'.s("Supprimer").'</a>';
 
@@ -197,11 +196,11 @@ class CashflowUi {
 		$h .= '</div>';
 
 		$form = new \util\FormUi();
-		$eOperation = new \journal\Operation();
+		$eOperation = new \journal\Operation(['account' => new Account()]);
 		$index = 0;
 		$defaultValues = [
 			'date' => $eCashflow['date'],
-			'amount' => $eCashflow['amount'],
+			'amount' => abs($eCashflow['amount']),
 			'type' => $eCashflow['type'],
 			'description' => $eCashflow['memo'],
 		];
@@ -212,7 +211,11 @@ class CashflowUi {
 			$h .= $form->hidden('id', $eCashflow['id']);
 
 			$h .= $form->dynamicGroup($eCashflow, 'memo');
-			$h .= $form->dynamicGroup($eCashflow, 'thirdParty', function($d) {$d->autocompleteDispatch = '#bank-cashflow-allocate';});
+			$h .= '<div id="bank-cashflow-allocate-thirdParty">';
+				$h .= $form->dynamicGroup($eCashflow, 'thirdParty', function($d) {
+					$d->autocompleteDispatch = '#bank-cashflow-allocate-thirdParty';
+				});
+			$h .= '</div>';
 
 			$h .= $form->asteriskInfo();
 
@@ -245,7 +248,7 @@ class CashflowUi {
 	public static function addAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, int $index): string {
 
 		$form = new \util\FormUi();
-		$eOperation = new \journal\Operation();
+		$eOperation = new \journal\Operation(['account' => new Account()]);
 		$defaultValues = [
 			'date' => $eCashflow['date'],
 			'type' => $eCashflow['type'],
@@ -311,15 +314,15 @@ class CashflowUi {
 		);
 	}
 
-	public static function getAutocomplete(int $company, Cashflow $eCashflow): array {
+	public static function getAutocomplete(int $company, string $thirdParty): array {
 
 		\Asset::css('media', 'media.css');
 
 		return [
-			'value' => $eCashflow['thirdParty'],
+			'value' => $thirdParty,
 			'company' => $company,
-			'itemHtml' => encode($eCashflow['thirdParty']),
-			'itemText' => encode($eCashflow['thirdParty'])
+			'itemHtml' => encode($thirdParty),
+			'itemText' => encode($thirdParty)
 		];
 
 	}
@@ -333,8 +336,8 @@ class CashflowUi {
 		$d->group += ['wrapper' => 'customer'];
 
 		$d->autocompleteUrl = \company\CompanyUi::urlBank($company).'/cashflow:thirdPartyQuery';
-		$d->autocompleteResults = function(Cashflow $e) use ($company) {
-			return self::getAutocomplete($company, $e);
+		$d->autocompleteResults = function(string $thirdParty) use ($company) {
+			return self::getAutocomplete($company, $thirdParty);
 		};
 
 	}

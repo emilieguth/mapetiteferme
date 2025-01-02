@@ -28,6 +28,20 @@ class OperationUi {
 		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 
+		$vatRateDefault = 0;
+		if ($eOperation['account']->exists() === TRUE) {
+			if ($eOperation['account']['vatRate'] !== NULL) {
+				$vatRateDefault = $eOperation['account']['vatRate'];
+			} else if($eOperation['account']['vatAccount']->exists() === TRUE) {
+				$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
+			}
+		}
+
+		$h .= $form->group(
+			s("Taux de TVA").' '.\util\FormUi::asterisk(),
+			$form->inputGroup($form->number('vatRate*', $vatRateDefault).$form->addon('% '))
+		);
+
 		$h .= $form->group(
 			content: $form->submit(s("Ajouter l'écriture"))
 		);
@@ -44,10 +58,12 @@ class OperationUi {
 
 	public function getFieldsCreate(\util\FormUi $form, \bank\Cashflow $eCashflow, Operation $eOperation, \accounting\FinancialYear $eFinancialYear, string $suffix, array $defaultValues): string {
 
+		\Asset::js('journal', 'operation.js');
+
 		$h = '<div class="operation-write">';
 
 			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix.'*', function($d) {
-				$d->autocompleteDispatch = '#journal-operation-create';
+				$d->autocompleteDispatch = '#bank-cashflow-allocate';
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);
@@ -69,6 +85,21 @@ class OperationUi {
 				$form->radio('type'.$suffix.'*', Operation::CREDIT, self::p('type')->values[Operation::CREDIT], $defaultValues['type'] ?? '')
 			);
 			$h .= $form->dynamicGroup($eOperation, 'lettering'.$suffix);
+
+			$vatRateDefault = 0;
+			if ($eOperation['account']->exists() === TRUE) {
+				if ($eOperation['account']['vatRate'] !== NULL) {
+					$vatRateDefault = $eOperation['account']['vatRate'];
+				} else if($eOperation['account']['vatAccount']->exists() === TRUE) {
+					$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
+				}
+			}
+
+			$eOperation['vatRate'.$suffix] = '';
+			$h .= $form->group(
+				s("Taux de TVA").' '.\util\FormUi::asterisk(),
+				$form->inputGroup($form->number('vatRate'.$suffix.'*',  $vatRateDefault, ['data-field' => 'vatRate']).$form->addon('% '))
+			);
 
 		$h .= '</div>';
 
@@ -97,6 +128,12 @@ class OperationUi {
 		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
 		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
+
+		$eOperation['vatRate'] = '';
+		$h .= $form->group(
+			s("Taux de TVA").' '.\util\FormUi::asterisk(),
+			$form->inputGroup($form->number('vatRate*',  '0').$form->addon('% '))
+		);
 
 		$h .= $form->group(
 			content: $form->submit(s("Modifier l'écriture"))
@@ -139,8 +176,6 @@ class OperationUi {
 				break;
 
 			case 'account':
-				\Asset::js('journal', 'routine.js');
-
 				$d->autocompleteBody = function(\util\FormUi $form, Operation $e) {
 					return [
 					];

@@ -9,10 +9,12 @@
 ))
 	->create(function($data) {
 
+		$eAccount = get_exists('account') ? \accounting\AccountLib::getByIdWithVatAccount(GET('account', 'int')) : new \accounting\Account();
 		$data->e->merge([
 			'company' => $data->eCompany['id'],
-			'account' => get_exists('account') ? \accounting\AccountLib::getById(GET('account', 'int')) : new \accounting\Account(),
+			'account' => $eAccount,
 			'accountLabel' => GET('accountLabel') ?? '',
+			'vatRate' => $eAccount['vatRate'] ?? $eAccount['vatRate'] ?? 0,
 		]);
 
 		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();

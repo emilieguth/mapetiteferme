@@ -73,6 +73,8 @@ class CashflowLib extends CashflowCrud {
 			return new \Collection();
 		}
 
+		$cAccounts = \accounting\AccountLib::getByIdsWithVatAccount($accounts);
+
 		$cOperation = new \Collection();
 
 		foreach($accounts as $index => $account) {
@@ -80,10 +82,34 @@ class CashflowLib extends CashflowCrud {
 			$eOperation = new \journal\Operation();
 			$eOperation['index'] = $index;
 
-			$eOperation->buildIndex(['account', 'accountLabel', 'description', 'amount', 'type', 'lettering'], $input, $index);
+			$eOperation->buildIndex(['account', 'accountLabel', 'description', 'amount', 'type', 'lettering', 'vatRate'], $input, $index);
 			$eOperation['cashflow'] = $eCashflow;
 			$eOperation['date'] = $eCashflow['date'];
+			$eOperation['amount'] = abs($eOperation['amount']);
+
+			// Ce type d'écriture a un compte de TVA correspondant
+			$eAccount = $cAccounts[$account] ?? new Account();
+			if ($eAccount['vatAccount']->exists() === true) {
+				$eOperation['vatAccount'] = $cAccounts[$account]['vatAccount'];
+
+				// Ajout de l'entrée de compte de TVA correspondante
+				$eOperationTva = new \journal\Operation();
+				$eOperationTva['cashflow'] = $eCashflow;
+				$eOperationTva['date'] = $eCashflow['date'];
+				$eOperationTva['account'] = $eAccount['vatAccount'];
+				$eOperationTva['accountLabel'] = $eAccount['vatAccount']['description'];
+				$eOperationTva['description'] = $eCashflow['memo'];
+				$eOperationTva['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
+					'7' => \journal\OperationElement::CREDIT,
+					'2' => \journal\OperationElement::DEBIT,
+					'6' => \journal\OperationElement::DEBIT,
+					default => NULL,
+				};
+				$eOperationTva['amount'] = round($eOperation['amount'] * $eOperation['vatRate'] / 100, 2);
+			}
+
 			$cOperation->append($eOperation);
+			$cOperation->append($eOperationTva);
 
 		}
 
@@ -100,7 +126,7 @@ class CashflowLib extends CashflowCrud {
 		$eOperationBank['accountLabel'] = \Setting::get('accounting\bankAccountLabel');
 		$eOperationBank['description'] = $eCashflow['memo'];
 		$eOperationBank['type'] = $eCashflow['type'];
-		$eOperationBank['amount'] = $eCashflow['amount'];
+		$eOperationBank['amount'] = abs($eCashflow['amount']);
 		$cOperation->append($eOperationBank);
 
 
@@ -113,7 +139,9 @@ class CashflowLib extends CashflowCrud {
 
 	public static function getByThirdParty(string $thirdParty): \Collection {
 		return Cashflow::model()
+			->select(Cashflow::getSelection())
 			->whereThirdParty('LIKE', '%'.$thirdParty.'%')
+			->whereThirdParty('!=', '')
 			->sort(['thirdParty' => SORT_ASC])
 			->getCollection(NULL, NULL, 'thirdParty');
 	}
