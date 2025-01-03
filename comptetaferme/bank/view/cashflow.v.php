@@ -29,7 +29,7 @@ new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 
 	$t->qs('#cashflow-create-operation-list')->insertAdjacentHtml('beforeend', (new \bank\CashflowUi())->addAllocate($data->eCompany, $data->eFinancialYearCurrent, $data->eCashflow, $data->index));
 	$t->qs('#cashflow-add-operation')->setAttribute('post-index', $data->index + 1);
-	$t->js()->eval('Cashflow.updateLastAmount('.$data->eCashflow['amount'].', '.$data->index.')');
+	$t->js()->eval('Cashflow.updateLastAmount('.$data->index.')');
 	$t->js()->eval('Cashflow.fillShowHideAmountWarning('.$data->eCashflow['amount'].')');
 	$t->js()->eval('Cashflow.showOrHideDeleteOperation()');
 

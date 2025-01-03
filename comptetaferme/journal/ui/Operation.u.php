@@ -59,6 +59,7 @@ class OperationUi {
 	public function getFieldsCreate(\util\FormUi $form, \bank\Cashflow $eCashflow, Operation $eOperation, \accounting\FinancialYear $eFinancialYear, string $suffix, array $defaultValues): string {
 
 		\Asset::js('journal', 'operation.js');
+		$index = mb_substr($suffix, 1, mb_strlen($suffix) - 2);
 
 		$h = '<div class="operation-write">';
 
@@ -77,12 +78,12 @@ class OperationUi {
 			);
 			$h .= $form->group(
 				self::p('amount')->label.' '.\util\FormUi::asterisk(),
-					$form->inputGroup($form->number('amount'.$suffix.'*', $defaultValues['amount'] ?? '', ['step' => 0.01, 'data-type' => 'amount', 'onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')']).$form->addon('€ '))
+					$form->inputGroup($form->number('amount'.$suffix.'*', $defaultValues['amount'] ?? '', ['step' => 0.01, 'data-type' => 'amount', 'onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')', 'data-index' => $index]).$form->addon('€ '))
 			);
 			$h .= $form->group(
 				self::p('type')->label.' '.\util\FormUi::asterisk(),
-				$form->radio('type'.$suffix.'*', Operation::DEBIT, self::p('type')->values[Operation::DEBIT], $defaultValues['type'] ?? '').
-				$form->radio('type'.$suffix.'*', Operation::CREDIT, self::p('type')->values[Operation::CREDIT], $defaultValues['type'] ?? '')
+				$form->radio('type'.$suffix.'*', Operation::DEBIT, self::p('type')->values[Operation::DEBIT], $defaultValues['type'] ?? '', ['onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')']).
+				$form->radio('type'.$suffix.'*', Operation::CREDIT, self::p('type')->values[Operation::CREDIT], $defaultValues['type'] ?? '', ['onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')'])
 			);
 			$h .= $form->dynamicGroup($eOperation, 'lettering'.$suffix);
 
@@ -98,7 +99,11 @@ class OperationUi {
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(
 				s("Taux de TVA").' '.\util\FormUi::asterisk(),
-				$form->inputGroup($form->number('vatRate'.$suffix.'*',  $vatRateDefault, ['data-field' => 'vatRate']).$form->addon('% '))
+				$form->inputGroup($form->number('vatRate'.$suffix.'*',  $vatRateDefault, ['data-field' => 'vatRate', 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => 'Cashflow.fillShowHideAmountWarning();']).$form->addon('% '))
+			);
+			$h .= $form->group(
+				s("Valeur calculée de TVA"),
+				$form->inputGroup($form->number('vatValue'.$suffix,  0, ['data-field' => 'vatValue', 'disabled' => 'disabled']).$form->addon('€'))
 			);
 
 		$h .= '</div>';

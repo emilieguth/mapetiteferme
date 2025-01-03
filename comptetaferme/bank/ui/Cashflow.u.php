@@ -191,7 +191,7 @@ class CashflowUi {
 				$h .= '<dt>'.s("Type").'</dt>';
 				$h .= '<dd>'.$type.'</dd>';
 				$h .= '<dt>'.s("Montant").'</dt>';
-				$h .= '<dd>'.\util\TextUi::money($eCashflow['amount']).'</dd>';
+				$h .= '<dd><span id="get-allocate-total-amount">'.$eCashflow['amount'].'</span>€</dd>';
 			$h .= '</dl>';
 		$h .= '</div>';
 
@@ -227,7 +227,7 @@ class CashflowUi {
 				$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
 			$h .= '</div>';
 
-			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.sumAmounts(); return true;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-amount="" class="btn btn-outline-secondary">';
+			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.recalculateAmounts(); return true;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-amount="" class="btn btn-outline-secondary">';
 				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre ligne");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';
