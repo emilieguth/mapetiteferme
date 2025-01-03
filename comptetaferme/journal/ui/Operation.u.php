@@ -134,10 +134,9 @@ class OperationUi {
 		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
 
-		$eOperation['vatRate'] = '';
 		$h .= $form->group(
 			s("Taux de TVA").' '.\util\FormUi::asterisk(),
-			$form->inputGroup($form->number('vatRate*',  '0').$form->addon('% '))
+			$form->inputGroup($form->number('vatRate*',  $eOperation['vatRate'] ?? 0, ['disabled' => 'disabled']).$form->addon('% '))
 		);
 
 		$h .= $form->group(

@@ -30,7 +30,7 @@
 	->update(function($data) {
 
 		$data->e->merge([
-			'account' => \accounting\AccountLib::getById($data->e['id']),
+			'account' => \accounting\AccountLib::getById($data->e['id'], \accounting\Account::getSelection() + ['vatAccount' => \accounting\Account::getSelection()]),
 		]);
 		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 
