@@ -18,7 +18,6 @@
 			? \accounting\FinancialYearLib::getById(GET('financialYear'))
 			: $data->eFinancialYearCurrent;
 
-
 		$data->imports = \bank\ImportLib::formatCurrentFinancialYearImports($data->eFinancialYearSelected);
 		$data->cImport = \bank\ImportLib::getAll($data->eFinancialYearSelected);
 

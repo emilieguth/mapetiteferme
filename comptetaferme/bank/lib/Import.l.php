@@ -92,8 +92,8 @@ class ImportLib extends ImportCrud {
 	public static function getAll(\accounting\FinancialYear $eFinancialYear): \Collection {
 		return Import::model()
 			->select(Import::getSelection() + ['account' => Account::getSelection()])
-			->whereStartDate('>=', $eFinancialYear['startDate'])
-			->whereEndDate('<=', $eFinancialYear['endDate'])
+			->whereStartDate('>=', $eFinancialYear['startDate'].' 00:00:00')
+			->whereEndDate('<=', $eFinancialYear['endDate'].' 23:59:59')
 			->sort(['startDate' => SORT_ASC])
 			->getCollection();
 	}
