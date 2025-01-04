@@ -38,11 +38,54 @@ class ThirdPartyModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'name' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
+			'accounts' => ['json', 'null' => TRUE, 'cast' => 'array'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name'
+			'id', 'name', 'accounts'
 		]);
+
+	}
+
+	public function getDefaultValue(string $property) {
+
+		switch($property) {
+
+			case 'accounts' :
+				return [];
+
+			default :
+				return parent::getDefaultValue($property);
+
+		}
+
+	}
+
+	public function encode(string $property, $value) {
+
+		switch($property) {
+
+			case 'accounts' :
+				return $value === NULL ? NULL : json_encode($value, JSON_UNESCAPED_UNICODE);
+
+			default :
+				return parent::encode($property, $value);
+
+		}
+
+	}
+
+	public function decode(string $property, $value) {
+
+		switch($property) {
+
+			case 'accounts' :
+				return $value === NULL ? NULL : json_decode($value, TRUE);
+
+			default :
+				return parent::decode($property, $value);
+
+		}
 
 	}
 
@@ -60,6 +103,10 @@ class ThirdPartyModel extends \ModuleModel {
 
 	public function whereName(...$data): ThirdPartyModel {
 		return $this->where('name', ...$data);
+	}
+
+	public function whereAccounts(...$data): ThirdPartyModel {
+		return $this->where('accounts', ...$data);
 	}
 
 

@@ -24,10 +24,6 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
-	public static function urlStatement(int|Company $company): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/statement';
-	}
-
 	public static function urlBank(int|Company $company): string {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/bank';
 	}
@@ -153,11 +149,20 @@ class CompanyUi {
 					$h .= '</span>';
 				$h .= '</a>';
 
-				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/analyze/bank" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/analyze/bank" class="company-tab '.($tab === 'analyze' ? 'selected' : '').'" data-tab="analyze">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('bar-chart').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('bar-chart-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
 						$h .= s("Analyse");
+					$h .= '</span>';
+				$h .= '</a>';
+
+
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/statement" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
+					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet').'</span>';
+					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet-fill').'</span>';
+					$h .= '<span class="company-tab-label hide-xs-down">';
+						$h .= s("Bilans (TODO)");
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -227,6 +232,11 @@ class CompanyUi {
 				$h .= '<a href="'.EmployeeUi::urlManage($eCompany).'" class="bg-secondary util-button">';
 					$h .= '<h4>'.s("L'équipe").'</h4>';
 					$h .= \Asset::icon('people-fill');
+				$h .= '</a>';
+
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/thirdParty" class="bg-secondary util-button">';
+					$h .= '<h4>'.s("Les tiers").'</h4>';
+					$h .= \Asset::icon('person-rolodex');
 				$h .= '</a>';
 
 			$h .= '</div>';

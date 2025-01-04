@@ -41,9 +41,9 @@ class AnalyzeUi {
 
 			$h .= '<div class="tabs-item">';
 				$h .= '<a class="tab-item selected" data-tab="analyze-bank" onclick="Lime.Tab.select(this)">'.s("Trésorerie").'</a>';
-				$h .= '<a class="tab-item" data-tab="analyze-charge" onclick="Lime.Tab.select(this)">'.s("Charges").'</a>';
-				$h .= '<a class="tab-item" data-tab="analyze-result" onclick="Lime.Tab.select(this)">'.s("Résultat").'</a>';
-				$h .= '<a class="tab-item" data-tab="analyze-vat" onclick="Lime.Tab.select(this)">'.s("TVA").'</a>';
+				$h .= '<a class="tab-item" data-tab="analyze-charge" onclick="Lime.Tab.select(this)">'.s("Charges (TODO)").'</a>';
+				$h .= '<a class="tab-item" data-tab="analyze-result" onclick="Lime.Tab.select(this)">'.s("Résultat (TODO)").'</a>';
+				$h .= '<a class="tab-item" data-tab="analyze-vat" onclick="Lime.Tab.select(this)">'.s("TVA (TODO)").'</a>';
 			$h .= '</div>';
 
 			$h .= '<div class="tab-panel" data-tab="analyze-bank">';
