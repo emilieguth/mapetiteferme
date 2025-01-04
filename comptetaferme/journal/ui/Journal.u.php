@@ -182,6 +182,8 @@ class JournalUi {
 									$eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
 									&& $eOperation['date'] <= $eFinancialYearSelected['endDate']
 									&& $eOperation['date'] >= $eFinancialYearSelected['startDate']
+									// On ne supprime pas une opération unitaire : il faut refaire l'attribution
+									&& $eOperation['cashflow']->exists() === FALSE
 								) {
 									$h .= $this->getUpdate($eCompany, $eOperation, 'btn-outline-secondary');
 								}

@@ -16,7 +16,7 @@ class AccountLib extends AccountCrud {
 
 	}
 
-	public static function getByIdWithVatAccount(int $id): Account {
+	public static function getByIdWithVatAccount(int $id): \Element {
 
 		return Account::model()
 			->select([
@@ -42,12 +42,37 @@ class AccountLib extends AccountCrud {
 			->getCollection(NULL, NULL, 'id');
 	}
 
-	public static function getBankClassAccount(): Account {
+	public static function getBankClassAccount(): \Element {
 
 		return Account::model()
 			->select(Account::getSelection())
 			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
 			->get();
+
+	}
+
+	public static function orderAccountsWithThirdParty(string $thirdParty, \Collection $cAccount): \Collection {
+
+		$eThirdParty = \journal\ThirdPartyLib::getByName($thirdParty);
+
+		$cAccountByThirdParty = new \Collection();
+		$cAccountOthers = new \Collection();
+
+		foreach($cAccount as $eAccount) {
+
+			if (in_array($eAccount['id'], $eThirdParty['accounts']) === TRUE) {
+
+				$cAccountByThirdParty->append($eAccount);
+
+			} else {
+
+				$cAccountOthers->append($eAccount);
+
+			}
+
+		}
+
+		return $cAccountByThirdParty->mergeCollection($cAccountOthers);
 
 	}
 

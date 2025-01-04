@@ -7,7 +7,12 @@ class Operation extends OperationElement {
 
 		$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 
-		return ($this['date'] >= $eFinancialYear['startDate'] and $this['date'] <= $eFinancialYear['endDate']);
+		return (
+			$this['date'] >= $eFinancialYear['startDate']
+			and $this['date'] <= $eFinancialYear['endDate']
+			// On ne permet pas de mettre à jour une écriture si elle a été attribuée via le relevé bancaire
+			and $this['cashflow']->exists() === FALSE
+		);
 
 	}
 

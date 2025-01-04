@@ -25,4 +25,4 @@ Operation:
 ThirdParty:
   id: serial32
   name: text8(1, null) @collate(general)
-  accounts: ?json = PHP([])
+  accounts: json = PHP([])

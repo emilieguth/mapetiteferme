@@ -132,7 +132,7 @@ class AccountUi {
 
 		$d->placeholder ??= s("Commencez à saisir la classe...");
 		$d->multiple = $multiple;
-		$d->group += ['wrapper' => 'customer'];
+		$d->group += ['wrapper' => 'account'];
 
 		$d->autocompleteUrl = \company\CompanyUi::urlAccounting($company).'/account:query';
 		$d->autocompleteResults = function(Account $e) use ($company) {

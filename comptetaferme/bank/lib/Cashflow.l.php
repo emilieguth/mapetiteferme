@@ -62,7 +62,7 @@ class CashflowLib extends CashflowCrud {
 
 	}
 
-	public static function prepareAllocate(Cashflow $eCashflow, array $input): \Collection {
+	public static function prepareAllocate(Cashflow $eCashflow, array $input): array {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
 
@@ -70,12 +70,13 @@ class CashflowLib extends CashflowCrud {
 
 		if($accounts === []) {
 			Cashflow::fail('accountsCheck');
-			return new \Collection();
+			return [new \Collection(), new \Collection()];
 		}
 
 		$cAccounts = \accounting\AccountLib::getByIdsWithVatAccount($accounts);
 
 		$cOperation = new \Collection();
+		$cThirdParty = new \Collection();
 
 		foreach($accounts as $index => $account) {
 
@@ -113,6 +114,16 @@ class CashflowLib extends CashflowCrud {
 
 			$cOperation->append($eOperation);
 
+			// Vérification du tiers et affectation
+			if (isset($input['thirdParty'][$index]) === true) {
+				$thirdParty = $input['thirdParty'][$index];
+				$eThirdParty = \journal\ThirdPartyLib::getByName($thirdParty);
+				if (in_array($eOperation['account']['id'], $eThirdParty['accounts']) === FALSE) {
+					$eThirdParty['accounts'][] = $eOperation['account']['id'];
+					$cThirdParty->append($eThirdParty);
+				}
+			}
+
 		}
 
 		// Ajout de la transaction sur le compte 512 (compte 5121)
@@ -136,10 +147,10 @@ class CashflowLib extends CashflowCrud {
 
 
 		if($fw->ko()) {
-			return new \Collection();
+			return [new \Collection(), new \Collection()];
 		}
 
-		return $cOperation;
+		return [$cOperation, $cThirdParty];
 	}
 
 }

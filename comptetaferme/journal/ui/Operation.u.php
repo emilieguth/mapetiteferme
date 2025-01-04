@@ -63,8 +63,12 @@ class OperationUi {
 
 		$h = '<div class="operation-write">';
 
+			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) {
+				$d->autocompleteDispatch = '[data-thirdParty="bank-cashflow-allocate"]';
+			});
+
 			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix.'*', function($d) {
-				$d->autocompleteDispatch = '#bank-cashflow-allocate';
+				$d->autocompleteDispatch = '[data-account="bank-cashflow-allocate"]';
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);
@@ -164,6 +168,7 @@ class OperationUi {
 			'amount' => s("Montant"),
 			'type' => s("Type (débit / crédit)"),
 			'lettering' => s("Lettrage"),
+			'thirdParty' => s("Tiers"),
 		]);
 
 		switch($property) {
@@ -192,6 +197,15 @@ class OperationUi {
 					return $form->addon(s("€"));
 				};
 				break;
+
+			case 'thirdParty':
+				$d->autocompleteBody = function(\util\FormUi $form, Operation $e) {
+					return [
+					];
+				};
+				(new ThirdPartyUi())->query($d, GET('company', '?int'));
+				break;
+
 
 		}
 

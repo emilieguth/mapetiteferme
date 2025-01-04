@@ -1,7 +1,10 @@
-document.delegateEventListener('autocompleteSelect', '#bank-cashflow-allocate', function(e) {
-    if (e.target.getAttribute('id') === 'bank-cashflow-allocate') {
-        Cashflow.refreshAllocate(e);
-    }
+document.delegateEventListener('autocompleteBeforeQuery', '[data-account="bank-cashflow-allocate"]', function(e) {
+    const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
+    e.detail.body.append('thirdParty', thirdParty);
+});
+
+document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashflow-allocate"]', function(e) {
+    Cashflow.refreshAllocate(e);
 });
 
 class Cashflow {
@@ -32,7 +35,7 @@ class Cashflow {
             const vatAmountToAdd = Math.abs((isNaN(vatValue) ? 0 : vatValue));
 
             const totalAmountToAdd = amountToAdd + vatAmountToAdd;
-console.log(amountToAdd, vatAmountToAdd, totalAmountToAdd);
+
             return accumulator + (type.value === 'credit' ? totalAmountToAdd : totalAmountToAdd * -1)
         }, 0);
 

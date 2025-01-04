@@ -7,12 +7,21 @@ class ThirdPartyLib extends ThirdPartyCrud {
 		return ['name'];
 	}
 
-	public static function getAllThirdPartiesWithAccounts(): \Collection {
+	public static function getAll(): \Collection {
 
 		return ThirdParty::model()
 			->select(ThirdParty::getSelection())
 			->sort('name', SORT_ASC)
 			->getCollection();
+
+	}
+
+	public static function getByName(string $name): ThirdParty|\Element {
+
+		return ThirdParty::model()
+			->select(ThirdParty::getSelection())
+			->whereName('=', $name)
+			->get();
 
 	}
 }

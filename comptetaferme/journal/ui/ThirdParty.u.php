@@ -77,5 +77,48 @@ class ThirdPartyUi {
 
 	}
 
+	public static function getAutocomplete(int $company, ThirdParty $eThirdParty): array {
+
+		\Asset::css('media', 'media.css');
+
+
+		return [
+			'value' => encode($eThirdParty['name']),
+			'company' => $company,
+			'itemHtml' => encode($eThirdParty['name']),
+			'itemText' => encode($eThirdParty['name'])
+		];
+
+	}
+
+	public function query(\PropertyDescriber $d, int $company, bool $multiple = FALSE) {
+
+		$d->prepend = \Asset::icon('person-rolodex');
+		$d->field = 'autocomplete';
+
+		$d->placeholder ??= s("Commencez à saisir le tiers...");
+		$d->multiple = $multiple;
+		$d->group += ['wrapper' => 'thirdParty'];
+
+		$d->autocompleteUrl = \company\CompanyUi::urlJournal($company).'/thirdParty:query';
+		$d->autocompleteResults = function(ThirdParty $e) use ($company) {
+			return self::getAutocomplete($company, $e);
+		};
+
+	}
+
+	public static function getAutocompleteCreate(\company\Company $eCompany): array {
+
+		$item = \Asset::icon('plus-circle');
+		$item .= '<div>'.s("Créer un tiers").'</div>';
+
+		return [
+			'type' => 'link',
+			'link' => \company\CompanyUi::urlJournal($eCompany).'/thirdParty:create',
+			'itemHtml' => $item
+		];
+
+	}
+
 }
 ?>

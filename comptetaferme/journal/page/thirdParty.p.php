@@ -9,7 +9,7 @@
 ))
 	->get('index', function($data) {
 
-		$data->cThirdParty = \journal\ThirdPartyLib::getAllThirdPartiesWithAccounts();
+		$data->cThirdParty = \journal\ThirdPartyLib::getAll();
 
 		throw new ViewAction($data);
 
@@ -21,8 +21,23 @@
 	})
 	->doCreate(function($data) {
 
-		throw new RedirectAction(\company\CompanyUi::urlJournal($data->eCompany).'/thirdParty?success=journal:ThirdParty::created');
+		throw new ViewAction($data);
 
 	});
 
+(new Page(function($data) {
+
+	\user\ConnectionLib::checkLogged();
+
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
+}))
+->post('query', function($data) {
+
+	$query = POST('query');
+
+	$data->cThirdParty = \journal\ThirdPartyLib::getAll();
+
+	throw new \ViewAction($data);
+
+})
 ?>

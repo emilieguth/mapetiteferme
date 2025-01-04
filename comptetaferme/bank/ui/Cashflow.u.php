@@ -141,7 +141,11 @@ class CashflowUi {
 	}
 	protected function getUpdate(\company\Company $eCompany, Cashflow $eCashflow, string $btn): string {
 
-		$primaryList = '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des écritures").'</a>';;
+		$primaryList = match($eCashflow['status']) {
+			CashflowElement::WAITING => '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des écritures").'</a>',
+			CashflowElement::ALLOCATED => '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:deAllocate" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Annuler les écritures repassera la transaciton en Attente, il faudra réattribuer des écritures. Confirmez-vous ?").'">'.s("Annuler les écritures liées").'</a>',
+			default => ''
+		};
 
 		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:doDelete" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de cette transaction ?").'">'.s("Supprimer").'</a>';
 
@@ -197,7 +201,10 @@ class CashflowUi {
 			'description' => $eCashflow['memo'],
 		];
 
-		$h .= $form->openAjax(\company\CompanyUi::urlBank($eCompany).'/cashflow:doAllocate', ['id' => 'bank-cashflow-allocate', 'autocomplete' => 'off']);
+		$h .= $form->openAjax(
+			\company\CompanyUi::urlBank($eCompany).'/cashflow:doAllocate',
+			['id' => 'bank-cashflow-allocate', 'data-account' => 'bank-cashflow-allocate', 'data-thirdParty' => 'bank-cashflow-allocate', 'autocomplete' => 'off']
+		);
 
 			$h .= $form->hidden('company', $eCompany['id']);
 			$h .= $form->hidden('id', $eCashflow['id']);

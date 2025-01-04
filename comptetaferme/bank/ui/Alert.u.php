@@ -23,7 +23,8 @@ Class AlertUi {
 
 		return match($fqn) {
 
-			'Cashflow::allocated' => s("L'imputation a bien été réalisée !"),
+			'Cashflow::allocated' => s("Les écritures ont bien été attribuées !"),
+			'Cashflow::deallocated' => s("Les écritures ont bien été annulées et la transaction bancaire remise en attente !"),
 
 			'Import::full' => s("L'import de votre relevé bancaire a bien été effectué !"),
 			'Import::partial' => s("L'import de votre relevé bancaire a bien été partiellement effectué, consultez l'import pour plus de détails."),

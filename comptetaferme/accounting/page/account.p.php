@@ -15,8 +15,14 @@
 	->post('query', function($data) {
 
 		$query = POST('query');
+		$thirdParty = POST('thirdParty');
 
 		$data->cAccount = \accounting\AccountLib::getAll($query);
+
+		if (post_exists('thirdParty') === TRUE) {
+			$data->cAccount = \accounting\AccountLib::orderAccountsWithThirdParty($thirdParty, $data->cAccount);
+
+		}
 
 		throw new \ViewAction($data);
 

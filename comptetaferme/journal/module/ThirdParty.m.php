@@ -38,7 +38,7 @@ class ThirdPartyModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'name' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
-			'accounts' => ['json', 'null' => TRUE, 'cast' => 'array'],
+			'accounts' => ['json', 'cast' => 'array'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [

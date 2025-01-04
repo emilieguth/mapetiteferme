@@ -63,8 +63,7 @@
 	})
 	->post('doAllocate', function($data) {
 		$fw = new FailWatch();
-
-		$cOperation = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
+		[$cOperation, $cThirdParty] = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
 
 		$fw->validate();
 
@@ -75,7 +74,31 @@
 			['memo' => POST('memo'), 'status' => \bank\CashflowElement::ALLOCATED]
 		);
 
+		foreach($cThirdParty as $eThirdParty) {
+			\journal\ThirdPartyLib::update($eThirdParty, ['accounts']);
+		}
+
 		throw new ReloadAction('bank', 'Cashflow::allocated');
+
+	})
+	->post('deAllocate', function($data) {
+
+		$fw = new FailWatch();
+
+		if ($data->eCashflow->exists() === FALSE) {
+			\bank\Cashflow::fail('internal');
+		}
+
+		$fw->validate();
+
+		\journal\Operation::model()
+			->whereCashflow('=', $data->eCashflow['id'])
+			->delete();
+
+		$data->eCashflow['status'] = \bank\CashflowElement::WAITING;
+		\bank\CashflowLib::update($data->eCashflow, ['status']);
+
+		throw new ReloadAction('bank', 'Cashflow::deallocated');
 
 	});
 ?>
