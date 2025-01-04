@@ -106,10 +106,12 @@ class CashflowLib extends CashflowCrud {
 					default => NULL,
 				};
 				$eOperationTva['amount'] = round($eOperation['amount'] * $eOperation['vatRate'] / 100, 2);
+				$cOperation->append($eOperationTva);
+			} else if ($eOperation['vatRate'] !== 0.0) {
+				\Fail::log('Cashflow::allocate.tvaInconsistency');
 			}
 
 			$cOperation->append($eOperation);
-			$cOperation->append($eOperationTva);
 
 		}
 
@@ -125,7 +127,10 @@ class CashflowLib extends CashflowCrud {
 		$eOperationBank['account'] = $eAccountBank;
 		$eOperationBank['accountLabel'] = \Setting::get('accounting\bankAccountLabel');
 		$eOperationBank['description'] = $eCashflow['memo'];
-		$eOperationBank['type'] = $eCashflow['type'];
+		$eOperationBank['type'] = match($eCashflow['type']) {
+			CashflowElement::CREDIT => \journal\Operation::DEBIT,
+			CashflowElement::DEBIT => \journal\Operation::CREDIT,
+		};
 		$eOperationBank['amount'] = abs($eCashflow['amount']);
 		$cOperation->append($eOperationBank);
 
