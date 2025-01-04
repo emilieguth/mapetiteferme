@@ -153,11 +153,11 @@ class CompanyUi {
 					$h .= '</span>';
 				$h .= '</a>';
 
-				$h .= '<a href="'.CompanyUi::urlStatement($eCompany).'" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
-					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-spreadsheet').'</span>';
-					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-spreadsheet-fill').'</span>';
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/analyze/bank" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
+					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('bar-chart').'</span>';
+					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('bar-chart-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Bilans (à venir)");
+						$h .= s("Analyse");
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -380,16 +380,7 @@ class CompanyUi {
 
 	protected static function getStatementCategories(Company $eCompany): array {
 
-		return [
-			'cashflow' => [
-				'url' => CompanyUi::urlStatement($eCompany).'/balance',
-				'label' => s("Bilan comptable")
-			],
-			'import' => [
-				'url' => CompanyUi::urlStatement($eCompany).'/profitLoss',
-				'label' => s("Compte de résultat")
-			]
-		];
+		return [];
 
 	}
 

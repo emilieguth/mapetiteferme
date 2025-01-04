@@ -4,7 +4,6 @@ namespace accounting;
 class AccountUi {
 
 	public function __construct() {
-		\Asset::css('accounting', 'accounting.css');
 	}
 
 	public function getManageTitle(\company\Company $eCompany): string {

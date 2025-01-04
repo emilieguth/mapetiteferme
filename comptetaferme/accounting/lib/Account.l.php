@@ -18,17 +18,15 @@ class AccountLib extends AccountCrud {
 
 	public static function getByIdWithVatAccount(int $id): Account {
 
-		$eAccount = new Account();
-		Account::model()
+		return Account::model()
 			->select([
 					'name' => new \Sql('CONCAT(class, ". ", description)')] +
 				Account::getSelection() +
 				['vatAccount' => ['class', 'vatRate']
 				])
 			->whereId('=', $id)
-			->get($eAccount);
+			->get();
 
-		return $eAccount;
 	}
 
 	public static function getAll($query = ''): \Collection {
@@ -42,6 +40,15 @@ class AccountLib extends AccountCrud {
 			->sort('class')
 			->where('class LIKE "%'.$query.'%" OR description LIKE "%'.strtolower($query).'%"', if: $query !== '')
 			->getCollection(NULL, NULL, 'id');
+	}
+
+	public static function getBankClassAccount(): Account {
+
+		return Account::model()
+			->select(Account::getSelection())
+			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
+			->get();
+
 	}
 
 }
