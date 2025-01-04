@@ -342,7 +342,7 @@ class CompanyUi {
 			],
 			'import' => [
 			'url' => CompanyUi::urlBank($eCompany).'/import',
-			'label' => s("Imports bancaires")
+			'label' => s("Imports de relevés")
 		]
 		];
 

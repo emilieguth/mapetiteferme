@@ -228,7 +228,7 @@ class CashflowUi {
 			$h .= '</div>';
 
 			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.recalculateAmounts(); return true;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-amount="" class="btn btn-outline-secondary">';
-				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre ligne");
+				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';
 			$buttons .= $form->submit(s("Attribuer des écritures"));
