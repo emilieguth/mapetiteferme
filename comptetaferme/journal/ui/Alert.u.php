@@ -12,6 +12,7 @@ class AlertUi {
 		return match($fqn) {
 
 			'Operation::date.check' => s("La date doit correspondre à l'exercice fiscal actuellement ouvert."),
+			'Operation::account.check' => s("N'oubliez pas de choisir une classe de compte !"),
 
 			default => null
 
