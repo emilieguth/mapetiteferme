@@ -17,7 +17,6 @@ Cashflow:
   account: bank\Account
   import: bank\Import
   status: enum(WAITING, ALLOCATED) = WAITING
-  thirdParty: ?text8(1, null) @collate(general)
   UNIQUE: [
     ["fitid"]
   ]

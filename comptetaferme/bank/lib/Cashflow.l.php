@@ -142,14 +142,5 @@ class CashflowLib extends CashflowCrud {
 		return $cOperation;
 	}
 
-	public static function getByThirdParty(string $thirdParty): \Collection {
-		return Cashflow::model()
-			->select(Cashflow::getSelection())
-			->whereThirdParty('LIKE', '%'.$thirdParty.'%')
-			->whereThirdParty('!=', '')
-			->sort(['thirdParty' => SORT_ASC])
-			->getCollection(NULL, NULL, 'thirdParty');
-	}
-
 }
 ?>

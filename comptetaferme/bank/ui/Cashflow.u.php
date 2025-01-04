@@ -62,10 +62,6 @@ class CashflowUi {
 							$h .= ($search ? $search->linkSort('date', $label) : $label);
 						$h .= '</th>';
 						$h .= '<th>';
-							$label = s("Tiers");
-							$h .= ($search ? $search->linkSort('thirdParty', $label) : $label);
-						$h .= '</th>';
-						$h .= '<th>';
 							$label = s("Libellé");
 							$h .= ($search ? $search->linkSort('memo', $label) : $label);
 						$h .= '</th>';
@@ -97,10 +93,6 @@ class CashflowUi {
 
 						$h .= '<td class="text-end">';
 							$h .= \util\DateUi::numeric($eCashflow['date']);
-						$h .= '</td>';
-
-						$h .= '<td>';
-							$h .= encode($eCashflow['thirdParty']);
 						$h .= '</td>';
 
 						$h .= '<td>';
@@ -210,13 +202,6 @@ class CashflowUi {
 			$h .= $form->hidden('company', $eCompany['id']);
 			$h .= $form->hidden('id', $eCashflow['id']);
 
-			$h .= $form->dynamicGroup($eCashflow, 'memo');
-			$h .= '<div id="bank-cashflow-allocate-thirdParty">';
-				$h .= $form->dynamicGroup($eCashflow, 'thirdParty', function($d) {
-					$d->autocompleteDispatch = '#bank-cashflow-allocate-thirdParty';
-				});
-			$h .= '</div>';
-
 			$h .= $form->asteriskInfo();
 
 			$h .= '<div id="cashflow-create-operation-list">';
@@ -314,34 +299,6 @@ class CashflowUi {
 		);
 	}
 
-	public static function getAutocomplete(int $company, string $thirdParty): array {
-
-		\Asset::css('media', 'media.css');
-
-		return [
-			'value' => $thirdParty,
-			'company' => $company,
-			'itemHtml' => encode($thirdParty),
-			'itemText' => encode($thirdParty)
-		];
-
-	}
-	public function query(\PropertyDescriber $d, int $company, bool $multiple = FALSE) {
-
-		$d->prepend = \Asset::icon('person');
-		$d->field = 'autocomplete';
-
-		$d->placeholder ??= s("Commencez à saisir le tiers...");
-		$d->multiple = $multiple;
-		$d->group += ['wrapper' => 'customer'];
-
-		$d->autocompleteUrl = \company\CompanyUi::urlBank($company).'/cashflow:thirdPartyQuery';
-		$d->autocompleteResults = function(string $thirdParty) use ($company) {
-			return self::getAutocomplete($company, $thirdParty);
-		};
-
-	}
-
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Cashflow::model()->describer($property, [
@@ -353,7 +310,6 @@ class CashflowUi {
 			'memo' => s("Libellé"),
 			'account' => s("Compte"),
 			'cashflow' => s("Flux"),
-			'thirdParty' => s("Tiers"),
 		]);
 
 		switch($property) {
@@ -378,14 +334,6 @@ class CashflowUi {
 					CashflowElement::ALLOCATED => s("I"),
 					CashflowElement::WAITING => s("A"),
 				];
-				break;
-
-			case 'thirdParty':
-				$d->autocompleteBody = function(\util\FormUi $form, Cashflow $e) {
-					return [
-					];
-				};
-				(new CashflowUi())->query($d, GET('company', '?int'));
 				break;
 		}
 

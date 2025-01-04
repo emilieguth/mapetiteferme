@@ -41,7 +41,8 @@ class OperationModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'account' => ['element32', 'accounting\Account', 'cast' => 'element'],
-			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
+			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
+			'thirdParty' => ['element32', 'journal\ThirdParty', 'null' => TRUE, 'cast' => 'element'],
 			'date' => ['date', 'min' => toDate('NOW - 2 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'cast' => 'string'],
 			'description' => ['text24', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
 			'document' => ['element32', 'journal\Document', 'null' => TRUE, 'cast' => 'element'],
@@ -54,11 +55,12 @@ class OperationModel extends \ModuleModel {
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'lettering', 'cashflow', 'vatRate', 'vatAccount'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'lettering', 'cashflow', 'vatRate', 'vatAccount'
 		]);
 
 		$this->propertiesToModule += [
 			'account' => 'accounting\Account',
+			'thirdParty' => 'journal\ThirdParty',
 			'document' => 'journal\Document',
 			'cashflow' => 'bank\Cashflow',
 			'vatAccount' => 'accounting\Account',
@@ -112,6 +114,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereAccountLabel(...$data): OperationModel {
 		return $this->where('accountLabel', ...$data);
+	}
+
+	public function whereThirdParty(...$data): OperationModel {
+		return $this->where('thirdParty', ...$data);
 	}
 
 	public function whereDate(...$data): OperationModel {
