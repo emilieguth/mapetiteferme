@@ -158,11 +158,20 @@ class CashflowUi {
 		$h .= '<div class="dropdown-list">';
 			$h .= '<div class="dropdown-title">'.self::getName($eCashflow).'</div>';
 
-			$h .= match($eCashflow['status']) {
-				CashflowElement::WAITING => '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des écritures").'</a>',
-				CashflowElement::ALLOCATED => '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:deAllocate" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Annuler les écritures repassera la transaciton en Attente, il faudra réattribuer des écritures. Confirmez-vous ?").'">'.s("Annuler les écritures liées").'</a>',
-				default => ''
-			};
+			if ($eCashflow['status'] === CashflowElement::ALLOCATED) {
+				$confirm = s("Annuler les écritures repassera la transaction en Attente, il faudra réattribuer des écritures. Confirmez-vous ?");
+				$h .= '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:deAllocate" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.$confirm.'">';
+					$h .= s("Annuler les écritures liées");
+				$h .= '</a>';
+
+			} else if ($eCashflow['status'] === CashflowElement::WAITING) {
+				$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">';
+					$h .= s("Créer de nouvelles écritures");
+				$h .= '</a>';
+				$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:attach?id='.$eCashflow['id'].'" class="dropdown-item">';
+					$h .= s("Rattacher des écritures existantes (TODO)");
+				$h .= '</a>';
+			}
 
 		$h .= '</div>';
 

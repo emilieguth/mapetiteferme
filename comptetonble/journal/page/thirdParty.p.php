@@ -35,7 +35,7 @@
 
 	$query = POST('query');
 
-	$data->cThirdParty = \journal\ThirdPartyLib::getAll();
+	$data->cThirdParty = \journal\ThirdPartyLib::getAll($query);
 
 	throw new \ViewAction($data);
 
