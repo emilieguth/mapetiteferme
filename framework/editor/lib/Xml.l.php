@@ -641,7 +641,7 @@ class XmlLib {
 						'data-link-title' => 'link-title'
 					]);
 
-				case 'comptetaferme':
+				case 'comptetonble':
 					return $this->createMediaNode($node, 'embed', [
 						'data-source' => 'source',
 						'data-url' => 'url',

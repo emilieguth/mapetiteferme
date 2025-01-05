@@ -1,7 +1,0 @@
-ul.list-unstyled {
-    padding-left: 0;
-    list-style: none;
-}
-tr.group-account-row {
-    background-color: var(--account-group) !important;
-}
