@@ -39,10 +39,11 @@ class AccountModel extends \ModuleModel {
 			'id' => ['serial32', 'cast' => 'int'],
 			'bankId' => ['text8', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
 			'accountId' => ['text8', 'min' => 1, 'max' => NULL, 'unique' => TRUE, 'cast' => 'string'],
+			'label' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'bankId', 'accountId'
+			'id', 'bankId', 'accountId', 'label'
 		]);
 
 		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
@@ -69,6 +70,10 @@ class AccountModel extends \ModuleModel {
 
 	public function whereAccountId(...$data): AccountModel {
 		return $this->where('accountId', ...$data);
+	}
+
+	public function whereLabel(...$data): AccountModel {
+		return $this->where('label', ...$data);
 	}
 
 

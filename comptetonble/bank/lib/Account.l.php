@@ -3,6 +3,14 @@ namespace bank;
 
 class AccountLib extends AccountCrud {
 
+	public static function getAll(): \Collection {
+
+		return Account::model()
+			->select(Account::getSelection())
+			->sort(['accountId' => SORT_ASC])
+			->getCollection();
+	}
+
 	public static function getFromOfx(string $bankId, string $accountId): Account {
 
 		$eAccount = new Account();

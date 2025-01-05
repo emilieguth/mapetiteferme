@@ -7,11 +7,11 @@ class ThirdPartyLib extends ThirdPartyCrud {
 		return ['name'];
 	}
 
-	public static function getAll(string $query): \Collection {
+	public static function getAll(string $query = NULL): \Collection {
 
 		return ThirdParty::model()
 			->select(ThirdParty::getSelection())
-			->whereName('LIKE', '%'.$query.'%', if: $query !== null and mb_strlen($query) > 0)
+			->whereName('LIKE', '%'.$query.'%', if: $query !== NULL and mb_strlen($query) > 0)
 			->sort('name', SORT_ASC)
 			->getCollection();
 

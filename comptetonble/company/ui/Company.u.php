@@ -235,6 +235,11 @@ class CompanyUi {
 					$h .= \Asset::icon('people-fill');
 				$h .= '</a>';
 
+				$h .= '<a href="'.CompanyUi::urlBank($eCompany).'/account" class="bg-secondary util-button">';
+					$h .= '<h4>'.s("Les comptes bancaires").'</h4>';
+					$h .= \Asset::icon('bank');
+				$h .= '</a>';
+
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/thirdParty" class="bg-secondary util-button">';
 					$h .= '<h4>'.s("Les tiers").'</h4>';
 					$h .= \Asset::icon('person-rolodex');

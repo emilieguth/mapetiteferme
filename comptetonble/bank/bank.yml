@@ -2,6 +2,7 @@ Account:
   id: serial32
   bankId: text8(1, null)
   accountId: text8(1, null)
+  label: ?text8(1, null)
   UNIQUE: [
     ["accountId"]
   ]

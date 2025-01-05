@@ -27,11 +27,7 @@ class AccountUi {
 			return '<div class="util-info">'.s("Aucun compte n'a encore été enregistré").'</div>';
 		}
 
-		$h = '';
-
-		if($cAccount->notEmpty()) {
-
-			$h .= '<div class="util-overflow-sm">';
+		$h = '<div class="util-overflow-sm">';
 
 			$h .= '<table class="tr-bordered tr-even">';
 
@@ -91,12 +87,9 @@ class AccountUi {
 				}
 
 				$h .= '<tbody>';
-			$h .= '<table class="tr-bordered tr-even">';
+			$h .= '</table';
 
-			$h .= '</div>';
-
-		}
-
+		$h .= '</div>';
 
 		return $h;
 
