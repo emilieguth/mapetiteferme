@@ -3,11 +3,6 @@ Route::register([
 	'DELETE' => [
 	],
 	'GET' => [
-		'/company' => [
-			'request' => 'company/index',
-			'priority' => 5,
-			'route' => ['company'],
-		],
 		'/journal/analyze/bank' => [
 			'request' => 'journal/analyze',
 			'priority' => 5,

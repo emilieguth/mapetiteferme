@@ -50,7 +50,7 @@ class Company extends CompanyElement {
 
 	public function getHomeUrl(): string {
 
-    return CompanyUi::url($this);
+    return CompanyUi::urlJournal($this).'/';
 
 	}
 
