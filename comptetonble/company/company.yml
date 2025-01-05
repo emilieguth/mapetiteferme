@@ -1,0 +1,39 @@
+Company:
+  id: serial32
+  name: text8(1, null) @collate(general)
+  vignette: ?textFixed(30, 30) @charset(ascii)
+  url: ?url
+  logo: ?textFixed(30, 30) @charset(ascii)
+  banner: ?textFixed(30, 30) @charset(ascii)
+  siret: ?text8(14,14)
+  nafCode: ?text8(6, 6)
+  addressLine1: ?text16
+  addressLine2: ?text16
+  postalCode: ?text8
+  city: ?text8
+  createdAt: datetime = SPECIAL(now)
+  status: enum(ACTIVE, CLOSED) = ACTIVE
+
+Employee:
+  id: serial32
+  user: user\User
+  company: company\Company
+  companyStatus: enum(ACTIVE, CLOSED) = ACTIVE
+  status: enum(INVITED, IN, OUT) = INVITED
+  createdAt: datetime = SPECIAL(now)
+  UNIQUE: [
+    ["user", "company"]
+  ]
+
+Invite:
+  id: serial32
+  company: company\Company
+  email: email
+  employee: ?company\Employee
+  expiresAt: date = SQL(NOW() + INTERVAL 3 DAY)
+  key: ?text8 = PHP(bin2hex(random_bytes(16)))
+  status: enum(PENDING, ACCEPTED) = PENDING
+  INDEX: [
+    ["email"],
+    ["key"]
+  ]

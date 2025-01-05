@@ -1,0 +1,39 @@
+
+.cashflow-status-label {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius);
+    display: inline-block;
+}
+
+.cashflow-status-label {
+    color: white;
+    font-weight: bold;
+}
+
+@media (max-width: 767px) {
+
+    .cashflow-status-mobile {
+        display: inline-block;
+        margin-top: 0.25rem;
+        font-size: 0.9rem;
+        text-align: right;
+    }
+
+}
+
+.sale-payment-status-allocated {
+    background-color: var(--success);
+}
+
+.cashflow-status-waiting {
+    color: var(--todo);
+}
+
+.cashflow-status-label.cashflow-status-waiting {
+    background-color: var(--todo);
+    color: white;
+}
+
+.cashflow-status-allocated {
+    color: var(--success);
+}

@@ -1,0 +1,28 @@
+# Pièce comptable
+Document:
+  id: serial32
+  number: text8(1, null)
+  document: int32(1, null)
+
+Operation:
+  id: serial32
+  # Compte concerné par l'opération
+  account: accounting\Account
+  accountLabel: ?text8(1, null) @collate(general)
+  thirdParty: ?journal\ThirdParty
+  date: date(PHP(toDate('NOW - 2 YEARS')), PHP(toDate('NOW + 1 YEARS')))
+  # Libellé de l'opération
+  description: text24(1, null)
+  document: ?journal\Document
+  # Une opération est toujours HT
+  amount: decimal(8, 2)
+  type: enum(DEBIT, CREDIT)
+  lettering: ?text8(1, null)
+  cashflow: ?bank\Cashflow
+  vatRate: decimal(5, 2) = 0.00
+  vatAccount: ?accounting\Account
+
+ThirdParty:
+  id: serial32
+  name: text8(1, null) @collate(general)
+  accounts: json = PHP([])

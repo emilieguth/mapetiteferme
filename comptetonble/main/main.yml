@@ -1,0 +1,5 @@
+Account:
+  id: serial32
+  class: text8(1, null)
+  description: text8(1, null) @collate(general)
+  visible: bool = TRUE
