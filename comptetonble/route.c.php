@@ -13,6 +13,16 @@ Route::register([
 			'priority' => 5,
 			'route' => ['journal', 'analyze', 'bank', '{financialYear}'],
 		],
+		'/journal/analyze/charges' => [
+			'request' => 'journal/analyze',
+			'priority' => 5,
+			'route' => ['journal', 'analyze', 'charges'],
+		],
+		'/journal/analyze/charges/{financialYear}' => [
+			'request' => 'journal/analyze',
+			'priority' => 5,
+			'route' => ['journal', 'analyze', 'charges', '{financialYear}'],
+		],
 		'/minify/{version}/{filename}' => [
 			'request' => 'dev/minify',
 			'priority' => 5,

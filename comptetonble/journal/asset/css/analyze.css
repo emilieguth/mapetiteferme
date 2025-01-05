@@ -45,11 +45,13 @@ div.analyze-chart-table .analyze-pie {
     grid-area: pie;
 }
 
+div.analyze-chart-table .analyze-pie-canvas,
 div.analyze-chart-table .analyze-line,
 div.analyze-chart-table .analyze-bar {
     grid-area: pie;
 }
 
+.analyze-pie,
 .analyze-line,
 .analyze-bar {
     height: 300px;

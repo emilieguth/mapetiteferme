@@ -5,6 +5,7 @@ Privilege::register('accounting', [
 ]);
 
 Setting::register('accounting', [
+	'chargeAccountClass' => 6,
 	'bankAccountClass' => '512',
 	'bankAccountLabel' => '5121',
 ]);
