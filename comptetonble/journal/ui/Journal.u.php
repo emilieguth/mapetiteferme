@@ -89,7 +89,7 @@ class JournalUi {
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="tr-bordered tr-even">';
+			$h .= '<table class="tr-bordered tr-even td-vertical-top">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
@@ -105,10 +105,6 @@ class JournalUi {
 						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
 						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
 						$h .= '<th class="text-end">'.s("Solde (D-C)").'</th>';
-						$h .= '<th>';
-							$label = s("Pièce comptable");
-							$h .= ($search ? $search->linkSort('document', $label) : $label);
-						$h .= '</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
@@ -139,7 +135,6 @@ class JournalUi {
 										$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit'] - $cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
 									$h .= '</td>';
 									$h .= '<td></td>';
-									$h .= '<td></td>';
 								$h .= '</tr>';
 							}
 						}
@@ -151,6 +146,12 @@ class JournalUi {
 
 							$h .= '<td>';
 								$h .= encode($eOperation['description']);
+								if ($eOperation['accountLabel'] !== NULL) {
+									$h .= '<div class="operation-info">'.s("N° compte : {accountLabel}", ['accountLabel' => encode($eOperation['accountLabel'])]).'</div>';
+								}
+								if ($eOperation['document'] !== NULL and strlen($eOperation['document']) > 0) {
+									$h .= '<div class="operation-info">'.s("Pièce comptable : {document}", ['document' => encode($eOperation['document'])]).'</div>';
+								}
 							$h .= '</td>';
 
 							$h .= '<td>';
@@ -181,10 +182,6 @@ class JournalUi {
 						$h .= '<td class="text-end">';
 							$h .= \util\TextUi::money($balance);
 						$h .= '</td>';
-
-							$h .= '<td>';
-								$h .= encode($eOperation['document']);
-							$h .= '</td>';
 
 							$h .= '<td>';
 								if (

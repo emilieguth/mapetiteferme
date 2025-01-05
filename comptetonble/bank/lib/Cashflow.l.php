@@ -105,7 +105,6 @@ class CashflowLib extends CashflowCrud {
 				$eOperationTva['cashflow'] = $eCashflow;
 				$eOperationTva['date'] = $eCashflow['date'];
 				$eOperationTva['account'] = $eAccount['vatAccount'];
-				$eOperationTva['accountLabel'] = $eAccount['vatAccount']['description'];
 				$eOperationTva['description'] = $eCashflow['memo'];
 				$eOperationTva['document'] = $document;
 				$eOperationTva['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
