@@ -40,10 +40,21 @@ class AccountModel extends \ModuleModel {
 			'class' => ['text8', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
 			'description' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'visible' => ['bool', 'cast' => 'bool'],
+			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
+			'vatRate' => ['decimal', 'digits' => 5, 'decimal' => 2, 'null' => TRUE, 'cast' => 'float'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'class', 'description', 'visible'
+			'id', 'class', 'description', 'visible', 'vatAccount', 'vatRate'
+		]);
+
+		$this->propertiesToModule += [
+			'vatAccount' => 'accounting\Account',
+		];
+
+		$this->indexConstraints = array_merge($this->indexConstraints, [
+			['id'],
+			['class']
 		]);
 
 	}
@@ -54,6 +65,9 @@ class AccountModel extends \ModuleModel {
 
 			case 'visible' :
 				return TRUE;
+
+			case 'vatRate' :
+				return 0;
 
 			default :
 				return parent::getDefaultValue($property);
@@ -84,6 +98,14 @@ class AccountModel extends \ModuleModel {
 
 	public function whereVisible(...$data): AccountModel {
 		return $this->where('visible', ...$data);
+	}
+
+	public function whereVatAccount(...$data): AccountModel {
+		return $this->where('vatAccount', ...$data);
+	}
+
+	public function whereVatRate(...$data): AccountModel {
+		return $this->where('vatRate', ...$data);
 	}
 
 
