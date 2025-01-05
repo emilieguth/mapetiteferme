@@ -63,6 +63,7 @@
 	})
 	->post('doAllocate', function($data) {
 		$fw = new FailWatch();
+
 		[$cOperation, $cThirdParty] = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
 
 		$fw->validate();
@@ -71,7 +72,7 @@
 
 		\bank\Cashflow::model()->update(
 			$data->eCashflow,
-			['status' => \bank\CashflowElement::ALLOCATED]
+			['status' => \bank\CashflowElement::ALLOCATED, 'document' => POST('cashflow[document]')]
 		);
 
 		foreach($cThirdParty as $eThirdParty) {

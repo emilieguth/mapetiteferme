@@ -18,7 +18,7 @@
 			'accountLabel' => GET('accountLabel'),
 			'description' => GET('description'),
 			'type' => GET('type'),
-			'lettering' => GET('lettering'),
+			'document' => GET('document'),
 		], GET('sort'));
 		$hasSort = get_exists('sort') === TRUE;
 		$data->search = clone $search;

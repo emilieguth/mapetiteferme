@@ -4,10 +4,10 @@ namespace journal;
 class OperationLib extends OperationCrud {
 
 	public static function getPropertiesCreate(): array {
-		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'lettering'];
+		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type'];
 	}
 	public static function getPropertiesUpdate(): array {
-		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'lettering'];
+		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'thirdParty'];
 	}
 
 	public static function countByOldDatesButNotNewDate(\accounting\FinancialYear $eFinancialYear, string $newStartDate, string $newEndDate): int {
@@ -27,7 +27,7 @@ class OperationLib extends OperationCrud {
 			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))
 			->whereAccountLabel('LIKE', '%'.$search->get('accountLabel').'%', if: $search->get('accountLabel'))
 			->whereDescription('LIKE', '%'.$search->get('description').'%', if: $search->get('description'))
-			->whereLettering('LIKE', '%'.$search->get('lettering').'%', if: $search->get('lettering'))
+			->whereDocument('LIKE', '%'.$search->get('document').'%', if: $search->get('document'))
 			->whereCashflow('=', $search->get('cashflow'), if: $search->get('cashflow'))
 			->whereType($search->get('type'), if: $search->get('type'));
 
@@ -35,7 +35,11 @@ class OperationLib extends OperationCrud {
 	public static function getAll(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
 		return self::applySearch($search)
-			->select(Operation::getSelection() + ['account' => ['class', 'description']])
+			->select(
+				Operation::getSelection()
+				+ ['account' => ['class', 'description']]
+				+ ['thirdParty' => ['name']]
+			)
 			->sort($hasSort === TRUE ? $search->buildSort() : ['accountLabel' => SORT_ASC, 'date' => SORT_DESC])
 			->getCollection(NULL, NULL, 'id');
 

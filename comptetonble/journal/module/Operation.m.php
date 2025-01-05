@@ -45,23 +45,21 @@ class OperationModel extends \ModuleModel {
 			'thirdParty' => ['element32', 'journal\ThirdParty', 'null' => TRUE, 'cast' => 'element'],
 			'date' => ['date', 'min' => toDate('NOW - 2 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'cast' => 'string'],
 			'description' => ['text24', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
-			'document' => ['element32', 'journal\Document', 'null' => TRUE, 'cast' => 'element'],
+			'document' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'type' => ['enum', [\journal\Operation::DEBIT, \journal\Operation::CREDIT], 'cast' => 'enum'],
-			'lettering' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
 			'cashflow' => ['element32', 'bank\Cashflow', 'null' => TRUE, 'cast' => 'element'],
 			'vatRate' => ['decimal', 'digits' => 5, 'decimal' => 2, 'cast' => 'float'],
 			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'lettering', 'cashflow', 'vatRate', 'vatAccount'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount'
 		]);
 
 		$this->propertiesToModule += [
 			'account' => 'accounting\Account',
 			'thirdParty' => 'journal\ThirdParty',
-			'document' => 'journal\Document',
 			'cashflow' => 'bank\Cashflow',
 			'vatAccount' => 'accounting\Account',
 		];
@@ -138,10 +136,6 @@ class OperationModel extends \ModuleModel {
 
 	public function whereType(...$data): OperationModel {
 		return $this->where('type', ...$data);
-	}
-
-	public function whereLettering(...$data): OperationModel {
-		return $this->where('lettering', ...$data);
 	}
 
 	public function whereCashflow(...$data): OperationModel {

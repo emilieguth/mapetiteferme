@@ -44,7 +44,7 @@ class JournalUi {
 						$h .= $form->text('accountLabel', $search->get('accountLabel'), ['placeholder' => s("Numéro de compte")]);
 						$h .= $form->text('description', $search->get('description'), ['placeholder' => s("Description")]);
 						$h .= $form->select('type', $statuses, $search->get('type'), ['placeholder' => s("Type")]);
-						$h .= $form->text('lettering', $search->get('lettering'), ['placeholder' => s("Lettrage")]);
+						$h .= $form->text('document', $search->get('document'), ['placeholder' => s("Pièce comptable")]);
 					$h .= '</div>';
 					$h .= '<div>';
 						$h .= $form->submit(s("Chercher"), ['class' => 'btn btn-secondary']);
@@ -101,12 +101,13 @@ class JournalUi {
 							$label = s("Description");
 							$h .= ($search ? $search->linkSort('description', $label) : $label);
 						$h .= '</th>';
+						$h .= '<th>'.s("Tiers").'</th>';
 						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
 						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
 						$h .= '<th class="text-end">'.s("Solde (D-C)").'</th>';
 						$h .= '<th>';
-							$label = s("Lettrage");
-							$h .= ($search ? $search->linkSort('lettering', $label) : $label);
+							$label = s("Pièce comptable");
+							$h .= ($search ? $search->linkSort('document', $label) : $label);
 						$h .= '</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
@@ -125,7 +126,7 @@ class JournalUi {
 									$h .= '<td>';
 										$h .= '<strong>'.$eOperation['account']['class'].'</strong>';
 									$h .= '</td>';
-									$h .= '<td>';
+									$h .= '<td colspan="2">';
 										$h .= '<strong>'.$lastAccount['description'].'</strong>';
 									$h .= '</td>';
 									$h .= '<td class="text-end">';
@@ -152,6 +153,12 @@ class JournalUi {
 								$h .= encode($eOperation['description']);
 							$h .= '</td>';
 
+							$h .= '<td>';
+								if($eOperation['thirdParty']->exists() === TRUE) {
+									$h .= encode($eOperation['thirdParty']['name']);
+								}
+							$h .= '</td>';
+
 							$h .= '<td class="text-end">';
 								$h .= match($eOperation['type']) {
 									Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
@@ -176,7 +183,7 @@ class JournalUi {
 						$h .= '</td>';
 
 							$h .= '<td>';
-								$h .= encode($eOperation['lettering']);
+								$h .= encode($eOperation['document']);
 							$h .= '</td>';
 
 							$h .= '<td>';

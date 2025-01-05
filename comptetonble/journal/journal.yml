@@ -1,9 +1,3 @@
-# Pièce comptable
-Document:
-  id: serial32
-  number: text8(1, null)
-  document: int32(1, null)
-
 Operation:
   id: serial32
   # Compte concerné par l'opération
@@ -13,11 +7,10 @@ Operation:
   date: date(PHP(toDate('NOW - 2 YEARS')), PHP(toDate('NOW + 1 YEARS')))
   # Libellé de l'opération
   description: text24(1, null)
-  document: ?journal\Document
+  document: ?text8(1, null) @collate(general)
   # Une opération est toujours HT
   amount: decimal(8, 2)
   type: enum(DEBIT, CREDIT)
-  lettering: ?text8(1, null)
   cashflow: ?bank\Cashflow
   vatRate: decimal(5, 2) = 0.00
   vatAccount: ?accounting\Account

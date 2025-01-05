@@ -183,6 +183,8 @@ class CashflowUi {
 
 		$h .= '<div class="util-block stick-xs bg-background-light">';
 			$h .= '<dl class="util-presentation util-presentation-2">';
+				$h .= '<dt>'.s("Numéro").'</dt>';
+				$h .= '<dd>'.$eCashflow['id'].'</dd>';
 				$h .= '<dt>'.s("Date").'</dt>';
 				$h .= '<dd>'.\util\DateUi::numeric($eCashflow['date'], \util\DateUi::DATE).'</dd>';
 				$h .= '<dt>'.s("Libellé").'</dt>';
@@ -213,6 +215,20 @@ class CashflowUi {
 			$h .= $form->hidden('id', $eCashflow['id']);
 
 			$h .= $form->asteriskInfo();
+
+			$h .= '<div class="util-block-flat bg-background-light">';
+				$h .= '<div class="cashflow-create-operation-title">';
+					$h .= '<h4>'.s("Personnalisation de la transaction #{id}", ['id' => $eCashflow['id']]).'</h4>';
+				$h .= '</div>';
+
+				$h .= $form->group(
+					self::p('document'),
+					$form->text(
+						'document',
+						attributes: ['name' => 'cashflow[document]'] + self::p('document')->attributes)
+					.self::p('document')->after
+				);
+			$h .= '</div>';
 
 			$h .= '<div id="cashflow-create-operation-list">';
 				$h .= self::addOperation($eCompany, $eOperation, $eFinancialYear, $eCashflow, $index, $form, $defaultValues);
@@ -319,6 +335,7 @@ class CashflowUi {
 
 		$d = Cashflow::model()->describer($property, [
 			'date' => s("Date"),
+			'document' => s("Pièce comptable"),
 			'type' => s("Type"),
 			'amount' => s("Montant"),
 			'fitid' => s("Id transaction"),
@@ -332,6 +349,13 @@ class CashflowUi {
 
 			case 'date' :
 				$d->prepend = \Asset::icon('calendar-date');
+				break;
+
+			case 'document':
+				$d->after = \util\FormUi::info(s("Nom de la pièce comptable de référence (n° facture, ...)."));
+				$d->attributes = [
+					'onchange' => 'Cashflow.copyDocument(this)'
+				];
 				break;
 
 			case 'type':

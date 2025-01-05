@@ -65,6 +65,7 @@ class CashflowLib extends CashflowCrud {
 	public static function prepareAllocate(Cashflow $eCashflow, array $input): array {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
+		$document = $input['cashflow']['document'] ?? null;
 
 		$fw = new \FailWatch();
 
@@ -83,10 +84,16 @@ class CashflowLib extends CashflowCrud {
 			$eOperation = new \journal\Operation();
 			$eOperation['index'] = $index;
 
-			$eOperation->buildIndex(['account', 'accountLabel', 'description', 'amount', 'type', 'lettering', 'vatRate'], $input, $index);
+			$eOperation->buildIndex(['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate'], $input, $index);
+
 			$eOperation['cashflow'] = $eCashflow;
 			$eOperation['date'] = $eCashflow['date'];
 			$eOperation['amount'] = abs($eOperation['amount']);
+
+			$thirdParty = $input['thirdParty'][$index] ?? null;
+			if($thirdParty !== null) {
+				$eOperation['thirdParty'] = \journal\ThirdPartyLib::getByName($thirdParty);
+			}
 
 			// Ce type d'écriture a un compte de TVA correspondant
 			$eAccount = $cAccounts[$account] ?? new Account();
@@ -100,6 +107,7 @@ class CashflowLib extends CashflowCrud {
 				$eOperationTva['account'] = $eAccount['vatAccount'];
 				$eOperationTva['accountLabel'] = $eAccount['vatAccount']['description'];
 				$eOperationTva['description'] = $eCashflow['memo'];
+				$eOperationTva['document'] = $document;
 				$eOperationTva['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
 					'7' => \journal\OperationElement::CREDIT,
 					'2' => \journal\OperationElement::DEBIT,
@@ -138,6 +146,7 @@ class CashflowLib extends CashflowCrud {
 		$eOperationBank['account'] = $eAccountBank;
 		$eOperationBank['accountLabel'] = \Setting::get('accounting\bankAccountLabel');
 		$eOperationBank['description'] = $eCashflow['memo'];
+		$eOperationBank['document'] = $document;
 		$eOperationBank['type'] = match($eCashflow['type']) {
 			CashflowElement::CREDIT => \journal\Operation::DEBIT,
 			CashflowElement::DEBIT => \journal\Operation::CREDIT,

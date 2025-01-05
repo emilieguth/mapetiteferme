@@ -26,7 +26,7 @@ class OperationUi {
 
 		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
 		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
-		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
+		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*']);
 
 		$vatRateDefault = 0;
 		if ($eOperation['account']->exists() === TRUE) {
@@ -82,14 +82,14 @@ class OperationUi {
 			);
 			$h .= $form->group(
 				self::p('amount')->label.' '.\util\FormUi::asterisk(),
-					$form->inputGroup($form->number('amount'.$suffix.'*', $defaultValues['amount'] ?? '', ['step' => 0.01, 'data-type' => 'amount', 'onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')', 'data-index' => $index]).$form->addon('€ '))
+					$form->inputGroup($form->number('amount'.$suffix.'*', $defaultValues['amount'] ?? '', ['min' => 0, 'step' => 0.01, 'data-type' => 'amount', 'onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')', 'data-index' => $index]).$form->addon('€ '))
 			);
 			$h .= $form->group(
 				self::p('type')->label.' '.\util\FormUi::asterisk(),
 				$form->radio('type'.$suffix.'*', Operation::DEBIT, self::p('type')->values[Operation::DEBIT], $defaultValues['type'] ?? '', ['onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')']).
 				$form->radio('type'.$suffix.'*', Operation::CREDIT, self::p('type')->values[Operation::CREDIT], $defaultValues['type'] ?? '', ['onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')'])
 			);
-			$h .= $form->dynamicGroup($eOperation, 'lettering'.$suffix);
+			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
 
 			$vatRateDefault = 0;
 			if ($eOperation['account']->exists() === TRUE) {
@@ -136,7 +136,7 @@ class OperationUi {
 
 		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
 		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
-		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'lettering']);
+		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'document']);
 
 		$h .= $form->group(
 			s("Taux de TVA").' '.\util\FormUi::asterisk(),
@@ -167,7 +167,6 @@ class OperationUi {
 			'document' => s("Pièce comptable"),
 			'amount' => s("Montant (HT)"),
 			'type' => s("Type (débit / crédit)"),
-			'lettering' => s("Lettrage"),
 			'thirdParty' => s("Tiers"),
 		]);
 

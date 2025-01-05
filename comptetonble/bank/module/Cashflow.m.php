@@ -53,10 +53,11 @@ class CashflowModel extends \ModuleModel {
 			'account' => ['element32', 'bank\Account', 'cast' => 'element'],
 			'import' => ['element32', 'bank\Import', 'cast' => 'element'],
 			'status' => ['enum', [\bank\Cashflow::WAITING, \bank\Cashflow::ALLOCATED], 'cast' => 'enum'],
+			'document' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status'
+			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status', 'document'
 		]);
 
 		$this->propertiesToModule += [
@@ -147,6 +148,10 @@ class CashflowModel extends \ModuleModel {
 
 	public function whereStatus(...$data): CashflowModel {
 		return $this->where('status', ...$data);
+	}
+
+	public function whereDocument(...$data): CashflowModel {
+		return $this->where('document', ...$data);
 	}
 
 
