@@ -57,6 +57,9 @@ class CashflowUi {
 
 				$h .= '<thead>';
 					$h .= '<tr>';
+						$h .= '<th>';
+							$h .= s("Numéro");
+						$h .= '</th>';
 						$h .= '<th class="text-end">';
 							$label = s("Date");
 							$h .= ($search ? $search->linkSort('date', $label) : $label);
@@ -82,7 +85,7 @@ class CashflowUi {
 
 							$h .= '<tr>';
 
-								$h .= '<td class="td-min-content" colspan="7">';
+								$h .= '<td class="td-min-content" colspan="8">';
 									$h .= '<strong>'.mb_ucfirst(\util\DateUi::textual($eCashflow['date'], \util\DateUi::MONTH_YEAR)).'</strong>';
 								$h .= '</td>';
 
@@ -90,6 +93,10 @@ class CashflowUi {
 					}
 
 					$h .= '<tr>';
+
+						$h .= '<td class="text-left">';
+							$h .= encode($eCashflow['id']);
+						$h .= '</td>';
 
 						$h .= '<td class="text-end">';
 							$h .= \util\DateUi::numeric($eCashflow['date']);
@@ -114,9 +121,15 @@ class CashflowUi {
 						$h .= '</td>';
 
 					$h .= '<td class="td-min-content text-center">';
+					if ($eCashflow['status'] === CashflowElement::ALLOCATED) {
 						$h .= '<a class="cashflow-status-label cashflow-status-'.$eCashflow['status'].'" href="'.\company\CompanyUi::urlJournal($eCompany).'/?cashflow='.$eCashflow['id'].'">';
 							$h .= CashflowUi::p('status')->values[$eCashflow['status']];
 						$h .= '</a>';
+					} else {
+						$h .= '<div class="cashflow-status-label cashflow-status-'.$eCashflow['status'].'">';
+							$h .= CashflowUi::p('status')->values[$eCashflow['status']];
+						$h .= '</div>';
+					}
 					$h .= '</td>';
 
 					$h .= '<td>';
@@ -141,25 +154,15 @@ class CashflowUi {
 	}
 	protected function getUpdate(\company\Company $eCompany, Cashflow $eCashflow, string $btn): string {
 
-		$primaryList = match($eCashflow['status']) {
-			CashflowElement::WAITING => '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des écritures").'</a>',
-			CashflowElement::ALLOCATED => '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:deAllocate" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Annuler les écritures repassera la transaciton en Attente, il faudra réattribuer des écritures. Confirmez-vous ?").'">'.s("Annuler les écritures liées").'</a>',
-			default => ''
-		};
-
-		$secondaryList = '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:doDelete" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Confirmer la suppression de cette transaction ?").'">'.s("Supprimer").'</a>';
-
 		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
 		$h .= '<div class="dropdown-list">';
+			$h .= '<div class="dropdown-title">'.self::getName($eCashflow).'</div>';
 
-			$h .= $primaryList;
-
-			if($secondaryList) {
-
-				$h .= '<div class="dropdown-divider"></div>';
-				$h .= $secondaryList;
-
-			}
+			$h .= match($eCashflow['status']) {
+				CashflowElement::WAITING => '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">'.s("Attribuer des écritures").'</a>',
+				CashflowElement::ALLOCATED => '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:deAllocate" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.s("Annuler les écritures repassera la transaciton en Attente, il faudra réattribuer des écritures. Confirmez-vous ?").'">'.s("Annuler les écritures liées").'</a>',
+				default => ''
+			};
 
 		$h .= '</div>';
 
@@ -304,6 +307,12 @@ class CashflowUi {
 			title: s("Importer un relevé bancaire"),
 			body: $h
 		);
+	}
+
+	public static function getName(Cashflow $eCashflow): string {
+
+		return s("Transaction #{id}", ['id' => $eCashflow['id']]);
+
 	}
 
 	public static function p(string $property): \PropertyDescriber {

@@ -71,7 +71,7 @@
 
 		\bank\Cashflow::model()->update(
 			$data->eCashflow,
-			['memo' => POST('memo'), 'status' => \bank\CashflowElement::ALLOCATED]
+			['status' => \bank\CashflowElement::ALLOCATED]
 		);
 
 		foreach($cThirdParty as $eThirdParty) {

@@ -17,7 +17,9 @@ class JournalUi {
 
 			$h .= '<div>';
 				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-				$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
+				if (get_exists('cashflow') === false) {
+					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
+				}
 			$h .= '</div>';
 
 		$h .= '</div>';
@@ -91,8 +93,8 @@ class JournalUi {
 
 				$h .= '<thead>';
 					$h .= '<tr>';
-						$h .= '<th class="text-end">';
-							$label = s("Date de l'opération");
+						$h .= '<th>';
+							$label = s("Date de l'écriture");
 							$h .= ($search ? $search->linkSort('date', $label) : $label);
 						$h .= '</th>';
 						$h .= '<th>';
@@ -118,10 +120,10 @@ class JournalUi {
 							$lastAccount = $eOperation['account'];
 
 							if ($cOperationGrouped->offsetExists($lastAccount['id']) === TRUE) {
-								$h .= '<tr>';
+								$h .= '<tr class="group-account-row">';
 
-									$h .= '<td class="text-end">';
-										$h .= '<strong>'.$eOperation['account']['class'].($eOperation['accountLabel'] ? ' ('.$eOperation['accountLabel'].')' : '').'</strong>';
+									$h .= '<td>';
+										$h .= '<strong>'.$eOperation['account']['class'].'</strong>';
 									$h .= '</td>';
 									$h .= '<td>';
 										$h .= '<strong>'.$lastAccount['description'].'</strong>';
@@ -142,7 +144,7 @@ class JournalUi {
 						}
 						$h .= '<tr>';
 
-							$h .= '<td class="text-end">';
+							$h .= '<td>';
 								$h .= \util\DateUi::numeric($eOperation['date']);
 							$h .= '</td>';
 
