@@ -8,7 +8,7 @@ class AnalyzeLib {
 
 		$eAccountBankClass = \accounting\AccountLib::getBankClassAccount();
 
-		return Operation::model()
+		$cOperation = Operation::model()
 			->select([
 				'month' => new \Sql('DATE_FORMAT(date, "%Y-%m")'),
 				'credit' => new \Sql('SUM(IF(type = "credit", amount, 0))'),
@@ -21,6 +21,14 @@ class AnalyzeLib {
 			->group(['month'])
 			->sort(['month' => SORT_ASC])
 			->getCollection();
+
+		$lastSolde = 0;
+		foreach($cOperation as &$eOperation) {
+			$eOperation['total'] += $lastSolde;
+			$lastSolde = $eOperation['total'];
+		}
+
+		return $cOperation;
 
 	}
 

@@ -85,8 +85,6 @@ class AnalyzeUi {
 		$h .= '</div>';
 
 		return $h;
-
-		return $h;
 	}
 
 	protected function getBankTable($cOperation): string {
@@ -100,13 +98,13 @@ class AnalyzeUi {
 						$h .= '<th>';
 							$h .= s("Mois");
 						$h .= '</th>';
-						$h .= '<th>';
+						$h .= '<th class="text-end">';
 							$h .= s("Recettes");
 						$h .= '</th>';
-						$h .= '<th>';
+						$h .= '<th class="text-end">';
 							$h .= s("Dépenses");
 						$h .= '</th>';
-						$h .= '<th>';
+						$h .= '<th class="text-end">';
 							$h .= s("Solde");
 						$h .= '</th>';
 					$h .= '</tr>';
@@ -119,13 +117,13 @@ class AnalyzeUi {
 						$h .= '<td>';
 							$h .= \util\DateUi::textual($eOperation['month'].'-01', \util\DateUi::MONTH_YEAR);
 						$h .= '</td>';
-						$h .= '<td>';
+						$h .= '<td class="text-end">';
 							$h .= \util\TextUi::money($eOperation['debit']);
 						$h .= '</td>';
-						$h .= '<td>';
+						$h .= '<td class="text-end">';
 							$h .= \util\TextUi::money(abs($eOperation['credit']));
 						$h .= '</td>';
-						$h .= '<td>';
+						$h .= '<td class="text-end">';
 							$h .= \util\TextUi::money($eOperation['total']);
 						$h .= '</td>';
 					$h .= '</tr>';

@@ -1,4 +1,7 @@
 document.delegateEventListener('autocompleteBeforeQuery', '[data-account="bank-cashflow-allocate"]', function(e) {
+    if (e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
+        return;
+    }
     const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
     e.detail.body.append('thirdParty', thirdParty);
 });
@@ -10,7 +13,19 @@ document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashfl
 class Cashflow {
 
     static refreshAllocate(event) {
+        // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
+        const amountElement = event.detail.input.firstParent('div.operation-write').qs('[name^="amount["]');
+        const amount = amountElement.getAttribute('value');
+        const vatRate = parseFloat(event.detail.input.firstParent('div.operation-write').qs('[name^="vatRate["]').getAttribute('value'));
+        if (vatRate === 0.0) {
+            const newAmount = (amount / (1 + event.detail.vatRate / 100)).toFixed(2);
+            amountElement.setAttribute('value', Math.abs(newAmount));
+        }
+
+        // On remplit ensuite le taux de TVA
         event.detail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', event.detail.vatRate);
+
+        // On vérifie les calculs de TVA
         this.fillShowHideAmountWarning();
     }
 
@@ -45,7 +60,7 @@ class Cashflow {
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('#get-allocate-total-amount').innerHTML);
 
-        qs('#cashflow-create-operation-list [name="amount[' + index + ']*"]').setAttribute('value', abs(Math.round(totalAmount - sum)), 2);
+        qs('#cashflow-create-operation-list [name="amount[' + index + ']*"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
 
     }
 

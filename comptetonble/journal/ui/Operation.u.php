@@ -165,7 +165,7 @@ class OperationUi {
 			'date' => s("Date du mouvement"),
 			'description' => s("Libellé"),
 			'document' => s("Pièce comptable"),
-			'amount' => s("Montant"),
+			'amount' => s("Montant (HT)"),
 			'type' => s("Type (débit / crédit)"),
 			'lettering' => s("Lettrage"),
 			'thirdParty' => s("Tiers"),
