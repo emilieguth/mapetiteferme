@@ -154,23 +154,6 @@ class AnalyzeUi {
 		return $h;
 	}
 
-	protected function getChargesValues(\Collection $cOperation): array {
-
-		$credit = [];
-		$debit = [];
-		$total = [];
-		$labels = [];
-
-		foreach($cOperation as $eOperation) {
-			$labels[] = \util\DateUi::textual($eOperation['month'], \util\DateUi::MONTH_YEAR);
-			$credit[] = $eOperation['credit'];
-			$debit[] = $eOperation['debit'];
-			$total[] = $eOperation['total'];
-		}
-
-		return [[$debit, $credit, $total], $labels];
-	}
-
 	protected function getChargesChart(\Collection $cOperation, \Collection $cAccount): string {
 
 		\Asset::jsUrl('https://cdn.jsdelivr.net/npm/chart.js');
@@ -227,6 +210,119 @@ class AnalyzeUi {
 						$h .= '</td>';
 						$h .= '<td class="text-end">';
 							$h .= \util\TextUi::money($cOperation[$eAccount['class']]['total'] ?? 0);
+						$h .= '</td>';
+					$h .= '</tr>';
+				}
+
+				$h .= '</tbody>';
+			$h .= '</table>';
+		$h .= '</div>';
+
+		return $h;
+	}
+
+	public static function getResultTitle(\company\Company $eCompany): string {
+
+		$h = '<div class="util-action">';
+
+		$h .= '<h1>';
+			$h .= s("Analyse du résultat");
+		$h .= '</h1>';
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+	public function getResult(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
+
+		if ($cOperation->empty() === true) {
+
+			$h = '<div class="util-info">';
+				$h .= s("Le suivi du résultat sera disponible lorsque vous aurez attribué des écritures à vos transactions bancaires pour cet exercice.");
+			$h .= '</div>';
+
+			return $h;
+		}
+
+		$h = '<div class="analyze-chart-table">';
+			$h .= $this->getResultChart($eFinancialYear, $cOperation);
+			$h .= $this->getResultTable($eFinancialYear, $cOperation);
+		$h .= '</div>';
+
+		return $h;
+	}
+
+
+	protected function getResultChart(\accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
+
+		\Asset::jsUrl('https://cdn.jsdelivr.net/npm/chart.js');
+
+		$charges = [];
+		$products = [];
+		$labels = [];
+		for(
+			$date = date('Y-m', strtotime($eFinancialYear['startDate']));
+			$date <= $eFinancialYear['endDate'];
+			$date = date("Y-m", strtotime("+1 month", strtotime($date)))
+		) {
+			$eOperation = $cOperation->offsetExists($date) ? $cOperation->offsetGet($date) : new Operation();
+			$labels[] = \util\DateUi::textual($date.'-01', \util\DateUi::MONTH_YEAR);
+			$charges[] = $eOperation['charge'] ?? 0;
+			$products[] = $eOperation['product'] ?? 0;
+		}
+
+		$h = '<div class="analyze-bar">';
+		$h .= '<canvas '.attr('onrender', 'Analyze.createDoubleBar(this, "'.s("Charges").'", '.json_encode($charges).', "'.s("Produits").'", '.json_encode($products).', '.json_encode($labels).')').'</canvas>';
+		$h .= '</div>';
+
+		return $h;
+	}
+
+	protected function getResultTable(\accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
+
+		$h = '<div class="util-overflow-sm">';
+
+			$h .= '<table class="tr-bordered tr-even">';
+
+				$h .= '<thead>';
+					$h .= '<tr>';
+						$h .= '<th>';
+							$h .= s("Mois");
+						$h .= '</th>';
+						$h .= '<th class="text-end">';
+							$h .= s("Produits");
+						$h .= '</th>';
+						$h .= '<th class="text-end">';
+							$h .= s("Charges");
+						$h .= '</th>';
+						$h .= '<th class="text-end">';
+							$h .= s("Resultat");
+						$h .= '</th>';
+					$h .= '</tr>';
+				$h .= '</thead>';
+
+				$h .= '<tbody>';
+
+				for(
+					$date = date('Y-m', strtotime($eFinancialYear['startDate']));
+					$date <= $eFinancialYear['endDate'];
+					$date = date("Y-m", strtotime("+1 month", strtotime($date)))
+				) {
+					$eOperation = $cOperation->offsetExists($date) ? $cOperation->offsetGet($date) : new Operation();
+					$h .= '<tr>';
+						$h .= '<td>';
+							$h .= \util\DateUi::textual($date.'-01', \util\DateUi::MONTH_YEAR);
+						$h .= '</td>';
+						$h .= '<td class="text-end">';
+							$h .= \util\TextUi::money($eOperation['product'] ?? 0);
+						$h .= '</td>';
+						$h .= '<td class="text-end">';
+							$h .= \util\TextUi::money($eOperation['charge'] ?? 0);
+						$h .= '</td>';
+						$h .= '<td class="text-end">';
+							$h .= \util\TextUi::money(($eOperation['product'] ?? 0) - ($eOperation['charge'] ?? 0));
 						$h .= '</td>';
 					$h .= '</tr>';
 				}

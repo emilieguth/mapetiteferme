@@ -4,6 +4,24 @@ namespace journal;
 class AnalyzeLib {
 
 
+	public static function getResultOperationsByMonth(\accounting\FinancialYear $eFinancialYear): \Collection {
+
+		$cOperation = Operation::model()
+			->select([
+				'month' => new \Sql('DATE_FORMAT(date, "%Y-%m")'),
+				'charge' => new \Sql('SUM(IF(SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\chargeAccountClass').'", amount, 0))'),
+				'product' => new \Sql('SUM(IF(SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\productAccountClass').'", amount, 0))'),
+			])
+			->whereDate('>=', $eFinancialYear['startDate'])
+			->whereDate('<=', $eFinancialYear['endDate'])
+			->where(new \Sql('SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\chargeAccountClass').'" OR SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\productAccountClass').'"'))
+			->join(\accounting\Account::model(), 'm1.account = m2.id')
+			->group(['m1_month'])
+			->getCollection(NULL, NULL, ['month']);
+
+		return $cOperation;
+	}
+
 	public static function getChargeOperationsByMonth(\accounting\FinancialYear $eFinancialYear): array {
 
 		$cAccount = \accounting\Account::model()

@@ -343,7 +343,11 @@ class CompanyUi {
 			'charges' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/analyze/charges',
 				'label' => s("Charges")
-			]
+			],
+			'result' => [
+				'url' => CompanyUi::urlJournal($eCompany).'/analyze/result',
+				'label' => s("Résultat")
+			],
 		];
 
 	}
