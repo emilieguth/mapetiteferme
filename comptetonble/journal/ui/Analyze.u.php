@@ -68,10 +68,10 @@ class AnalyzeUi {
 			$labels[] = \util\DateUi::textual($eOperation['month'], \util\DateUi::MONTH_YEAR);
 			$credit[] = $eOperation['credit'];
 			$debit[] = $eOperation['debit'];
-			$total[] = $eOperation['credit'] + $eOperation['debit'];
+			$total[] = $eOperation['total'];
 		}
 
-		return [[$credit, $debit, $total], $labels];
+		return [[$debit, $credit, $total], $labels];
 	}
 
 	protected function getBankChart(\Collection $cOperation): string {
@@ -120,14 +120,13 @@ class AnalyzeUi {
 							$h .= \util\DateUi::textual($eOperation['month'].'-01', \util\DateUi::MONTH_YEAR);
 						$h .= '</td>';
 						$h .= '<td>';
-							$h .= \util\TextUi::money($eOperation['credit']);
+							$h .= \util\TextUi::money($eOperation['debit']);
 						$h .= '</td>';
 						$h .= '<td>';
-							$h .= \util\TextUi::money(abs($eOperation['debit']));
+							$h .= \util\TextUi::money(abs($eOperation['credit']));
 						$h .= '</td>';
 						$h .= '<td>';
-							// TODO : ajouter le report du mois précédent ?
-							$h .= \util\TextUi::money($eOperation['credit'] + $eOperation['debit']);
+							$h .= \util\TextUi::money($eOperation['total']);
 						$h .= '</td>';
 					$h .= '</tr>';
 				}

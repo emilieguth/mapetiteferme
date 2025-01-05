@@ -120,7 +120,7 @@ class JournalUi {
 							$lastAccount = $eOperation['account'];
 
 							if ($cOperationGrouped->offsetExists($lastAccount['id']) === TRUE) {
-								$h .= '<tr class="group-account-row">';
+								$h .= '<tr class="group-row">';
 
 									$h .= '<td>';
 										$h .= '<strong>'.$eOperation['account']['class'].'</strong>';

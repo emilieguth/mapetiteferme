@@ -703,3 +703,7 @@ address {
 	border-left: 2px solid var(--border);
 	padding-left: 1rem;
 }
+
+tr.group-row {
+	background-color: var(--account-group) !important;
+}
