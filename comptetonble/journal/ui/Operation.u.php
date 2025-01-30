@@ -56,7 +56,7 @@ class OperationUi {
 
 	}
 
-	public function getFieldsCreate(\util\FormUi $form, \bank\Cashflow $eCashflow, Operation $eOperation, \accounting\FinancialYear $eFinancialYear, string $suffix, array $defaultValues): string {
+	public function getFieldsCreate(\company\Company $eCompany, \util\FormUi $form, \bank\Cashflow $eCashflow, Operation $eOperation, \accounting\FinancialYear $eFinancialYear, string $suffix, array $defaultValues): string {
 
 		\Asset::js('journal', 'operation.js');
 		$index = mb_substr($suffix, 1, mb_strlen($suffix) - 2);
@@ -99,6 +99,13 @@ class OperationUi {
 					$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
 				}
 			}
+
+			$h .= '<div class="util-info">';
+				$h .= s(
+					"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>.",
+					['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
+				);
+			$h .= '</div>';
 
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(

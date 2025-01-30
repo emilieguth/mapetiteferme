@@ -133,7 +133,7 @@ class CashflowLib extends CashflowCrud {
 
 		}
 
-		// Ajout de la transaction sur le compte 512 (compte 5121)
+		// Ajout de la transaction sur la classe de compte bancaire 512
 		$eOperationBank = new \journal\Operation();
 		$eAccountBank = new Account();
 		$eOperationBank['cashflow'] = $eCashflow;
@@ -143,7 +143,7 @@ class CashflowLib extends CashflowCrud {
 			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
 			->get($eAccountBank);
 		$eOperationBank['account'] = $eAccountBank;
-		$eOperationBank['accountLabel'] = \Setting::get('accounting\bankAccountLabel');
+		$eOperationBank['accountLabel'] = $eCashflow['import']['account']['label'] ?? \Setting::get('accounting\defaultBankAccountLabel');
 		$eOperationBank['description'] = $eCashflow['memo'];
 		$eOperationBank['document'] = $document;
 		$eOperationBank['type'] = match($eCashflow['type']) {

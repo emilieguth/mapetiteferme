@@ -62,6 +62,13 @@
 
 	})
 	->post('doAllocate', function($data) {
+		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'),
+			\bank\Cashflow::getSelection() +
+			[
+				'import' => \bank\Import::getSelection() +
+					['account' => \bank\Account::getSelection()]
+			]
+		);
 		$fw = new FailWatch();
 
 		[$cOperation, $cThirdParty] = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
