@@ -38,6 +38,11 @@ Route::register([
 			'priority' => 5,
 			'route' => ['minify', '{version}', '{filename}'],
 		],
+		'/presentation/engagements' => [
+			'request' => 'main/index',
+			'priority' => 5,
+			'route' => ['presentation', 'engagements'],
+		],
 		'/presentation/entreprise' => [
 			'request' => 'main/index',
 			'priority' => 5,

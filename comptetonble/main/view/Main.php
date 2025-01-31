@@ -231,14 +231,14 @@ class MainTemplate extends BaseTemplate {
 						$h .= '<div>';
 							$h .= '<h4>'.s("Ressources").'</h4>';
 							$h .= '<a href="/presentation/faq">'.s("Foire aux questions").'</a><br/>';
-							$h .= '<a href="https://app.element.io/#/room/#comptetonble:matrix.org" target="_blank">'.s("Signaler un problème").'</a><br/>';
-							$h .= '<a href="https://blog.comptetonble.fr/" target="_blank">'.s("Blog").'</a>';
+							$h .= '<a href="/presentation/engagements">'.s("Engagements environnementaux").'</a><br/>';
+							$h .= s("[Bientôt] Signaler un problème").'<br/>';
 						$h .= '</div>';
 						$h .= '<div>';
 							$h .= '<h4>'.s("Usage").'</h4>';
 							$h .= '<a href="/presentation/legal">'.s("Mentions légales").'</a><br/>';
 							$h .= '<a href="/presentation/service">'.s("Conditions d'utilisation").'</a><br/>';
-							$h .= '<a href="/presentation/producteur">'.s("Fonctionnalités").'</a>';
+							$h .= '<a href="/presentation/fonctionnalites">'.s("Fonctionnalités").'</a>';
 						$h .= '</div>';
 					$h .= '</div>';
 				$h .= '</div>';

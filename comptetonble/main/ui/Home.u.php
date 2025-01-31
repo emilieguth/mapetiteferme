@@ -39,7 +39,7 @@ class HomeUi {
 		$h .= '<div class="home-points">';
 			$h .= '<div class="home-point" style="grid-column: span 2">';
 				$h .= \Asset::icon('inboxes');
-				$h .= '<h4>'.s("Toutes les fonctionnalités sont indépendantes,<br/>vous utilisez seulement celles adaptées à votre ferme !").'</h4>';
+				$h .= '<h4>'.s("Toutes les fonctionnalités sont indépendantes,<br/>vous utilisez seulement celles adaptées à votre activité !").'</h4>';
 			$h .= '</div>';
 			$h .= '<div class="home-point" style="grid-column: span 2">';
 				$h .= \Asset::icon('columns-gap');
@@ -57,8 +57,8 @@ class HomeUi {
 				$h .= '<h4>'.s("Conçu pour réduire la charge mentale<br/>sans décider à votre place").'</h4>';
 			$h .= '</div>';
 			$h .= '<div class="home-point">';
-				$h .= \Asset::icon('people');
-				$h .= '<h4>'.s("Développé par et pour<br/>des producteurs").'</h4>';
+				$h .= \Asset::icon('flower2');
+				$h .= '<h4>'.s("Développé dans le respect<br/>des bonnes pratiques écologiques").'</h4>';
 			$h .= '</div>';
 			$h .= '<div class="home-point">';
 				$h .= \Asset::icon('phone');

@@ -1,38 +1,24 @@
 <?php
 new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
-	$t->title = s("Logiciel de planification et de vente pour le maraichage");
+	$t->title = s("Logiciel de comptabilité pour les agriculteurs et agricultrices");
 	$t->metaDescription = s("Logiciel gratuit et en ligne dédié aux maraîchers en agriculture biologique pour organiser le travail à la ferme, du plan de culture jusqu'à la vente.");
 	$t->template = 'home-main';
 
 	Asset::css('main', 'font-itim.css');
 	Asset::css('main', 'home.css');
 
-	$t->header .= '<h1>'.s("Organisez le travail à la ferme du plan de culture à la vente").'</h1>';
-	$t->header .= '<h4 class="home-domain">'.s("Le logiciel gratuit pour le maraîchage en agriculture biologique").'</h4>';
+	$t->header .= '<h1>'.s("Optimisez votre comptabilité et concentrez-vous sur votre coeur de métier").'</h1>';
+	$t->header .= '<h4 class="home-domain">'.s("Le logiciel accessible pour  gérer votre comptabilité").'</h4>';
 
 	echo '<div class="home-presentation">';
 
 		echo '<div class="home-presentation-dark bg-secondary">';
-			echo '<h2>'.Asset::icon('arrow-right').''.s("Pour les producteurs").'</h2>';
+			echo '<h2>'.Asset::icon('arrow-right').''.s("À quoi sert {siteName} ?").'</h2>';
 			echo '<ul>';
-				echo '<li>'.s("Construisez facilement vos plan de culture et plan d'assolement").'</li>';
-				echo '<li>'.s("Suivez votre planning de maraîchage semaine par semaine").'</li>';
-				echo '<li>'.s("Vendez en ligne votre production sans commission sur les ventes").'</li>';
-				echo '<li>'.s("Utilisez les données récoltées pour améliorer vos pratiques année après année").'</li>';
-				echo '<li>'.s("Logiciel gratuit pour les producteurs en agriculture biologique !").'</li>';
-			echo '</ul>';
-			echo '<div class="mt-1">';
-				echo '<a href="/presentation/producteur" class="btn btn-lg btn-transparent">'.s("En savoir plus").'</a> ';
-			echo '</div>';
-		echo '</div>';
-
-		echo '<div class="home-presentation-dark bg-shop">';
-			echo '<h2>'.Asset::icon('arrow-right').''.s("Pour les clients").'</h2>';
-			echo '<ul>';
-				echo '<li>'.s("Commandez à vos producteurs préférés les produits qu'ils proposent cette semaine").'</li>';
-				echo '<li>'.s("Récupérez votre commande au lieu et à la date convenus").'</li>';
-				echo '<li>'.s("Payez en ligne ou sur place selon le choix du producteur").'</li>';
+				echo '<li>'.s("Vous aider à tenir votre comptabilité à jour facilement").'</li>';
+				echo '<li>'.s("Vous permettre d'analyser avec efficacité et simplicité votre activité").'</li>';
+				echo '<li>'.s("Générer tous vos rapports comptables").'</li>';
 			echo '</ul>';
 		echo '</div>';
 
@@ -41,7 +27,7 @@ new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 	echo '<h2>'.s("La philosophie du projet 👩‍🌾").'</h2>';
 
 	echo '<div class="home-story">';
-		echo s("La plateforme {siteName} est née du constat qu'il n'existe pas de logiciel libre, gratuit et simple d'utilisation pour permettre aux producteurs maraîchers d'organiser le travail dans leur ferme. En proposant un logiciel complet du plan de culture jusqu'à la vente, nous avons pour objectif de donner les moyens aux producteurs en agriculture biologique de réaliser les finalités de leur ferme en maraichage.");
+		echo s("La plateforme {siteName} est née du constat qu'il n'est pas simple de tenir sa comptabilité agricole à jour. Avec {siteName}, nous avons pour objectif de vous simplifier la comptabilité pour que vous puissiez vous concentrer sur votre métier.");
 	echo '</div>';
 
 	echo (new \main\HomeUi())->getPoints();
@@ -193,8 +179,8 @@ new AdaptativeView('/presentation/legal', function($data, MainTemplate $t) {
 
 	$t->header = '<h1>'.s("Mentions légales").'</h1>';
 
-	echo '<h2>'.s("Directeur de la publication").'</h2>';
-	echo '<p>'.s("Un maraîcher (ancien informaticien) du Puy-de-Dôme.").'</p>';
+	echo '<h2>'.s("Directrice de la publication").'</h2>';
+	echo '<p>'.s("Une ingénieure du Puy-de-Dôme.").'</p>';
 
 	echo '<br/>';
 
@@ -235,6 +221,22 @@ new AdaptativeView('/presentation/faq', function($data, MainTemplate $t) {
 	$t->header = '<h1>'.s("Foire aux questions").'</h1>';
 
 	echo (new \main\LegalUi())->faq();
+
+});
+
+new AdaptativeView('/presentation/engagements', function($data, MainTemplate $t) {
+
+	$t->title = s("Les engagements de {siteName}");
+	$t->metaNoindex = TRUE;
+	$t->template = 'home-legal';
+
+	Asset::css('main', 'font-itim.css');
+
+	Asset::css('main', 'home.css');
+
+	$t->header = '<h1>'.s("Les engagements de {siteName}").'</h1>';
+
+	echo (new \main\LegalUi())->engagements();
 
 });
 ?>
