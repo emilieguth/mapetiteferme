@@ -33,7 +33,8 @@ class AccountUi {
 		\Asset::js('util', 'form.js');
 		\Asset::css('util', 'form.css');
 
-		$h = '<div class="util-overflow-sm">';
+		$h = '<div class="util-info">'.s("Les comptes bancaires se créent automatiquement lors de l'import d'un relevé. Vous pouvez modifier le libellé du compte").'</div>';
+		$h .= '<div class="util-overflow-sm">';
 
 			$h .= '<table class="tr-bordered tr-even">';
 
@@ -41,7 +42,7 @@ class AccountUi {
 					$h .= '<tr>';
 						$h .= '<th>'.s("N° banque").'</th>';
 						$h .= '<th>'.s("N° Compte").'</th>';
-						$h .= '<th>'.s("Libellé de compte par défaut").'</th>';
+						$h .= '<th>'.s("Libellé de compte").'</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
