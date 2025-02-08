@@ -39,7 +39,7 @@ class AccountLib extends AccountCrud {
 		parent::update($e, $properties);
 
 		// Quick label update
-		if ($properties === ['label']) {
+		if (in_array('label', $properties) === TRUE) {
 			\journal\OperationLib::updateAccountLabels($e);
 		}
 	}
