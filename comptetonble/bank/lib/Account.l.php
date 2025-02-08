@@ -11,6 +11,29 @@ class AccountLib extends AccountCrud {
 			->getCollection();
 	}
 
+	public static function getDefaultAccount(): Account {
+
+		$eAccount = new Account();
+
+		// Get default account
+		Account::model()
+			->select(Account::getSelection())
+			->whereIsDefault(TRUE)
+			->get($eAccount);
+
+		if ($eAccount->exists() === TRUE) {
+			return $eAccount;
+		}
+
+		// Get the first found account
+		Account::model()
+			->select(Account::getSelection())
+			->get($eAccount);
+
+		return $eAccount;
+
+	}
+
 	public static function getFromOfx(string $bankId, string $accountId): Account {
 
 		$eAccount = new Account();
@@ -23,9 +46,13 @@ class AccountLib extends AccountCrud {
 
 		if ($eAccount->exists() === false) {
 
+			// Check if there is already an account. Set current account to default if there is none.
+			$cAccountDefault = Account::model()->whereIsDefault(TRUE)->count();
+
 			$eAccount = new Account([
 				'bankId' => $bankId,
 				'accountId' => $accountId,
+				'isDefault' => $cAccountDefault === 0,
 			]);
 
 			Account::model()->insert($eAccount);

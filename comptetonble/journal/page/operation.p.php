@@ -12,10 +12,22 @@
 	->create(function($data) {
 
 		$eAccount = get_exists('account') ? \accounting\AccountLib::getByIdWithVatAccount(GET('account', 'int')) : new \accounting\Account();
+
+		// Apply default bank account label if the class is a bank account class.
+		$label = '';
+		if (get_exists('label') and mb_strlen(GET('label') > 0)) {
+			$label = GET('label');
+		} else if ($eAccount->exists() === TRUE and $eAccount['class'] === \Setting::get('accounting\bankAccountClass')) {
+			$eAccountBank = \bank\AccountLib::getDefaultAccount();
+			if ($eAccountBank->exists() === TRUE) {
+				$label = $eAccountBank['label'];
+			}
+		}
+
 		$data->e->merge([
 			'company' => $data->eCompany['id'],
 			'account' => $eAccount,
-			'accountLabel' => GET('accountLabel') ?? '',
+			'accountLabel' => $label,
 			'vatRate' => $eAccount['vatRate'] ?? $eAccount['vatRate'] ?? 0,
 		]);
 

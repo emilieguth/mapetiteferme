@@ -40,15 +40,30 @@ class AccountModel extends \ModuleModel {
 			'bankId' => ['text8', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
 			'accountId' => ['text8', 'min' => 1, 'max' => NULL, 'unique' => TRUE, 'cast' => 'string'],
 			'label' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
+			'isDefault' => ['bool', 'cast' => 'bool'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'bankId', 'accountId', 'label'
+			'id', 'bankId', 'accountId', 'label', 'isDefault'
 		]);
 
 		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
 			['accountId']
 		]);
+
+	}
+
+	public function getDefaultValue(string $property) {
+
+		switch($property) {
+
+			case 'isDefault' :
+				return FALSE;
+
+			default :
+				return parent::getDefaultValue($property);
+
+		}
 
 	}
 
@@ -76,11 +91,17 @@ class AccountModel extends \ModuleModel {
 		return $this->where('label', ...$data);
 	}
 
+	public function whereIsDefault(...$data): AccountModel {
+		return $this->where('isDefault', ...$data);
+	}
+
 
 }
 
 
 abstract class AccountCrud extends \ModuleCrud {
+
+ private static array $cache = [];
 
 	public static function getById(mixed $id, array $properties = []): Account {
 
@@ -124,6 +145,13 @@ abstract class AccountCrud extends \ModuleCrud {
 			->select($properties)
 			->whereId('IN', $ids)
 			->getCollection(NULL, NULL, $index);
+
+	}
+
+	public static function getCache(mixed $key, \Closure $callback): mixed {
+
+		self::$cache[$key] ??= $callback();
+		return self::$cache[$key];
 
 	}
 

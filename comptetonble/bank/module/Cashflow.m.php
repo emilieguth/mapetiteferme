@@ -160,6 +160,8 @@ class CashflowModel extends \ModuleModel {
 
 abstract class CashflowCrud extends \ModuleCrud {
 
+ private static array $cache = [];
+
 	public static function getById(mixed $id, array $properties = []): Cashflow {
 
 		$e = new Cashflow();
@@ -202,6 +204,13 @@ abstract class CashflowCrud extends \ModuleCrud {
 			->select($properties)
 			->whereId('IN', $ids)
 			->getCollection(NULL, NULL, $index);
+
+	}
+
+	public static function getCache(mixed $key, \Closure $callback): mixed {
+
+		self::$cache[$key] ??= $callback();
+		return self::$cache[$key];
 
 	}
 
