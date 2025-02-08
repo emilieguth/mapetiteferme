@@ -34,5 +34,14 @@ class AccountLib extends AccountCrud {
 		return $eAccount;
 	}
 
+
+	public static function update(Account $e, array $properties): void {
+		parent::update($e, $properties);
+
+		// Quick label update
+		if ($properties === ['label']) {
+			\journal\OperationLib::updateAccountLabels($e);
+		}
+	}
 }
 ?>

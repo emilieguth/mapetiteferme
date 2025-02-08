@@ -56,6 +56,25 @@ class OperationLib extends OperationCrud {
 			->getCollection(NULL, NULL, 'account');
 
 	}
+	public static function updateAccountLabels(\bank\Account $eAccount): bool {
+
+		$eOperation = ['accountLabel' => $eAccount['label']];
+		$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+
+		Operation::model()
+			// Liée aux cashflow de ce compte bancaire
+			->join(\bank\Cashflow::model(), 'm1.cashflow = m2.id')
+			->where('m2.account = '.$eAccount['id'])
+			// Type banque
+			->join(\accounting\Account::model(), 'm1.account = m3.id')
+			->where('m3.class = '.\Setting::get('accounting\bankAccountClass'))
+			// De l'exercice fiscal courant
+			->where('m1.date >= "'.$eFinancialYear['startDate'].'"')
+			->where('m1.date <= "'.$eFinancialYear['endDate'].'"')
+			->update($eOperation);
+
+		return TRUE;
+	}
 
 }
 ?>
