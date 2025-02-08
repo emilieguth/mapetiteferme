@@ -84,6 +84,8 @@ class JournalUi {
 		if ($cOperation->empty() === true) {
 			return '<div class="util-info">'.s("Aucune opération n'a encore été enregistrée").'</div>';
 		}
+		\Asset::js('util', 'form.js');
+		\Asset::css('util', 'form.css');
 
 		$h = '';
 
@@ -149,10 +151,13 @@ class JournalUi {
 								if ($eOperation['accountLabel'] !== NULL) {
 									$h .= '<div class="operation-info">'.s("N° compte : {accountLabel}", ['accountLabel' => encode($eOperation['accountLabel'])]).'</div>';
 								}
-								if ($eOperation['document'] !== NULL and strlen($eOperation['document']) > 0) {
-									$h .= '<div class="operation-info">'.s("Pièce comptable : {document}", ['document' => encode($eOperation['document'])]).'</div>';
-								}
-							$h .= '</td>';
+
+								$h .= '<div class="operation-info">';
+									$eOperation->setQuickAttribute('company', $eCompany['id']);
+									$h .= s("Pièce comptable :").'&nbsp;';
+									$h .= $eOperation->quick('document', $eOperation['document'] ? encode($eOperation['document']) : '<i>'.s("Non définie").'</i>', validate:['canQuickDocument']);
+								$h .= '</div>';
+						$h .= '</td>';
 
 							$h .= '<td>';
 								if($eOperation['thirdParty']->exists() === TRUE) {
@@ -174,14 +179,14 @@ class JournalUi {
 								};
 							$h .= '</td>';
 
-						$balance = match($eOperation['type']) {
-							Operation::CREDIT => -$eOperation['amount'],
-							Operation::DEBIT => $eOperation['amount'],
-							default => 0,
-						};
-						$h .= '<td class="text-end">';
-							$h .= \util\TextUi::money($balance);
-						$h .= '</td>';
+							$balance = match($eOperation['type']) {
+								Operation::CREDIT => -$eOperation['amount'],
+								Operation::DEBIT => $eOperation['amount'],
+								default => 0,
+							};
+							$h .= '<td class="text-end">';
+								$h .= \util\TextUi::money($balance);
+							$h .= '</td>';
 
 							$h .= '<td>';
 								if (

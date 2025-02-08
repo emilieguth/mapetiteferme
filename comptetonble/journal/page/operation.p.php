@@ -2,11 +2,13 @@
 (new \journal\OperationPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
-		$company = GET('company');
+		$company = REQUEST('company');
 
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 	}
 ))
+	->quick(['document'], [], ['canQuickDocument'])
 	->create(function($data) {
 
 		$eAccount = get_exists('account') ? \accounting\AccountLib::getByIdWithVatAccount(GET('account', 'int')) : new \accounting\Account();

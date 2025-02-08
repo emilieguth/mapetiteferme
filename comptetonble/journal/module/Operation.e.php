@@ -3,6 +3,10 @@ namespace journal;
 
 class Operation extends OperationElement {
 
+	public function canQuickDocument(): bool {
+		return TRUE;
+	}
+
 	public function canUpdate(): bool {
 
 		$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();

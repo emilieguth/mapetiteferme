@@ -47,7 +47,11 @@ class OperationLib extends OperationCrud {
 
 	public static function getGrouped(\Search $search = new \Search()): \Collection {
 		return self::applySearch($search)
-			->select(['account', 'credit' => new \Sql('SUM(IF(type = "'.OperationElement::CREDIT.'", amount, 0))'), 'debit' => new \Sql('SUM(IF(type = "'.OperationElement::DEBIT.'", amount, 0))')])
+			->select([
+				'account',
+				'credit' => new \Sql('SUM(IF(type = "'.OperationElement::CREDIT.'", amount, 0))'),
+				'debit' => new \Sql('SUM(IF(type = "'.OperationElement::DEBIT.'", amount, 0))'),
+			])
 			->group('account')
 			->getCollection(NULL, NULL, 'account');
 

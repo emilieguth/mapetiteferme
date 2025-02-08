@@ -92,6 +92,16 @@ Route::register([
 			'priority' => 5,
 			'route' => ['@module', 'bank', 'Account', 'quick'],
 		],
+		'/@module/journal/Operation/doQuick' => [
+			'request' => 'journal/operation',
+			'priority' => 5,
+			'route' => ['@module', 'journal', 'Operation', 'doQuick'],
+		],
+		'/@module/journal/Operation/quick' => [
+			'request' => 'journal/operation',
+			'priority' => 5,
+			'route' => ['@module', 'journal', 'Operation', 'quick'],
+		],
 	],
 	'PUT' => [
 	],
