@@ -54,9 +54,9 @@ class LegalUi {
 
 		$h .= '<ul>';
 			$h .= '<li>'.s("Respect autant que possible des <link>115 bonnes pratiques pour une écoconception web {icon}</link>, préconisées par le collectif greenIT.", ['link' => '<a href="https://collectif.greenit.fr/ecoconception-web/">', 'icon' => \Asset::icon('box-arrow-up-right')]).'</li>';
-			$h .= '<li>'.s("Design épuré : {siteName} s'adapte à l'écran (<i>design responsive</i>, utilisation d'icônes plutôt que d'images, si des images sont nécessaires, elles sont compressées avant usage, etc.").'</li>';
-			$h .= '<li>'.s("Fonctionnalités utiles : Pour un site maintenable et utilisable de tous, seules les fonctionnalités utiles sont développées et conservées.").'</li>';
-			$h .= '<li>'.s("Requêtes limitées : Une attention particulière est portée au nombre d'interactions entre l'ordinateur de l'utilisateur et le serveur pour éviter de gaspiller de l'énergie.").'</li>';
+			$h .= '<li>'.s("Design épuré : {siteName} s'adapte à l'écran (design <i>responsive</i>, utilisation d'icônes plutôt que d'images, si des images sont nécessaires, elles sont compressées avant usage, etc.").'</li>';
+			$h .= '<li>'.s("Fonctionnalités utiles : pour un service maintenable et utilisable de tous, seules les fonctionnalités utiles sont développées et conservées.").'</li>';
+			$h .= '<li>'.s("Requêtes limitées : une attention particulière est portée au nombre d'interactions entre l'ordinateur de l'utilisateur et le serveur pour éviter de gaspiller de l'énergie.").'</li>';
 		$h .= '</ul>';
 
 		return $h;

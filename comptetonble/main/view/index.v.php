@@ -8,17 +8,22 @@ new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 	Asset::css('main', 'font-itim.css');
 	Asset::css('main', 'home.css');
 
-	$t->header .= '<h1>'.s("Optimisez votre comptabilité et concentrez-vous sur votre coeur de métier").'</h1>';
-	$t->header .= '<h4 class="home-domain">'.s("Le logiciel accessible pour  gérer votre comptabilité").'</h4>';
+	$t->header .= '<h1>'.s("Facilitez-vous la comptabilité et concentrez-vous sur votre ferme !").'</h1>';
 
 	echo '<div class="home-presentation">';
 
 		echo '<div class="home-presentation-dark bg-secondary">';
 			echo '<h2>'.Asset::icon('arrow-right').''.s("À quoi sert {siteName} ?").'</h2>';
 			echo '<ul>';
-				echo '<li>'.s("Vous aider à tenir votre comptabilité à jour facilement").'</li>';
+				echo '<li>'.s("Faciliter la tenue de votre comptabilité").'</li>';
 				echo '<li>'.s("Vous permettre d'analyser avec efficacité et simplicité votre activité").'</li>';
 				echo '<li>'.s("Générer tous vos rapports comptables").'</li>';
+			echo '</ul>';
+		echo '</div>';
+
+		echo '<div class="home-presentation-dark bg-shop">';
+			echo '<h2>'.Asset::icon('megaphone').''.s("Bientôt !").'</h2>';
+			echo s("{siteName} est actuellement en développement, inscrivez-vous ici pour être informé·e de sa sortie !");
 			echo '</ul>';
 		echo '</div>';
 
@@ -27,7 +32,7 @@ new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 	echo '<h2>'.s("La philosophie du projet 👩‍🌾").'</h2>';
 
 	echo '<div class="home-story">';
-		echo s("La plateforme {siteName} est née du constat qu'il n'est pas simple de tenir sa comptabilité agricole à jour. Avec {siteName}, nous avons pour objectif de vous simplifier la comptabilité pour que vous puissiez vous concentrer sur votre métier.");
+		echo s("La plateforme {siteName} est née du constat qu'il n'est pas simple de tenir sa comptabilité agricole à jour. Avec {siteName}, nous avons pour objectif de vous simplifier la comptabilité pour que vous puissiez vous concentrer sur votre ferme.");
 	echo '</div>';
 
 	echo (new \main\HomeUi())->getPoints();
