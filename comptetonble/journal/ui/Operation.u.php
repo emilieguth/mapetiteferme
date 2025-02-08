@@ -113,8 +113,8 @@ class OperationUi {
 				$form->inputGroup($form->number('vatRate'.$suffix.'*',  $vatRateDefault, ['data-field' => 'vatRate', 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => 'Cashflow.fillShowHideAmountWarning();']).$form->addon('% '))
 			);
 			$h .= $form->group(
-				s("Valeur calculée de TVA"),
-				$form->inputGroup($form->number('vatValue'.$suffix,  0, ['data-field' => 'vatValue', 'disabled' => 'disabled']).$form->addon('€'))
+				s("Valeur de TVA (calcul automatique)"),
+				$form->inputGroup($form->number('vatValue'.$suffix,  0, ['data-field' => 'vatValue']).$form->addon('€'))
 			);
 
 		$h .= '</div>';
