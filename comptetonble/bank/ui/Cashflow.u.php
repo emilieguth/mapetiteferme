@@ -227,7 +227,7 @@ class CashflowUi {
 
 			$h .= '<div class="util-block-flat bg-background-light">';
 				$h .= '<div class="cashflow-create-operation-title">';
-					$h .= '<h4>'.s("Personnalisation de la transaction #{id}", ['id' => $eCashflow['id']]).'</h4>';
+					$h .= '<h4>'.s("Personnalisation d'opération #{id}", ['id' => $eCashflow['id']]).'</h4>';
 				$h .= '</div>';
 
 				$h .= $form->group(

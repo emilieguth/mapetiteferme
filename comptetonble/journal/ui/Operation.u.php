@@ -25,7 +25,7 @@ class OperationUi {
 		});
 
 		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
-		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
+		$h .= $form->group(s("Date de l'opération").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*']);
 
 		$vatRateDefault = 0;
@@ -142,7 +142,7 @@ class OperationUi {
 		});
 
 		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
-		$h .= $form->group(s("Date du mouvement").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
+		$h .= $form->group(s("Date de l'opération").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'document']);
 
 		$h .= $form->group(
@@ -169,7 +169,7 @@ class OperationUi {
 		$d = Operation::model()->describer($property, [
 			'account' => s("Classe de compte"),
 			'accountLabel' => s("Compte"),
-			'date' => s("Date du mouvement"),
+			'date' => s("Date de l'opération"),
 			'description' => s("Libellé"),
 			'document' => s("Pièce comptable"),
 			'amount' => s("Montant (HT)"),

@@ -76,5 +76,22 @@ class OperationLib extends OperationCrud {
 		return TRUE;
 	}
 
+	public static function update(Operation $e, array $properties): void {
+		parent::update($e, $properties);
+
+		// Quick document update
+		if (in_array('document', $properties) === TRUE) {
+			// On rattache cette pièce comptable au cashflow + aux opérations liées
+			if ($e['cashflow']->exists() === TRUE) {
+				$eCashflow = $e['cashflow'];
+				$eCashflow['document'] = $e['document'];
+				\bank\CashflowLib::update($eCashflow, ['document']);
+				Operation::model()
+					->select('document')
+					->whereCashflow('=', $e['cashflow']['id'])
+					->update(['document' => $e['document']]);
+			}
+		}
+	}
 }
 ?>

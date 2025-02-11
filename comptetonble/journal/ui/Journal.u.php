@@ -58,12 +58,12 @@ class JournalUi {
 		if ($eCashflow->exists() === TRUE) {
 			$h .= '<div class="util-block-search stick-xs">';
 				$h .= s(
-					"Vous visualisez actuellement les écritures correspondant au flux du {date}, \"{memo}\" d'un {type} de {amount}.",
+					"Vous visualisez actuellement les écritures correspondant à l'opération bancaire du {date}, \"{memo}\" d'un {type} de {amount}.",
 					[
 						'date' => \util\DateUi::numeric($eCashflow['date']),
 						'memo' => encode($eCashflow['memo']),
 						'type' => mb_strtolower(\bank\CashflowUi::p('type')->values[$eCashflow['type']]),
-						'amount' => \util\TextUi::money($eCashflow['amount']),
+						'amount' => \util\TextUi::money(abs($eCashflow['amount'])),
 					]
 				);
 			$h .= '</div>';
@@ -168,14 +168,14 @@ class JournalUi {
 							$h .= '<td class="text-end">';
 								$h .= match($eOperation['type']) {
 									Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
-									default => \util\TextUi::money(0),
+									default => '',
 								};
 							$h .= '</td>';
 
 							$h .= '<td class="text-end">';
 								$h .= match($eOperation['type']) {
 									Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
-									default => \util\TextUi::money(0),
+									default => '',
 								};
 							$h .= '</td>';
 

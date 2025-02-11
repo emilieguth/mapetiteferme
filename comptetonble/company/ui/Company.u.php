@@ -390,7 +390,7 @@ class CompanyUi {
 		return [
 			'cashflow' => [
 				'url' => CompanyUi::urlBank($eCompany).'/cashflow',
-				'label' => s("opérations bancaires")
+				'label' => s("Opérations bancaires")
 			],
 			'import' => [
 				'url' => CompanyUi::urlBank($eCompany).'/import',
