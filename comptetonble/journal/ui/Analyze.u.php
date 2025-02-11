@@ -27,7 +27,7 @@ class AnalyzeUi {
 		if ($cOperation->empty() === true) {
 
 			$h = '<div class="util-info">';
-				$h .= s("Le suivi de la trésorerie sera disponible lorsque vous aurez attribué des écritures à vos transactions bancaires pour cet exercice.");
+				$h .= s("Le suivi de la trésorerie sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");
 			$h .= '</div>';
 
 			return $h;
@@ -140,7 +140,7 @@ class AnalyzeUi {
 		if ($cOperation->empty() === true) {
 
 			$h = '<div class="util-info">';
-				$h .= s("Le suivi des charges sera disponible lorsque vous aurez attribué des écritures à vos transactions bancaires pour cet exercice.");
+				$h .= s("Le suivi des charges sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");
 			$h .= '</div>';
 
 			return $h;
@@ -240,7 +240,7 @@ class AnalyzeUi {
 		if ($cOperation->empty() === true) {
 
 			$h = '<div class="util-info">';
-				$h .= s("Le suivi du résultat sera disponible lorsque vous aurez attribué des écritures à vos transactions bancaires pour cet exercice.");
+				$h .= s("Le suivi du résultat sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");
 			$h .= '</div>';
 
 			return $h;
