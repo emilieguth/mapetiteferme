@@ -58,13 +58,13 @@ class BookUi {
 
 	public function getBook(
 		\company\Company $eCompany,
-		\Collection $ccOperation,
+		\Collection $cccOperation,
 		\Collection $cOperationGrouped,
 		\accounting\FinancialYear $eFinancialYearSelected,
 		\Search $search = new \Search()
 	): string {
 
-		if($ccOperation->empty() === TRUE) {
+		if($cccOperation->empty() === TRUE) {
 			return '<div class="util-info">'. \s("Aucune écriture n'a encore été enregistrée") .'</div>';
 		}
 		\Asset::js('util', 'form.js');
@@ -97,89 +97,90 @@ class BookUi {
 
 				$h .= '<tbody>';
 
-					foreach($ccOperation as $class => $cOperation) {
+					foreach($cccOperation as $class => $ccOperation) {
 
 						$eOperationGrouped = $cOperationGrouped->offsetGet($class)[0];
 						$eAccount = $eOperationGrouped['account'];
 
-						$h .= '<tr>';
-							$h .= '<td colspan="5">';
-								$h .= '<strong>'.s("{class} - {description}", [
-										'class' => $eAccount['class'],
-										'description' => $eAccount['description'],
-									]).'</strong>';
-							$h .= '</td>';
-						$h .= '</tr>';
+						foreach($ccOperation as $accountLabel => $cOperation) {
 
-						foreach($cOperation as $eOperation) {
+							$displayedAccountLabel = mb_strlen($accountLabel) > 0 ? $accountLabel : str_pad($eAccount['class'], 8, 0);
 
 							$h .= '<tr>';
-
-								$h .= '<td>';
-									$h .= \util\DateUi::numeric($eOperation['date']);
+								$h .= '<td colspan="5">';
+									$h .= '<strong>'.s("{class} - {description}", [
+											'class' => $displayedAccountLabel,
+											'description' => $eAccount['description'],
+										]).'</strong>';
 								$h .= '</td>';
-
-								$h .= '<td>';
-									$h .= encode($eOperation['document']);
-								$h .= '</td>';
-
-								$h .= '<td>';
-									$h .= \encode($eOperation['description']);
-									if($eOperation['accountLabel'] !== NULL) {
-										$h .= '<div class="operation-info">'.s("N° compte : {accountLabel}", ['accountLabel' => encode($eOperation['accountLabel'])]) .'</div>';
-									}
-
-							$h .= '</td>';
-
-								$h .= '<td class="text-end">';
-									$h .= match($eOperation['type']) {
-										Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
-										default => '',
-									};
-								$h .= '</td>';
-
-								$h .= '<td class="text-end">';
-									$h .= match($eOperation['type']) {
-										Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
-										default => '',
-									};
-								$h .= '</td>';
-
 							$h .= '</tr>';
 
+							foreach($cOperation as $eOperation) {
+
+								$h .= '<tr>';
+
+									$h .= '<td>';
+										$h .= \util\DateUi::numeric($eOperation['date']);
+									$h .= '</td>';
+
+									$h .= '<td>';
+										$h .= encode($eOperation['document']);
+									$h .= '</td>';
+
+									$h .= '<td>';
+										$h .= \encode($eOperation['description']);
+									$h .= '</td>';
+
+									$h .= '<td class="text-end">';
+										$h .= match($eOperation['type']) {
+											Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
+											default => '',
+										};
+									$h .= '</td>';
+
+									$h .= '<td class="text-end">';
+										$h .= match($eOperation['type']) {
+											Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
+											default => '',
+										};
+									$h .= '</td>';
+
+								$h .= '</tr>';
+
+							}
+
+							$h .= '<tr class="sub-total">';
+
+								$h .= '<td colspan="3" class="text-end">';
+									$h .= '<strong>'.s("Total pour le compte {class} :", [
+										'class' => $displayedAccountLabel,
+									]).'</strong>';
+								$h .= '</td>';
+									$h .= '<td class="text-end">';
+								$h .= '<strong>'.\util\TextUi::money($eOperationGrouped['debit']).'</strong>';
+								$h .= '</td>';
+									$h .= '<td class="text-end">';
+									$h .= '<strong>'.\util\TextUi::money($eOperationGrouped['credit']).'</strong>';
+								$h .= '</td>';
+							$h .= '</tr>';
+
+							$balance = abs($eOperationGrouped['debit'] - $eOperationGrouped['credit']);
+							$h .= '<tr class="sub-total">';
+
+								$h .= '<td colspan="3" class="text-end">';
+									$h .= '<strong>'.s("Solde :").'</strong>';
+								$h .= '</td>';
+								$h .= '<td class="text-end">';
+									$h .= '<strong>'.($eOperationGrouped['debit'] > $eOperationGrouped['credit'] ? \util\TextUi::money($balance) : '').'</strong>';
+								$h .= '</td>';
+									$h .= '<td class="text-end">';
+									$h .= '<strong>'.($eOperationGrouped['debit'] <= $eOperationGrouped['credit'] ? \util\TextUi::money($balance) : '').'</strong>';
+								$h .= '</td>';
+							$h .= '</tr>';
 						}
-
-						$h .= '<tr class="sub-total">';
-
-							$h .= '<td colspan="3" class="text-end">';
-								$h .= '<strong>'.s("Total pour le compte {class} :", [
-									'class' => $eAccount['class'],
-								]).'</strong>';
-							$h .= '</td>';
-								$h .= '<td class="text-end">';
-							$h .= '<strong>'.\util\TextUi::money($eOperationGrouped['debit']).'</strong>';
-							$h .= '</td>';
-								$h .= '<td class="text-end">';
-								$h .= '<strong>'.\util\TextUi::money($eOperationGrouped['credit']).'</strong>';
-							$h .= '</td>';
-						$h .= '</tr>';
-
-						$balance = abs($eOperationGrouped['debit'] - $eOperationGrouped['credit']);
-						$h .= '<tr class="sub-total">';
-
-							$h .= '<td colspan="3" class="text-end">';
-								$h .= '<strong>'.s("Solde :").'</strong>';
-							$h .= '</td>';
-							$h .= '<td class="text-end">';
-								$h .= '<strong>'.($eOperationGrouped['debit'] > $eOperationGrouped['credit'] ? \util\TextUi::money($balance) : '').'</strong>';
-							$h .= '</td>';
-								$h .= '<td class="text-end">';
-								$h .= '<strong>'.($eOperationGrouped['debit'] <= $eOperationGrouped['credit'] ? \util\TextUi::money($balance) : '').'</strong>';
-							$h .= '</td>';
-						$h .= '</tr>';
 					}
 
-					// TODO : ajouter un total pour la période
+						// TODO : ajouter un total pour la période
 
 				$h .= '</tbody>';
 			$h .= '</table>';

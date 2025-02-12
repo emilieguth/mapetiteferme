@@ -34,7 +34,7 @@ class OperationLib extends OperationCrud {
 	}
 	public static function getAllForBook(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
-		return self::applySearch($search)
+		$ccOperation = self::applySearch($search)
 			->select(
 				Operation::getSelection()
 				+ ['account' => ['class', 'description']]
@@ -43,6 +43,12 @@ class OperationLib extends OperationCrud {
 			->sort(['date' => SORT_ASC])
 			->getCollection()
 			->reindex(['account', 'class']);
+
+		$cccOperation = new \Collection();
+		foreach($ccOperation as $class => $cOperation) {
+			$cccOperation[$class] = $cOperation->reindex(['accountLabel']);
+		}
+		return $cccOperation;
 
 	}
 	public static function getAllForJournal(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {

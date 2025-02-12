@@ -98,6 +98,8 @@ class JournalUi {
 							$label = s("Date de l'écriture");
 							$h .= ($search ? $search->linkSort('date', $label) : $label);
 						$h .= '</th>';
+						$h .= '<th>'.s("Pièce comptable").'</th>';
+						$h .= '<th colspan="2">'.s("Compte (Classe et libellé)").'</th>';
 						$h .= '<th>';
 							$label = s("Description");
 							$h .= ($search ? $search->linkSort('description', $label) : $label);
@@ -119,17 +121,27 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
-								$h .= encode($eOperation['description']);
-								if($eOperation['accountLabel'] !== NULL) {
-									$h .= '<div class="operation-info">'.s("N° compte : {accountLabel}", ['accountLabel' => encode($eOperation['accountLabel'])]).'</div>';
-								}
-
 								$h .= '<div class="operation-info">';
 									$eOperation->setQuickAttribute('company', $eCompany['id']);
-									$h .= s("Pièce comptable :").'&nbsp;';
 									$h .= $eOperation->quick('document', $eOperation['document'] ? encode($eOperation['document']) : '<i>'.s("Non définie").'</i>', validate:['canQuickDocument']);
 								$h .= '</div>';
-						$h .= '</td>';
+							$h .= '</td>';
+
+							$h .= '<td>';
+								if($eOperation['accountLabel'] !== NULL) {
+									$h .= encode($eOperation['accountLabel']);
+								} else {
+									$h .= encode(str_pad($eOperation['account']['class'], 8, 0));
+								}
+							$h .= '</td>';
+
+							$h .= '<td>';
+								$h .= encode($eOperation['account']['description']);
+							$h .= '</td>';
+
+							$h .= '<td>';
+								$h .= encode($eOperation['description']);
+							$h .= '</td>';
 
 							$h .= '<td>';
 								if($eOperation['thirdParty']->exists() === TRUE) {
