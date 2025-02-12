@@ -38,7 +38,7 @@ class BookUi {
 
 				$h .= '<div>';
 						$h .= $form->month('date', $search->get('date'), ['placeholder' => \s("Mois")]);
-						$h .= $form->text('accountLabel', $search->get('accountLabel'), ['placeholder' => \s("Numéro de compte")]);
+						$h .= $form->text('accountLabel', $search->get('accountLabel'), ['placeholder' => \s("Classe de compte")]);
 						$h .= $form->text('description', $search->get('description'), ['placeholder' => \s("Description")]);
 						$h .= $form->select('type', $statuses, $search->get('type'), ['placeholder' => \s("Type")]);
 						$h .= $form->text('document', $search->get('document'), ['placeholder' => \s("Pièce comptable")]);
