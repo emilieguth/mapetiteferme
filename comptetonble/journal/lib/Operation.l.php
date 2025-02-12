@@ -32,6 +32,19 @@ class OperationLib extends OperationCrud {
 			->whereType($search->get('type'), if: $search->get('type'));
 
 	}
+	public static function getAllForBook(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
+
+		return self::applySearch($search)
+			->select(
+				Operation::getSelection()
+				+ ['account' => ['class', 'description']]
+				+ ['thirdParty' => ['name']]
+			)
+			->sort(['date' => SORT_ASC])
+			->getCollection()
+			->reindex(['account', 'class']);
+
+	}
 	public static function getAllForJournal(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
 		return self::applySearch($search)
@@ -40,20 +53,21 @@ class OperationLib extends OperationCrud {
 				+ ['account' => ['class', 'description']]
 				+ ['thirdParty' => ['name']]
 			)
-			->sort($hasSort === TRUE ? $search->buildSort() : ['account' => SORT_ASC, 'date' => SORT_DESC])
-			->getCollection(NULL, NULL, 'id');
+			->sort($hasSort === TRUE ? $search->buildSort() : ['date' => SORT_ASC, 'id' => SORT_ASC])
+			->getCollection();
 
 	}
 
 	public static function getGrouped(\Search $search = new \Search()): \Collection {
 		return self::applySearch($search)
 			->select([
-				'account',
+				'account' => ['id', 'class', 'description'],
 				'credit' => new \Sql('SUM(IF(type = "'.OperationElement::CREDIT.'", amount, 0))'),
 				'debit' => new \Sql('SUM(IF(type = "'.OperationElement::DEBIT.'", amount, 0))'),
 			])
 			->group('account')
-			->getCollection(NULL, NULL, 'account');
+			->getCollection()
+			->reindex(['account', 'class']);
 
 	}
 	public static function updateAccountLabels(\bank\Account $eAccount): bool {

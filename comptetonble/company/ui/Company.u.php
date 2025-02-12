@@ -145,7 +145,7 @@ class CompanyUi {
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('journal-bookmark').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('journal-bookmark-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Journal comptable");
+						$h .= s("Écritures comptables");
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -308,11 +308,11 @@ class CompanyUi {
 		return [
 			'journal' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/',
-				'label' => s("Journal comptable")
+				'label' => s("Journal")
 			],
 			'book' => [
 			'url' => CompanyUi::urlJournal($eCompany).'/book',
-			'label' => s("Grand livre (TODO)")
+			'label' => s("Grand livre")
 		]
 		];
 

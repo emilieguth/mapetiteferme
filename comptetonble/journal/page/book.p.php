@@ -2,7 +2,7 @@
 (new Page())
 	->get('index', function($data) {
 
-		\Setting::set('main\viewJournal', 'journal');
+		\Setting::set('main\viewJournal', 'book');
 
 		$company = GET('company');
 
@@ -32,7 +32,8 @@
 			$search->set('cashflow', GET('cashflow'));
 		}
 
-		$data->cOperation = \journal\OperationLib::getAllForJournal($search, $hasSort);
+		$data->ccOperation = \journal\OperationLib::getAllForBook($search, $hasSort);
+		$data->cOperationGrouped = $hasSort ? new \Collection() : \journal\OperationLib::getGrouped($search);
 		$data->cAccount = \accounting\AccountLib::getAll();
 
 		throw new ViewAction($data);

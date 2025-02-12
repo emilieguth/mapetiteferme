@@ -76,13 +76,12 @@ class JournalUi {
 	public function getJournal(
 		\company\Company $eCompany,
 		\Collection $cOperation,
-		\Collection $cOperationGrouped,
 		\accounting\FinancialYear $eFinancialYearSelected,
 		\Search $search = new \Search()
 	): string {
 
 		if ($cOperation->empty() === true) {
-			return '<div class="util-info">'.s("Aucune opération n'a encore été enregistrée").'</div>';
+			return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
 		}
 		\Asset::js('util', 'form.js');
 		\Asset::css('util', 'form.css');
@@ -106,40 +105,13 @@ class JournalUi {
 						$h .= '<th>'.s("Tiers").'</th>';
 						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
 						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
-						$h .= '<th class="text-end">'.s("Solde (D-C)").'</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
 				$h .= '<tbody>';
 
-					$lastAccount = new \accounting\Account();
 					foreach($cOperation as $eOperation) {
 
-						if ($lastAccount->empty() === true or $lastAccount['id'] !== $eOperation['account']['id']) {
-							$lastAccount = $eOperation['account'];
-
-							if ($cOperationGrouped->offsetExists($lastAccount['id']) === TRUE) {
-								$h .= '<tr class="group-row">';
-
-									$h .= '<td>';
-										$h .= '<strong>'.$eOperation['account']['class'].'</strong>';
-									$h .= '</td>';
-									$h .= '<td colspan="2">';
-										$h .= '<strong>'.$lastAccount['description'].'</strong>';
-									$h .= '</td>';
-									$h .= '<td class="text-end">';
-										$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit']).'</strong>';
-									$h .= '</td>';
-									$h .= '<td class="text-end">';
-										$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
-									$h .= '</td>';
-									$h .= '<td class="text-end">';
-										$h .= '<strong>'.\util\TextUi::money($cOperationGrouped[$lastAccount['id']]['debit'] - $cOperationGrouped[$lastAccount['id']]['credit']).'</strong>';
-									$h .= '</td>';
-									$h .= '<td></td>';
-								$h .= '</tr>';
-							}
-						}
 						$h .= '<tr>';
 
 							$h .= '<td>';
@@ -177,15 +149,6 @@ class JournalUi {
 									Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
 									default => '',
 								};
-							$h .= '</td>';
-
-							$balance = match($eOperation['type']) {
-								Operation::CREDIT => -$eOperation['amount'],
-								Operation::DEBIT => $eOperation['amount'],
-								default => 0,
-							};
-							$h .= '<td class="text-end">';
-								$h .= \util\TextUi::money($balance);
 							$h .= '</td>';
 
 							$h .= '<td>';
