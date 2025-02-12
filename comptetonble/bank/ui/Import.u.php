@@ -28,7 +28,7 @@ class ImportUi {
 
 		$year = \accounting\FinancialYearUi::getYear($eFinancialYear);
 
-		if (mb_strlen($year) === 4) {
+		if(mb_strlen($year) === 4) {
 			return \util\DateUi::numeric($period,\util\DateUi::DAY_MONTH);
 		}
 
@@ -43,7 +43,7 @@ class ImportUi {
 	): string {
 		\Asset::css('bank', 'flow.css');
 
-		if ($cImport->empty() === true) {
+		if($cImport->empty() === TRUE) {
 			return '<div class="util-info">'.
 				s("Aucun import bancaire n'a été réalisé pour l'exercice {year}", ['year' => \accounting\FinancialYearUi::getYear($eFinancialYearSelected)]).
 				'</div>';
@@ -67,7 +67,7 @@ class ImportUi {
 				$h .= '<div class="flow-timeline flow-timeline-only">';
 					$h .= '<div class="flow-timeline-item">';
 						$h .= '<div class="flow-timeline-circle">';
-							if ($import['endPeriod'] === date('Y-m-d')) {
+							if($import['endPeriod'] === date('Y-m-d')) {
 								$h .= s("Aujourd'hui");
 							} else {
 								$h .= $this->getPeriod($import['endPeriod'], $eFinancialYearSelected);
@@ -78,7 +78,7 @@ class ImportUi {
 					$h .= '</div>';
 					$h .= '<div class="flow-timeline-action">';
 						$h .= '<div class="flow-timeline-action-title">';
-							if ($eImport->exists() === FALSE) {
+							if($eImport->exists() === FALSE) {
 								$h .= '<div class="util-warning mt-1 mb-1">';
 									$h .= \Asset::icon('exclamation-circle').'&nbsp;'.s("Aucun import n'a couvert cette période");
 								$h .= '</div>';
@@ -122,7 +122,7 @@ class ImportUi {
 
 			$h .= '<div>';
 
-				if (in_array($eImport['status'], [ImportElement::FULL, ImportElement::PARTIAL]) === TRUE) {
+				if(in_array($eImport['status'], [ImportElement::FULL, ImportElement::PARTIAL]) === TRUE) {
 
 					$h.= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow?import='.$eImport['id'].'" class="color-text">';
 						$h.= \Asset::icon('chevron-right');
@@ -134,12 +134,12 @@ class ImportUi {
 						);
 					$h.= '</a>';
 
-				} else if ($eImport['status'] === ImportElement::NONE) {
+				} else if($eImport['status'] === ImportElement::NONE) {
 
 					$h.= \Asset::icon('chevron-right');
 					$h.= s("Aucun mouvement enregistré");
 
-				} else if ($eImport['status'] === ImportElement::ERROR) {
+				} else if($eImport['status'] === ImportElement::ERROR) {
 
 					$h.= \Asset::icon('chevron-right');
 					$h.= s("Cet import n'a pas pu être réalisé");

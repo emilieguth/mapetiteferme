@@ -60,7 +60,7 @@ class AccountLib extends AccountCrud {
 
 		foreach($cAccount as $eAccount) {
 
-			if (in_array($eAccount['id'], $eThirdParty['accounts']) === TRUE) {
+			if(in_array($eAccount['id'], $eThirdParty['accounts']) === TRUE) {
 
 				$cAccountByThirdParty->append($eAccount);
 

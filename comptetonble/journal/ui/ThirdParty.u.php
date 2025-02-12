@@ -60,7 +60,7 @@ class ThirdPartyUi {
 
 	public static function manage(\company\Company $eCompany, \Collection $cThirdParty): string {
 
-		if ($cThirdParty->empty() === true) {
+		if($cThirdParty->empty() === TRUE) {
 			return '<div class="util-info">'.
 				s("Aucun tiers n'a encore été créé.").
 				'</div>';

@@ -29,8 +29,8 @@ class OperationUi {
 		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*']);
 
 		$vatRateDefault = 0;
-		if ($eOperation['account']->exists() === TRUE) {
-			if ($eOperation['account']['vatRate'] !== NULL) {
+		if($eOperation['account']->exists() === TRUE) {
+			if($eOperation['account']['vatRate'] !== NULL) {
 				$vatRateDefault = $eOperation['account']['vatRate'];
 			} else if($eOperation['account']['vatAccount']->exists() === TRUE) {
 				$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
@@ -74,7 +74,7 @@ class OperationUi {
 			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);
 			$h .= $form->group(
 				self::p('date')->label.' '.\util\FormUi::asterisk(),
-				$form->date('date'.$suffix.'*', $defaultValues['date'] ?? '', ['disabled' => true, 'min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+				$form->date('date'.$suffix.'*', $defaultValues['date'] ?? '', ['disabled' => TRUE, 'min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
 			);
 			$h .= $form->group(
 				self::p('description')->label.' '.\util\FormUi::asterisk(),
@@ -92,8 +92,8 @@ class OperationUi {
 			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
 
 			$vatRateDefault = 0;
-			if ($eOperation['account']->exists() === TRUE) {
-				if ($eOperation['account']['vatRate'] !== NULL) {
+			if($eOperation['account']->exists() === TRUE) {
+				if($eOperation['account']['vatRate'] !== NULL) {
 					$vatRateDefault = $eOperation['account']['vatRate'];
 				} else if($eOperation['account']['vatAccount']->exists() === TRUE) {
 					$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];

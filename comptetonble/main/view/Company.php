@@ -121,7 +121,7 @@ class CompanyTemplate extends MainTemplate {
 
 				$company .= '<div class="nav-title-company">';
 					$company .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '4rem').'</div>';
-					$company .= '<a data-dropdown="bottom-start" data-dropdown-hover="true">'.encode($this->data->eCompany['name']).'  '.Asset::icon('chevron-down').'</a>';
+					$company .= '<a data-dropdown="bottom-start" data-dropdown-hover="TRUE">'.encode($this->data->eCompany['name']).'  '.Asset::icon('chevron-down').'</a>';
 					$company .= '<div class="dropdown-list bg-primary">';
 						foreach($this->data->cCompanyUser as $eCompany) {
 							$company .= '<a href="'.$eCompany->getHomeUrl().'" data-ajax-navigation="never" class="dropdown-item">'.\company\CompanyUi::getVignette($eCompany, '1.75rem').'&nbsp;&nbsp;'.encode($eCompany['name']).'</a>';

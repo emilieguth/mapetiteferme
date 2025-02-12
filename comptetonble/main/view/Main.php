@@ -175,7 +175,7 @@ class MainTemplate extends BaseTemplate {
 
 		$h = '<li>';
 
-		$h .= '<a class="nav-user nav-item" data-dropdown="bottom" data-dropdown-hover="true">';
+		$h .= '<a class="nav-user nav-item" data-dropdown="bottom" data-dropdown-hover="TRUE">';
 			$h .= \user\UserUi::getVignette($data->eUserOnline, '1.75rem');
 			$h .= \Asset::icon('chevron-down');
 		$h .= '</a>';

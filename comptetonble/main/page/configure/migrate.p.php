@@ -28,7 +28,7 @@
 			foreach($classes as $class) {
 				$libModule->buildModule($class);
 				list($package) = explode('\\', $class);
-				if (in_array($package, \company\CompanyLib::$specificPackages) === false) {
+				if(in_array($package, \company\CompanyLib::$specificPackages) === FALSE) {
 					continue;
 				}
 				echo $class."\n";

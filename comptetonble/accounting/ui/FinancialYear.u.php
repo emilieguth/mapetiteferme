@@ -35,7 +35,7 @@ class FinancialYearUi {
 
 	public function getManage(\company\Company $eCompany, \Collection $cFinancialYear): string {
 
-		if ($cFinancialYear->empty() === true) {
+		if($cFinancialYear->empty() === TRUE) {
 			return '<div class="util-info">'.s("Aucun exercice comptable n'a encore été enregistré").'</div>';
 		}
 
@@ -63,7 +63,7 @@ class FinancialYearUi {
 						$h .= '<tr>';
 
 						$h .= '<td class="td-min-content text-center">';
-							if ($eFinancialYear['status'] === FinancialYear::CLOSE) {
+							if($eFinancialYear['status'] === FinancialYear::CLOSE) {
 								$h .= $eFinancialYear['id'];
 							} else {
 								$h .= '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:update?id='.$eFinancialYear['id'].'" class="btn btn-sm btn-outline-primary">'.$eFinancialYear['id'].'</a>';
@@ -85,7 +85,7 @@ class FinancialYearUi {
 							};
 						$h .= '</td>';
 						$h .= '<td>';
-							if ($eFinancialYear['status'] === FinancialYearElement::OPEN) {
+							if($eFinancialYear['status'] === FinancialYearElement::OPEN) {
 								$h .= self::getAction($eCompany, $eFinancialYear, 'btn-outline-primary');
 							}
 						$h .= '</td>';
@@ -162,7 +162,7 @@ class FinancialYearUi {
 
 	public static function getYear(\accounting\FinancialYear $eFinancialYear): string {
 
-		if (substr($eFinancialYear['startDate'], 0, 4) === substr($eFinancialYear['endDate'], 0, 4)) {
+		if(substr($eFinancialYear['startDate'], 0, 4) === substr($eFinancialYear['endDate'], 0, 4)) {
 			return substr($eFinancialYear['startDate'], 0, 4);
 		}
 
@@ -172,7 +172,7 @@ class FinancialYearUi {
 
 	public function getFinancialYearTabs(\Closure $url, \Collection $cFinancialYear, \accounting\FinancialYear $eFinancialYearSelected): string {
 
-		$h = ' <a data-dropdown="bottom-start" data-dropdown-hover="true" data-dropdown-offset-x="2" class="nav-year">';
+		$h = ' <a data-dropdown="bottom-start" data-dropdown-hover="TRUE" data-dropdown-offset-x="2" class="nav-year">';
 			$h .= s("Exercice {year}", ['year' => self::getYear($eFinancialYearSelected).'  '.\Asset::icon('chevron-down')]);
 		$h .= '</a>';
 

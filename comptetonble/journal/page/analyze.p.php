@@ -12,12 +12,12 @@
 
 	Setting::set('main\viewAnalyze', 'bank');
 
-	if (get_exists('financialYear')) {
+	if(get_exists('financialYear')) {
 		$eFinancialYearSelected = \accounting\FinancialYearLib::getById(GET('financialYear'));
 	} else {
 		$eFinancialYearSelected = new \accounting\FinancialYear();
 	}
-	$data->eFinancialYearSelected = $eFinancialYearSelected->exists() === true ? $eFinancialYearSelected : $data->eFinancialYearCurrent;
+	$data->eFinancialYearSelected = $eFinancialYearSelected->exists() === TRUE ? $eFinancialYearSelected : $data->eFinancialYearCurrent;
 
 	$data->cOperation = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYearSelected);
 
@@ -28,12 +28,12 @@
 
 	Setting::set('main\viewAnalyze', 'charges');
 
-	if (get_exists('financialYear')) {
+	if(get_exists('financialYear')) {
 		$eFinancialYearSelected = \accounting\FinancialYearLib::getById(GET('financialYear'));
 	} else {
 		$eFinancialYearSelected = new \accounting\FinancialYear();
 	}
-	$data->eFinancialYearSelected = $eFinancialYearSelected->exists() === true ? $eFinancialYearSelected : $data->eFinancialYearCurrent;
+	$data->eFinancialYearSelected = $eFinancialYearSelected->exists() === TRUE ? $eFinancialYearSelected : $data->eFinancialYearCurrent;
 
 	[$data->cOperation, $data->cAccount] = \journal\AnalyzeLib::getChargeOperationsByMonth($data->eFinancialYearSelected);
 
@@ -44,12 +44,12 @@
 
 	Setting::set('main\viewAnalyze', 'result');
 
-	if (get_exists('financialYear')) {
+	if(get_exists('financialYear')) {
 		$eFinancialYearSelected = \accounting\FinancialYearLib::getById(GET('financialYear'));
 	} else {
 		$eFinancialYearSelected = new \accounting\FinancialYear();
 	}
-	$data->eFinancialYearSelected = $eFinancialYearSelected->exists() === true ? $eFinancialYearSelected : $data->eFinancialYearCurrent;
+	$data->eFinancialYearSelected = $eFinancialYearSelected->exists() === TRUE ? $eFinancialYearSelected : $data->eFinancialYearCurrent;
 
 	$data->cOperation = \journal\AnalyzeLib::getResultOperationsByMonth($data->eFinancialYearSelected);
 

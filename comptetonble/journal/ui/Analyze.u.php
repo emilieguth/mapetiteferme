@@ -24,7 +24,7 @@ class AnalyzeUi {
 
 	public function getBank(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
 
-		if ($cOperation->empty() === true) {
+		if($cOperation->empty() === TRUE) {
 
 			$h = '<div class="util-info">';
 				$h .= s("Le suivi de la trésorerie sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");
@@ -137,7 +137,7 @@ class AnalyzeUi {
 
 	public function getCharges(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation, \Collection $cAccount): string {
 
-		if ($cOperation->empty() === true) {
+		if($cOperation->empty() === TRUE) {
 
 			$h = '<div class="util-info">';
 				$h .= s("Le suivi des charges sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");
@@ -166,7 +166,7 @@ class AnalyzeUi {
 		$values = [];
 		$labels = [];
 		foreach($cAccount as $eAccount) {
-			if ($cOperation->offsetExists($eAccount['class']) === FALSE) {
+			if($cOperation->offsetExists($eAccount['class']) === FALSE) {
 				continue;
 			}
 			$values[] = 100 * ($cOperation->offsetGet($eAccount['class'])['total'] / $total);
@@ -237,7 +237,7 @@ class AnalyzeUi {
 
 	public function getResult(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
 
-		if ($cOperation->empty() === true) {
+		if($cOperation->empty() === TRUE) {
 
 			$h = '<div class="util-info">';
 				$h .= s("Le suivi du résultat sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");

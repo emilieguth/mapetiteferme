@@ -8,7 +8,7 @@ class FinancialYearLib extends FinancialYearCrud {
 
 	public static function closeFinancialYear(FinancialYear $eFinancialYear): void {
 
-		if ($eFinancialYear['status'] == FinancialYearElement::CLOSE) {
+		if($eFinancialYear['status'] == FinancialYearElement::CLOSE) {
 			throw new \NotExpectedAction('Financial year already closed');
 		}
 

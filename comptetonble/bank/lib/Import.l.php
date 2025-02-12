@@ -7,7 +7,7 @@ class ImportLib extends ImportCrud {
 
 		$cImport = self::getAll($eFinancialYear);
 		$startDate = $eFinancialYear['startDate'];
-		if ($eFinancialYear['endDate']) {
+		if($eFinancialYear['endDate']) {
 			$endDate = date('Y-m-d');
 		} else {
 			$endDate = $eFinancialYear['endDate'];
@@ -18,15 +18,15 @@ class ImportLib extends ImportCrud {
 		$endPeriod = NULL;
 		$currentPeriod = new Import();
 		for($currentDate = $startDate; $currentDate <= $endDate; $currentDate = date('Y-m-d', strtotime($currentDate.' +1 day'))) {
-			if ($startPeriod === NULL) {
+			if($startPeriod === NULL) {
 				$startPeriod = $currentDate;
 			}
 
 			$eImport = self::extractImportFromDate($cImport, $currentDate);
 
-			if ($endPeriod !== NULL) {
-				if ($eImport->exists() === FALSE) { // No corresponding import
-					if ($currentPeriod->exists() === TRUE) { // Last import existed
+			if($endPeriod !== NULL) {
+				if($eImport->exists() === FALSE) { // No corresponding import
+					if($currentPeriod->exists() === TRUE) { // Last import existed
 						$imports[] = [
 							'startPeriod' => $startPeriod,
 							'endPeriod' => $endPeriod,
@@ -35,7 +35,7 @@ class ImportLib extends ImportCrud {
 						$startPeriod = $currentDate;
 					}
 				} else {
-					if ($currentPeriod->exists() === FALSE) { // Last import did not exist
+					if($currentPeriod->exists() === FALSE) { // Last import did not exist
 						$imports[] = [
 							'startPeriod' => $startPeriod,
 							'endPeriod' => $endPeriod,
@@ -43,7 +43,7 @@ class ImportLib extends ImportCrud {
 						];
 						$startPeriod = $currentDate;
 					} else {
-						if ($currentPeriod['id'] !== $eImport['id']) { // Changed the import
+						if($currentPeriod['id'] !== $eImport['id']) { // Changed the import
 							$imports[] = [
 								'startPeriod' => $startPeriod,
 								'endPeriod' => $endPeriod,
@@ -75,14 +75,14 @@ class ImportLib extends ImportCrud {
 		$imports = [ImportElement::FULL => [], ImportElement::PARTIAL => [], ImportElement::ERROR => [], ImportElement::NONE => []];
 
 		foreach($cImport as $eImport) {
-			if (date('Y-m-d', strtotime($eImport['startDate'])) <= $date and date('Y-m-d', strtotime($eImport['endDate'])) >= $date) {
+			if(date('Y-m-d', strtotime($eImport['startDate'])) <= $date and date('Y-m-d', strtotime($eImport['endDate'])) >= $date) {
 				$imports[$eImport['status']][] = $eImport;
 			}
 		}
 
 		// On récupère l'import le plus pertinent
 		foreach($imports as $importList) {
-			if (count($importList) > 0) {
+			if(count($importList) > 0) {
 				return $importList[0];
 			}
 		}
@@ -135,10 +135,10 @@ class ImportLib extends ImportCrud {
 			$cashflows = \bank\OfxParserLib::extractOperations($xmlFile, $eAccount, $eImport);
 			$result = \bank\CashflowLib::insertMultiple($cashflows);
 
-			if (count($result['imported']) === 0) {
+			if(count($result['imported']) === 0) {
 				\Fail::log('Import::nothingImported');
 				$status = ImportElement::NONE;
-			} else if (count($result['alreadyImported']) > 0 or count($result['invalidDate']) > 0) {
+			} else if(count($result['alreadyImported']) > 0 or count($result['invalidDate']) > 0) {
 				$status = ImportElement::PARTIAL;
 			} else {
 				$status = ImportElement::FULL;

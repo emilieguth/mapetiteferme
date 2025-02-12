@@ -43,7 +43,7 @@ class CashflowUi {
 
 		\Asset::css('bank', 'cashflow.css');
 
-		if ($cCashflow->empty() === true) {
+		if($cCashflow->empty() === TRUE) {
 			return '<div class="util-info">'.
 				s("Aucun import bancaire n'a été réalisé pour l'exercice {year}", ['year' => \accounting\FinancialYearUi::getYear($eFinancialYearSelected)]).
 			'</div>';
@@ -80,7 +80,7 @@ class CashflowUi {
 				$lastMonth = '';
 				foreach($cCashflow as $eCashflow) {
 
-					if ($lastMonth === '' or $lastMonth !== substr($eCashflow['date'], 0, 7)) {
+					if($lastMonth === '' or $lastMonth !== substr($eCashflow['date'], 0, 7)) {
 						$lastMonth = substr($eCashflow['date'], 0, 7);
 
 							$h .= '<tr class="group-row">';
@@ -121,7 +121,7 @@ class CashflowUi {
 						$h .= '</td>';
 
 					$h .= '<td class="td-min-content text-center">';
-					if ($eCashflow['status'] === CashflowElement::ALLOCATED) {
+					if($eCashflow['status'] === CashflowElement::ALLOCATED) {
 						$h .= '<a class="cashflow-status-label cashflow-status-'.$eCashflow['status'].'" href="'.\company\CompanyUi::urlJournal($eCompany).'/?cashflow='.$eCashflow['id'].'">';
 							$h .= CashflowUi::p('status')->values[$eCashflow['status']];
 						$h .= '</a>';
@@ -133,7 +133,7 @@ class CashflowUi {
 					$h .= '</td>';
 
 					$h .= '<td>';
-							if (
+							if(
 								$eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
 								&& $eCashflow['date'] <= $eFinancialYearSelected['endDate']
 								&& $eCashflow['date'] >= $eFinancialYearSelected['startDate']
@@ -158,13 +158,13 @@ class CashflowUi {
 		$h .= '<div class="dropdown-list">';
 			$h .= '<div class="dropdown-title">'.self::getName($eCashflow).'</div>';
 
-			if ($eCashflow['status'] === CashflowElement::ALLOCATED) {
+			if($eCashflow['status'] === CashflowElement::ALLOCATED) {
 				$confirm = s("Cette action supprimera les écritures actuellement liées à l'opération bancaire qui repassera l'opération bancaire au statut attente. Confirmez-vous ?");
 				$h .= '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:deAllocate" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.$confirm.'">';
 					$h .= s("Annuler les écritures liées");
 				$h .= '</a>';
 
-			} else if ($eCashflow['status'] === CashflowElement::WAITING) {
+			} else if($eCashflow['status'] === CashflowElement::WAITING) {
 				$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:allocate?id='.$eCashflow['id'].'" class="dropdown-item">';
 					$h .= s("Créer de nouvelles écritures");
 				$h .= '</a>';
@@ -247,7 +247,7 @@ class CashflowUi {
 				$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
 			$h .= '</div>';
 
-			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.recalculateAmounts(); return true;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-amount="" class="btn btn-outline-secondary">';
+			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-amount="" class="btn btn-outline-secondary">';
 				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';

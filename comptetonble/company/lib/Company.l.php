@@ -121,7 +121,7 @@ class CompanyLib extends CompanyCrud {
 
 	public static function getDatabaseName(Company $eCompany): string {
 
-		if (LIME_ENV === 'prod') {
+		if(LIME_ENV === 'prod') {
 			return'comptetonble_'.$eCompany['id'];
 		}
 
@@ -145,7 +145,7 @@ class CompanyLib extends CompanyCrud {
 		foreach($classes as $class) {
 
 			list($package) = explode('\\', $class);
-			if (in_array($package, self::$specificPackages)) {
+			if(in_array($package, self::$specificPackages)) {
 				(new \ModuleAdministration($class))->init();
 			}
 

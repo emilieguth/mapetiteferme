@@ -17,7 +17,7 @@ class JournalUi {
 
 			$h .= '<div>';
 				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-				if (get_exists('cashflow') === false) {
+				if(get_exists('cashflow') === FALSE) {
 					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
 				}
 			$h .= '</div>';
@@ -55,7 +55,7 @@ class JournalUi {
 
 		$h .= '</div>';
 
-		if ($eCashflow->exists() === TRUE) {
+		if($eCashflow->exists() === TRUE) {
 			$h .= '<div class="util-block-search stick-xs">';
 				$h .= s(
 					"Vous visualisez actuellement les écritures correspondant à l'opération bancaire du {date}, \"{memo}\" d'un {type} de {amount}.",
@@ -80,7 +80,7 @@ class JournalUi {
 		\Search $search = new \Search()
 	): string {
 
-		if ($cOperation->empty() === true) {
+		if($cOperation->empty() === TRUE) {
 			return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
 		}
 		\Asset::js('util', 'form.js');
@@ -120,7 +120,7 @@ class JournalUi {
 
 							$h .= '<td>';
 								$h .= encode($eOperation['description']);
-								if ($eOperation['accountLabel'] !== NULL) {
+								if($eOperation['accountLabel'] !== NULL) {
 									$h .= '<div class="operation-info">'.s("N° compte : {accountLabel}", ['accountLabel' => encode($eOperation['accountLabel'])]).'</div>';
 								}
 
@@ -152,7 +152,7 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
-								if (
+								if(
 									$eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
 									&& $eOperation['date'] <= $eFinancialYearSelected['endDate']
 									&& $eOperation['date'] >= $eFinancialYearSelected['startDate']

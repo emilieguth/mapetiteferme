@@ -28,7 +28,7 @@
 
 		// Ne pas ouvrir le bloc de recherche pour ces champs
 		$search->set('financialYear', $data->eFinancialYearSelected);
-		if (GET('import')) {
+		if(GET('import')) {
 			$search->set('import', GET('import'));
 		}
 
@@ -93,7 +93,7 @@
 
 		$fw = new FailWatch();
 
-		if ($data->eCashflow->exists() === FALSE) {
+		if($data->eCashflow->exists() === FALSE) {
 			\bank\Cashflow::fail('internal');
 		}
 

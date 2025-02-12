@@ -1,5 +1,5 @@
 document.delegateEventListener('autocompleteBeforeQuery', '[data-account="bank-cashflow-allocate"]', function(e) {
-    if (e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
+    if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
         return;
     }
     const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
@@ -17,7 +17,7 @@ class Cashflow {
         const amountElement = event.detail.input.firstParent('div.operation-write').qs('[name^="amount["]');
         const amount = amountElement.getAttribute('value');
         const vatRate = parseFloat(event.detail.input.firstParent('div.operation-write').qs('[name^="vatRate["]').getAttribute('value'));
-        if (vatRate === 0.0) {
+        if(vatRate === 0.0) {
             const newAmount = (amount / (1 + event.detail.vatRate / 100)).toFixed(2);
             amountElement.setAttribute('value', Math.abs(newAmount));
         }
@@ -85,7 +85,7 @@ class Cashflow {
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('#get-allocate-total-amount').innerHTML);
 
-        if (sum !== totalAmount) {
+        if(sum !== totalAmount) {
             var difference = totalAmount - sum;
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
             qs('#cashflow-allocate-difference-value').innerHTML = Math.abs(difference).toFixed(2);
@@ -102,7 +102,7 @@ class Cashflow {
 
         Array.from(operationDocuments).forEach((operationDocument) => {
 
-            if (operationDocument.getAttribute('value') === null) {
+            if(operationDocument.getAttribute('value') === null) {
                 operationDocument.setAttribute('value', documentValue);
             }
 

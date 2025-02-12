@@ -15,11 +15,11 @@
 
 		// Apply default bank account label if the class is a bank account class.
 		$label = '';
-		if (get_exists('label') and mb_strlen(GET('label') > 0)) {
+		if(get_exists('label') and mb_strlen(GET('label') > 0)) {
 			$label = GET('label');
-		} else if ($eAccount->exists() === TRUE and $eAccount['class'] === \Setting::get('accounting\bankAccountClass')) {
+		} else if($eAccount->exists() === TRUE and $eAccount['class'] === \Setting::get('accounting\bankAccountClass')) {
 			$eAccountBank = \bank\AccountLib::getDefaultAccount();
-			if ($eAccountBank->exists() === TRUE) {
+			if($eAccountBank->exists() === TRUE) {
 				$label = $eAccountBank['label'];
 			}
 		}

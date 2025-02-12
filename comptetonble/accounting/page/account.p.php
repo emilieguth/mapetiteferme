@@ -19,7 +19,7 @@
 
 		$data->cAccount = \accounting\AccountLib::getAll($query);
 
-		if (post_exists('thirdParty') === TRUE) {
+		if(post_exists('thirdParty') === TRUE) {
 			$data->cAccount = \accounting\AccountLib::orderAccountsWithThirdParty($thirdParty, $data->cAccount);
 
 		}

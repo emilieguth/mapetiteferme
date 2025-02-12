@@ -21,7 +21,7 @@ class AccountLib extends AccountCrud {
 			->whereIsDefault(TRUE)
 			->get($eAccount);
 
-		if ($eAccount->exists() === TRUE) {
+		if($eAccount->exists() === TRUE) {
 			return $eAccount;
 		}
 
@@ -44,7 +44,7 @@ class AccountLib extends AccountCrud {
 			->whereAccountId($accountId)
 			->get($eAccount);
 
-		if ($eAccount->exists() === false) {
+		if($eAccount->exists() === FALSE) {
 
 			// Check if there is already an account. Set current account to default if there is none.
 			$cAccountDefault = Account::model()->whereIsDefault(TRUE)->count();
@@ -66,7 +66,7 @@ class AccountLib extends AccountCrud {
 		parent::update($e, $properties);
 
 		// Quick label update
-		if (in_array('label', $properties) === TRUE) {
+		if(in_array('label', $properties) === TRUE) {
 			\journal\OperationLib::updateAccountLabels($e);
 		}
 	}

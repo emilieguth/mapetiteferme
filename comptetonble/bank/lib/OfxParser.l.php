@@ -11,7 +11,7 @@ class OfxParserLib {
 
 		foreach($fileArray as $index => $line) {
 
-			if (preg_match('/<([A-Z]+)>(.*)/', $line, $matches) and strlen($matches[2]) > 0) {
+			if(preg_match('/<([A-Z]+)>(.*)/', $line, $matches) and strlen($matches[2]) > 0) {
 				$fileArray[$index] = '<'.$matches[1].'>'.$matches[2].'</'.$matches[1].'>';
 			}
 

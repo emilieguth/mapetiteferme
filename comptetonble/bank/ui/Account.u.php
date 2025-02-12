@@ -26,7 +26,7 @@ class AccountUi {
 
 	public function list(\company\Company $eCompany ,\Collection $cAccount): string {
 
-		if ($cAccount->empty() === TRUE) {
+		if($cAccount->empty() === TRUE) {
 			return '<div class="util-info">'.s("Aucun compte bancaire n'a encore été enregistré. Lorsque vous effectuerez votre premier import de relevé bancaire, le compte bancaire rattaché sera automatiquement créé.").'</div>';
 		}
 

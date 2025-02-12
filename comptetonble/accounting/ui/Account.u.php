@@ -23,7 +23,7 @@ class AccountUi {
 
 	public function getManage(\company\Company $eCompany, \Collection $cAccount): string {
 
-		if ($cAccount->empty() === true) {
+		if($cAccount->empty() === TRUE) {
 			return '<div class="util-info">'.s("Aucun compte n'a encore été enregistré").'</div>';
 		}
 
@@ -76,7 +76,7 @@ class AccountUi {
 						$h .= '</td>';
 
 						$h .= '<td>';
-							if ($eAccount['vatAccount']->exists() === TRUE) {
+							if($eAccount['vatAccount']->exists() === TRUE) {
 								$h .= encode($eAccount['vatAccount']['vatRate']).'%';
 							} else {
 								$h .= $eAccount['vatRate'] ? $eAccount['vatRate'].'%' : '';
@@ -100,9 +100,9 @@ class AccountUi {
 		\Asset::css('media', 'media.css');
 
 		$vatRate = 0.0;
-		if ($eAccount['vatRate'] !== NULL) {
+		if($eAccount['vatRate'] !== NULL) {
 			$vatRate = $eAccount['vatRate'];
-		} else if ($eAccount['vatAccount']->exists() === TRUE) {
+		} else if($eAccount['vatAccount']->exists() === TRUE) {
 			$vatRate = $eAccount['vatAccount']['vatRate'];
 		}
 

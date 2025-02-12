@@ -2,7 +2,7 @@ class Company {
 
 	static getCompanyDataBySiret(target) {
 
-		if (target.value.length !== 14) {
+		if(target.value.length !== 14) {
 			return;
 		}
 
@@ -15,7 +15,7 @@ class Company {
 			.url('https://suggestions.pappers.fr/v2?cibles=siret&q='+ siret)
 			.fetch()
 			.then((response) => {
-				if (response.resultats_siret[0] === undefined) {
+				if(response.resultats_siret[0] === undefined) {
 					return;
 				}
 				form.qs('[name="name"]').value = response.resultats_siret[0].nom_entreprise;

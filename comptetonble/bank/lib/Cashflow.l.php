@@ -26,7 +26,7 @@ class CashflowLib extends CashflowCrud {
 
 			$isAlreadyImportedTransaction = (Cashflow::model()->whereFitid($cashflow['fitid'])->count() > 0);
 
-			if ($isAlreadyImportedTransaction === true) {
+			if($isAlreadyImportedTransaction === TRUE) {
 				$alreadyImported[] = $cashflow['fitid'];
 				continue;
 			}
@@ -38,7 +38,7 @@ class CashflowLib extends CashflowCrud {
 			};
 			$date = substr($cashflow['date'], 0, 4).'-'.substr($cashflow['date'], 4, 2).'-'.substr($cashflow['date'], 6, 2);
 
-			if (\util\DateLib::isValid($date) === FALSE) {
+			if(\util\DateLib::isValid($date) === FALSE) {
 				$invalidDate[] = $cashflow['fitid'];
 				continue;
 			}
@@ -97,7 +97,7 @@ class CashflowLib extends CashflowCrud {
 
 			// Ce type d'écriture a un compte de TVA correspondant
 			$eAccount = $cAccounts[$account] ?? new Account();
-			if ($eAccount['vatAccount']->exists() === true) {
+			if($eAccount['vatAccount']->exists() === TRUE) {
 				$eOperation['vatAccount'] = $cAccounts[$account]['vatAccount'];
 
 				// Ajout de l'entrée de compte de TVA correspondante
@@ -115,17 +115,17 @@ class CashflowLib extends CashflowCrud {
 				};
 				$eOperationTva['amount'] = round($eOperation['amount'] * $eOperation['vatRate'] / 100, 2);
 				$cOperation->append($eOperationTva);
-			} else if ($eOperation['vatRate'] !== 0.0) {
+			} else if($eOperation['vatRate'] !== 0.0) {
 				\Fail::log('Cashflow::allocate.tvaInconsistency');
 			}
 
 			$cOperation->append($eOperation);
 
 			// Vérification du tiers et affectation
-			if (isset($input['thirdParty'][$index]) === true) {
+			if(isset($input['thirdParty'][$index]) === TRUE) {
 				$thirdParty = $input['thirdParty'][$index];
 				$eThirdParty = \journal\ThirdPartyLib::getByName($thirdParty);
-				if (in_array($eOperation['account']['id'], $eThirdParty['accounts']) === FALSE) {
+				if(in_array($eOperation['account']['id'], $eThirdParty['accounts']) === FALSE) {
 					$eThirdParty['accounts'][] = $eOperation['account']['id'];
 					$cThirdParty->append($eThirdParty);
 				}

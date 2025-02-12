@@ -183,8 +183,8 @@ new AdaptativeView('index', function($data, DocTemplate $t) {
 			[
 				s("Série clôturée"),
 				'finished',
-				s("<example>true</example> si la série est clôturée, <example>false</example> sinon", ['example' => '<div class="doc-example">']),
-				'false'
+				s("<example>TRUE</example> si la série est clôturée, <example>FALSE</example> sinon", ['example' => '<div class="doc-example">']),
+				'FALSE'
 			],
 			[
 				s("Unité de récolte"),

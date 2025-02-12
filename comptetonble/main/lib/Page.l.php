@@ -40,7 +40,7 @@ class PageLib {
 			$data->cCompanyUser = \company\CompanyLib::getOnline();
 			$data->eCompany = \company\CompanyLib::getById(GET('company'));
 
-			if ($data->eCompany->empty() === FALSE) {
+			if($data->eCompany->empty() === FALSE) {
 				\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 			}
 

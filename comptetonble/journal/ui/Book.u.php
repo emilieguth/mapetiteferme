@@ -64,7 +64,7 @@ class BookUi {
 		\Search $search = new \Search()
 	): string {
 
-		if ($ccOperation->empty() === true) {
+		if($ccOperation->empty() === TRUE) {
 			return '<div class="util-info">'. \s("Aucune écriture n'a encore été enregistrée") .'</div>';
 		}
 		\Asset::js('util', 'form.js');
@@ -125,7 +125,7 @@ class BookUi {
 
 								$h .= '<td>';
 									$h .= \encode($eOperation['description']);
-									if ($eOperation['accountLabel'] !== NULL) {
+									if($eOperation['accountLabel'] !== NULL) {
 										$h .= '<div class="operation-info">'.s("N° compte : {accountLabel}", ['accountLabel' => encode($eOperation['accountLabel'])]) .'</div>';
 									}
 
