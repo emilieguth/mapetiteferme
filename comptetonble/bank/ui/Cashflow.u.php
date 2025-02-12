@@ -159,7 +159,7 @@ class CashflowUi {
 			$h .= '<div class="dropdown-title">'.self::getName($eCashflow).'</div>';
 
 			if ($eCashflow['status'] === CashflowElement::ALLOCATED) {
-				$confirm = s("Annuler les écritures repassera la transaction en Attente, il faudra réattribuer des écritures. Confirmez-vous ?");
+				$confirm = s("Cette action supprimera les écritures actuellement liées à l'opération bancaire qui repassera l'opération bancaire au statut attente. Confirmez-vous ?");
 				$h .= '<a data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:deAllocate" post-id="'.$eCashflow['id'].'" class="dropdown-item" data-confirm="'.$confirm.'">';
 					$h .= s("Annuler les écritures liées");
 				$h .= '</a>';

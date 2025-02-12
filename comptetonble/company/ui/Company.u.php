@@ -149,6 +149,9 @@ class CompanyUi {
 					$h .= '</span>';
 				$h .= '</a>';
 
+				$h .= $this->getJournalMenu($eCompany, prefix: $prefix, tab: $tab);
+
+
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/analyze/bank" class="company-tab '.($tab === 'analyze' ? 'selected' : '').'" data-tab="analyze">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('bar-chart').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('bar-chart-fill').'</span>';
@@ -290,18 +293,10 @@ class CompanyUi {
 
 	}
 
-	public function getJournalSubNav(Company $eCompany): string {
-
-		$selectedView = \Setting::get('main\viewJournal');
+	public function getJournalSubNav(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
 
 		$h = '<nav id="company-subnav">';
-		$h .= '<div class="company-subnav-wrapper">';
-
-		foreach($this->getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
-			$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
-		}
-
-		$h .= '</div>';
+		$h .= $this->getJournalMenu($eCompany, tab: 'journal');
 		$h .= '</nav>';
 
 		return $h;
@@ -314,7 +309,11 @@ class CompanyUi {
 			'journal' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/',
 				'label' => s("Journal comptable")
-			]
+			],
+			'book' => [
+			'url' => CompanyUi::urlJournal($eCompany).'/book',
+			'label' => s("Grand livre (TODO)")
+		]
 		];
 
 	}
@@ -404,8 +403,26 @@ class CompanyUi {
 	public function getBankSubNav(Company $eCompany): string {
 
 		$h = '<nav id="company-subnav">';
-			$h .= $this->getBankMenu($eCompany, tab: 'bank');
+		$h .= $this->getBankMenu($eCompany, tab: 'bank');
 		$h .= '</nav>';
+
+		return $h;
+
+	}
+	public function getJournalMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
+
+		$selectedView = ($tab === 'journal') ? \Setting::get('main\viewJournal') : NULL;
+
+		$h = '<div class="company-subnav-wrapper">';
+
+			foreach($this->getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+
+				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
+					$h .= $prefix.'<span>'.$label.'</span>';
+				$h .= '</a>';
+			}
+
+		$h .= '</div>';
 
 		return $h;
 
@@ -417,12 +434,12 @@ class CompanyUi {
 
 		$h = '<div class="company-subnav-wrapper">';
 
-		foreach($this->getStatementCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+			foreach($this->getStatementCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 
-			$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
-			$h .= $prefix.'<span>'.$label.'</span>';
-			$h .= '</a>';
-		}
+				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
+					$h .= $prefix.'<span>'.$label.'</span>';
+				$h .= '</a>';
+			}
 
 		$h .= '</div>';
 
@@ -434,7 +451,7 @@ class CompanyUi {
 	public function getStatementSubNav(Company $eCompany): string {
 
 		$h = '<nav id="company-subnav">';
-		$h .= $this->getStatementMenu($eCompany, tab: 'statement');
+			$h .= $this->getStatementMenu($eCompany, tab: 'statement');
 		$h .= '</nav>';
 
 		return $h;

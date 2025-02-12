@@ -32,7 +32,7 @@ class OperationLib extends OperationCrud {
 			->whereType($search->get('type'), if: $search->get('type'));
 
 	}
-	public static function getAll(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
+	public static function getAllForJournal(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
 		return self::applySearch($search)
 			->select(
@@ -40,7 +40,7 @@ class OperationLib extends OperationCrud {
 				+ ['account' => ['class', 'description']]
 				+ ['thirdParty' => ['name']]
 			)
-			->sort($hasSort === TRUE ? $search->buildSort() : ['accountLabel' => SORT_ASC, 'date' => SORT_DESC])
+			->sort($hasSort === TRUE ? $search->buildSort() : ['account' => SORT_ASC, 'date' => SORT_DESC])
 			->getCollection(NULL, NULL, 'id');
 
 	}

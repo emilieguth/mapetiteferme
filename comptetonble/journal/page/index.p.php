@@ -30,7 +30,7 @@
 			$search->set('cashflow', GET('cashflow'));
 		}
 
-		$data->cOperation = \journal\OperationLib::getAll($search, $hasSort);
+		$data->cOperation = \journal\OperationLib::getAllForJournal($search, $hasSort);
 		$data->cOperationGrouped = $hasSort ? new \Collection() : \journal\OperationLib::getGrouped($search);
 		$data->cAccount = \accounting\AccountLib::getAll();
 
