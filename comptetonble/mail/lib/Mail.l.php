@@ -16,6 +16,7 @@ class MailLib {
 	protected ?string $bodyText = NULL;
 	protected ?string $bodyHtml = NULL;
 	protected ?string $subject = NULL;
+	protected ?string $template = NULL;
 
 	protected array $attachments = [];
 
@@ -201,11 +202,87 @@ class MailLib {
 
 	}
 
-	private static function doSend(Email $eEmail) {
+	private static function doSendWithAPI(Email $eEmail) {
+
+		$server = \Setting::get('mail\smtpServers')[$eEmail['server']];
+
+		$headers = [
+			'Accept: application/json',
+			'Content-Type: application/json',
+			'Api-Key: '.$server['apiKey'],
+		];
+
+		$to = [];
+		foreach($eEmail['to'] as $email) {
+			$to[] = ['email' => $email];
+		}
+
+		$data = [
+			'sender' => [
+				'name' => $eEmail['fromName'],
+				'email' => $eEmail['fromEmail'] ?? $server['from'],
+			],
+			'to' => $to,
+			'subject' => $eEmail['subject'],
+			'htmlContent' => $eEmail['html'],
+			'textContent' => $eEmail['text'],
+		];
+
+		if (count($eEmail['cc']) > 0) {
+
+			$cc = [];
+			foreach($eEmail['cc'] as $email) {
+				$cc[] = ['email' => $email];
+			}
+
+			$data['cc'] = $cc;
+
+		}
+
+		if (count($eEmail['bcc']) > 0) {
+
+			$bcc = [];
+			foreach($eEmail['bcc'] as $email) {
+				$bcc[] = ['email' => $email];
+			}
+
+			$data['bcc'] = $bcc;
+		}
+
+		if($eEmail['replyTo'] !== NULL) {
+			$data['replyTo'] = ['email' => $eEmail['replyTo']];
+		}
+
+		$attachments = unserialize($eEmail['attachments']);
+
+		if(count($attachments) > 0) {
+
+			$data['attachment'] = [];
+			foreach($attachments as $attachment) {
+				$data['attachment'][] = ['content' => base64_encode($attachment['content']), 'name' => $attachment['name']];
+			}
+
+		}
+
+		$ch = curl_init();
+
+		curl_setopt_array($ch, [
+			CURLOPT_URL => $server['apiUrl'],
+			CURLOPT_HEADER => 1,
+			CURLOPT_HTTPHEADER => $headers,
+			CURLOPT_POSTFIELDS => json_encode($data),
+		]);
+
+		curl_exec($ch);
+
+		curl_close($ch);
+	}
+	private static function doSendWithSMTP(Email $eEmail) {
+
+		$server = \Setting::get('mail\smtpServers')[$eEmail['server']];
+
 
 		foreach($eEmail['to'] as $to) {
-
-			$server = \Setting::get('mail\smtpServers')[$eEmail['server']];
 
 			$mail = new \PHPMailer\PHPMailer\PHPMailer();
 			$mail->isSMTP();
@@ -250,6 +327,21 @@ class MailLib {
 			}
 
 			$mail->send();
+
+		}
+	}
+
+	private static function doSend(Email $eEmail) {
+
+		$server = \Setting::get('mail\smtpServers')[$eEmail['server']];
+
+		if(isset($server['apiKey']) === TRUE) {
+
+			self::doSendWithAPI($eEmail);
+
+ 		} else {
+
+			self::doSendWithSMTP($eEmail);
 
 		}
 
