@@ -102,6 +102,21 @@
     ]);
 
   })
+	->create(function($data) {
+
+		$data->eEmployeeLink = \company\EmployeeLib::getById(GET('employee'));
+
+		if(
+			$data->eEmployeeLink->notEmpty() and
+			$data->eEmployeeLink['company']['id'] !== $data->e['company']['id']
+		) {
+			throw new NotExpectedAction('Inconsistency');
+		}
+
+		throw new ViewAction($data);
+
+	})
+	->doCreate(fn($data) => throw new RedirectAction(\company\CompanyUi::url($data->e['company']).'/employee:manage?company='.$data->e['company']['id'].'&success=company:Employee::created'))
   ->update()
   ->doUpdate(fn($data) => throw new ViewAction($data))
   ->doDelete(fn($data) => throw new RedirectAction(\company\CompanyUi::url($data->e['company']).'/employee:manage?company='.$data->e['company']['id'].'&success=company:Employee::deleted'));

@@ -55,7 +55,7 @@ switch(LIME_ENV) {
 }
 
 Feature::set('user\ban', TRUE);
-Setting::set('user\signUpRoles', ['customer', 'employee']);
+Setting::set('user\signUpRoles', ['employee']);
 Setting::set('user\signUpView', 'main/index:signUp');
 
 Page::construct(function($data) {

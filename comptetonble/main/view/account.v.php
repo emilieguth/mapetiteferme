@@ -57,6 +57,23 @@ new AdaptativeView('index', function($data, MainTemplate $t) {
 
 		}
 
+		if($data->canUpdate['drop']) {
+
+			$h .= '<a href="/user/settings:dropAccount" class="bg-danger util-button">';
+
+				$h .= '<h4>';
+				if($data->userDeletedAt) {
+					$h .= s("Annuler la fermeture de mon compte");
+				} else {
+					$h .= s("Fermer mon compte");
+				}
+				$h .= '</h4>';
+				$h .= \Asset::icon('trash');
+
+			$h .= '</a>';
+
+		}
+
 	$h .= '</div>';
 
 	echo $h;

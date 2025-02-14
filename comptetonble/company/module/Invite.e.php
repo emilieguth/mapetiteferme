@@ -3,6 +3,13 @@ namespace company;
 
 class Invite extends InviteElement {
 
+	public static function getSelection(): array {
+
+		return parent::getSelection() + [
+				'employee' => ['user'],
+			];
+
+	}
 
   public function isValid(): bool {
 

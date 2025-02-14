@@ -44,7 +44,7 @@ class EmployeeModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
-			'user' => ['element32', 'user\User', 'cast' => 'element'],
+			'user' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
 			'company' => ['element32', 'company\Company', 'cast' => 'element'],
 			'companyStatus' => ['enum', [\company\Employee::ACTIVE, \company\Employee::CLOSED], 'cast' => 'enum'],
 			'status' => ['enum', [\company\Employee::INVITED, \company\Employee::IN, \company\Employee::OUT], 'cast' => 'enum'],

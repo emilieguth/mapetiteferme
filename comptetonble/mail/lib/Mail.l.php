@@ -268,7 +268,8 @@ class MailLib {
 
 		curl_setopt_array($ch, [
 			CURLOPT_URL => $server['apiUrl'],
-			CURLOPT_HEADER => 1,
+			CURLOPT_HEADER => FALSE,
+			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_POSTFIELDS => json_encode($data),
 		]);
@@ -281,18 +282,18 @@ class MailLib {
 
 		$server = \Setting::get('mail\smtpServers')[$eEmail['server']];
 
-
 		foreach($eEmail['to'] as $to) {
 
 			$mail = new \PHPMailer\PHPMailer\PHPMailer();
-			$mail->isSMTP();
 			$mail->Host = $server['host'];
 			$mail->Port = $server['port'];
 			$mail->CharSet = 'UTF-8';
+			$mail->isSMTP();
 			$mail->SMTPAuth = TRUE;
+			$mail->AuthType = 'LOGIN';
 			$mail->Username = $server['user'];
 			$mail->Password = $server['password'];
-			$mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+			$mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
 
 			$mail->setFrom($eEmail['fromEmail'] ?? $server['from'], $eEmail['fromName']);
 			$mail->addAddress($to);
@@ -335,7 +336,7 @@ class MailLib {
 
 		$server = \Setting::get('mail\smtpServers')[$eEmail['server']];
 
-		if(isset($server['apiKey']) === TRUE) {
+		if($server['mode'] === 'api') {
 
 			self::doSendWithAPI($eEmail);
 

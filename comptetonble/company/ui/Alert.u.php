@@ -43,8 +43,8 @@ class AlertUi {
 			'Employee::created' => s("L'utilisateur a bien été ajouté à l'équipe de l'entreprise !"),
 			'Employee::deleted' => s("L'utilisateur a bien été retiré de l'équipe de l'entreprise !"),
 
-			'Invite::created' => s("L'utilisateur a bien été invité à rejoindre l'équipe de l'entreprise !"),
-			'Invite::extended' => s("L'invitation a bien été prolongée et un e-mail avec un nouveau lien a été envoyé à la personne !"),
+			'Invite::created' => s("Un email a bien été envoyé pour rejoindre l'équipe de l'entreprise !"),
+			'Invite::extended' => s("L'invitation a bien été prolongée et un e-mail avec un nouveau lien a été renvoyé !"),
 			'Invite::deleted' => s("L'invitation à rejoindre l'entreprise a bien été supprimée !"),
 
 			default => null

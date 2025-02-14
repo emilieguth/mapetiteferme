@@ -16,7 +16,7 @@ Company:
 
 Employee:
   id: serial32
-  user: user\User
+  user: ?user\User
   company: company\Company
   companyStatus: enum(ACTIVE, CLOSED) = ACTIVE
   status: enum(INVITED, IN, OUT) = INVITED

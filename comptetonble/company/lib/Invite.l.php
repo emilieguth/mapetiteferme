@@ -67,7 +67,7 @@ class InviteLib extends InviteCrud {
 	public static function accept(Invite $e, \user\User $eUser, bool $bypassExistingUser = FALSE): bool {
 
 		$e->expects([
-			'type', 'status',
+			'status',
 			'company' => ['name'],
 			'employee' => ['user'],
 		]);
@@ -77,14 +77,6 @@ class InviteLib extends InviteCrud {
 		}
 
 		if($eUser->empty()) {
-			return FALSE;
-		}
-
-		// Le cas où le companyer est associé à un utilisateur existant est géré à part
-		if(
-			$bypassExistingUser === FALSE and
-			$e['company']['user']->notEmpty()
-		) {
 			return FALSE;
 		}
 

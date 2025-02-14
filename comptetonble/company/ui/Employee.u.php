@@ -126,7 +126,7 @@ class EmployeeUi {
     $h .= '</h1>';
 
     $h .= '<div>';
-      $h .= '<a href="'.CompanyUi::url($eCompany).'/invite:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter une personne dans l'équipe").'</a>';
+      $h .= '<a href="'.CompanyUi::url($eCompany).'/employee:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Inviter une personne dans l'équipe").'</a>';
     $h .= '</div>';
 
     $h .= '</div>';
@@ -184,10 +184,10 @@ class EmployeeUi {
                   }
                 $h .= '</div>';
                 $h .= '<div class="mt-1">';
-                  $h .= '<a data-ajax="/company/invite:doDelete" post-id="'.$eInvite['id'].'" class="btn btn-transparent">';
+                  $h .= '<a data-ajax="/company/invite:doDelete" post-company="'.$eCompany['id'].'" post-id="'.$eInvite['id'].'" class="btn btn-transparent">';
                     $h .= s("Supprimer");
                   $h .= '</a> ';
-                  $h .= '<a data-ajax="/company/invite:doExtend" post-id="'.$eInvite['id'].'" data-confirm="'.s("Voulez-vous vraiment renvoyer un mail d'invitation à cette personne ?").'" class="btn btn-transparent">';
+                  $h .= '<a data-ajax="/company/invite:doExtend" post-company="'.$eCompany['id'].'" post-id="'.$eInvite['id'].'" data-confirm="'.s("Voulez-vous vraiment renvoyer un mail d'invitation à cette personne ?").'" class="btn btn-transparent">';
                     $h .= s("Renvoyer l'invitation");
                   $h .= '</a>';
                 $h .= '</div>';
