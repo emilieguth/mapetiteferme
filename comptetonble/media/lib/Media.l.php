@@ -38,7 +38,7 @@ abstract class MediaLib {
 	/**
 	 * Get module for this type of image
 	 *
-	 * @return \Module
+	 * @return \ModuleModel
 	 */
 	public function getModel(): ?\ModuleModel {
 
@@ -70,7 +70,7 @@ abstract class MediaLib {
 	 * Puts a media on the server after cropping it if necessary
 	 *
 	 */
-	public function putBasename(\Element $eElement, &$hash, string $basename, array $bounds, int $fileType = NULL): bool {
+	public function putBasename(\Element $eElement, &$hash, string $basename, array $bounds, ?int $fileType = NULL): bool {
 
 		try {
 			$resource = new \Imagick($basename);
@@ -86,7 +86,7 @@ abstract class MediaLib {
 	 * Puts a media from a file
 	 *
 	 */
-	public function putFile(\Element $eElement, &$hash, string $file, array $bounds, int $fileType = NULL): bool {
+	public function putFile(\Element $eElement, &$hash, string $file, array $bounds, ?int $fileType = NULL): bool {
 
 		try {
 			$resource = new \Imagick($file);
@@ -102,7 +102,7 @@ abstract class MediaLib {
 	 * Puts a media on the server after cropping it if necessary
 	 *
 	 */
-	public function putImagick(\Element $eElement, &$hash, \Imagick $resource, array $bounds, int $fileType = NULL): bool {
+	public function putImagick(\Element $eElement, &$hash, \Imagick $resource, array $bounds, ?int $fileType = NULL): bool {
 
 		if($this->regenerate) {
 			$hash = NULL;
@@ -159,7 +159,7 @@ abstract class MediaLib {
 
 		try {
 			array_expects($bounds, ['top', 'left', 'width', 'height']);
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 			throw new \NotExistsAction('Missing top, left, width, height properties in bounds parameter');
 		}
 

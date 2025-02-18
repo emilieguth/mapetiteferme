@@ -7,7 +7,7 @@ class ThirdPartyLib extends ThirdPartyCrud {
 		return ['name'];
 	}
 
-	public static function getAll(string $query = NULL): \Collection {
+	public static function getAll(?string $query = NULL): \Collection {
 
 		return ThirdParty::model()
 			->select(ThirdParty::getSelection())
