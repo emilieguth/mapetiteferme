@@ -74,7 +74,7 @@ class BookUi {
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="tr-bordered td-vertical-top no-background">';
+			$h .= '<table class="table-block td-vertical-top no-background">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';

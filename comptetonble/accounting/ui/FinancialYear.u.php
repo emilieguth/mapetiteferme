@@ -43,7 +43,7 @@ class FinancialYearUi {
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="financialYear-item-table tr-bordered tr-even">';
+			$h .= '<table class="financialYear-item-table table-block tr-even">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';

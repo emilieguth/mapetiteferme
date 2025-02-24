@@ -37,7 +37,7 @@ class AccountUi {
 		$h .= '<div class="util-warning">'.s("Attention, en <b>modifiant le libellé d'un compte bancaire</b>, toutes les écritures comptables de l'exercice fiscal en cours qui sont liées à ce compte bancaire verront leur n° de compte être mis à jour avec ce libellé.").'</div>';
 		$h .= '<div class="util-overflow-sm">';
 
-			$h .= '<table class="tr-bordered tr-even">';
+			$h .= '<table class="table-block tr-even">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
