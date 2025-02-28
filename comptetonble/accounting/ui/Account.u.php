@@ -29,7 +29,7 @@ class AccountUi {
 
 		$h = '<div class="util-overflow-sm">';
 
-			$h .= '<table class="table-block tr-even">';
+			$h .= '<table class="table-block tr-even tr-hover">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';

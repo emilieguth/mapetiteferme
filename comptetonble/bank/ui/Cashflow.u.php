@@ -53,7 +53,7 @@ class CashflowUi {
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="table-block tr-even">';
+			$h .= '<table class="table-block tr-even tr-hover">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';

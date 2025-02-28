@@ -76,7 +76,7 @@ class AnalyzeUi {
 
 		$h = '<div class="util-overflow-sm">';
 
-			$h .= '<table class="table-block tr-even">';
+			$h .= '<table class="table-block tr-even tr-hover">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
@@ -188,7 +188,7 @@ class AnalyzeUi {
 
 		$h = '<div class="util-overflow-sm">';
 
-			$h .= '<table class="table-block tr-even">';
+			$h .= '<table class="table-block tr-even tr-hover">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
@@ -284,7 +284,7 @@ class AnalyzeUi {
 
 		$h = '<div class="util-overflow-sm">';
 
-			$h .= '<table class="table-block tr-even">';
+			$h .= '<table class="table-block tr-even tr-hover">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';

@@ -106,7 +106,7 @@ class AdminUi {
 							} else {
 								$h .= '<small>'.implode('<br/>', $eCompany['cEmployee']->toArray(function($eEmployee) {
 
-									return \user\UserUi::name($eEmployee['user']);
+									return '<a href="user/admin/?id='.$eEmployee['user']['id'].'">'.\user\UserUi::name($eEmployee['user']).'</a>';
 
 								})).'</small>';
 							}
