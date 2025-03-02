@@ -228,7 +228,7 @@ class CashflowUi {
 
 			$h .= $form->asteriskInfo();
 
-			$h .= '<div class="util-block-flat bg-background-light">';
+			$h .= '<div>';
 				$h .= '<div class="cashflow-create-operation-title">';
 					$h .= '<h4>'.s("Personnalisation d'opération #{id}", ['id' => $eCashflow['id']]).'</h4>';
 				$h .= '</div>';
@@ -288,7 +288,7 @@ class CashflowUi {
 
 		$h = '<div class="cashflow-create-operation">';
 
-			$h .= '<div class="util-block-flat bg-background-light">';
+			$h .= '<div class="util-block bg-background-light">';
 
 				$h .= '<div class="util-title">';
 
