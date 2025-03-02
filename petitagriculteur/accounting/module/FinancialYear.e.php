@@ -12,9 +12,13 @@ class FinancialYear extends FinancialYearElement {
 
 		return parent::build($properties, $input, $callbacks + [
 
-				'startDate.loseOperations' => function(string $date): bool {
+				'startDate.loseOperations' => function(string $date) use($for): bool {
 
-					return \journal\OperationLib::countByOldDatesButNotNewDate($this, $date, $this['endDate']) === 0;
+					if($for === 'update') {
+						return \journal\OperationLib::countByOldDatesButNotNewDate($this, $date, $this['endDate']) === 0;
+					}
+
+					return TRUE;
 
 				},
 
@@ -26,9 +30,13 @@ class FinancialYear extends FinancialYearElement {
 
 				},
 
-				'endDate.loseOperations' => function(string $date): bool {
+				'endDate.loseOperations' => function(string $date) use($for): bool {
 
-					return \journal\OperationLib::countByOldDatesButNotNewDate($this, $this['startDate'], $date) === 0;
+					if($for === 'update') {
+						return \journal\OperationLib::countByOldDatesButNotNewDate($this, $this['startDate'], $date) === 0;
+					}
+
+					return TRUE;
 
 				},
 

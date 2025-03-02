@@ -2,6 +2,9 @@
 namespace accounting;
 class FinancialYearLib extends FinancialYearCrud {
 
+	public static function getPropertiesCreate(): array {
+		return ['startDate', 'endDate'];
+	}
 	public static function getPropertiesUpdate(): array {
 		return ['startDate', 'endDate'];
 	}
@@ -30,7 +33,7 @@ class FinancialYearLib extends FinancialYearCrud {
 
 	}
 
-	public static function getFinancialYearSurroundingDate(string $date, int $excludedId): FinancialYear {
+	public static function getFinancialYearSurroundingDate(string $date, ?int $excludedId): FinancialYear {
 
 		$eFinancialYear = new FinancialYear();
 
@@ -38,7 +41,7 @@ class FinancialYearLib extends FinancialYearCrud {
 			->select(FinancialYear::getSelection())
 			->whereStartDate('<=', $date)
 			->whereEndDate('>=', $date)
-			->whereId('!=', $excludedId)
+			->whereId('!=', $excludedId, if:$excludedId !== NULL)
 			->get($eFinancialYear);
 
 
