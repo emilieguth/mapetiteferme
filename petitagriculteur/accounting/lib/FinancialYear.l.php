@@ -69,6 +69,22 @@ class FinancialYearLib extends FinancialYearCrud {
 			->getCollection();
 
 	}
+
+	public static function isDateLinkedToFinancialYear(string $date, \Collection $cFinancialYear): bool {
+
+		foreach($cFinancialYear as $eFinancialYear) {
+
+			if(
+				$date >= date('Y-m-d', strtotime($eFinancialYear['startDate']))
+				and $date <= date('Y-m-d', strtotime($eFinancialYear['endDate']))
+			) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+
+	}
 }
 
 ?>

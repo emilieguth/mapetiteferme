@@ -16,11 +16,13 @@ class CashflowLib extends CashflowCrud {
 			->getCollection();
 	}
 
-	public static function insertMultiple(array $cashflows): array {
+	public static function insertMultiple(array $cashflows, \company\Company $eCompany): array {
 
 		$alreadyImported = [];
+		$noFinancialYear = [];
 		$imported = [];
 		$invalidDate = [];
+		$cFinancialYear = \accounting\FinancialYearLib::getAll();
 
 		foreach($cashflows as $cashflow) {
 
@@ -37,6 +39,14 @@ class CashflowLib extends CashflowCrud {
 				default => $cashflow['amount'] > 0 ? CashflowElement::CREDIT : CashflowElement::DEBIT,
 			};
 			$date = substr($cashflow['date'], 0, 4).'-'.substr($cashflow['date'], 4, 2).'-'.substr($cashflow['date'], 6, 2);
+
+			if(
+				$eCompany['accountingType'] === \company\Company::CASH
+				and \accounting\FinancialYearLib::isDateLinkedToFinancialYear($date, $cFinancialYear) === FALSE
+			) {
+				$noFinancialYear[] = $cashflow['fitid'];
+				continue;
+			}
 
 			if(\util\DateLib::isValid($date) === FALSE) {
 				$invalidDate[] = $cashflow['fitid'];
@@ -58,7 +68,7 @@ class CashflowLib extends CashflowCrud {
 
 		}
 
-		return ['alreadyImported' => $alreadyImported, 'invalidDate' => $invalidDate, 'imported' => $imported];
+		return ['alreadyImported' => $alreadyImported, 'invalidDate' => $invalidDate, 'imported' => $imported, 'noFinancialYear' => $noFinancialYear];
 
 	}
 

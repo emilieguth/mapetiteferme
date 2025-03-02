@@ -98,7 +98,7 @@ class ImportLib extends ImportCrud {
 			->getCollection();
 	}
 
-	public static function importBankStatement(): ?string {
+	public static function importBankStatement(\company\Company $eCompany): ?string {
 
 		if(isset($_FILES['ofx']) === FALSE) {
 			return null;
@@ -133,12 +133,16 @@ class ImportLib extends ImportCrud {
 			Import::model()->insert($eImport);
 
 			$cashflows = \bank\OfxParserLib::extractOperations($xmlFile, $eAccount, $eImport);
-			$result = \bank\CashflowLib::insertMultiple($cashflows);
+			$result = \bank\CashflowLib::insertMultiple($cashflows, $eCompany);
 
 			if(count($result['imported']) === 0) {
-				\Fail::log('Import::nothingImported');
+				if(count($result['noFinancialYear']) > 0) {
+					\Fail::log('Import::nothingImportedNoFinancialYear');
+				} else {
+					\Fail::log('Import::nothingImported');
+				}
 				$status = ImportElement::NONE;
-			} else if(count($result['alreadyImported']) > 0 or count($result['invalidDate']) > 0) {
+			} else if(count($result['alreadyImported']) > 0 or count($result['invalidDate']) > 0 or count($result['noFinancialYear']) > 0) {
 				$status = ImportElement::PARTIAL;
 			} else {
 				$status = ImportElement::FULL;

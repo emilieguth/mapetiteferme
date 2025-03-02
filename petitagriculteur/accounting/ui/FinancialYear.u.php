@@ -26,6 +26,9 @@ class FinancialYearUi {
 		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
 		$h .= '<div class="dropdown-list">';
 			$h .= '<div class="dropdown-title">'.s("Exercice {year}", ['year' => self::getYear($eFinancialYear)]).'</div>';
+			$h .= '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:update?id='.$eFinancialYear['id'].'" class="dropdown-item">';
+				$h .= s("Modifier les dates");
+			$h .= '</a>';
 			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:close" post-id="'.$eFinancialYear['id'].'" class="dropdown-item" data-confirm="'.s("Action irréversible ! Souhaitez-vous confirmer la clôture de cet exercice comptable ? Le suivant sera créé automatiquement.").'">'.s("Clôturer et créer l'exercice suivant").'</a>';;
 		$h .= '</div>';
 

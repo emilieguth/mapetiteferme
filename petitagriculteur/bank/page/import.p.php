@@ -37,7 +37,7 @@
 
 		$fw = new FailWatch();
 
-		$result = \bank\ImportLib::importBankStatement();
+		$result = \bank\ImportLib::importBankStatement($data->eCompany);
 
 		if($fw->ok()) {
 			throw new RedirectAction(\company\CompanyUi::urlBank($data->eCompany).'/import?success=bank:Import::'.$result);

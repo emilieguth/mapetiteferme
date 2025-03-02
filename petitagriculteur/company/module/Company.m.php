@@ -10,6 +10,9 @@ abstract class CompanyElement extends \Element {
 	const ACTIVE = 'active';
 	const CLOSED = 'closed';
 
+	const ACCRUAL = 'accrual';
+	const CASH = 'cash';
+
 	public static function getSelection(): array {
 		return Company::model()->getProperties();
 	}
@@ -53,10 +56,11 @@ class CompanyModel extends \ModuleModel {
 			'city' => ['text8', 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'status' => ['enum', [\company\Company::ACTIVE, \company\Company::CLOSED], 'cast' => 'enum'],
+			'accountingType' => ['enum', [\company\Company::ACCRUAL, \company\Company::CASH], 'cast' => 'enum'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'siret', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'createdAt', 'status'
+			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'siret', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'createdAt', 'status', 'accountingType'
 		]);
 
 	}
@@ -71,6 +75,9 @@ class CompanyModel extends \ModuleModel {
 			case 'status' :
 				return Company::ACTIVE;
 
+			case 'accountingType' :
+				return Company::CASH;
+
 			default :
 				return parent::getDefaultValue($property);
 
@@ -83,6 +90,9 @@ class CompanyModel extends \ModuleModel {
 		switch($property) {
 
 			case 'status' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			case 'accountingType' :
 				return ($value === NULL) ? NULL : (string)$value;
 
 			default :
@@ -154,6 +164,10 @@ class CompanyModel extends \ModuleModel {
 
 	public function whereStatus(...$data): CompanyModel {
 		return $this->where('status', ...$data);
+	}
+
+	public function whereAccountingType(...$data): CompanyModel {
+		return $this->where('accountingType', ...$data);
 	}
 
 

@@ -111,7 +111,7 @@ class CompanyUi {
 				(new \media\CompanyVignetteUi())->getCamera($eCompany, size: '10rem')
 			);
 			$h .= $form-> group(self::p('siret'), $form->text('siret', $eCompany['siret'], ['oninput' => 'Company.getCompanyDataBySiret(this)']));
-			$h .= $form->dynamicGroups($eCompany, ['nafCode', 'name', 'url', 'addressLine1', 'addressLine2', 'postalCode', 'city']);
+			$h .= $form->dynamicGroups($eCompany, ['nafCode', 'name', 'accountingType', 'url', 'addressLine1', 'addressLine2', 'postalCode', 'city']);
 
 			$h .= $form->group(
 				content: $form->submit(s("Modifier"))
@@ -578,6 +578,7 @@ class CompanyUi {
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Company::model()->describer($property, [
+			'accountingType' => s("Type de comptabilité"),
 			'addressLine1' => s("Adresse (ligne 1)"),
 			'addressLine2' => s("Adresse (ligne 2)"),
 			'banner' => s("Bandeau à afficher en haut des e-mails envoyés à vos clients"),
@@ -590,6 +591,17 @@ class CompanyUi {
 			'url' => s("Site internet"),
 			'vignette' => s("Photo de présentation"),
 		]);
+
+		switch($property) {
+
+			case 'accountingType' :
+				$d->values = [
+					Company::ACCRUAL => s("Comptabilité à l'engagement"),
+					Company::CASH => s("Comptabilité de trésorerie"),
+				];
+				break;
+
+		}
 
 		return $d;
 

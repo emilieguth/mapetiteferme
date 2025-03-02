@@ -45,7 +45,10 @@ class CashflowUi {
 
 		if($cCashflow->empty() === TRUE) {
 			return '<div class="util-info">'.
-				s("Aucun import bancaire n'a été réalisé pour l'exercice {year}", ['year' => \accounting\FinancialYearUi::getYear($eFinancialYearSelected)]).
+				s("Aucun import bancaire n'a été réalisé pour l'exercice {year} (<link>importer</link>)", [
+					'year' => \accounting\FinancialYearUi::getYear($eFinancialYearSelected),
+					'link' => '<a href="'.\company\CompanyUi::urlBank($eCompany).'/import">',
+				]).
 			'</div>';
 		}
 

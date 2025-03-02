@@ -13,6 +13,7 @@ Company:
   city: ?text8
   createdAt: datetime = SPECIAL(now)
   status: enum(ACTIVE, CLOSED) = ACTIVE
+  accountingType: enum(ACCRUAL, CASH) = CASH
 
 Employee:
   id: serial32
