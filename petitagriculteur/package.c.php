@@ -13,7 +13,6 @@ Package::setList([
 	'accounting' => 'petitagriculteur',
 	'bank' => 'petitagriculteur',
 	'company' => 'petitagriculteur',
-	'dropbox' => 'petitagriculteur',
 	'journal' => 'petitagriculteur',
 	'mail' => 'petitagriculteur',
 	'media' => 'petitagriculteur',
