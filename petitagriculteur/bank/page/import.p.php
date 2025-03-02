@@ -13,6 +13,10 @@
 
 		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
 
+		if($data->cFinancialYear->empty() === TRUE) {
+			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
+		}
+
 		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 		$data->eFinancialYearSelected = get_exists('financialYear')
 			? \accounting\FinancialYearLib::getById(GET('financialYear'))

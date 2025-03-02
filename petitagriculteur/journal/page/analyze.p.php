@@ -6,6 +6,10 @@
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
+
+		if($data->cFinancialYear->empty() === TRUE) {
+			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
+		}
 	}
 ))
 ->get(['/journal/analyze/bank', '/journal/analyze/bank/{financialYear}'], function($data) {

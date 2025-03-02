@@ -109,6 +109,12 @@ class FinancialYearUi {
 
 		$h = '';
 
+		if(GET('message') === 'FinancialYear::toCreate') {
+			$h .= '<div class="util-info">';
+			$h .= s("Avant de démarrer, votre ferme a besoin d'un premier exercice comptable. Vous pouvez le créer ici !");
+			$h .= '</div>';
+		}
+
 		$h .= $form->openAjax(\company\CompanyUi::urlAccounting($eCompany).'/financialYear:doCreate', ['id' => 'accounting-financialYear-create', 'autocomplete' => 'off']);
 
 			$h .= $form->asteriskInfo();
