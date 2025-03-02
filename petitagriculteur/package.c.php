@@ -1,0 +1,43 @@
+<?php
+Package::setList([
+	'main' => 'petitagriculteur',
+	'core' => 'framework',
+	'dev' => 'framework',
+	'editor' => 'framework',
+	'example' => 'framework',
+	'language' => 'framework',
+	'session' => 'framework',
+	'storage' => 'framework',
+	'user' => 'framework',
+	'util' => 'framework',
+	'accounting' => 'petitagriculteur',
+	'bank' => 'petitagriculteur',
+	'company' => 'petitagriculteur',
+	'dropbox' => 'petitagriculteur',
+	'journal' => 'petitagriculteur',
+	'mail' => 'petitagriculteur',
+	'media' => 'petitagriculteur',
+]);
+
+Package::setObservers([
+	'lib' => [
+		'user' => [
+			'sendVerifyEmail' => ['main'],
+			'signUpCreate' => ['main'],
+			'close' => ['main'],
+			'logIn' => ['session', 'company'],
+			'logOut' => ['session'],
+			'formLog' => ['company'],
+			'formSignUp' => ['company'],
+		],
+		'lime' => [
+			'loadConf' => ['media'],
+		],
+	],
+	'ui' => [
+		'user' => [
+			'emailSignUp' => ['main'],
+		],
+	],
+]);
+?>
