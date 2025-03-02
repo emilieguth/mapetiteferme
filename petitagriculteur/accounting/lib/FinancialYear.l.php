@@ -58,19 +58,12 @@ class FinancialYearLib extends FinancialYearCrud {
 
 	}
 
-	public static function getAll($query = ''): \Collection {
+	public static function getAll(): \Collection {
 
 		return FinancialYear::model()
 			->select(FinancialYear::getSelection())
 			->sort(['startDate' => SORT_DESC])
 			->getCollection();
-
-	}
-	public static function createDefault(): void {
-
-		$eFinancialYear = new FinancialYear(['startDate' => date('Y').'-01-01', 'endDate' => date('Y').'-12-31']);
-
-		self::create($eFinancialYear);
 
 	}
 }

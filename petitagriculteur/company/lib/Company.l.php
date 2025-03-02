@@ -101,7 +101,6 @@ class CompanyLib extends CompanyCrud {
 		}
 
 		self::createSpecificDatabaseAndTables($e);
-		\accounting\FinancialYearLib::createDefault();
 
     Company::model()->commit();
 
