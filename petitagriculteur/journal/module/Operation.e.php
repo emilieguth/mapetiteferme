@@ -20,22 +20,20 @@ class Operation extends OperationElement {
 
 	}
 
-	public function build(array $properties, array $input, array $callbacks = [], ?string $for = NULL): array {
+	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {
 
-		return parent::build($properties, $input, $callbacks + [
+		$p
+			->setCallback('date.check', function(string $date): bool {
 
-				'date.check' => function(string $date): bool {
+				$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 
-					$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+				return ($date >= $eFinancialYear['startDate'] && $date <= $eFinancialYear['endDate']);
 
-					return ($date >= $eFinancialYear['startDate'] && $date <= $eFinancialYear['endDate']);
+			});
 
-				},
-
-			]);
+		parent::build($properties, $input, $p);
 
 	}
-
 
 }
 ?>

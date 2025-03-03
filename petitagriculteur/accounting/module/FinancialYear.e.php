@@ -7,51 +7,44 @@ class FinancialYear extends FinancialYearElement {
 		return ($this['status'] === FinancialYear::OPEN);
 	}
 
+	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {
 
-	public function build(array $properties, array $input, array $callbacks = [], ?string $for = NULL): array {
+		$p
+			->setCallback('startDate.loseOperations', function(string $date) use($p): bool {
 
-		return parent::build($properties, $input, $callbacks + [
+				if($p->for === 'update') {
+					return \journal\OperationLib::countByOldDatesButNotNewDate($this, $date, $this['endDate']) === 0;
+				}
 
-				'startDate.loseOperations' => function(string $date) use($for): bool {
+				return TRUE;
+			})
+			->setCallback('startDate.check', function(string $date): bool {
 
-					if($for === 'update') {
-						return \journal\OperationLib::countByOldDatesButNotNewDate($this, $date, $this['endDate']) === 0;
-					}
+				$eFinancialYear = \accounting\FinancialYearLib::getFinancialYearSurroundingDate($date, $this['id']);
 
-					return TRUE;
+				return $eFinancialYear->exists() === FALSE;
 
-				},
+			})
+			->setCallback('endDate.loseOperations', function(string $date) use($p): bool {
 
-				'startDate.check' => function(string $date): bool {
+				if($p->for === 'update') {
+					return \journal\OperationLib::countByOldDatesButNotNewDate($this, $this['startDate'], $date) === 0;
+				}
 
-					$eFinancialYear = \accounting\FinancialYearLib::getFinancialYearSurroundingDate($date, $this['id']);
+				return TRUE;
 
-					return $eFinancialYear->exists() === FALSE;
+			})
+			->setCallback('endDate.check', function(string $date) use($p): bool {
 
-				},
+				$eFinancialYear = \accounting\FinancialYearLib::getFinancialYearSurroundingDate($date, $this['id']);
 
-				'endDate.loseOperations' => function(string $date) use($for): bool {
+				return $eFinancialYear->exists() === FALSE;
 
-					if($for === 'update') {
-						return \journal\OperationLib::countByOldDatesButNotNewDate($this, $this['startDate'], $date) === 0;
-					}
+			});
 
-					return TRUE;
-
-				},
-
-				'endDate.check' => function(string $date): bool {
-
-					$eFinancialYear = \accounting\FinancialYearLib::getFinancialYearSurroundingDate($date, $this['id']);
-
-					return $eFinancialYear->exists() === FALSE;
-
-				},
-
-			]);
+		parent::build($properties, $input, $p);
 
 	}
-
 
 }
 ?>

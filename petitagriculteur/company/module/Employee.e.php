@@ -13,18 +13,15 @@ class Employee extends EmployeeElement {
 		] + parent::getSelection();
 
 	}
+	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {
 
-	public function build(array $properties, array $input, array $callbacks = [], ?string $for = NULL): array {
-
-		return parent::build($properties, $input, $callbacks + [
-
-			'email.check' => function(string $email): bool {
+		$p
+			->setCallback('email.check', function(string $email): bool {
 
 				return \Filter::check('email', $email);
 
-			},
-
-			'id.prepare' => function(int &$id): bool {
+			})
+			->setCallback('id.prepare', function(int &$id): bool {
 
 				if($id === 0) {
 					$id = NULL;
@@ -32,9 +29,8 @@ class Employee extends EmployeeElement {
 
 				return TRUE;
 
-			},
-
-			'id.check' => function(?int $id): bool {
+			})
+			->setCallback('id.check', function(?int $id): bool {
 
 				if($id === NULL) {
 					return TRUE;
@@ -42,21 +38,19 @@ class Employee extends EmployeeElement {
 
 				$this->expects(['company']);
 
-				// On vérifie qu'on est sur la même ferme
+				// On vérifie qu'on est sur la même entreprise
 				return Employee::model()
 					->whereId($id)
 					->whereCompany($this['company']['id'])
 					->exists();
 
-			},
-
-			'role.prepare' => function(?string $role): bool {
+			})
+			->setCallback('role.prepare', function(?string $role): bool {
 
 				return ($role !== NULL);
 
-			},
-
-			'email.duplicate' => function(string $email): bool {
+			})
+			->setCallback('email.duplicate', function(string $email): bool {
 
 				$this->expects(['company']);
 
@@ -67,18 +61,17 @@ class Employee extends EmployeeElement {
 				}
 
 				return Employee::model()
-					->whereUser($eUser)
-					->whereCompany($this['company'])
-					->exists() === FALSE;
+						->whereUser($eUser)
+						->whereCompany($this['company'])
+						->exists() === FALSE;
 
-			},
-
-			'email.set' => function(string $email): bool {
+			})
+			->setCallback('email.set', function(string $email): bool {
 				$this['email'] = $email;
 				return TRUE;
-			},
+			});
 
-		]);
+		parent::build($properties, $input, $p);
 
 	}
 

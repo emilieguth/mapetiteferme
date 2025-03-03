@@ -11,7 +11,7 @@ class CompanyLib extends CompanyCrud {
 	}
 
 	public static function getPropertiesUpdate(): array {
-		return ['name', 'nafCode', 'siret', 'addressLine1', 'addressLine2', 'postalCode', 'city'];
+		return ['name', 'nafCode', 'siret', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'accountingType'];
 	}
 
 	public static function getOnline(): \Collection {
