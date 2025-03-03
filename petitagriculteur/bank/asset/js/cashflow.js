@@ -55,12 +55,13 @@ class Cashflow {
         }, 0);
 
     }
-    static updateLastAmount(index) {
+    static updateNewOperationLine(index) {
 
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('#get-allocate-total-amount').innerHTML);
 
         qs('#cashflow-create-operation-list [name="amount[' + index + ']*"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
+        qs('#cashflow-create-operation-list [name="document[' + index + ']"]').setAttribute('value', qs('#bank-cashflow-allocate [name="cashflow[document]"]').value || '');
 
     }
 

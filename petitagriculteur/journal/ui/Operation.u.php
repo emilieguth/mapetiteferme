@@ -114,7 +114,7 @@ class OperationUi {
 			);
 			$h .= $form->group(
 				s("Valeur de TVA (calcul automatique)"),
-				$form->inputGroup($form->number('vatValue'.$suffix,  0, ['data-field' => 'vatValue']).$form->addon('€'))
+				$form->inputGroup($form->number('vatValue'.$suffix,  0, ['data-field' => 'vatValue', 'min' => 0.0, 'step' => 0.01]).$form->addon('€'))
 			);
 
 		$h .= '</div>';
