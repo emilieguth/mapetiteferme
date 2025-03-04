@@ -10,6 +10,10 @@ document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashfl
     Cashflow.refreshAllocate(e);
 });
 
+document.delegateEventListener('load', '#cashflow-list', function() {
+    Cashflow.scrollTo();
+});
+
 class Cashflow {
 
     static refreshAllocate(event) {
@@ -111,5 +115,20 @@ class Cashflow {
 
         return true;
 
+    }
+
+    static scrollTo() {
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        const cashflowId = urlParams.get('id') || null;
+
+        if(cashflowId !== null) {
+            const { top: mainTop} = qs('main').getBoundingClientRect();
+            const { top: divTop } = qs('#cashflow-list [name="cashflow-' + cashflowId + '"]').getBoundingClientRect();
+
+            window.scrollTo({top: divTop - mainTop, behavior: 'smooth'});
+        }
     }
 }

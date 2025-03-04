@@ -98,6 +98,7 @@ class JournalUi {
 							$label = s("Date de l'écriture");
 							$h .= ($search ? $search->linkSort('date', $label) : $label);
 						$h .= '</th>';
+						$h .= '<th>'.s("# Opération bancaire").'</th>';
 						$h .= '<th>'.s("Pièce comptable").'</th>';
 						$h .= '<th colspan="2">'.s("Compte (Classe et libellé)").'</th>';
 						$h .= '<th>';
@@ -118,6 +119,14 @@ class JournalUi {
 
 							$h .= '<td>';
 								$h .= \util\DateUi::numeric($eOperation['date']);
+							$h .= '</td>';
+
+							$h .= '<td>';
+								if($eOperation['cashflow']['id'] !== NULL) {
+									$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow?id='.$eOperation['cashflow']['id'].'" class="color-text">'.$eOperation['cashflow']['id'].'</a>';
+								} else {
+									$h .= '';
+								}
 							$h .= '</td>';
 
 							$h .= '<td>';

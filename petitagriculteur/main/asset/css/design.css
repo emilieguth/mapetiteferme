@@ -707,3 +707,7 @@ address {
 tr.group-row {
 	background-color: var(--account-group) !important;
 }
+
+tr.row-highlight {
+	background-color: var(--background-dark) !important;
+}

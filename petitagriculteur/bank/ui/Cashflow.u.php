@@ -4,8 +4,8 @@ namespace bank;
 class CashflowUi {
 
 	public function __construct() {
+		\Asset::js('bank', 'cashflow.js');
 	}
-
 
 	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected): string {
 
@@ -13,7 +13,6 @@ class CashflowUi {
 
 		$form = new \util\FormUi();
 		$url = LIME_REQUEST_PATH.'?financialYear='.$eFinancialYearSelected['id'];
-
 
 		$h .= $form->openAjax($url, ['method' => 'get', 'id' => 'form-search']);
 
@@ -52,9 +51,11 @@ class CashflowUi {
 			'</div>';
 		}
 
+		$highlightedCashflowId = GET('id', 'int');
+
 		$h = '';
 
-		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm">';
 
 			$h .= '<table class="table-block tr-even tr-hover">';
 
@@ -95,7 +96,7 @@ class CashflowUi {
 							$h .= '</tr>';
 					}
 
-					$h .= '<tr>';
+					$h .= '<tr name="cashflow-'.$eCashflow['id'].'" '.($highlightedCashflowId === $eCashflow['id'] ? ' class="row-highlight"' : '').'>';
 
 						$h .= '<td class="text-left">';
 							$h .= encode($eCashflow['id']);
