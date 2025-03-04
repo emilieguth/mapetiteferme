@@ -102,7 +102,7 @@ class OperationUi {
 
 			$h .= '<div class="util-info">';
 				$h .= s(
-					"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>.",
+					"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
 					['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
 				);
 			$h .= '</div>';
@@ -210,6 +210,13 @@ class OperationUi {
 					];
 				};
 				(new ThirdPartyUi())->query($d, GET('company', '?int'));
+				break;
+
+			case 'document':
+				$d->after = \util\FormUi::info(s("Si cette écriture a une pièce comptable spécifique (sinon, la pièce comptable de l'opération bancaire correspondante sera utilisée si elle est renseignée)."));
+				$d->attributes = [
+					'onchange' => 'Cashflow.copyDocument(this)'
+				];
 				break;
 
 

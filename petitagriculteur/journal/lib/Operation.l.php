@@ -32,6 +32,18 @@ class OperationLib extends OperationCrud {
 			->whereType($search->get('type'), if: $search->get('type'));
 
 	}
+
+	public static function getByThirdPartyAndOrderedByUsage(ThirdParty $eThirdParty): \Collection {
+
+		return \journal\Operation::model()
+			->select(['account', 'count' => new \Sql('COUNT(*)')])
+			->whereThirdParty($eThirdParty)
+			->group('account')
+			->sort(['count' => SORT_DESC])
+			->getCollection(NULL, NULL, 'account');
+
+	}
+
 	public static function getAllForBook(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
 		$ccOperation = self::applySearch($search)

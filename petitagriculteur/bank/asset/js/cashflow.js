@@ -33,7 +33,7 @@ class Cashflow {
 
         const amounts = qsa('#cashflow-create-operation-list [data-type="amount"]');
 
-        return Array.from(amounts).reduce((accumulator, amount) => {
+        return Math.round(Array.from(amounts).reduce((accumulator, amount) => {
 
             const index = amount.getAttribute('data-index');
 
@@ -52,7 +52,7 @@ class Cashflow {
             const totalAmountToAdd = amountToAdd + vatAmountToAdd;
 
             return accumulator + (type.value === 'credit' ? totalAmountToAdd : totalAmountToAdd * -1)
-        }, 0);
+        }, 0) * 100) / 100;
 
     }
     static updateNewOperationLine(index) {

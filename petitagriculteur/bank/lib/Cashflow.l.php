@@ -72,7 +72,7 @@ class CashflowLib extends CashflowCrud {
 
 	}
 
-	public static function prepareAllocate(Cashflow $eCashflow, array $input): array {
+	public static function prepareAllocate(Cashflow $eCashflow, array $input): \Collection {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
 		$document = $input['cashflow']['document'] ?? null;
@@ -81,13 +81,12 @@ class CashflowLib extends CashflowCrud {
 
 		if($accounts === []) {
 			Cashflow::fail('accountsCheck');
-			return [new \Collection(), new \Collection()];
+			return new \Collection();
 		}
 
 		$cAccounts = \accounting\AccountLib::getByIdsWithVatAccount($accounts);
 
 		$cOperation = new \Collection();
-		$cThirdParty = new \Collection();
 
 		foreach($accounts as $index => $account) {
 
@@ -107,40 +106,35 @@ class CashflowLib extends CashflowCrud {
 
 			// Ce type d'écriture a un compte de TVA correspondant
 			$eAccount = $cAccounts[$account] ?? new Account();
-			if($eAccount['vatAccount']->exists() === TRUE) {
-				$eOperation['vatAccount'] = $cAccounts[$account]['vatAccount'];
+			$hasVatAccount = $eAccount['vatAccount']->exists() === TRUE; 
+			if($hasVatAccount === TRUE) {
+				$eOperation['vatAccount'] = $eAccount['vatAccount'];
+			}
 
-				// Ajout de l'entrée de compte de TVA correspondante
-				$eOperationTva = new \journal\Operation();
-				$eOperationTva['cashflow'] = $eCashflow;
-				$eOperationTva['date'] = $eCashflow['date'];
-				$eOperationTva['account'] = $eAccount['vatAccount'];
-				$eOperationTva['description'] = $eCashflow['memo'];
-				$eOperationTva['document'] = $document;
-				$eOperationTva['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
+			\journal\Operation::model()->insert($eOperation);
+			$cOperation->append($eOperation);
+
+			// Ajout de l'entrée de compte de TVA correspondante
+			if($hasVatAccount === TRUE) {
+
+				$eOperationVat = new \journal\Operation();
+				$eOperationVat['cashflow'] = $eCashflow;
+				$eOperationVat['date'] = $eCashflow['date'];
+				$eOperationVat['account'] = $eAccount['vatAccount'];
+				$eOperationVat['description'] = $eCashflow['memo'];
+				$eOperationVat['document'] = $document;
+				$eOperationVat['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
 					'7' => \journal\OperationElement::CREDIT,
 					'2' => \journal\OperationElement::DEBIT,
 					'6' => \journal\OperationElement::DEBIT,
 					default => NULL,
 				};
-				$eOperationTva['amount'] = round($eOperation['amount'] * $eOperation['vatRate'] / 100, 2);
-				$cOperation->append($eOperationTva);
-			} else if($eOperation['vatRate'] !== 0.0) {
-				\Fail::log('Cashflow::allocate.tvaInconsistency');
+				$eOperationVat['amount'] = abs($input['vatValue'][$index]);
+				$eOperationVat['operation'] = $eOperation;
+
+				\journal\Operation::model()->insert($eOperationVat);
+				$cOperation->append($eOperationVat);
 			}
-
-			$cOperation->append($eOperation);
-
-			// Vérification du tiers et affectation
-			if(isset($input['thirdParty'][$index]) === TRUE) {
-				$thirdParty = $input['thirdParty'][$index];
-				$eThirdParty = \journal\ThirdPartyLib::getByName($thirdParty);
-				if(in_array($eOperation['account']['id'], $eThirdParty['accounts']) === FALSE) {
-					$eThirdParty['accounts'][] = $eOperation['account']['id'];
-					$cThirdParty->append($eThirdParty);
-				}
-			}
-
 		}
 
 		// Ajout de la transaction sur la classe de compte bancaire 512
@@ -161,14 +155,15 @@ class CashflowLib extends CashflowCrud {
 			CashflowElement::DEBIT => \journal\Operation::CREDIT,
 		};
 		$eOperationBank['amount'] = abs($eCashflow['amount']);
-		$cOperation->append($eOperationBank);
 
+		\journal\Operation::model()->insert($eOperationBank);
+		$cOperation->append($eOperation);
 
 		if($fw->ko()) {
-			return [new \Collection(), new \Collection()];
+			return new \Collection();
 		}
 
-		return [$cOperation, $cThirdParty];
+		return $cOperation;
 	}
 
 }

@@ -230,7 +230,7 @@ class CashflowUi {
 
 			$h .= '<div>';
 				$h .= '<div class="cashflow-create-operation-title">';
-					$h .= '<h4>'.s("Personnalisation d'opération #{id}", ['id' => $eCashflow['id']]).'</h4>';
+					$h .= '<h4>'.s("Opération bancaire #{id}", ['id' => $eCashflow['id']]).'</h4>';
 				$h .= '</div>';
 
 				$h .= $form->group(

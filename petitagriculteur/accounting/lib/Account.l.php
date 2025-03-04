@@ -55,21 +55,23 @@ class AccountLib extends AccountCrud {
 
 		$eThirdParty = \journal\ThirdPartyLib::getByName($thirdParty);
 
+		$cOperationThirdParty = \journal\OperationLib::getByThirdPartyAndOrderedByUsage($eThirdParty);
+
 		$cAccountByThirdParty = new \Collection();
 		$cAccountOthers = new \Collection();
 
-		foreach($cAccount as $eAccount) {
-
-			if(in_array($eAccount['id'], $eThirdParty['accounts']) === TRUE) {
-
-				$cAccountByThirdParty->append($eAccount);
-
-			} else {
-
-				$cAccountOthers->append($eAccount);
-
+		// Comptes liés au tiers en priorité (et triés par nombre d'usages décroissants)
+		foreach($cOperationThirdParty as $eOperation) {
+			if($cAccount->offsetExists($eOperation['account']['id']) === TRUE) {
+				$cAccountByThirdParty->append($cAccount->offsetGet($eOperation['account']['id']) );
 			}
+		}
 
+		// On empile tous les autres comptes
+		foreach($cAccount as $eAccount) {
+			if($cOperationThirdParty->offsetExists($eAccount['id']) === FALSE) {
+				$cAccountOthers->append($eAccount);
+			}
 		}
 
 		return $cAccountByThirdParty->mergeCollection($cAccountOthers);

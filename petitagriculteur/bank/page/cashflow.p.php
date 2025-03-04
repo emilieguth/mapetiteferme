@@ -74,20 +74,18 @@
 		);
 		$fw = new FailWatch();
 
-		[$cOperation, $cThirdParty] = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
+		$cOperation = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
+
+		if($cOperation->empty() === TRUE) {
+			\Fail::log('Cashflow::allocate.noOperation');
+		}
 
 		$fw->validate();
 
-		\journal\Operation::model()->insert($cOperation);
-
 		\bank\Cashflow::model()->update(
 			$data->eCashflow,
-			['status' => \bank\CashflowElement::ALLOCATED, 'document' => POST('cashflow[document]')]
+			['status' => \bank\CashflowElement::ALLOCATED, 'document' => POST('cashflow[document]'), 'updatedAt' => \bank\Cashflow::model()->now()]
 		);
-
-		foreach($cThirdParty as $eThirdParty) {
-			\journal\ThirdPartyLib::update($eThirdParty, ['accounts']);
-		}
 
 		throw new ReloadAction('bank', 'Cashflow::allocated');
 

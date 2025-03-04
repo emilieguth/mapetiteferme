@@ -14,8 +14,9 @@ Operation:
   cashflow: ?bank\Cashflow
   vatRate: decimal(5, 2) = 0.00
   vatAccount: ?accounting\Account
+  # Opération à laquelle celle-ci est liée (ex: opération de TVA reliée à une autre opération)
+  operation: ?journal\Operation
 
 ThirdParty:
   id: serial32
   name: text8(1, null) @collate(general)
-  accounts: json = PHP([])

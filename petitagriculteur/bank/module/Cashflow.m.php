@@ -54,10 +54,12 @@ class CashflowModel extends \ModuleModel {
 			'import' => ['element32', 'bank\Import', 'cast' => 'element'],
 			'status' => ['enum', [\bank\Cashflow::WAITING, \bank\Cashflow::ALLOCATED], 'cast' => 'enum'],
 			'document' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
+			'createdAt' => ['datetime', 'cast' => 'string'],
+			'updatedAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status', 'document'
+			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status', 'document', 'createdAt', 'updatedAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -77,6 +79,12 @@ class CashflowModel extends \ModuleModel {
 
 			case 'status' :
 				return Cashflow::WAITING;
+
+			case 'createdAt' :
+				return new \Sql('NOW()');
+
+			case 'updatedAt' :
+				return new \Sql('NOW()');
 
 			default :
 				return parent::getDefaultValue($property);
@@ -152,6 +160,14 @@ class CashflowModel extends \ModuleModel {
 
 	public function whereDocument(...$data): CashflowModel {
 		return $this->where('document', ...$data);
+	}
+
+	public function whereCreatedAt(...$data): CashflowModel {
+		return $this->where('createdAt', ...$data);
+	}
+
+	public function whereUpdatedAt(...$data): CashflowModel {
+		return $this->where('updatedAt', ...$data);
 	}
 
 

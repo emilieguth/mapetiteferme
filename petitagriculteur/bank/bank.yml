@@ -20,6 +20,8 @@ Cashflow:
   import: bank\Import
   status: enum(WAITING, ALLOCATED) = WAITING
   document: ?text8(1, null) @collate(general)
+  createdAt: datetime = SPECIAL(now)
+  updatedAt: datetime = SPECIAL(now)
   UNIQUE: [
     ["fitid"]
   ]

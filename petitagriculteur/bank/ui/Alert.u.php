@@ -8,7 +8,7 @@ Class AlertUi {
 		return match($fqn) {
 
 			'Cashflow::accountsCheck' => s("Veuillez sélectionner au moins une classe de compte !"),
-			'Cashflow::allocate.tvaInconsistency' => s("La classe de compte choisie n'autorise pas de TVA."),
+			'Cashflow::allocate.noOperation' => s("Aucune opération n'a pu être enregistrée."),
 
 			'Import::ofxSize' => s("Votre import ne peut pas excéder 1 Mo, merci de réduire la taille de votre fichier."),
 			'Import::ofxError' => s("Une erreur est survenue lors de l'import de votre fichier, merci de réessayer."),

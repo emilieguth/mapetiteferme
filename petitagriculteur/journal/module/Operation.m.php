@@ -51,10 +51,11 @@ class OperationModel extends \ModuleModel {
 			'cashflow' => ['element32', 'bank\Cashflow', 'null' => TRUE, 'cast' => 'element'],
 			'vatRate' => ['decimal', 'digits' => 5, 'decimal' => 2, 'cast' => 'float'],
 			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
+			'operation' => ['element32', 'journal\Operation', 'null' => TRUE, 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation'
 		]);
 
 		$this->propertiesToModule += [
@@ -62,6 +63,7 @@ class OperationModel extends \ModuleModel {
 			'thirdParty' => 'journal\ThirdParty',
 			'cashflow' => 'bank\Cashflow',
 			'vatAccount' => 'accounting\Account',
+			'operation' => 'journal\Operation',
 		];
 
 	}
@@ -148,6 +150,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereVatAccount(...$data): OperationModel {
 		return $this->where('vatAccount', ...$data);
+	}
+
+	public function whereOperation(...$data): OperationModel {
+		return $this->where('operation', ...$data);
 	}
 
 

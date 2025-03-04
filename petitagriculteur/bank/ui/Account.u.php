@@ -57,7 +57,7 @@ class AccountUi {
 						$h .= '<td>'.encode($eAccount['accountId']).'</td>';
 						$h .= '<td>';
 								$eAccount->setQuickAttribute('company', $eCompany['id']);
-								$h .= $eAccount->quick('label', $eAccount['label'] ? encode($eAccount['label']) : '<i>'.s("Non défini").'</i>');
+								$h .= $eAccount->quick('label', $eAccount['label'] ? encode($eAccount['label']) : '<i>'.\Setting::get('accounting\defaultBankAccountLabel').'&nbsp;'.s("(Par défaut)").'</i>');
 							$h .= '</div>';
 						$h .= '</td>';
 
