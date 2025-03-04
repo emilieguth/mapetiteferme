@@ -26,10 +26,11 @@ class AccountUi {
 		if($cAccount->empty() === TRUE) {
 			return '<div class="util-info">'.s("Aucun compte n'a encore été enregistré").'</div>';
 		}
+		\Asset::js('main', 'settings.js');
 
 		$h = '<div class="util-overflow-sm">';
 
-			$h .= '<table class="table-block tr-even tr-hover">';
+			$h .= '<table id="account-list" class="table-block tr-even tr-hover">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
@@ -54,7 +55,7 @@ class AccountUi {
 
 					$classNumber = strlen($eAccount['class']) - 2;
 
-					$h .= '<tr>';
+					$h .= '<tr name="account-'.$eAccount['id'].'">';
 
 						$h .= '<td>';
 							$h .= '<span class="ml-'.$classNumber.'">';
@@ -72,7 +73,7 @@ class AccountUi {
 						$h .= '</td>';
 
 						$h .= '<td>';
-							$h .= ($eAccount['vatAccount']->exists() === TRUE ? encode($eAccount['vatAccount']['class']) : '');
+							$h .= ($eAccount['vatAccount']->exists() === TRUE ? '<a '.attr('onclick', 'Settings.scrollTo('.$eAccount['vatAccount']['id'].');').'>'.encode($eAccount['vatAccount']['class']).'</a>' : '');
 						$h .= '</td>';
 
 						$h .= '<td>';
