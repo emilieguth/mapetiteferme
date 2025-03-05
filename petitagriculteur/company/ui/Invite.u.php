@@ -82,6 +82,7 @@ class InviteUi {
   public function create(Invite $eInvite): \Panel {
 
     return new \Panel(
+      id: 'company-invite-user',
       title: s("Inviter une personne dans l'équipe"),
       body: $this->createForm($eInvite, 'panel'),
       close: 'reload'

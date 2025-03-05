@@ -70,6 +70,7 @@ class EmployeeUi {
     $h .= $form->close();
 
     return new \Panel(
+			id: 'company-create-ghost',
       title: s("Créer un utilisateur fantôme pour la ferme"),
       body: $h,
       close: 'reload'
@@ -99,6 +100,7 @@ class EmployeeUi {
     $h .= $form->close();
 
     return new \Panel(
+			id: 'company-employee-update',
       title: s("Modifier un utilisateur de l'entreprise"),
       body: $h,
       close: 'reload'
@@ -109,6 +111,7 @@ class EmployeeUi {
   public function create(Employee $eEmployee, Employee $eEmployeeLink): \Panel {
 
     return new \Panel(
+			id: 'company-employee-invite',
       title: s("Inviter une personne dans l'équipe"),
       body: $this->createForm($eEmployee, $eEmployeeLink, 'panel'),
       close: 'reload'
@@ -303,6 +306,7 @@ class EmployeeUi {
     $h .= $form->close();
 
     return new \Panel(
+			id: 'company-employee-update',
       title: s("Modifier un utilisateur de l'entreprise"),
       body: $h,
       close: 'reload'
