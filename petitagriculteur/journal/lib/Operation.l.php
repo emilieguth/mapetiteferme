@@ -4,7 +4,7 @@ namespace journal;
 class OperationLib extends OperationCrud {
 
 	public static function getPropertiesCreate(): array {
-		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type'];
+		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'vatRate', 'thirdParty'];
 	}
 	public static function getPropertiesUpdate(): array {
 		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'thirdParty'];
@@ -109,6 +109,7 @@ class OperationLib extends OperationCrud {
 	}
 
 	public static function update(Operation $e, array $properties): void {
+
 		parent::update($e, $properties);
 
 		// Quick document update
@@ -124,6 +125,60 @@ class OperationLib extends OperationCrud {
 					->update(['document' => $e['document']]);
 			}
 		}
+	}
+
+	public static function create(Operation $e): void {
+
+		Operation::model()->beginTransaction();
+
+		$thirdParty = post_exists('thirdParty') === TRUE ? POST('thirdParty') : null;
+		if($thirdParty !== null) {
+			$e['thirdParty'] = \journal\ThirdPartyLib::getByName($thirdParty);
+		}
+
+		if($e['account']->exists() === TRUE) {
+			$eAccountWithVatAccount = \accounting\AccountLib::getByIdWithVatAccount($e['account']['id']);
+			if($eAccountWithVatAccount->exists() === TRUE) {
+				$e['vatAccount'] = $eAccountWithVatAccount['vatAccount'];
+			}
+		}
+
+		Operation::model()->insert($e);
+
+		if($e['account']->exists() === TRUE and $eAccountWithVatAccount->exists() === TRUE) {
+			\journal\OperationLib::createVatOperation(
+				$e,
+				$eAccountWithVatAccount,
+				POST('vatValue', 'float', 0),
+				['date' => $e['date'], 'description' => $e['description'], 'cashflow' => NULL],
+			);
+		}
+		Operation::model()->commit();
+
+	}
+
+	public static function createVatOperation(Operation $eOperationLinked, \accounting\Account $eAccount, float $vatValue, array $defaultValues): Operation {
+
+		$eOperationVat = new \journal\Operation();
+		$eOperationVat['cashflow'] = $defaultValues['cashflow'];
+		$eOperationVat['date'] = $defaultValues['date'];
+		$eOperationVat['account'] = $eAccount['vatAccount'];
+		$eOperationVat['description'] = $defaultValues['description'];
+		$eOperationVat['document'] = $eOperationLinked['document'];
+		$eOperationVat['thirdParty'] = $eOperationLinked['thirdParty'];
+		$eOperationVat['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
+			'7' => \journal\OperationElement::CREDIT,
+			'2' => \journal\OperationElement::DEBIT,
+			'6' => \journal\OperationElement::DEBIT,
+			default => NULL,
+		};
+		$eOperationVat['amount'] = abs($vatValue);
+		$eOperationVat['operation'] = $eOperationLinked;
+
+		\journal\Operation::model()->insert($eOperationVat);
+
+		return $eOperationVat;
+
 	}
 }
 ?>

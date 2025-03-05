@@ -303,7 +303,7 @@ class CashflowUi {
 
 				$h .= '</div>';
 
-				$h .= (new \journal\OperationUi())->getFieldsCreate($eCompany, $form, $eCashflow, $eOperation, $eFinancialYear, $suffix, $defaultValues);
+				$h .= new \journal\OperationUi()->getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, $eCashflow['amount'], $suffix, $defaultValues);
 
 			$h .= '</div>';
 

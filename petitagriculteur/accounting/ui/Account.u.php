@@ -11,8 +11,8 @@ class AccountUi {
 		$h = '<div class="util-action">';
 
 		$h .= '<h1>';
-		$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
-		$h .= s("Les classes de comptes");
+			$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
+			$h .= s("Les classes de comptes");
 		$h .= '</h1>';
 
 		$h .= '</div>';
@@ -103,7 +103,7 @@ class AccountUi {
 		$vatRate = 0.0;
 		if($eAccount['vatRate'] !== NULL) {
 			$vatRate = $eAccount['vatRate'];
-		} else if($eAccount['vatAccount']->exists() === TRUE) {
+		} elseif($eAccount['vatAccount']->exists() === TRUE) {
 			$vatRate = $eAccount['vatAccount']['vatRate'];
 		}
 
