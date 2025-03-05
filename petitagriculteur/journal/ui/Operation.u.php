@@ -49,7 +49,7 @@ class OperationUi {
 		\Asset::js('journal', 'operation.js');
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
 		$onchange = $cashflowAmount !== NULL
-			? 'Cashflow.fillShowHideAmountWarning('.$cashflowAmount.')'
+			? 'Cashflow.fillShowHideAmountWarning('.abs($cashflowAmount).')'
 			: 'Operation.calculateVAT()';
 
 		$h = '<div class="operation-write">';
@@ -230,7 +230,6 @@ class OperationUi {
 				break;
 
 			case 'document':
-				$d->after = \util\FormUi::info(s("Si cette écriture a une pièce comptable spécifique (sinon, la pièce comptable de l'opération bancaire correspondante sera utilisée si elle est renseignée)."));
 				$d->attributes = [
 					'onchange' => 'Cashflow.copyDocument(this)'
 				];

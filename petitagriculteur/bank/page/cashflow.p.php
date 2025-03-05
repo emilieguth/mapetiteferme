@@ -74,6 +74,8 @@
 		);
 		$fw = new FailWatch();
 
+		\journal\Operation::model()->beginTransaction();
+
 		$cOperation = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
 
 		if($cOperation->empty() === TRUE) {
@@ -86,6 +88,8 @@
 			$data->eCashflow,
 			['status' => \bank\CashflowElement::ALLOCATED, 'document' => POST('cashflow[document]'), 'updatedAt' => \bank\Cashflow::model()->now()]
 		);
+
+		\journal\Operation::model()->commit();
 
 		throw new ReloadAction('bank', 'Cashflow::allocated');
 

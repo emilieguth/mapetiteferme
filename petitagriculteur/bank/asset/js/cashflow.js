@@ -39,12 +39,12 @@ class Cashflow {
 
             const amountValue = (isNaN(amount.valueAsNumber) ? 0 : amount.valueAsNumber);
 
-            const vatRate = qs('#cashflow-create-operation-list [name="vatRate[' + index + ']*"]').valueAsNumber;
+            const vatRate = qs('#cashflow-create-operation-list [name="vatRate[' + index + ']"]').valueAsNumber;
             const vatValue = (amountValue * vatRate / 100).toFixed(2);
 
             qs('#cashflow-create-operation-list [name="vatValue[' + index + ']"]').setAttribute('value', vatValue);
 
-            const type = Array.from(qsa('#cashflow-create-operation-list [name="type[' + index + ']*"]')).find((checkboxType) => checkboxType.checked === true);
+            const type = Array.from(qsa('#cashflow-create-operation-list [name="type[' + index + ']"]')).find((checkboxType) => checkboxType.checked === true);
 
             const amountToAdd = Math.abs(amountValue);
             const vatAmountToAdd = Math.abs((isNaN(vatValue) ? 0 : vatValue));
@@ -61,7 +61,7 @@ class Cashflow {
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('#get-allocate-total-amount').innerHTML);
 
-        qs('#cashflow-create-operation-list [name="amount[' + index + ']*"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
+        qs('#cashflow-create-operation-list [name="amount[' + index + ']"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
         qs('#cashflow-create-operation-list [name="document[' + index + ']"]').setAttribute('value', qs('#bank-cashflow-allocate [name="cashflow[document]"]').value || '');
 
     }
@@ -90,7 +90,7 @@ class Cashflow {
         if(sum !== totalAmount) {
             var difference = totalAmount - sum;
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
-            qs('#cashflow-allocate-difference-value').innerHTML = Math.abs(difference).toFixed(2);
+            qs('#cashflow-allocate-difference-value').innerHTML = Math.round(Math.abs(difference) * 100) / 100;
         } else {
             qs('#cashflow-allocate-difference-warning').classList.add('hide');
         }
