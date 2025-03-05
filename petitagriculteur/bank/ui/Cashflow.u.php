@@ -55,7 +55,7 @@ class CashflowUi {
 
 		$h = '';
 
-		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').'>';
 
 			$h .= '<table class="table-block tr-even tr-hover">';
 

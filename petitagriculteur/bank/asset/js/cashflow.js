@@ -10,10 +10,6 @@ document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashfl
     Cashflow.refreshAllocate(e);
 });
 
-document.delegateEventListener('load', '#cashflow-list', function() {
-    Cashflow.scrollTo();
-});
-
 class Cashflow {
 
     static refreshAllocate(event) {
@@ -59,6 +55,7 @@ class Cashflow {
         }, 0) * 100) / 100;
 
     }
+
     static updateNewOperationLine(index) {
 
         const sum = this.recalculateAmounts();
@@ -116,19 +113,14 @@ class Cashflow {
         return true;
 
     }
+}
 
-    static scrollTo() {
+class CashflowList {
+    static scrollTo(cashflowId) {
 
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
+        const { top: mainTop} = qs('main').getBoundingClientRect();
+        const { top: divTop } = qs('#cashflow-list [name="cashflow-' + cashflowId + '"]').getBoundingClientRect();
+        window.scrollTo({top: divTop - mainTop, behavior: 'smooth'});
 
-        const cashflowId = urlParams.get('id') || null;
-
-        if(cashflowId !== null) {
-            const { top: mainTop} = qs('main').getBoundingClientRect();
-            const { top: divTop } = qs('#cashflow-list [name="cashflow-' + cashflowId + '"]').getBoundingClientRect();
-
-            window.scrollTo({top: divTop - mainTop, behavior: 'smooth'});
-        }
     }
 }
