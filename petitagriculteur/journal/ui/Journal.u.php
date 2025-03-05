@@ -122,7 +122,7 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
-								if($eOperation['cashflow']['id'] !== NULL) {
+								if($eOperation['cashflow']->exists() === TRUE) {
 									$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow?id='.$eOperation['cashflow']['id'].'" class="color-text">'.$eOperation['cashflow']['id'].'</a>';
 								} else {
 									$h .= '';

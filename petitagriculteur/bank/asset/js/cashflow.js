@@ -31,7 +31,7 @@ class Cashflow {
 
     static recalculateAmounts() {
 
-        const amounts = qsa('#cashflow-create-operation-list [data-type="amount"]');
+        const amounts = qsa('#cashflow-create-operation-list [data-field="amount"]');
 
         return Math.round(Array.from(amounts).reduce((accumulator, amount) => {
 

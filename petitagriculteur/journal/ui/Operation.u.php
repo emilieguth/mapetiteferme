@@ -14,33 +14,13 @@ class OperationUi {
 
 		$h = '';
 
-		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/operation:doCreate', ['id' => 'journal-operation-create', 'autocomplete' => 'off']);
+		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/operation:doCreate', ['id' => 'journal-operation-create','data-thirdParty' => 'journal-operation-create', 'data-account' => 'journal-operation-create']);
 
 		$h .= $form->asteriskInfo();
 
 		$h .= $form->hidden('company', $eCompany['id']);
 
-		$h .= $form->dynamicGroup($eOperation, 'account*', function($d) {
-			$d->autocompleteDispatch = '#journal-operation-create';
-		});
-
-		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
-		$h .= $form->group(s("Date de l'opération").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
-		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*']);
-
-		$vatRateDefault = 0;
-		if($eOperation['account']->exists() === TRUE) {
-			if($eOperation['account']['vatRate'] !== NULL) {
-				$vatRateDefault = $eOperation['account']['vatRate'];
-			} else if($eOperation['account']['vatAccount']->exists() === TRUE) {
-				$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
-			}
-		}
-
-		$h .= $form->group(
-			s("Taux de TVA").' '.\util\FormUi::asterisk(),
-			$form->inputGroup($form->number('vatRate*', $vatRateDefault).$form->addon('% '))
-		);
+		$h .= $this->getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, NULL, NULL, []);
 
 		$h .= $form->group(
 			content: $form->submit(s("Ajouter l'écriture"))
@@ -56,38 +36,75 @@ class OperationUi {
 
 	}
 
-	public function getFieldsCreate(\company\Company $eCompany, \util\FormUi $form, \bank\Cashflow $eCashflow, Operation $eOperation, \accounting\FinancialYear $eFinancialYear, string $suffix, array $defaultValues): string {
+	public function getFieldsCreate(
+		\company\Company $eCompany,
+		\util\FormUi $form,
+		Operation $eOperation,
+		\accounting\FinancialYear $eFinancialYear,
+		?float $cashflowAmount,
+		?string $suffix,
+		array $defaultValues,
+	): string {
 
 		\Asset::js('journal', 'operation.js');
-		$index = mb_substr($suffix, 1, mb_strlen($suffix) - 2);
+		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
+		$onchange = $cashflowAmount !== NULL
+			? 'Cashflow.fillShowHideAmountWarning('.$cashflowAmount.')'
+			: 'Operation.calculateVAT()';
 
 		$h = '<div class="operation-write">';
 
-			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) {
-				$d->autocompleteDispatch = '[data-thirdParty="bank-cashflow-allocate"]';
+			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form) {
+				$d->autocompleteDispatch = '[data-thirdParty="'.$form->getId().'"]';
 			});
 
-			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix.'*', function($d) {
-				$d->autocompleteDispatch = '[data-account="bank-cashflow-allocate"]';
+			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form) {
+				$d->autocompleteDispatch = '[data-account="'.$form->getId().'"]';
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);
 			$h .= $form->group(
 				self::p('date')->label.' '.\util\FormUi::asterisk(),
-				$form->date('date'.$suffix.'*', $defaultValues['date'] ?? '', ['disabled' => TRUE, 'min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+				$form->date('date'.$suffix, $defaultValues['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
 			);
 			$h .= $form->group(
 				self::p('description')->label.' '.\util\FormUi::asterisk(),
-				$form->text('description'.$suffix.'*', $defaultValues['description'] ?? '')
+				$form->text('description'.$suffix, $defaultValues['description'] ?? '')
 			);
 			$h .= $form->group(
 				self::p('amount')->label.' '.\util\FormUi::asterisk(),
-					$form->inputGroup($form->number('amount'.$suffix.'*', $defaultValues['amount'] ?? '', ['min' => 0, 'step' => 0.01, 'data-type' => 'amount', 'onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')', 'data-index' => $index]).$form->addon('€ '))
+					$form->inputGroup(
+						$form->number(
+							'amount'.$suffix,
+							$defaultValues['amount'] ?? '',
+							[
+								'min' => 0, 'step' => 0.01, 'data-field' => 'amount',
+								'data-index' => $index,
+								'onchange' => $onchange
+							]
+						)
+						.$form->addon('€ ')
+					)
 			);
 			$h .= $form->group(
 				self::p('type')->label.' '.\util\FormUi::asterisk(),
-				$form->radio('type'.$suffix.'*', Operation::DEBIT, self::p('type')->values[Operation::DEBIT], $defaultValues['type'] ?? '', ['onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')']).
-				$form->radio('type'.$suffix.'*', Operation::CREDIT, self::p('type')->values[Operation::CREDIT], $defaultValues['type'] ?? '', ['onchange' => 'Cashflow.fillShowHideAmountWarning('.$eCashflow['amount'].')'])
+				$form->radio(
+					'type'.$suffix,
+					Operation::DEBIT,
+					self::p('type')->values[Operation::DEBIT],
+					$defaultValues['type'] ?? '',
+					[
+						'onchange' => $onchange
+					]
+				).
+				$form->radio(
+					'type'.$suffix, Operation::CREDIT,
+					self::p('type')->values[Operation::CREDIT],
+					$defaultValues['type'] ?? '',
+					[
+						'onchange' => $onchange
+					]
+				)
 			);
 			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
 
@@ -110,7 +127,7 @@ class OperationUi {
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(
 				s("Taux de TVA").' '.\util\FormUi::asterisk(),
-				$form->inputGroup($form->number('vatRate'.$suffix.'*',  $vatRateDefault, ['data-field' => 'vatRate', 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => 'Cashflow.fillShowHideAmountWarning();']).$form->addon('% '))
+				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => $onchange]).$form->addon('% '))
 			);
 			$h .= $form->group(
 				s("Valeur de TVA (calcul automatique)"),
@@ -195,7 +212,7 @@ class OperationUi {
 					return [
 					];
 				};
-				(new \accounting\AccountUi())->query($d, GET('company', '?int'));
+				new \accounting\AccountUi()->query($d, GET('company', '?int'));
 				break;
 
 			case 'amount' :
@@ -209,7 +226,7 @@ class OperationUi {
 					return [
 					];
 				};
-				(new ThirdPartyUi())->query($d, GET('company', '?int'));
+				new ThirdPartyUi()->query($d, GET('company', '?int'));
 				break;
 
 			case 'document':

@@ -16,17 +16,19 @@ class AccountLib extends AccountCrud {
 
 	}
 
-	public static function getByIdWithVatAccount(int $id): \Element {
+	public static function getByIdWithVatAccount(int $id): Account {
 
-		return Account::model()
+		$eAccount = new Account();
+		Account::model()
 			->select([
 					'name' => new \Sql('CONCAT(class, ". ", description)')] +
 				Account::getSelection() +
 				['vatAccount' => ['class', 'vatRate']
 				])
 			->whereId('=', $id)
-			->get();
+			->get($eAccount);
 
+		return $eAccount;
 	}
 
 	public static function getAll($query = ''): \Collection {

@@ -117,22 +117,13 @@ class CashflowLib extends CashflowCrud {
 			// Ajout de l'entrée de compte de TVA correspondante
 			if($hasVatAccount === TRUE) {
 
-				$eOperationVat = new \journal\Operation();
-				$eOperationVat['cashflow'] = $eCashflow;
-				$eOperationVat['date'] = $eCashflow['date'];
-				$eOperationVat['account'] = $eAccount['vatAccount'];
-				$eOperationVat['description'] = $eCashflow['memo'];
-				$eOperationVat['document'] = $document;
-				$eOperationVat['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
-					'7' => \journal\OperationElement::CREDIT,
-					'2' => \journal\OperationElement::DEBIT,
-					'6' => \journal\OperationElement::DEBIT,
-					default => NULL,
-				};
-				$eOperationVat['amount'] = abs($input['vatValue'][$index]);
-				$eOperationVat['operation'] = $eOperation;
+				$eOperationVat = \journal\OperationLib::createVatOperation(
+					$eOperation,
+					$eAccount,
+					$input['vatValue'][$index],
+					['date' => $eCashflow['date'], 'description' => $eCashflow['memo'], 'cashflow' => $eCashflow],
+				);
 
-				\journal\Operation::model()->insert($eOperationVat);
 				$cOperation->append($eOperationVat);
 			}
 		}

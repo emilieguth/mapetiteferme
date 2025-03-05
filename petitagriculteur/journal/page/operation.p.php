@@ -1,5 +1,5 @@
 <?php
-(new \journal\OperationPage(
+new \journal\OperationPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
 		$company = REQUEST('company');
@@ -7,7 +7,7 @@
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 		\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 	}
-))
+)
 	->quick(['document'], [], ['canQuickDocument'])
 	->create(function($data) {
 
@@ -28,7 +28,7 @@
 			'company' => $data->eCompany['id'],
 			'account' => $eAccount,
 			'accountLabel' => $label,
-			'vatRate' => $eAccount['vatRate'] ?? $eAccount['vatRate'] ?? 0,
+			'vatRate' => $eAccount['vatRate'] ?? 0,
 		]);
 
 		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
