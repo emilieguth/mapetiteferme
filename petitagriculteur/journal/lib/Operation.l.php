@@ -180,5 +180,18 @@ class OperationLib extends OperationCrud {
 		return $eOperationVat;
 
 	}
+
+	public static function delete(Operation $e): void {
+
+		$e->expects(['id']);
+
+		// Deletes related operations (like TVA)
+		Operation::model()
+			->whereOperation($e)
+			->delete();
+
+		parent::delete($e);
+
+	}
 }
 ?>
