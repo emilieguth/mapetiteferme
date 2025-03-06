@@ -145,7 +145,7 @@ class OperationLib extends OperationCrud {
 
 		Operation::model()->insert($e);
 
-		if($e['account']->exists() === TRUE and $eAccountWithVatAccount->exists() === TRUE) {
+		if($e['account']->exists() === TRUE and $e['vatAccount']->exists() === TRUE) {
 			\journal\OperationLib::createVatOperation(
 				$e,
 				$eAccountWithVatAccount,
@@ -191,6 +191,106 @@ class OperationLib extends OperationCrud {
 			->delete();
 
 		parent::delete($e);
+
+	}
+
+	public static function getOperationsForAttach(\bank\Cashflow $eCashflow): \Collection {
+
+		$amount = abs($eCashflow['amount']);
+
+		$properties = Operation::getSelection()
+			+ ['account' => ['class', 'description']]
+			+ ['thirdParty' => ['name']];
+
+		$cOperation = Operation::model()
+			->select($properties)
+			->whereCashflow(NULL)
+			->whereOperation(NULL)
+			->getCollection();
+
+		$cOperationLinked = $cOperation->empty() === FALSE ? Operation::model()
+			->select($properties)
+			->whereCashflow(NULL)
+			->whereOperation('IN', $cOperation)
+			->getCollection() : new \Collection();
+
+		// Tri pour optimiser le montant
+		foreach($cOperation as &$eOperation) {
+			$eOperation['links'] = new \Collection();
+			$sum = 0;
+			foreach($cOperationLinked as $eOperationLinked) {
+				if($eOperationLinked['operation']['id'] === $eOperation['id']) {
+					$sum += $eOperationLinked['amount'];
+					$eOperation['links']->append($eOperationLinked);
+				}
+			}
+			$eOperation['totalVATIncludedAmount'] = $eOperation['amount'] + $sum;
+			$eOperation['difference'] = abs($eOperation['totalVATIncludedAmount'] - $amount);
+		}
+
+		$cOperation->sort(['difference' => SORT_ASC]);
+
+		return $cOperation;
+
+	}
+
+	public static function countByCashflow(\bank\Cashflow $eCashflow): int {
+
+		return Operation::model()
+			->whereCashflow($eCashflow)
+			->count();
+
+	}
+
+	public static function attachIdsToCashflow(\bank\Cashflow $eCashflow, array $operationIds): int {
+
+		$properties = ['cashflow', 'updatedAt'];
+		$eOperation = new Operation(['cashflow' => $eCashflow, 'updatedAt' => Operation::model()->now()]);
+
+		$updated = Operation::model()
+			->select($properties)
+			->whereId('IN', $operationIds)
+			->whereCashflow(NULL)
+			->update($eOperation);
+
+		// Also update linked operations
+		Operation::model()
+			->select($properties)
+			->whereOperation('IN', $operationIds)
+			->whereCashflow(NULL)
+			->update($eOperation);
+
+		// Create Bank line
+		OperationLib::createBankOperationFromCashflow($eCashflow);
+
+		return $updated;
+	}
+
+	public static function createBankOperationFromCashflow(\bank\Cashflow $eCashflow, ?string $document = NULL): Operation {
+
+		$eOperationBank = new Operation();
+
+		$eAccountBank = new \accounting\Account();
+		\accounting\Account::model()
+			->select(\accounting\Account::getSelection())
+			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
+			->get($eAccountBank);
+
+		$eOperationBank['date'] = $eCashflow['date'];
+		$eOperationBank['cashflow'] = $eCashflow;
+		$eOperationBank['account'] = $eAccountBank;
+		$eOperationBank['accountLabel'] = $eCashflow['import']['account']['label'] ?? \Setting::get('accounting\defaultBankAccountLabel');
+		$eOperationBank['description'] = $eCashflow['memo'];
+		$eOperationBank['document'] = $document;
+		$eOperationBank['type'] = match($eCashflow['type']) {
+			\bank\Cashflow::CREDIT => Operation::DEBIT,
+			\bank\Cashflow::DEBIT => Operation::CREDIT,
+		};
+		$eOperationBank['amount'] = abs($eCashflow['amount']);
+
+		\journal\Operation::model()->insert($eOperationBank);
+
+		return $eOperationBank;
 
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-(new Page(
+new Page(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
@@ -8,7 +8,7 @@
 
 		\Setting::set('main\viewBank', 'cashflow');
 	}
-))
+)
 	->get('index', function($data) {
 
 		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
@@ -41,18 +41,18 @@
 
 	});
 
-(new \bank\CashflowPage(
+new \bank\CashflowPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
 
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
-		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'));
+		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'))->validate('canAllocate');
 
 		\Setting::set('main\viewBank', 'import');
 		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 	}
-))
+)
 	->get('allocate', function($data) {
 
 		throw new ViewAction($data);
@@ -112,6 +112,32 @@
 		\bank\CashflowLib::update($data->eCashflow, ['status']);
 
 		throw new ReloadAction('bank', 'Cashflow::deallocated');
+
+	})
+	->get('attach', function($data) {
+
+		$data->cOperation = \journal\OperationLib::getOperationsForAttach($data->eCashflow);
+
+		throw new ViewAction($data);
+
+	})
+	->post('doAttach', function($data) {
+
+		$fw = new FailWatch();
+
+		if($data->eCashflow->exists() === FALSE) {
+			\bank\Cashflow::fail('internal');
+		}
+
+		if(post_exists('operation') === FALSE) {
+			\bank\Cashflow::fail('noSelectedOperation');
+		}
+
+		\bank\CashflowLib::attach($data->eCashflow, POST('operation', 'array'));
+
+		$fw->validate();
+
+		throw new ReloadAction('bank', 'Cashflow::attached');
 
 	});
 ?>

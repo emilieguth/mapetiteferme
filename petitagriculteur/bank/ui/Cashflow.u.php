@@ -173,7 +173,7 @@ class CashflowUi {
 					$h .= s("Créer de nouvelles écritures");
 				$h .= '</a>';
 				$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:attach?id='.$eCashflow['id'].'" class="dropdown-item">';
-					$h .= s("Rattacher des écritures existantes (TODO)");
+					$h .= s("Rattacher des écritures comptables");
 				$h .= '</a>';
 			}
 
@@ -183,10 +183,7 @@ class CashflowUi {
 
 	}
 
-	public static function getAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow): \Panel {
-
-		\Asset::js('bank', 'cashflow.js');
-		$h = '';
+	public static function getCashflowHeader(Cashflow $eCashflow): string {
 
 		$type = match($eCashflow['type']) {
 			CashflowElement::CREDIT => s("Crédit"),
@@ -194,7 +191,7 @@ class CashflowUi {
 			default => '',
 		};
 
-		$h .= '<div class="util-block stick-xs bg-background-light">';
+		$h = '<div class="util-block stick-xs bg-background-light">';
 			$h .= '<dl class="util-presentation util-presentation-2">';
 				$h .= '<dt>'.s("Numéro").'</dt>';
 				$h .= '<dd>'.$eCashflow['id'].'</dd>';
@@ -208,6 +205,14 @@ class CashflowUi {
 				$h .= '<dd><span id="get-allocate-total-amount">'.$eCashflow['amount'].'</span>€</dd>';
 			$h .= '</dl>';
 		$h .= '</div>';
+
+		return $h;
+	}
+
+	public static function getAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow): \Panel {
+
+		\Asset::js('bank', 'cashflow.js');
+		$h = CashflowUi::getCashflowHeader($eCashflow);
 
 		$form = new \util\FormUi();
 		$eOperation = new \journal\Operation(['account' => new Account()]);
@@ -338,6 +343,168 @@ class CashflowUi {
 			title: s("Importer un relevé bancaire"),
 			body: $h
 		);
+	}
+
+	public static function getAttach(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, \Collection $cOperation): \Panel {
+
+		\Asset::js('bank', 'cashflow.js');
+		$h = CashflowUi::getCashflowHeader($eCashflow);
+
+		if($cOperation->empty() === TRUE) {
+
+			$h .='<div class="util-warning">'.s("Aucune écriture comptable ne peut être actuellement rattachée à cette opération bancaire.").'</div>';
+
+		} else {
+
+			$form = new \util\FormUi();
+			$h .= $form->openAjax(\company\CompanyUi::urlBank($eCompany).'/cashflow:doAttach', ['method' => 'post', 'id' => 'cashflow-doAttach']);
+
+				$h .= $form->hidden('id', $eCashflow['id']);
+				$h .= '<span class="hide" name="cashflowAmount">'.$eCashflow['amount'].'</span>';
+
+				$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+					$h .= '<table class="table-block tr-even tr-hover">';
+
+						$h .= '<thead>';
+							$h .= '<tr>';
+								$h .= '<th class="text-end">';
+									$h .= s("Date");
+								$h .= '</th>';
+								$h .= '<th>';
+									$h .= s("Description");
+								$h .= '</th>';
+								$h .= '<th>';
+									$h .= s("Tiers");
+								$h .= '</th>';
+								$h .= '<th class="text-end">'.s("Total").'</th>';
+								$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
+								$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
+								$h .= '<th class="text-center">'.s("Choisir").'</th>';
+							$h .= '</tr>';
+						$h .= '</thead>';
+
+						$h .= '<tbody>';
+
+						foreach($cOperation as $eOperation) {
+
+							if($eOperation['links']->empty() === FALSE) {
+								// Ajouter une ligne de résumé
+								$h .= '<tr class="row-bold">';
+									$h .= '<td class="text-end">';
+										$h .= \util\DateUi::numeric($eOperation['date']);
+									$h .= '</td>';
+									$h .= '<td>';
+										$h .= encode($eOperation['description']);
+									$h .= '</td>';
+
+									$h .= '<td>';
+									if($eOperation['thirdParty']->exists() === TRUE) {
+										$h .= encode($eOperation['thirdParty']['name']);
+									}
+									$h .= '</td>';
+
+									$h .= '<td class="text-end">';
+										$h .= \util\TextUi::money($eOperation['totalVATIncludedAmount']);
+									$h .= '</td>';
+
+									$h .= '<td class="text-end">';
+									$h .= '</td>';
+
+									$h .= '<td class="text-end">';
+									$h .= '</td>';
+
+									$h .= '<td class="text-center">';
+										$h .= $form->checkbox('operation[]', $eOperation['id']);
+										$h .= '<span class="hide" name="amount" data-operation="'.$eOperation['id'].'">'.$eOperation['totalVATIncludedAmount'].'</span>';
+									$h .= '</td>';
+								$h .= '</tr>';
+							}
+
+							// Ligne principale
+							$h .= CashflowUi::getOperationLineForAttachment($eOperation, $eOperation['links']->empty() === TRUE ? $form : NULL);
+
+							// Lignes rattachées
+							foreach($eOperation['links'] as $eOperationLinked) {
+								$h .= CashflowUi::getOperationLineForAttachment($eOperationLinked, NULL);
+							}
+
+						}
+
+						$h .= '<tr>';
+							$h .= '<td colspan="6" class="text-end">'.s("Total sélectionné :").'</td>';
+							$h .= '<td class="text-center"><span data-field="total"></span>€</td>';
+						$h .= '</tr>';
+
+						$h .= '</tbody>';
+
+					$h .= '</table>';
+				$h .= '</div>';
+
+				$h .= '<div id="cashflow-attach-difference-warning" class="util-danger hide">';
+				$h .= s("Attention, le montant de l'opération bancaire ne correspond pas au total des écritures sélectionnées. Vous pouvez quand même valider.");
+				$h .= '</div>';
+
+				$h .= '<div class="text-end">'.$form->submit(s("Rattacher"), ['class' => 'btn btn-secondary']).'</div>';
+
+			$h .= $form->close();
+		}
+
+		return new \Panel(
+			id: 'panel-cashflow-attach',
+			title: s("Rattacher l'opération bancaire à une ou plusieurs écritures comptables"),
+			body: $h
+		);
+
+	}
+
+	protected static function getOperationLineForAttachment(\journal\Operation $eOperation, ?\util\FormUi $form): string {
+
+		$h = '<tr '.($form !== NULL ? 'class="row-bold"' : '').'>';
+			$h .= '<td class="text-end">';
+				if($form !== NULL) {
+					$h .= \util\DateUi::numeric($eOperation['date']);
+				}
+			$h .= '</td>';
+			$h .= '<td>';
+			if($form !== NULL) {
+				$h .= encode($eOperation['account']['class'].' '.$eOperation['account']['description']).' - '.encode($eOperation['description']);
+			} else {
+				$h .= '<span class="ml-1">'.encode($eOperation['account']['class'].' '.$eOperation['account']['description']).'</span>';
+			}
+			$h .= '</td>';
+
+			$h .= '<td>';
+			if($eOperation['thirdParty']->exists() === TRUE and $form !== NULL) {
+				$h .= encode($eOperation['thirdParty']['name']);
+			}
+			$h .= '</td>';
+
+			$h .= '<td class="text-end">';
+			$h .= '</td>';
+
+			$h .= '<td class="text-end">';
+			$h .= match($eOperation['type']) {
+				\journal\Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
+				default => '',
+			};
+			$h .= '</td>';
+
+			$h .= '<td class="text-end">';
+			$h .= match($eOperation['type']) {
+				\journal\Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
+				default => '',
+			};
+			$h .= '</td>';
+			$h .= '<td class="text-center">';
+				$h .= $form !== NULL
+					? $form->checkbox('operation[]', $eOperation['id'])
+						.'<span class="hide" name="amount" data-operation="'.$eOperation['id'].'">'.$eOperation['amount'].'</span>'
+					: '';
+			$h .= '</td>';
+		$h .= '</tr>';
+
+		return $h;
+
 	}
 
 	public static function getName(Cashflow $eCashflow): string {

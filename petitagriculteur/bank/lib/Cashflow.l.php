@@ -129,26 +129,8 @@ class CashflowLib extends CashflowCrud {
 		}
 
 		// Ajout de la transaction sur la classe de compte bancaire 512
-		$eOperationBank = new \journal\Operation();
-		$eAccountBank = new Account();
-		$eOperationBank['cashflow'] = $eCashflow;
-		$eOperationBank['date'] = $eCashflow['date'];
-		\accounting\Account::model()
-			->select(\accounting\Account::getSelection())
-			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
-			->get($eAccountBank);
-		$eOperationBank['account'] = $eAccountBank;
-		$eOperationBank['accountLabel'] = $eCashflow['import']['account']['label'] ?? \Setting::get('accounting\defaultBankAccountLabel');
-		$eOperationBank['description'] = $eCashflow['memo'];
-		$eOperationBank['document'] = $document;
-		$eOperationBank['type'] = match($eCashflow['type']) {
-			CashflowElement::CREDIT => \journal\Operation::DEBIT,
-			CashflowElement::DEBIT => \journal\Operation::CREDIT,
-		};
-		$eOperationBank['amount'] = abs($eCashflow['amount']);
-
-		\journal\Operation::model()->insert($eOperationBank);
-		$cOperation->append($eOperation);
+		$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow($eCashflow, $document);
+		$cOperation->append($eOperationBank);
 
 		if($fw->ko()) {
 			return new \Collection();
@@ -157,5 +139,29 @@ class CashflowLib extends CashflowCrud {
 		return $cOperation;
 	}
 
+	public static function attach(Cashflow $eCashflow, array $operations): void {
+
+		Cashflow::model()->beginTransaction();
+
+		if($eCashflow['status'] !== Cashflow::WAITING or \journal\OperationLib::countByCashflow($eCashflow) > 0) {
+			throw new \NotExpectedAction('Cashflow #'.$eCashflow['id'].' already attached');
+		}
+
+		$updated = \journal\OperationLib::attachIdsToCashflow($eCashflow, $operations);
+		if($updated !== count($operations)) {
+			throw new \NotExpectedAction($updated.' operations updated instead of '.count($operations).' expected. Cashflow #'.$eCashflow['id'].' not attached.');
+		}
+
+		$properties = ['status', 'updatedAt'];
+		$eCashflow['status'] = Cashflow::ALLOCATED;
+		$eCashflow['updatedAt'] = Cashflow::model()->now();
+
+		Cashflow::model()
+			->select($properties)
+			->whereId($eCashflow['id'])
+			->update($eCashflow->extracts(['status', 'updatedAt']));
+
+		Cashflow::model()->commit();
+	}
 }
 ?>

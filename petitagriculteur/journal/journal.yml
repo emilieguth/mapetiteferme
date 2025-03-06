@@ -16,6 +16,8 @@ Operation:
   vatAccount: ?accounting\Account
   # Opération à laquelle celle-ci est liée (ex: opération de TVA reliée à une autre opération)
   operation: ?journal\Operation
+  createdAt: datetime = SPECIAL(now)
+  updatedAt: datetime = SPECIAL(now)
 
 ThirdParty:
   id: serial32

@@ -7,8 +7,10 @@ Class AlertUi {
 
 		return match($fqn) {
 
-			'Cashflow::accountsCheck' => s("Veuillez sélectionner au moins une classe de compte !"),
+			'Cashflow::accountsCheck' => s("Veuillez sélectionner au moins une classe de compte."),
 			'Cashflow::allocate.noOperation' => s("Aucune opération n'a pu être enregistrée."),
+			'Cashflow::internal' => s("Une erreur interne est survenue."),
+			'Cashflow::noSelectedOperation' => s("Sélectionnez au moins une écriture à rattacher."),
 
 			'Import::ofxSize' => s("Votre import ne peut pas excéder 1 Mo, merci de réduire la taille de votre fichier."),
 			'Import::ofxError' => s("Une erreur est survenue lors de l'import de votre fichier, merci de réessayer."),
@@ -26,6 +28,7 @@ Class AlertUi {
 
 			'Cashflow::allocated' => s("Les écritures ont bien été attribuées !"),
 			'Cashflow::deallocated' => s("Les écritures ont bien été annulées et la transaction bancaire remise en attente !"),
+			'Cashflow::attached' => s("L'opération bancaire a bien été rattachée !"),
 
 			'Import::full' => s("L'import de votre relevé bancaire a bien été effectué !"),
 			'Import::partial' => s("L'import de votre relevé bancaire a bien été partiellement effectué, consultez l'import pour plus de détails."),

@@ -113,7 +113,7 @@ class AccountUi {
 			'vatRate' => $vatRate,
 			'company' => $company,
 			'itemHtml' => encode($eAccount['class'].' '.$eAccount['description']),
-			'itemText' => encode($eAccount['class'].' '.$eAccount['description'])
+			'itemText' => $eAccount['class'].' '.$eAccount['description']
 		];
 
 	}

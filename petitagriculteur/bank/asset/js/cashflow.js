@@ -118,9 +118,35 @@ class Cashflow {
 class CashflowList {
     static scrollTo(cashflowId) {
 
-        const { top: mainTop} = qs('main').getBoundingClientRect();
-        const { top: divTop } = qs('#cashflow-list [name="cashflow-' + cashflowId + '"]').getBoundingClientRect();
-        window.scrollTo({top: divTop - mainTop, behavior: 'smooth'});
+        if(parseInt(cashflowId) > 0) {
+            const { top: mainTop} = qs('main').getBoundingClientRect();
+            const { top: divTop } = qs('#cashflow-list [name="cashflow-' + cashflowId + '"]').getBoundingClientRect();
+            window.scrollTo({top: divTop - mainTop, behavior: 'smooth'});
+        }
+
+    }
+}
+
+
+document.delegateEventListener('click', '#cashflow-doAttach input[type="checkbox"]', function() {
+    CashflowAttach.updateTotal();
+});
+class CashflowAttach {
+
+    static updateTotal() {
+
+        let total = 0;
+        qsa('input[type="checkbox"][name="operation[]"]:checked', operation => total += parseFloat(qs('span[data-operation="' + operation.value + '"][name="amount"]').innerHTML));
+        total = Math.round(total * 100) / 100;
+        qs('span[data-field="total"]').innerHTML = total;
+
+        const cashflowAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
+
+        if(Math.abs(cashflowAmount) !== Math.abs(total)) {
+            qs('#cashflow-attach-difference-warning').classList.remove('hide');
+        } else {
+            qs('#cashflow-attach-difference-warning').classList.add('hide');
+        }
 
     }
 }
