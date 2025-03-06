@@ -116,6 +116,7 @@ class OperationUi {
 					$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
 				}
 			}
+			$vatAmountDefault = $vatRateDefault !== 0 ? round(($defaultValues['amount'] ?? 0) * $vatRateDefault / 100,2) : 0;
 
 			$h .= '<div class="util-info">';
 				$h .= s(
@@ -131,7 +132,7 @@ class OperationUi {
 			);
 			$h .= $form->group(
 				s("Valeur de TVA (calcul automatique)"),
-				$form->inputGroup($form->number('vatValue'.$suffix,  0, ['data-field' => 'vatValue', 'min' => 0.0, 'step' => 0.01]).$form->addon('€'))
+				$form->inputGroup($form->number('vatValue'.$suffix,  $vatAmountDefault, ['data-field' => 'vatValue', 'min' => 0.0, 'step' => 0.01]).$form->addon('€'))
 			);
 
 		$h .= '</div>';
@@ -140,7 +141,7 @@ class OperationUi {
 
 	}
 
-	public function update(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
+/*	public function update(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
 
 		\Asset::js('journal', 'operation.js');
 		$form = new \util\FormUi();
@@ -155,7 +156,7 @@ class OperationUi {
 		$h .= $form->hidden('id', $eOperation['id']);
 
 		$h .= $form->dynamicGroup($eOperation, 'account*', function($d) {
-			$d->autocompleteDispatch = '#journal-operation-create';
+			//$d->autocompleteDispatch = '#journal-operation-create';
 		});
 
 		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
@@ -179,7 +180,7 @@ class OperationUi {
 			body: $h
 		);
 
-	}
+	}*/
 
 	public static function p(string $property): \PropertyDescriber {
 

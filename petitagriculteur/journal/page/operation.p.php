@@ -24,11 +24,15 @@ new \journal\OperationPage(
 			}
 		}
 
+		// Third party
+		$thirdParty = \journal\ThirdPartyLib::getByName(GET('thirdParty'));
+
 		$data->e->merge([
 			'company' => $data->eCompany['id'],
 			'account' => $eAccount,
 			'accountLabel' => $label,
 			'vatRate' => $eAccount['vatRate'] ?? 0,
+			'thirdParty' => $thirdParty,
 		]);
 
 		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();

@@ -131,8 +131,8 @@ class OperationLib extends OperationCrud {
 
 		Operation::model()->beginTransaction();
 
-		$thirdParty = post_exists('thirdParty') === TRUE ? POST('thirdParty') : null;
-		if($thirdParty !== null) {
+		$thirdParty = post_exists('thirdParty') === TRUE ? POST('thirdParty') : NULL;
+		if($thirdParty !== NULL) {
 			$e['thirdParty'] = \journal\ThirdPartyLib::getByName($thirdParty);
 		}
 

@@ -81,7 +81,6 @@ class ThirdPartyUi {
 
 		\Asset::css('media', 'media.css');
 
-
 		return [
 			'value' => encode($eThirdParty['name']),
 			'company' => $company,

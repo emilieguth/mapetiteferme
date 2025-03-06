@@ -12,7 +12,7 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journa
 class Operation {
 
     static refreshCreate(accountDetail) {
-
+        const thirdParty = qs('#journal-operation-create').form().get('thirdParty');
         const company = qs('#journal-operation-create').form().get('company');
         const { value: account, class: accountLabel } = accountDetail;
 
@@ -20,7 +20,8 @@ class Operation {
             .url(company + '/journal/operation:create?'+ new URLSearchParams({
                 company,
                 account,
-                accountLabel
+                accountLabel,
+                thirdParty,
             }))
             .method('get')
             .fetch();
