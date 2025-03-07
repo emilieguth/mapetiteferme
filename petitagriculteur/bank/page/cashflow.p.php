@@ -31,8 +31,11 @@ new Page(
 
 		// Ne pas ouvrir le bloc de recherche pour ces champs
 		$search->set('financialYear', $data->eFinancialYearSelected);
-		if(GET('import')) {
+		if(get_exists('import') === TRUE) {
 			$search->set('import', GET('import'));
+			$data->eImport = \bank\ImportLib::getById(GET('import', 'int'));
+		} else {
+			$data->eImport = new \bank\Import();
 		}
 
 		$data->cCashflow = \bank\CashflowLib::getAll($search, $hasSort);

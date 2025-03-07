@@ -15,7 +15,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	);
 
 	echo new \bank\CashflowUi()->getSearch($data->search, $data->eFinancialYearSelected);
-	echo new \bank\CashflowUi()->getCashflow($data->eCompany, $data->cCashflow, $data->eFinancialYearSelected, $data->search);
+	echo new \bank\CashflowUi()->getCashflow($data->eCompany, $data->cCashflow, $data->eFinancialYearSelected, $data->eImport, $data->search);
 
 });
 

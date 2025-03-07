@@ -37,7 +37,8 @@ class CashflowUi {
 		\company\Company $eCompany,
 		\Collection $cCashflow,
 		\accounting\FinancialYear $eFinancialYearSelected,
-		\Search $search = new \Search()
+		Import $eImport,
+		\Search $search,
 	): string {
 
 		\Asset::css('bank', 'cashflow.css');
@@ -54,6 +55,19 @@ class CashflowUi {
 		$highlightedCashflowId = GET('id', 'int');
 
 		$h = '';
+
+		if($eImport->exists() === TRUE) {
+
+			$h .= '<div class="util-block-search stick-xs">';
+			$h .= s(
+				"Vous visualisez actuellement les opérations bancaires correspondant à l'import #{id} du {date}.",
+				[
+					'id' => GET('import'),
+					'date' => \util\DateUi::numeric($eImport['createdAt'], \util\DateUi::DATE),
+				]
+			);
+			$h .= '</div>';
+		}
 
 		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').'>';
 
@@ -355,7 +369,7 @@ class CashflowUi {
 		);
 	}
 
-	public static function getAttach(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, \Collection $cOperation): \Panel {
+	public function getAttach(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, \Collection $cOperation): \Panel {
 
 		\Asset::js('bank', 'cashflow.js');
 		$h = CashflowUi::getCashflowHeader($eCashflow);
