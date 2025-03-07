@@ -39,7 +39,7 @@ class OperationUi {
 
 			$h .= '<h4>'.s("Nouvelle écriture").'</h4>';
 
-			$h .= self::getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, NULL, '[0]', [], []);
+			$h .= self::getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, NULL, '[0]', $eOperation->getArrayCopy(), []);
 
 		$h .= '</div>';
 
@@ -285,7 +285,7 @@ class OperationUi {
 
 			case 'document':
 				$d->attributes = [
-					'onchange' => 'Cashflow.copyDocument(this)'
+					//'onchange' => 'Cashflow.copyDocument(this)'
 				];
 				break;
 

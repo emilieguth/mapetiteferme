@@ -15,12 +15,12 @@ new \journal\OperationPage(
 
 		// Apply default bank account label if the class is a bank account class.
 		$label = '';
-		if(get_exists('label') and mb_strlen(GET('label') > 0)) {
-			$label = GET('label');
-		} else if($eAccount->exists() === TRUE and $eAccount['class'] === \Setting::get('accounting\bankAccountClass')) {
+		if(get_exists('accountLabel') and mb_strlen(GET('accountLabel') > 0)) {
+			$label = GET('accountLabel');
+		} elseif($eAccount->exists() === TRUE and $eAccount['class'] === \Setting::get('accounting\bankAccountClass')) {
 			$eAccountBank = \bank\AccountLib::getDefaultAccount();
 			if($eAccountBank->exists() === TRUE) {
-				$label = $eAccountBank['label'];
+				$label = $eAccountBank['accountLabel'];
 			}
 		}
 
@@ -33,6 +33,11 @@ new \journal\OperationPage(
 			'accountLabel' => $label,
 			'vatRate' => $eAccount['vatRate'] ?? 0,
 			'thirdParty' => $thirdParty,
+			'date' => GET('date'),
+			'description' => GET('description'),
+			'document' => GET('document'),
+			'type' => GET('type'),
+			'amount' => GET('amount', 'float'),
 		]);
 
 		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();

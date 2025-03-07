@@ -11,17 +11,39 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journa
 
 class Operation {
 
+    static getFormValues() {
+
+        const thirdParty = qs('[name="thirdParty[0]"]')?.value;
+        const account = qs('[name="account[0]"]').value;
+        const accountLabel = qs('[name="accountLabel[0]"]').value;
+        const date = qs('[name="date[0]"]').value;
+        const description = qs('[name="description[0]"]').value;
+        const document = qs('[name="document[0]"]').value;
+        const type = qs('[name="type[0]"]').value;
+        const amount = qs('[name="amount[0]"]').value;
+
+        return {
+            account,
+            accountLabel,
+            amount,
+            thirdParty,
+            date,
+            description,
+            document,
+            type,
+        }
+    }
+
     static refreshCreate(accountDetail) {
-        const thirdParty = accountDetail.input.firstParent('div.operation-write').qs('[name^="thirdParty["]')?.value;
         const company = qs('#journal-operation-create').form().get('company');
         const { value: account, class: accountLabel } = accountDetail;
 
         new Ajax.Query()
             .url(company + '/journal/operation:create?'+ new URLSearchParams({
                 company,
+                ...Operation.getFormValues(),
                 account,
                 accountLabel,
-                thirdParty,
             }))
             .method('get')
             .fetch();
@@ -67,25 +89,12 @@ class Operation {
 
     static addShippingBlock() {
 
-        const thirdParty = qs('[name="thirdParty[0]"]')?.value;
-        const account = qs('[name="account[0]"]').value;
-        const accountLabel = qs('[name="accountLabel[0]"]').value;
-        const date = qs('[name="date[0]"]').value;
-        const description = qs('[name="description[0]"]').value;
-        const document = qs('[name="document[0]"]').value;
-        const type = qs('[name="type[0]"]').value;
         const company = qs('#journal-operation-create').form().get('company');
 
         new Ajax.Query()
             .url(company + '/journal/operation:addShipping?'+ new URLSearchParams({
                 company,
-                account,
-                accountLabel,
-                thirdParty,
-                date,
-                description,
-                document,
-                type,
+                ...Operation.getFormValues(),
             }))
             .method('get')
             .fetch();
