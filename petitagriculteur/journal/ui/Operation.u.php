@@ -194,47 +194,6 @@ class OperationUi {
 
 	}
 
-/*	public function update(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
-
-		\Asset::js('journal', 'operation.js');
-		$form = new \util\FormUi();
-
-		$h = '';
-
-		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/operation:doUpdate', ['id' => 'journal-operation-create', 'autocomplete' => 'off']);
-
-		$h .= $form->asteriskInfo();
-
-		$h .= $form->hidden('company', $eCompany['id']);
-		$h .= $form->hidden('id', $eOperation['id']);
-
-		$h .= $form->dynamicGroup($eOperation, 'account*', function($d) {
-			//$d->autocompleteDispatch = '#journal-operation-create';
-		});
-
-		$h .= $form->dynamicGroups($eOperation, ['accountLabel']);
-		$h .= $form->group(s("Date de l'opération").' '.\util\FormUi::asterisk(), $form->date('date', $eOperation['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]));
-		$h .= $form->dynamicGroups($eOperation, ['description*', 'amount*', 'type*', 'document']);
-
-		$h .= $form->group(
-			s("Taux de TVA").' '.\util\FormUi::asterisk(),
-			$form->inputGroup($form->number('vatRate*',  $eOperation['vatRate'] ?? 0, ['disabled' => 'disabled']).$form->addon('% '))
-		);
-
-		$h .= $form->group(
-			content: $form->submit(s("Modifier l'écriture"))
-		);
-
-		$h .= $form->close();
-
-		return new \Panel(
-			id: 'panel-journal-operation-create',
-			title: s("Modifier une écriture"),
-			body: $h
-		);
-
-	}*/
-
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Operation::model()->describer($property, [

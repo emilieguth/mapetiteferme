@@ -25,7 +25,6 @@ class AlertUi {
 		return match($fqn) {
 
 			'Operation::created' => s("L'écriture a bien été enregistrée."),
-			'Operation::updated' => s("L'écriture a bien été mise à jour."),
 			'Operation::deleted' => s("L'écriture a bien été supprimée."),
 
 			'ThirdParty::created' => s("Le tiers a bien été créé."),

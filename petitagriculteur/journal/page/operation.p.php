@@ -78,20 +78,18 @@ new \journal\OperationPage(
 
 		throw new ReloadAction('journal', 'Operation::created');
 
-	})
-	->update(function($data) {
+	});
 
-		$data->e->merge([
-			'account' => \accounting\AccountLib::getById($data->e['id'], \accounting\Account::getSelection() + ['vatAccount' => \accounting\Account::getSelection()]),
-		]);
-		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+	new \journal\OperationPage(
+		function($data) {
+			\user\ConnectionLib::checkLogged();
+			$company = REQUEST('company');
 
-		throw new ViewAction($data);
-
-	})
-	->doUpdate(function($data) {
-		throw new ReloadAction('journal', 'Operation::updated');
-	})
+			$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+			\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
+			$data->eOperation = \journal\OperationLib::getById(REQUEST('id', 'int'))->validate('canUpdate');
+		}
+	)
 	->doDelete(function($data) {
 		throw new ReloadAction('journal', 'Operation::deleted');
 	});

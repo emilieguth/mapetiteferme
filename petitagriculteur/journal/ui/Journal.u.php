@@ -180,7 +180,12 @@ class JournalUi {
 									// On ne supprime pas une opération unitaire : il faut refaire l'attribution
 									&& $eOperation['cashflow']->exists() === FALSE
 								) {
-									$h .= $this->getUpdate($eCompany, $eOperation, 'btn-outline-secondary');
+									if($eOperation['vatAccount']->exists() === TRUE) {
+										$message = s("En supprimant cette écriture, l'entrée de TVA associée sera également supprimée. Confirmez-vous la suppression de cette écriture ?");
+									} else {
+										$message = s("Confirmez-vous la suppression de cette écriture ?");
+									}
+									$h .= '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:doDelete" post-id="'.$eOperation['id'].'" data-confirm="'.$message.'" class="btn btn-outline-secondary btn-outline-danger">'.\Asset::icon('trash').'</a>';
 								}
 							$h .= '</td>';
 
