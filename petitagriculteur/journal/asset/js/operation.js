@@ -12,7 +12,7 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journa
 class Operation {
 
     static refreshCreate(accountDetail) {
-        const thirdParty = accountDetail.input.firstParent('div.operation-write').qs('[name^="thirdParty["]').value;
+        const thirdParty = accountDetail.input.firstParent('div.operation-write').qs('[name^="thirdParty["]')?.value;
         const company = qs('#journal-operation-create').form().get('company');
         const { value: account, class: accountLabel } = accountDetail;
 
@@ -56,8 +56,9 @@ class Operation {
 
         const operations = qsa('[data-field="amount"]').length;
         const account = qs('[name="account[0]"]')?.value;
+        const accountClass = qs('[data-autocomplete-field="account[0]"]').value;
 
-        if(operations === 1 && account !== undefined) {
+        if(operations === 1 && account !== undefined && [6, 7].includes(parseInt(accountClass.substring(0, 1))) === true) {
             Operation.enableShippingButton();
         } else {
             Operation.disableShippingButton();
@@ -66,7 +67,7 @@ class Operation {
 
     static addShippingBlock() {
 
-        const thirdParty = qs('[name="thirdParty[0]"]').value;
+        const thirdParty = qs('[name="thirdParty[0]"]')?.value;
         const account = qs('[name="account[0]"]').value;
         const accountLabel = qs('[name="accountLabel[0]"]').value;
         const date = qs('[name="date[0]"]').value;
