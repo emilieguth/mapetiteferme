@@ -15,7 +15,7 @@ new AdaptativeView('index', function($data, MainTemplate $t) {
 		$h .= '<a href="/company/public:create" class="bg-secondary util-button">';
 
 			$h .= '<div>';
-				$h .= '<h4>'.s("Créer une autre entreprise").'</h4>';
+				$h .= '<h4>'.s("Créer une autre ferme").'</h4>';
 			$h .= '</div>';
 			$h .= \Asset::icon('house-door-fill');
 

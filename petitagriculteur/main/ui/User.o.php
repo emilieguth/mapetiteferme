@@ -10,7 +10,7 @@ class UserObserverUi {
 		$text = s("Bonjour,
 
 {how}
-Vous pouvez désormais créer la page de votre entreprise pour commencer à utiliser le service !
+Vous pouvez désormais créer la page de votre ferme pour commencer à utiliser le service !
 
 {url}
 

@@ -51,7 +51,7 @@ class AdminUi {
 				}
 
 				$h .= '<div class="form-search-end">';
-					$h .= p("{value} entreprise", "{value} entreprises", $count);
+					$h .= p("{value} ferme", "{value} fermes", $count);
 				$h .= '</div>';
 			$h .= '</div>';
 
@@ -68,7 +68,7 @@ class AdminUi {
 	public function displayCompanies(\Collection $cCompany, int $nCompany, int $page, \Search $search): string {
 
 		if($nCompany === 0) {
-			return '<div class="util-info">'.s("Il n'y a aucune entreprise à afficher...").'</div>';
+			return '<div class="util-info">'.s("Il n'y a aucune ferme à afficher...").'</div>';
 		}
 
 		$h = '<div class="util-overflow-xs stick-sm">';

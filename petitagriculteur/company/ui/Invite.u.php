@@ -14,7 +14,7 @@ class InviteUi {
       $h = '<div class="util-block text-center">';
         $h .= '<br/><br/>';
         $h .= '<h2>'.s("Le lien que vous avez utilisé pour activer votre compte a expiré !").'</h2>';
-        $h .= '<h4>'.s("Merci de demander à l'entreprise de vous envoyer un nouveau lien.").'</h4>';
+        $h .= '<h4>'.s("Merci de demander au gestionnaire de la ferme de vous envoyer un nouveau lien.").'</h4>';
         $h .= '<br/><br/>';
       $h .= '</div>';
 
@@ -67,7 +67,7 @@ class InviteUi {
       $h = '<div class="util-block text-center">';
         $h .= '<br/><br/>';
         $h .= '<h2>'.s("Vous devez être connecté·e sur {siteName} avec {emailExpected} pour activer votre compte client ! Vous êtes actuellement connecté avec l'adresse e-mail {emailCurrent}.", ['emailExpected' => '<b>'.encode($eInvite['email']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h2>';
-        $h .= '<h4>'.s("Merci de vous déconnecter de {siteName} et de vous reconnecter avec la bonne adresse e-mail, ou bien de demander à l'entreprise {company} de vous envoyer un lien sur {emailCurrent}.", ['company' => '<b>'.encode($eCompany['name']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h4>';
+        $h .= '<h4>'.s("Merci de vous déconnecter de {siteName} et de vous reconnecter avec la bonne adresse e-mail, ou bien de demander à la ferme {company} de vous envoyer un lien sur {emailCurrent}.", ['company' => '<b>'.encode($eCompany['name']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h4>';
         $h .= '<br/><br/>';
       $h .= '</div>';
 
@@ -101,7 +101,7 @@ class InviteUi {
     $h .= $form->hidden('company', $eInvite['company']['id']);
 
     $description = '<div class="util-block-help">';
-    $description .= '<p>'.s("En invitant une personne à rejoindre l'équipe de votre entreprise, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise.").'</p>';
+    $description .= '<p>'.s("En invitant une personne à rejoindre l'équipe de votre ferme, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise.").'</p>';
     $description .= '<p>'.s("Pour inviter une personne, saisissez son adresse e-mail. Un e-mail avec les instructions à suivre lui sera envoyé. Ces instructions devront être réalisées dans un délai de trois jours.").'</p>';
     $description .= '</div>';
 
@@ -174,7 +174,7 @@ class InviteUi {
       $h .= '<h2>'.s("Votre compte {company} a été activé !", ['company' => '<b>'.encode($eInvite['company']['name']).'</b>']).'</h2>';
       $h .= '<h4>'.s("Vous avez désormais accès à l'ensemble des fonctionnalités.").'</h4>';
       $h .= '<div>';
-        $h .= '<a href="/" class="btn btn-secondary">'.s("Découvrir l'entreprise").'</a> ';
+        $h .= '<a href="/" class="btn btn-secondary">'.s("Découvrir la ferme").'</a> ';
       $h .= '</div>';
       $h .= '<br/><br/>';
     $h .= '</div>';
@@ -201,7 +201,7 @@ class InviteUi {
 
     $text = s("Bonjour,
 
-L'entreprise {company} vous invite à créer un compte {siteName} pour rejoindre l'équipe de l'entreprise.
+La ferme {company} vous invite à créer un compte {siteName} pour rejoindre l'équipe.
 
 Utilisez le lien suivant dans votre navigateur pour activer votre compte :
 {url}
@@ -234,7 +234,7 @@ L'équipe {siteName}", ['company' => $e['company']['name'], 'email' => $e['email
 
 Vous avez accepté l'invitation à rejoindre l'équipe de {company} avec succès sur {siteName}.
 
-Vous pouvez accéder à la page de l'entreprise en utilisant le lien suivant :
+Vous pouvez accéder à la page de la ferme en utilisant le lien suivant :
 {url}
 
 À bientôt,

@@ -27,7 +27,7 @@ class EmployeeUi {
 
   public function getNoCompany(): string {
 
-    $h = '<h2>'.s("Mon entreprise").'</h2>';
+    $h = '<h2>'.s("Ma ferme").'</h2>';
     $h .= '<div class="util-block-help">';
       $h .= '<h4>'.s("Bienvenue sur {siteName} !").'</h4>';
       $h .= '<p>'.s("Vous dirigez une exploitation et vous venez de vous inscrire sur {siteName}. Pour commencer à utiliser tous les outils numériques développés pour vous sur la plateforme, configurez maintenant votre ferme en renseignant quelques informations de base !").'</p>';
@@ -35,7 +35,7 @@ class EmployeeUi {
     $h .= '<div class="util-buttons">';
       $h .= '<a href="/company/public:create" class="bg-secondary util-button">';
         $h .= '<div>';
-          $h .= '<h4>'.s("Démarrer la création de mon entreprise").'</h4>';
+          $h .= '<h4>'.s("Démarrer la création de ma ferme").'</h4>';
         $h .= '</div>';
         $h .= \Asset::icon('house-door-fill');
       $h .= '</a>';
@@ -101,7 +101,7 @@ class EmployeeUi {
 
     return new \Panel(
 			id: 'company-employee-update',
-      title: s("Modifier un utilisateur de l'entreprise"),
+      title: s("Modifier un utilisateur de la ferme"),
       body: $h,
       close: 'reload'
     );
@@ -273,7 +273,7 @@ class EmployeeUi {
     $h .= $form->hidden('company', $eEmployee['company']['id']);
 
     $description = '<div class="util-block-help">';
-      $description .= '<p>'.s("En invitant un utilisateur à rejoindre l'équipe de votre entreprise, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise.").'</p>';
+      $description .= '<p>'.s("En invitant un utilisateur à rejoindre l'équipe de votre ferme, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise.").'</p>';
       $description .= '<p>'.s("Pour inviter un utilisateur, saisissez son adresse e-mail. Un e-mail avec les instructions à suivre lui sera envoyé. Ces instructions devront être réalisées dans un délai de trois jours.").'</p>';
     $description .= '</div>';
 
@@ -307,7 +307,7 @@ class EmployeeUi {
 
     return new \Panel(
 			id: 'company-employee-update',
-      title: s("Modifier un utilisateur de l'entreprise"),
+      title: s("Modifier un utilisateur de la ferme"),
       body: $h,
       close: 'reload'
     );

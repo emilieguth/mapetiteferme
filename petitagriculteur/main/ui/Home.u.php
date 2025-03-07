@@ -21,7 +21,7 @@ class HomeUi {
 			}
 		} else {
 
-			$h .= '<h2>'.($cCompany->count() === 1 ? s("Mon entreprise") : s("Mes entreprises")).'</h2>';
+			$h .= '<h2>'.($cCompany->count() === 1 ? s("Ma ferme") : s("Mes fermes")).'</h2>';
 			$h .= (new \company\EmployeeUi())->getMyCompanies($cCompany);
 
 		}

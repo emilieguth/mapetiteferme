@@ -10,10 +10,10 @@ class FinancialYearUi {
 
 		$h = '<div class="util-action">';
 
-		$h .= '<h1>';
-		$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
-		$h .= s("Les exercices comptables");
-		$h .= '</h1>';
+			$h .= '<h1>';
+				$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
+				$h .= s("Les exercices comptables");
+			$h .= '</h1>';
 
 		$h .= '</div>';
 
@@ -39,7 +39,7 @@ class FinancialYearUi {
 	public function getManage(\company\Company $eCompany, \Collection $cFinancialYear): string {
 
 		if($cFinancialYear->empty() === TRUE) {
-			return '<div class="util-info">'.s("Aucun exercice comptable n'a encore été enregistré").'</div>';
+			return '<div class="util-info">'.s("Aucun exercice comptable n'a encore été enregistré").'</div>'.(new \accounting\FinancialYearUi()->create($eCompany, new FinancialYear()))->body;
 		}
 
 		$h = '';

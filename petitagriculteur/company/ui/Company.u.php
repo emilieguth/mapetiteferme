@@ -42,7 +42,7 @@ class CompanyUi {
 		$d->prepend = \Asset::icon('house-door-fill');
 		$d->field = 'autocomplete';
 
-		$d->placeholder = s("Tapez un nom d'entreprise...");
+		$d->placeholder = s("Tapez un nom de ferme...");
 		$d->multiple = $multiple;
 
 		$d->autocompleteUrl = '/company/search:query';
@@ -85,14 +85,14 @@ class CompanyUi {
 			$h .= $form->hidden('nafCode', null);
 
 			$h .= $form->group(
-				content: $form->submit(s("Créer mon entreprise"))
+				content: $form->submit(s("Créer ma ferme"))
 			);
 
 		$h .= $form->close();
 
 		return new \Panel(
 			id: 'panel-company-create',
-			title: s("Créer mon entreprise"),
+			title: s("Créer ma ferme"),
 			body: $h
 		);
 
@@ -222,14 +222,22 @@ class CompanyUi {
 
 		$h = '';
 
+		if(get_exists('firstTime') === TRUE) {
+
+			$h .= '<div class="util-block-search stick-xs">';
+			$h .= s(
+				"Pour commencer, vérifiez le <b>type de comptabilité</b> de votre ferme dans la section ”Les réglages de base”. Puis ensuite, créez votre <b>premier exercice comptable</b>.",
+			);
+			$h .= '</div>';
+		}
 		$h .= '<div class="util-block-optional">';
 
-			$h .= '<h2>'.s("L'entreprise").'</h2>';
+			$h .= '<h2>'.s("La ferme").'</h2>';
 
 			$h .= '<div class="util-buttons">';
 
 				$h .= '<a href="'.CompanyUi::url($eCompany).'/company:update?id='.$eCompany['id'].'" class="bg-secondary util-button">';
-					$h .= '<h4>'.s("Les réglages de base<br/>de l'entreprise").'</h4>';
+					$h .= '<h4>'.s("Les réglages de base<br/>de la ferme").'</h4>';
 					$h .= \Asset::icon('gear-fill');
 				$h .= '</a>';
 
@@ -278,9 +286,9 @@ class CompanyUi {
 
 			$h .= '<div class="util-buttons">';
 
-				$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Êtes-vous sûr·e de vouloir supprimer cette entreprise ?").'" class="bg-danger util-button">';
+				$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Êtes-vous sûr·e de vouloir supprimer votre ferme ?").'" class="bg-danger util-button">';
 
-					$h .= '<h4>'.s("Supprimer l'entreprise").'</h4>';
+					$h .= '<h4>'.s("Supprimer la ferme").'</h4>';
 					$h .= \Asset::icon('trash');
 
 				$h .= '</a>';
@@ -583,11 +591,11 @@ class CompanyUi {
 			'addressLine2' => s("Adresse (ligne 2)"),
 			'banner' => s("Bandeau à afficher en haut des e-mails envoyés à vos clients"),
 			'city' => s("Ville"),
-			'logo' => s("Logo de l'entreprise"),
-			'nafCode' => s("Code NAF de l'entreprise (APE)"),
-			'name' => s("Nom de l'entreprise"),
+			'logo' => s("Logo de votre ferme"),
+			'nafCode' => s("Code NAF de votre ferme (APE)"),
+			'name' => s("Nom de votre ferme"),
 			'postalCode' => s("Code postal"),
-			'siret' => s("SIRET de l'entreprise*"),
+			'siret' => s("SIRET de votre ferme"),
 			'url' => s("Site internet"),
 			'vignette' => s("Photo de présentation"),
 		]);

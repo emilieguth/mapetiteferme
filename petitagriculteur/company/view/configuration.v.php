@@ -12,7 +12,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->mainTitle = '<h1>'.s("Paramétrage").'</h1>';
 	$t->mainTitleClass = 'hide-lateral-down';
 
-	echo (new \company\CompanyUi())->getSettings($data->eCompany);
+	echo new \company\CompanyUi()->getSettings($data->eCompany);
 
 });
 ?>

@@ -1,7 +1,7 @@
 <?php
 new AdaptativeView('index', function($data, MainTemplate $t) {
 
-	$t->title = s("Gérer les entreprises");
+	$t->title = s("Gérer les fermes");
 
 	$uiAdmin = new \company\AdminUi();
 

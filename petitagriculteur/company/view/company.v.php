@@ -24,7 +24,7 @@ new AdaptativeView('update', function($data, CompanyTemplate $t) {
 
 	$h = '<h1>';
 		$h .= '<a href="'.\company\CompanyUi::urlSettings($data->e).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
-		$h .= s("Réglages de base de l'entreprise");
+		$h .= s("Réglages de base de la ferme");
 	$h .= '</h1>';
 
 	$t->mainTitle = $h;
