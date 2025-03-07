@@ -202,7 +202,10 @@ class CashflowUi {
 				$h .= '<dt>'.s("Type").'</dt>';
 				$h .= '<dd>'.$type.'</dd>';
 				$h .= '<dt>'.s("Montant").'</dt>';
-				$h .= '<dd><span id="get-allocate-total-amount">'.$eCashflow['amount'].'</span>€</dd>';
+				$h .= '<dd>';
+					$h .= '<span name="cashflowAmount" class="hide">'.$eCashflow['amount'].'</span>';
+					$h .= '<span>'.\util\TextUi::money($eCashflow['amount']).'</span>';
+				$h .= '</dd>';
 			$h .= '</dl>';
 		$h .= '</div>';
 
@@ -439,7 +442,7 @@ class CashflowUi {
 
 						$h .= '<tr>';
 							$h .= '<td colspan="6" class="text-end">'.s("Total sélectionné :").'</td>';
-							$h .= '<td class="text-center"><span data-field="total"></span>€</td>';
+							$h .= '<td class="text-center"><span data-field="totalAmount"></span></td>';
 						$h .= '</tr>';
 
 						$h .= '</tbody>';

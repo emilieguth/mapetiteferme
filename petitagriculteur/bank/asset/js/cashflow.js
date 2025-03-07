@@ -26,7 +26,19 @@ class Cashflow {
         event.detail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', event.detail.vatRate);
 
         // On vérifie les calculs de TVA
+        const index = event.detail.input.getAttribute('data-index');
+        this.updateVatValue(index);
         this.fillShowHideAmountWarning();
+    }
+
+    static updateVatValue(index) {
+
+        const amountValue = qs('#cashflow-create-operation-list [name="amount[' + index + ']"]').valueAsNumber;
+        const vatRate = qs('#cashflow-create-operation-list [name="vatRate[' + index + ']"]').valueAsNumber;
+        const vatValue = Math.round(amountValue * vatRate) / 100;
+
+        qs('#cashflow-create-operation-list [name="vatValue[' + index + ']"]').setAttribute('value', vatValue);
+
     }
 
     static recalculateAmounts() {
@@ -39,10 +51,7 @@ class Cashflow {
 
             const amountValue = (isNaN(amount.valueAsNumber) ? 0 : amount.valueAsNumber);
 
-            const vatRate = qs('#cashflow-create-operation-list [name="vatRate[' + index + ']"]').valueAsNumber;
-            const vatValue = (amountValue * vatRate / 100).toFixed(2);
-
-            qs('#cashflow-create-operation-list [name="vatValue[' + index + ']"]').setAttribute('value', vatValue);
+            const vatValue = qs('#cashflow-create-operation-list [name="vatValue[' + index + ']"]').valueAsNumber;
 
             const type = Array.from(qsa('#cashflow-create-operation-list [name="type[' + index + ']"]')).find((checkboxType) => checkboxType.checked === true);
 
@@ -58,8 +67,10 @@ class Cashflow {
 
     static updateNewOperationLine(index) {
 
+        this.updateVatValue(index);
+
         const sum = this.recalculateAmounts();
-        const totalAmount = parseFloat(qs('#get-allocate-total-amount').innerHTML);
+        const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 
         qs('#cashflow-create-operation-list [name="amount[' + index + ']"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
         qs('#cashflow-create-operation-list [name="document[' + index + ']"]').setAttribute('value', qs('#bank-cashflow-allocate [name="cashflow[document]"]').value || '');
@@ -85,7 +96,7 @@ class Cashflow {
     static fillShowHideAmountWarning() {
 
         const sum = this.recalculateAmounts();
-        const totalAmount = parseFloat(qs('#get-allocate-total-amount').innerHTML);
+        const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 
         if(sum !== totalAmount) {
             var difference = totalAmount - sum;
@@ -138,7 +149,7 @@ class CashflowAttach {
         let total = 0;
         qsa('input[type="checkbox"][name="operation[]"]:checked', operation => total += parseFloat(qs('span[data-operation="' + operation.value + '"][name="amount"]').innerHTML));
         total = Math.round(total * 100) / 100;
-        qs('span[data-field="total"]').innerHTML = total;
+        qs('span[data-field="totalAmount"]').innerHTML = money(total);
 
         const cashflowAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 

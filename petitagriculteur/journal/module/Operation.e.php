@@ -38,7 +38,7 @@ class Operation extends OperationElement {
 				return $description !== NULL;
 
 			})
-			->setCallback('amount.empty', function(?int $amount): bool {
+			->setCallback('amount.empty', function(?float $amount): bool {
 
 				return $amount !== NULL;
 
