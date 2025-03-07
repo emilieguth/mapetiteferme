@@ -30,7 +30,7 @@ class EmployeeUi {
     $h = '<h2>'.s("Mon entreprise").'</h2>';
     $h .= '<div class="util-block-help">';
       $h .= '<h4>'.s("Bienvenue sur {siteName} !").'</h4>';
-      $h .= '<p>'.s("Vous êtes chef d'entreprise et vous venez de vous inscrire sur {siteName}. Pour commencer à utiliser tous les outils numériques développés pour vous sur la plateforme, configurez maintenant votre entreprise en renseignant quelques informations de base !").'</p>';
+      $h .= '<p>'.s("Vous dirigez une exploitation et vous venez de vous inscrire sur {siteName}. Pour commencer à utiliser tous les outils numériques développés pour vous sur la plateforme, configurez maintenant votre ferme en renseignant quelques informations de base !").'</p>';
     $h .= '</div>';
     $h .= '<div class="util-buttons">';
       $h .= '<a href="/company/public:create" class="bg-secondary util-button">';
