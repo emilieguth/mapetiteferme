@@ -35,6 +35,19 @@ class CompanyLib extends CompanyCrud {
 
 	}
 
+	public static function getBySiret(string $siret): Company {
+
+		$eCompany = new Company();
+
+		Company::model()
+      ->select(Company::getSelection())
+			->whereSiret($siret)
+      ->get($eCompany);
+
+		return $eCompany;
+
+	}
+
 	public static function getByUser(\user\User $eUser): \Collection {
 
 		return Company::model()

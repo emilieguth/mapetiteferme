@@ -12,7 +12,8 @@ class AlertUi {
 		return match($fqn) {
 
 			'Company::disabled' => s("Vous avez désactivé cette fonctionnalité sur votre entreprise."),
-			'Company::demo.delete' => s("Vous ne pouvez pas supprimer la démo !"),
+			'Company::siret.exists' => s("Cette ferme a déjà un compte sur le site, rapprochez-vous de ses dirigeants pour vous ajouter à l'équipe !"),
+
 			'Company::name.check' => s("Merci de renseigner le nom de l'entreprise !"),
 			'Employee::demo.write' => s("Vous ne pouvez pas modifier l'équipe sur la démo !"),
 			'Employee::user.check' => s("Vous n'avez pas sélectionné d'utilisateur."),

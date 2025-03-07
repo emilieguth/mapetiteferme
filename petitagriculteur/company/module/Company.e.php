@@ -56,6 +56,23 @@ class Company extends CompanyElement {
 
 	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {
 
+		$p
+			->setCallback('name.empty', function(?string $name): bool {
+
+				return $name !== NULL and mb_strlen($name) > 0;
+
+			})
+			->setCallback('siret.empty', function(?string $siret): bool {
+
+				return $siret !== NULL and mb_strlen($siret) > 0;
+
+			})
+			->setCallback('siret.exists', function(?string $siret): bool {
+
+				$eCompany = CompanyLib::getBySiret($siret);
+				return $eCompany->exists() === FALSE;
+
+			});
 		parent::build($properties, $input, $p);
 
 	}
