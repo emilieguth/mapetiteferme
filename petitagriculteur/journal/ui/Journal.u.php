@@ -30,7 +30,7 @@ class JournalUi {
 
 	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected, \bank\Cashflow $eCashflow): string {
 
-		$h = '<div id="journal-search" class="util-block-search stick-xs '.($search->empty(['ids']) ? 'hide' : '').'">';
+		$h = '<div id="journal-search" class="util-block-search stick-xs '.($search->empty(['ids']) === TRUE ? 'hide' : '').'">';
 
 			$form = new \util\FormUi();
 			$url = LIME_REQUEST_PATH.'?financialYear='.$eFinancialYearSelected['id'];
@@ -45,6 +45,7 @@ class JournalUi {
 						$h .= $form->text('description', $search->get('description'), ['placeholder' => s("Description")]);
 						$h .= $form->select('type', $statuses, $search->get('type'), ['placeholder' => s("Type")]);
 						$h .= $form->text('document', $search->get('document'), ['placeholder' => s("Pièce comptable")]);
+						$h .= $form->checkbox('cashflowFilter', 1, ['checked' => $search->get('cashflowFilter'), 'callbackLabel' => fn($input) => $input.' '.s("Filtrer les écritures non rattachées")]);
 					$h .= '</div>';
 					$h .= '<div>';
 						$h .= $form->submit(s("Chercher"), ['class' => 'btn btn-secondary']);

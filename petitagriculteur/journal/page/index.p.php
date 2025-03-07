@@ -26,6 +26,9 @@
 			'type' => GET('type'),
 			'document' => GET('document'),
 		], GET('sort'));
+
+		$search->set('cashflowFilter', GET('cashflowFilter', 'bool'));
+
 		$hasSort = get_exists('sort') === TRUE;
 		$data->search = clone $search;
 		// Ne pas ouvrir le bloc de recherche
