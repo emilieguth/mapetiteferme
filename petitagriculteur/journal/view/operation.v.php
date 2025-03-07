@@ -11,4 +11,9 @@ new AdaptativeView('update', function($data, PanelTemplate $t) {
 
 });
 
+new JsonView('addShipping', function($data, AjaxTemplate $t) {
+
+	$t->qs('div[data-operation="original"]')->insertAdjacentHtml('afterEnd', new \journal\OperationUi()->addShipping($data->eCompany, $data->eFinancialYear, $data->eOperation));
+
+});
 ?>

@@ -3,14 +3,30 @@ namespace accounting;
 
 class AccountLib extends AccountCrud {
 
+	public static function getByClassWithVatAccount(string $class): Account {
+
+		$eAccount = new Account();
+
+		Account::model()
+			->select([
+         'name' => new \Sql('CONCAT(class, ". ", description)')]
+	       + Account::getSelection()
+	       + ['vatAccount' => ['class', 'vatRate', 'description']
+       ])
+			->whereClass($class)
+			->get($eAccount);
+
+		return $eAccount;
+
+	}
 	public static function getByIdsWithVatAccount(array $ids): \Collection {
 
 		return Account::model()
 			->select([
-					'name' => new \Sql('CONCAT(class, ". ", description)')] +
-				Account::getSelection() +
-				['vatAccount' => ['class', 'vatRate', 'description']
-				])
+				'name' => new \Sql('CONCAT(class, ". ", description)')]
+				+ Account::getSelection()
+				+ ['vatAccount' => ['class', 'vatRate', 'description']
+			])
 			->whereId('IN', $ids)
 			->getCollection(NULL, NULL, 'id');
 
@@ -21,10 +37,10 @@ class AccountLib extends AccountCrud {
 		$eAccount = new Account();
 		Account::model()
 			->select([
-					'name' => new \Sql('CONCAT(class, ". ", description)')] +
-				Account::getSelection() +
-				['vatAccount' => ['class', 'vatRate']
-				])
+				'name' => new \Sql('CONCAT(class, ". ", description)')]
+				+ Account::getSelection()
+				+ ['vatAccount' => ['class', 'vatRate', 'description']
+			])
 			->whereId('=', $id)
 			->get($eAccount);
 
@@ -77,6 +93,27 @@ class AccountLib extends AccountCrud {
 		}
 
 		return $cAccountByThirdParty->mergeCollection($cAccountOthers);
+
+	}
+
+	/**
+	 * Cette fonction va chercher la classe de compte correspondant aux frais de port
+	 * en fonction de la classe de compte de l'achat ou la vente
+	 * @return Account
+	 */
+	public static function getShippingAccountByOperationAccount(Account $eAccount): Account {
+
+		$shippingClass = match(intval(mb_substr($eAccount['class'], 0, 1))) {
+			\Setting::get('accounting\chargeAccountClass') => \Setting::get('accounting\shippingChargeAccountClass'),
+			\Setting::get('accounting\productAccountClass') => \Setting::get('accounting\shippingProductAccountClass'),
+			default => NULL,
+		};
+
+		if($shippingClass === NULL) {
+			throw new \NotExpectedAction('Unexpected retrieval of shipping account for original account of class '.$eAccount['class']);
+		}
+
+		return AccountLib::getByClassWithVatAccount($shippingClass);
 
 	}
 

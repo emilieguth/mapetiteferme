@@ -127,32 +127,74 @@ class OperationLib extends OperationCrud {
 		}
 	}
 
-	public static function create(Operation $e): void {
+	public static function createOperation(array $input): void {
+
+		$vatValues = POST('vatValue', 'array');
+		$thirdParties = POST('thirdParty', 'array');
+
+		// Original Operation
+		$index = 0;
+		$eOperation = new Operation();
+
+		$fw = new \FailWatch();
+			$eOperation->buildIndex(['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate', 'date'], $input, $index);
+		$fw->validate();
+
+		$thirdParty = $thirdParties[0] ?? NULL;
+		if($thirdParty !== NULL) {
+			$eThirdParty = \journal\ThirdPartyLib::getByName($thirdParty);
+		} else {
+			$eThirdParty = NULL;
+		}
 
 		Operation::model()->beginTransaction();
 
-		$thirdParty = post_exists('thirdParty') === TRUE ? POST('thirdParty') : NULL;
-		if($thirdParty !== NULL) {
-			$e['thirdParty'] = \journal\ThirdPartyLib::getByName($thirdParty);
-		}
+		$eOperation['thirdParty'] = $eThirdParty;
 
-		if($e['account']->exists() === TRUE) {
-			$eAccountWithVatAccount = \accounting\AccountLib::getByIdWithVatAccount($e['account']['id']);
+		if($eOperation['account']->exists() === TRUE) {
+			$eAccountWithVatAccount = \accounting\AccountLib::getByIdWithVatAccount($eOperation['account']['id']);
 			if($eAccountWithVatAccount->exists() === TRUE) {
-				$e['vatAccount'] = $eAccountWithVatAccount['vatAccount'];
+				$eOperation['vatAccount'] = $eAccountWithVatAccount['vatAccount'];
 			}
 		}
 
-		Operation::model()->insert($e);
+		Operation::model()->insert($eOperation);
 
-		if($e['account']->exists() === TRUE and $e['vatAccount']->exists() === TRUE) {
+		if($eOperation['account']->exists() === TRUE and $eOperation['vatAccount']->exists() === TRUE) {
 			\journal\OperationLib::createVatOperation(
-				$e,
+				$eOperation,
 				$eAccountWithVatAccount,
-				POST('vatValue', 'float', 0),
-				['date' => $e['date'], 'description' => $e['description'], 'cashflow' => NULL],
+				$vatValues[$index] ?? 0,
+				['date' => $eOperation['date'], 'description' => $eOperation['description'], 'cashflow' => NULL],
 			);
 		}
+
+		// Create the related Shipping operation & TVA if exist
+		$index = 1;
+		$eOperationShipping = new Operation();
+
+		$fw = new \FailWatch();
+
+			$eOperationShipping->buildIndex(['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate', 'date'], $input, $index);
+			if($fw->ok() === TRUE) {
+
+			$eOperationShipping['thirdParty'] = $eThirdParty;
+			$eAccountShippingWithVatAccount = \accounting\AccountLib::getByIdWithVatAccount($eOperationShipping['account']['id']);
+			$eOperationShipping['vatAccount'] = $eAccountShippingWithVatAccount['vatAccount'];
+
+			Operation::model()->insert($eOperationShipping);
+
+			if($eOperation['account']->exists() === TRUE and $eOperation['vatAccount']->exists() === TRUE) {
+				\journal\OperationLib::createVatOperation(
+					$eOperationShipping,
+					$eAccountShippingWithVatAccount,
+					$vatValues[$index] ?? 0,
+					['date' => $eOperation['date'], 'description' => $eOperation['description'], 'cashflow' => NULL],
+				);
+			}
+
+		}
+
 		Operation::model()->commit();
 
 	}

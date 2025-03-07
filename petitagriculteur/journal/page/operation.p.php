@@ -40,7 +40,36 @@ new \journal\OperationPage(
 		throw new ViewAction($data);
 
 	})
-	->doCreate(function($data) {
+	->get('addShipping', function($data) {
+
+		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+
+		$eAccountOriginalOperation = get_exists('account') ? \accounting\AccountLib::getById(GET('account', 'int')) : new \accounting\Account();
+		if($eAccountOriginalOperation->exists() === FALSE) {
+			throw new NotExpectedAction('Account should have been given before creating shipping operation');
+		}
+		// Search for the corresponding shipping account
+		$eAccount = \accounting\AccountLib::getShippingAccountByOperationAccount($eAccountOriginalOperation);
+
+		$thirdParty = \journal\ThirdPartyLib::getByName(GET('thirdParty'));
+
+		$data->eOperation = new \journal\Operation([
+      'company' => $data->eCompany['id'],
+      'account' => $eAccount,
+      'vatRate' => $eAccount['vatRate'] ?? 0,
+      'thirdParty' => $thirdParty,
+			'date' => GET('date'),
+			'description' => GET('description'),
+			'document' => GET('document'),
+			'type' => GET('type'),
+    ]);
+
+		throw new ViewAction($data);
+
+	})
+	->post('doCreate', function($data) {
+
+		\journal\OperationLib::createOperation($_POST);
 
 		throw new ReloadAction('journal', 'Operation::created');
 

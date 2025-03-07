@@ -14,17 +14,43 @@ class OperationUi {
 
 		$h = '';
 
-		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/operation:doCreate', ['id' => 'journal-operation-create','data-thirdParty' => 'journal-operation-create', 'data-account' => 'journal-operation-create']);
+		$h .= $form->openAjax(
+			\company\CompanyUi::urlJournal($eCompany).'/operation:doCreate',
+			[
+				'id' => 'journal-operation-create',
+				'data-thirdParty' => 'journal-operation-create',
+				'data-account' => 'journal-operation-create',
+				'onrender' => 'Operation.checkShippingButtonStatus();'
+			],
+		);
 
 		$h .= $form->asteriskInfo();
 
 		$h .= $form->hidden('company', $eCompany['id']);
 
-		$h .= $this->getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, NULL, NULL, []);
-
-		$h .= $form->group(
-			content: $form->submit(s("Ajouter l'écriture"))
+		$h .= '<div class="util-info">';
+		$h .= s(
+			"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
+			['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
 		);
+		$h .= '</div>';
+
+		$h .= '<div class="util-block bg-background-light" data-operation="original">';
+
+			$h .= '<h4>'.s("Nouvelle écriture").'</h4>';
+
+			$h .= self::getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, NULL, '[0]', [], []);
+
+		$h .= '</div>';
+
+		$buttons = $form->button(
+			\Asset::icon('plus-circle').'&nbsp;'.s("🚚 Ajouter des frais de port liés"),
+			['onclick' => 'Operation.addShippingBlock();', 'class' => 'btn btn-outline-secondary', 'id' => 'journal-operation-create-shipping-button'],
+		);
+		$buttons .= '&nbsp;';
+		$buttons .= $form->submit(s("Enregistrer"));
+
+		$h .= $form->group(content: $buttons);
 
 		$h .= $form->close();
 
@@ -36,7 +62,31 @@ class OperationUi {
 
 	}
 
-	public function getFieldsCreate(
+	public static function addShipping(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Operation $eOperation): string {
+
+		$form = new \util\FormUi();
+
+		$h = '<div class="util-block bg-background-light">';
+
+			$h .= '<h4>'.s("🚚 Frais de port").'</h4>';
+			$h .= self::getFieldsCreate(
+				$eCompany,
+				$form,
+				$eOperation,
+				$eFinancialYear,
+				NULL,
+				'[1]',
+				['date' => $eOperation['date'], 'description' => $eOperation['description'], 'type' => $eOperation['type']],
+				['thirdParty', 'account'],
+			);
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+	public static function getFieldsCreate(
 		\company\Company $eCompany,
 		\util\FormUi $form,
 		Operation $eOperation,
@@ -44,22 +94,32 @@ class OperationUi {
 		?float $cashflowAmount,
 		?string $suffix,
 		array $defaultValues,
+		array $disabled
 	): string {
 
 		\Asset::js('journal', 'operation.js');
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
 		$onchange = $cashflowAmount !== NULL
 			? 'Cashflow.fillShowHideAmountWarning('.abs($cashflowAmount).')'
-			: 'Operation.calculateVAT()';
+			: 'Operation.calculateVAT('.$index.')';
+		$onrender = $cashflowAmount !== NULL ? '' : 'Operation.checkShippingButtonStatus();';
 
-		$h = '<div class="operation-write">';
+		$h = '<div class="operation-write" '.($onrender !== NULL ? 'onrender="'.$onrender.'"' : '').'>';
 
-			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form) {
+			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled) {
 				$d->autocompleteDispatch = '[data-thirdParty="'.$form->getId().'"]';
+				$d->attributes['data-index'] = $index;
+				if(in_array('thirdParty', $disabled) === TRUE) {
+					$d->attributes['disabled'] = TRUE;
+				}
 			});
 
-			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form) {
+			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled) {
 				$d->autocompleteDispatch = '[data-account="'.$form->getId().'"]';
+				$d->attributes['data-index'] = $index;
+				if(in_array('account', $disabled) === TRUE) {
+					$d->attributes['disabled'] = TRUE;
+				}
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);
@@ -117,13 +177,6 @@ class OperationUi {
 				}
 			}
 			$vatAmountDefault = $vatRateDefault !== 0 ? round(($defaultValues['amount'] ?? 0) * $vatRateDefault / 100,2) : 0;
-
-			$h .= '<div class="util-info">';
-				$h .= s(
-					"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
-					['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
-				);
-			$h .= '</div>';
 
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(

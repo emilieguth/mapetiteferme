@@ -23,6 +23,31 @@ class Operation extends OperationElement {
 	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {
 
 		$p
+			->setCallback('account.empty', function(?\accounting\Account $account): bool {
+
+				return $account !== NULL;
+
+			})
+			->setCallback('date.empty', function(?string $date): bool {
+
+				return $date !== NULL;
+
+			})
+			->setCallback('description.empty', function(?string $description): bool {
+
+				return $description !== NULL;
+
+			})
+			->setCallback('amount.empty', function(?int $amount): bool {
+
+				return $amount !== NULL;
+
+			})
+			->setCallback('type.empty', function(?string $type): bool {
+
+				return $type !== NULL;
+
+			})
 			->setCallback('date.check', function(string $date): bool {
 
 				$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
