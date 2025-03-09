@@ -1,8 +1,8 @@
 <?php
 new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
-	$t->title = s("Logiciel de comptabilité pour les agriculteurs et agricultrices");
-	$t->metaDescription = s("Logiciel gratuit et en ligne dédié aux maraîchers en agriculture biologique pour organiser le travail à la ferme, du plan de culture jusqu'à la vente.");
+	$t->title = s("Suite logicielle pour les agriculteurs et agricultrices");
+	$t->metaDescription = s("Suite logicielle en ligne pour les exploitant·e·s agricoles (comptabilité, ...)..");
 	$t->template = 'home-main';
 
 	Asset::css('main', 'font-itim.css');
@@ -10,32 +10,9 @@ new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
 	$t->header .= '<h1>'.s("Facilitez-vous la comptabilité et concentrez-vous sur votre ferme !").'</h1>';
 
-	echo '<div class="home-presentation">';
 
-		echo '<div class="home-presentation-dark bg-secondary">';
-			echo '<h2>'.Asset::icon('arrow-right').''.s("À quoi sert {siteName} ?").'</h2>';
-			echo '<ul>';
-				echo '<li>'.s("Faciliter la tenue de votre comptabilité").'</li>';
-				echo '<li>'.s("Vous permettre d'analyser avec efficacité et simplicité votre activité").'</li>';
-				echo '<li>'.s("Générer tous vos rapports comptables").'</li>';
-			echo '</ul>';
-		echo '</div>';
-
-		echo '<div class="home-presentation-dark bg-shop">';
-			echo '<h2>'.Asset::icon('megaphone').''.s("Bientôt !").'</h2>';
-			echo s("{siteName} est actuellement en développement, inscrivez-vous ici pour être informé·e de sa sortie !");
-			echo '</ul>';
-		echo '</div>';
-
-	echo '</div>';
-
-	echo '<h2>'.s("La philosophie du projet 👩‍🌾").'</h2>';
-
-	echo '<div class="home-story">';
-		echo s("La plateforme {siteName} est née du constat qu'il n'est pas simple de tenir sa comptabilité agricole à jour. Avec {siteName}, nous avons pour objectif de vous simplifier la comptabilité pour que vous puissiez vous concentrer sur votre ferme.");
-	echo '</div>';
-
-	echo (new \main\HomeUi())->getPoints();
+	echo '<script src="https://static.airtable.com/js/embed/embed_snippet_v1.js"></script>';
+	echo '<iframe class="airtable-embed airtable-dynamic-height" src="https://airtable.com/embed/appZX7JttC6YAjC4v/shraQryU7ejJZeyKv" onmousewheel="" width="100%" height="1329" style="background: transparent; border: 1px solid #ccc;"></iframe>';
 
 });
 

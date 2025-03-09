@@ -153,13 +153,13 @@ class MainTemplate extends BaseTemplate {
 
 			} else {
 
-				$h .= '<li id="signIn-item">';
+				/*$h .= '<li id="signIn-item">';
 					$h .= '<a href="'.Lime::getUrl().'/user/signUp" class="nav-item">'.s("Inscription").'</a>';
 				$h .= '</li>';
 
 				$h .= '<li id="logIn-item">';
 					$h .= '<a href="/user/log:form" class="nav-item">'.s("Connexion").'</a>';
-				$h .= '</li>';
+				$h .= '</li>';*/
 
 			}
 
@@ -230,15 +230,15 @@ class MainTemplate extends BaseTemplate {
 					$h .= '<div class="footer-content-legal">';
 						$h .= '<div>';
 							$h .= '<h4>'.s("Ressources").'</h4>';
-							$h .= '<a href="/presentation/faq">'.s("Foire aux questions").'</a><br/>';
-							$h .= '<a href="/presentation/engagements">'.s("Engagements environnementaux").'</a><br/>';
+							//$h .= '<a href="/presentation/faq">'.s("Foire aux questions").'</a><br/>';
+							//$h .= '<a href="/presentation/engagements">'.s("Engagements environnementaux").'</a><br/>';
 							$h .= s("[Bientôt] Signaler un problème").'<br/>';
 						$h .= '</div>';
 						$h .= '<div>';
 							$h .= '<h4>'.s("Usage").'</h4>';
 							$h .= '<a href="/presentation/legal">'.s("Mentions légales").'</a><br/>';
-							$h .= '<a href="/presentation/service">'.s("Conditions d'utilisation").'</a><br/>';
-							$h .= '<a href="/presentation/fonctionnalites">'.s("Fonctionnalités").'</a>';
+							//$h .= '<a href="/presentation/service">'.s("Conditions d'utilisation").'</a><br/>';
+							//$h .= '<a href="/presentation/fonctionnalites">'.s("Fonctionnalités").'</a>';
 						$h .= '</div>';
 					$h .= '</div>';
 				$h .= '</div>';

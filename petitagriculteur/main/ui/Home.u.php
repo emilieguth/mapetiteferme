@@ -14,15 +14,15 @@ class HomeUi {
 		$h = '';
 
 		if($cCompany->empty()) {
-			if((new \company\Company())->canCreate()) {
-				$h .= (new \company\EmployeeUi())->getNoCompany();
+			if(new \company\Company()->canCreate()) {
+				$h .= new \company\EmployeeUi()->getNoCompany();
 			} else {
 				$h .= '';
 			}
 		} else {
 
 			$h .= '<h2>'.($cCompany->count() === 1 ? s("Ma ferme") : s("Mes fermes")).'</h2>';
-			$h .= (new \company\EmployeeUi())->getMyCompanies($cCompany);
+			$h .= new \company\EmployeeUi()->getMyCompanies($cCompany);
 
 		}
 
