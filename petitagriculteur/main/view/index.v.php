@@ -2,7 +2,7 @@
 new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
 	$t->title = s("Suite logicielle pour les agriculteurs et agricultrices");
-	$t->metaDescription = s("Suite logicielle en ligne pour les exploitant·e·s agricoles (comptabilité, ...)..");
+	$t->metaDescription = s("Suite logicielle en ligne pour le domaine agricole (comptabilité, ...)..");
 	$t->template = 'home-main';
 
 	Asset::css('main', 'font-itim.css');

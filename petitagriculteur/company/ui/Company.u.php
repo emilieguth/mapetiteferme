@@ -286,7 +286,7 @@ class CompanyUi {
 
 			$h .= '<div class="util-buttons">';
 
-				$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Êtes-vous sûr·e de vouloir supprimer votre ferme ?").'" class="bg-danger util-button">';
+				$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Confirmez-vous vouloir supprimer votre ferme ?").'" class="bg-danger util-button">';
 
 					$h .= '<h4>'.s("Supprimer la ferme").'</h4>';
 					$h .= \Asset::icon('trash');

@@ -49,7 +49,7 @@ class InviteUi {
 
       $h = '<div class="util-block text-center">';
         $h .= '<br/><br/>';
-        $h .= '<h2>'.s("Vous n'êtes pas connecté·e sur {siteName} !").'</h2>';
+        $h .= '<h2>'.s("Connectez-vous sur {siteName} !").'</h2>';
         $h .= '<h4>'.s("Pour créer votre compte employé·e {company}, veuillez vous connecter sur {siteName} avec l'adresse e-mail {emailCurrent} ou créer un compte si vous n'en disposez pas.", ['company' => '<b>'.encode($eCompany['name']).'</b>', 'emailCurrent' => '<b>'.encode($eInvite['email']).'</b>']).'</h4>';
         $h .= '<div>';
           $h .= '<a href="/user/signUp?invite='.$eInvite['key'].'" class="btn btn-secondary">'.s("Créer un compte").'</a> ';
@@ -66,7 +66,7 @@ class InviteUi {
 
       $h = '<div class="util-block text-center">';
         $h .= '<br/><br/>';
-        $h .= '<h2>'.s("Vous devez être connecté·e sur {siteName} avec {emailExpected} pour activer votre compte client ! Vous êtes actuellement connecté avec l'adresse e-mail {emailCurrent}.", ['emailExpected' => '<b>'.encode($eInvite['email']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h2>';
+        $h .= '<h2>'.s("Connectez-vous sur {siteName} avec {emailExpected} pour activer votre compte client ! Vous êtes actuellement connecté avec l'adresse e-mail {emailCurrent}.", ['emailExpected' => '<b>'.encode($eInvite['email']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h2>';
         $h .= '<h4>'.s("Merci de vous déconnecter de {siteName} et de vous reconnecter avec la bonne adresse e-mail, ou bien de demander à la ferme {company} de vous envoyer un lien sur {emailCurrent}.", ['company' => '<b>'.encode($eCompany['name']).'</b>', 'emailCurrent' => encode($eUser['email'])]).'</h4>';
         $h .= '<br/><br/>';
       $h .= '</div>';
