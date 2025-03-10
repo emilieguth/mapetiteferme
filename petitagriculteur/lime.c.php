@@ -1,14 +1,15 @@
 <?php
+$hostname = match(GET('limeGender', 'string', 'm')) { 'f' => 'petiteagricultrice', default => 'petitagriculteur'};
 Lime::setUrls([
-  'dev' => 'http://www.dev-petitagriculteur.fr',
-  'prod' => 'https://www.petitagriculteur.fr',
+  'dev' => 'http://www.dev-'.$hostname.'.fr',
+  'prod' => 'https://www.'.$hostname.'.fr',
 ]);
 
 Lime::setApps(['framework', 'petitagriculteur']);
 
 L::setLang('fr_FR');
 L::setVariables([
-  'siteName' => 'petitagriculteur.fr',
+  'siteName' => $hostname,
 ]);
 
 require_once Lime::getPath().'/secret.c.php';
