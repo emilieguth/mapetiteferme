@@ -79,7 +79,7 @@ new \bank\CashflowPage(
 
 		\journal\Operation::model()->beginTransaction();
 
-		$accounts = var_filter($input['account'] ?? [], 'array');
+		$accounts = post('account', 'array', []);
 
 		if(count($accounts) === 0) {
 			Fail::log('Cashflow::allocate.accountsCheck');
