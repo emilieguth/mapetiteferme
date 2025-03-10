@@ -10,9 +10,13 @@ new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
 	$t->header .= '<h1>'.s("Facilitez-vous la comptabilité et concentrez-vous sur votre ferme !").'</h1>';
 
+	$airtableForm = match(\L::getVariable('siteName')) {
+		'petiteagricultrice' => 'shraQryU7ejJZeyKv',
+		default => 'shrQ1Js8YZY1vcGxz',
+	};
 
 	echo '<script src="https://static.airtable.com/js/embed/embed_snippet_v1.js"></script>';
-	echo '<iframe class="airtable-embed airtable-dynamic-height" src="https://airtable.com/embed/appZX7JttC6YAjC4v/shraQryU7ejJZeyKv" onmousewheel="" width="100%" height="1329" style="background: transparent; border: 1px solid #ccc;"></iframe>';
+	echo '<iframe class="airtable-embed airtable-dynamic-height" src="https://airtable.com/embed/appZX7JttC6YAjC4v/'.$airtableForm.'" onmousewheel="" width="100%" height="1329" style="background: transparent; border: 1px solid #ccc;"></iframe>';
 
 });
 
