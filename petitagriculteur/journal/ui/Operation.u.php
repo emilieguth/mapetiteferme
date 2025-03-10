@@ -20,74 +20,85 @@ class OperationUi {
 				'id' => 'journal-operation-create',
 				'data-thirdParty' => 'journal-operation-create',
 				'data-account' => 'journal-operation-create',
-				'onrender' => 'Operation.checkShippingButtonStatus();'
 			],
 		);
 
-		$h .= $form->asteriskInfo();
+			$h .= $form->asteriskInfo();
 
-		$h .= $form->hidden('company', $eCompany['id']);
+			$h .= $form->hidden('company', $eCompany['id']);
 
-		$h .= '<div class="util-info">';
-		$h .= s(
-			"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
-			['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
-		);
-		$h .= '</div>';
+			$h .= '<div class="util-info">';
+			$h .= s(
+				"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
+				['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
+			);
+			$h .= '</div>';
 
-		$h .= '<div class="util-block bg-background-light" data-operation="original">';
+			$index = 0;
+			$defaultValues = [];
 
-			$h .= '<h4>'.s("Nouvelle écriture").'</h4>';
+			$h .= '<div id="create-operation-list">';
+				$h .= self::addOperation($eOperation, $eFinancialYear, NULL, $index, $form, $defaultValues);
+			$h .= '</div>';
 
-			$h .= self::getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, NULL, '[0]', $eOperation->getArrayCopy(), []);
+			$buttons = '<a id="add-operation" onclick="Operation.addOperation(); return TRUE;" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" class="btn btn-outline-secondary">';
+				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
+			$buttons .= '</a>';
+			$buttons .= '&nbsp;';
+			$buttons .= $form->submit(
+				s("Enregistrer l'écriture"),
+				['id' => 'submit-save-operation', 'data-text-singular' => s("Enregistrer l'écriture"), 'data-text-plural' => s(("Enregistrer les écritures"))],
+			);
 
-		$h .= '</div>';
-
-		$buttons = $form->button(
-			\Asset::icon('plus-circle').'&nbsp;'.s("🚚 Ajouter des frais de port liés"),
-			['onclick' => 'Operation.addShippingBlock();', 'class' => 'btn btn-outline-secondary', 'id' => 'journal-operation-create-shipping-button'],
-		);
-		$buttons .= '&nbsp;';
-		$buttons .= $form->submit(s("Enregistrer"));
-
-		$h .= $form->group(content: $buttons);
+			$h .= $form->group(content: $buttons);
 
 		$h .= $form->close();
 
 		return new \Panel(
 			id: 'panel-journal-operation-create',
-			title: s("Ajouter une écriture"),
+			title: s("Ajouter une ou plusieurs écriture(s)"),
 			body: $h
 		);
 
 	}
 
-	public static function addShipping(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Operation $eOperation): string {
+	public static function addOperation(
+		Operation $eOperation,
+		\accounting\FinancialYear $eFinancialYear,
+		?float $cashflowAmount,
+		int $index,
+		\util\FormUi $form,
+		array $defaultValues,
+	): string {
 
-		$form = new \util\FormUi();
+		$suffix = '['.$index.']';
 
-		$h = '<div class="util-block bg-background-light">';
+		$h = '<div class="create-operation">';
 
-			$h .= '<h4>'.s("🚚 Frais de port").'</h4>';
-			$h .= self::getFieldsCreate(
-				$eCompany,
-				$form,
-				$eOperation,
-				$eFinancialYear,
-				NULL,
-				'[1]',
-				['date' => $eOperation['date'], 'description' => $eOperation['description'], 'type' => $eOperation['type']],
-				['thirdParty', 'account'],
-			);
+			$h .= '<div class="util-block bg-background-light">';
+
+				$h .= '<div class="util-title">';
+
+					$h .= '<div class="create-operation-title">';
+					$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
+				$h .= '</div>';
+
+				$h .= '<div class="create-operation-delete hide" data-index="'.$index.'">';
+					$h .= '<a onclick="Operation.deleteOperation(this)" class="btn btn-outline-primary">'.\Asset::icon('trash').'</a>';
+				$h .= '</div>';
+
+				$h .= '</div>';
+
+				$h .= \journal\OperationUi::getFieldsCreate($form, $eOperation, $eFinancialYear, $cashflowAmount, $suffix, $defaultValues, []);
+
+			$h .= '</div>';
 
 		$h .= '</div>';
 
 		return $h;
-
 	}
 
 	public static function getFieldsCreate(
-		\company\Company $eCompany,
 		\util\FormUi $form,
 		Operation $eOperation,
 		\accounting\FinancialYear $eFinancialYear,
@@ -102,9 +113,8 @@ class OperationUi {
 		$onchange = $cashflowAmount !== NULL
 			? 'Cashflow.fillShowHideAmountWarning('.abs($cashflowAmount).')'
 			: 'Operation.calculateVAT('.$index.')';
-		$onrender = $cashflowAmount !== NULL ? '' : 'Operation.checkShippingButtonStatus();';
 
-		$h = '<div class="operation-write" '.($onrender !== NULL ? 'onrender="'.$onrender.'"' : '').'>';
+		$h = '<div class="operation-write">';
 
 			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled) {
 				$d->autocompleteDispatch = '[data-thirdParty="'.$form->getId().'"]';

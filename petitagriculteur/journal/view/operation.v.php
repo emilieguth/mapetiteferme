@@ -5,9 +5,17 @@ new AdaptativeView('create', function($data, PanelTemplate $t) {
 
 });
 
-new JsonView('addShipping', function($data, AjaxTemplate $t) {
+new JsonView('addOperation', function($data, AjaxTemplate $t) {
 
-	$t->qs('div[data-operation="original"]')->insertAdjacentHtml('afterEnd', new \journal\OperationUi()->addShipping($data->eCompany, $data->eFinancialYear, $data->eOperation));
+	$form = new \util\FormUi();
+	$form->open('journal-operation-create');
+	$eOperation = new \journal\Operation(['account' => new \accounting\Account()]);
+	$defaultValues = [];
+
+	$t->qs('#create-operation-list')->insertAdjacentHtml('beforeend', new \journal\OperationUi()::addOperation($eOperation, $data->eFinancialYear, NULL, $data->index, $form, $defaultValues));
+	$t->qs('#add-operation')->setAttribute('post-index', $data->index + 1);
+	$t->js()->eval('Operation.showOrHideDeleteOperation()');
 
 });
+
 ?>

@@ -79,7 +79,13 @@ new \bank\CashflowPage(
 
 		\journal\Operation::model()->beginTransaction();
 
-		$cOperation = \bank\CashflowLib::prepareAllocate($data->eCashflow, $_POST);
+		$accounts = var_filter($input['account'] ?? [], 'array');
+
+		if(count($accounts) === 0) {
+			Fail::log('Cashflow::allocate.accountsCheck');
+		}
+
+		$cOperation = \journal\OperationLib::prepareOperations($_POST, new \journal\Operation(['cashflow' => $data->eCashflow, 'date' => $data->eCashflow['date']]));
 
 		if($cOperation->empty() === TRUE) {
 			\Fail::log('Cashflow::allocate.noOperation');

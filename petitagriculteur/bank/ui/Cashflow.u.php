@@ -273,7 +273,7 @@ class CashflowUi {
 			$h .= '</div>';
 
 			$h .= '<div id="cashflow-create-operation-list">';
-				$h .= self::addOperation($eCompany, $eOperation, $eFinancialYear, $eCashflow, $index, $form, $defaultValues);
+				$h .= \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $eCashflow['amount'], $index, $form, $defaultValues);
 			$h .= '</div>';
 
 			$h .= '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
@@ -301,6 +301,7 @@ class CashflowUi {
 	public static function addAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, int $index): string {
 
 		$form = new \util\FormUi();
+		$form->open('bank-cashflow-allocate');
 		$eOperation = new \journal\Operation(['account' => new Account()]);
 		$defaultValues = [
 			'date' => $eCashflow['date'],
@@ -308,37 +309,8 @@ class CashflowUi {
 			'description' => $eCashflow['memo'],
 		];
 
-		return self::addOperation($eCompany, $eOperation, $eFinancialYear, $eCashflow, $index, $form, $defaultValues);
+		return \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $eCashflow['amount'], $index, $form, $defaultValues);
 
-	}
-
-	public static function addOperation(\company\Company $eCompany, \journal\Operation $eOperation, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, int $index, \util\FormUi $form, array $defaultValues): string {
-
-		$suffix = '['.$index.']';
-
-		$h = '<div class="cashflow-create-operation">';
-
-			$h .= '<div class="util-block bg-background-light">';
-
-				$h .= '<div class="util-title">';
-
-				$h .= '<div class="cashflow-create-operation-title">';
-					$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
-				$h .= '</div>';
-
-				$h .= '<div class="cashflow-create-operation-delete hide" data-index="'.$index.'">';
-				$h .= '<a onclick="Cashflow.deleteOperation(this)" class="btn btn-outline-primary">'.\Asset::icon('trash').'</a>';
-				$h .= '</div>';
-
-				$h .= '</div>';
-
-				$h .= \journal\OperationUi::getFieldsCreate($eCompany, $form, $eOperation, $eFinancialYear, $eCashflow['amount'], $suffix, $defaultValues, []);
-
-			$h .= '</div>';
-
-		$h .= '</div>';
-
-		return $h;
 	}
 
 	public static function import(\company\Company $eCompany): \Panel {

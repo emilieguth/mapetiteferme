@@ -96,26 +96,5 @@ class AccountLib extends AccountCrud {
 
 	}
 
-	/**
-	 * Cette fonction va chercher la classe de compte correspondant aux frais de port
-	 * en fonction de la classe de compte de l'achat ou la vente
-	 * @return Account
-	 */
-	public static function getShippingAccountByOperationAccount(Account $eAccount): Account {
-
-		$shippingClass = match(intval(mb_substr($eAccount['class'], 0, 1))) {
-			\Setting::get('accounting\chargeAccountClass') => \Setting::get('accounting\shippingChargeAccountClass'),
-			\Setting::get('accounting\productAccountClass') => \Setting::get('accounting\shippingProductAccountClass'),
-			default => NULL,
-		};
-
-		if($shippingClass === NULL) {
-			throw new \NotExpectedAction('Unexpected retrieval of shipping account for original account of class '.$eAccount['class']);
-		}
-
-		return AccountLib::getByClassWithVatAccount($shippingClass);
-
-	}
-
 }
 ?>

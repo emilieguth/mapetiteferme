@@ -119,7 +119,7 @@ class MailLib {
 			empty($this->subject)
 		) {
 
-			trigger_error('Internal error: it needs at least to set: a to address ('.var_export($this->to, true).'), a subject ('.var_export($this->subject, true).'), a body (text or html) to send a mail.', E_USER_ERROR);
+			trigger_error('Internal error: it needs at least to set: a to address ('.var_export($this->to, true).'), a subject ('.var_export($this->subject, true).'), a body (text or html) to send a mail.');
 
 		} else {
 
@@ -228,7 +228,7 @@ class MailLib {
 			'textContent' => $eEmail['text'],
 		];
 
-		if (count($eEmail['cc']) > 0) {
+		if(count($eEmail['cc']) > 0) {
 
 			$cc = [];
 			foreach($eEmail['cc'] as $email) {

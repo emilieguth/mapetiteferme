@@ -83,6 +83,8 @@ class Cashflow {
         const index = Number(qs('#cashflow-add-operation').getAttribute('post-index'));
         qs('#cashflow-add-operation').setAttribute('post-index', index - 1);
 
+        Cashflow.showOrHideDeleteOperation();
+
     }
 
     static showOrHideDeleteOperation() {

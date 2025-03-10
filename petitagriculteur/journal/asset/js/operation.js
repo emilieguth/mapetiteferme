@@ -1,6 +1,3 @@
-document.delegateEventListener('autocompleteSelect', '#journal-operation-create', function(e) {
-    Operation.refreshCreate(e.detail);
-});
 document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journal-operation-create"]', function(e) {
     if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
         return;
@@ -9,44 +6,57 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journa
     e.detail.body.append('thirdParty', thirdParty);
 });
 
+document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"]', function(e) {
+    Operation.refreshCreate(e.detail);
+});
+
 class Operation {
 
-    static getFormValues() {
+    static deleteOperation(target) {
 
-        const thirdParty = qs('[name="thirdParty[0]"]')?.value;
-        const account = qs('[name="account[0]"]').value;
-        const accountLabel = qs('[name="accountLabel[0]"]').value;
-        const date = qs('[name="date[0]"]').value;
-        const description = qs('[name="description[0]"]').value;
-        const document = qs('[name="document[0]"]').value;
-        const type = qs('[name="type[0]"]').value;
-        const amount = qs('[name="amount[0]"]').value;
+        target.firstParent('.create-operation').remove();
+        const index = Number(qs('#add-operation').getAttribute('post-index'));
+        qs('#add-operation').setAttribute('post-index', index - 1);
 
-        return {
-            account,
-            accountLabel,
-            amount,
-            thirdParty,
-            date,
-            description,
-            document,
-            type,
-        }
+        Operation.showOrHideDeleteOperation();
+        Operation.updateSubmitText();
+
+    }
+
+    static showOrHideDeleteOperation() {
+
+        const operations = qsa('#create-operation-list .create-operation').length;
+
+        qsa('#create-operation-list .create-operation-delete', node => (operations > 1 && Number(node.getAttribute('data-index')) === operations - 1) ? node.classList.remove('hide') : node.classList.add('hide'));
+
+        Operation.updateSubmitText();
+
+    }
+
+    static updateSubmitText() {
+
+        const operations = qsa('#create-operation-list .create-operation').length;
+
+        qs('#submit-save-operation').innerHTML = qs('#submit-save-operation').getAttribute(operations > 1 ? 'data-text-plural' : 'data-text-singular');
     }
 
     static refreshCreate(accountDetail) {
-        const company = qs('#journal-operation-create').form().get('company');
-        const { value: account, class: accountLabel } = accountDetail;
 
-        new Ajax.Query()
-            .url(company + '/journal/operation:create?'+ new URLSearchParams({
-                company,
-                ...Operation.getFormValues(),
-                account,
-                accountLabel,
-            }))
-            .method('get')
-            .fetch();
+        // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
+        const amountElement = accountDetail.input.firstParent('div.operation-write').qs('[name^="amount["]');
+        const amount = amountElement.getAttribute('value');
+        const vatRate = parseFloat(accountDetail.input.firstParent('div.operation-write').qs('[name^="vatRate["]').getAttribute('value'));
+        if(vatRate === 0.0) {
+            const newAmount = (amount / (1 + accountDetail.vatRate / 100)).toFixed(2);
+            amountElement.setAttribute('value', Math.abs(newAmount));
+        }
+
+        // On remplit ensuite le taux de TVA
+        accountDetail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', accountDetail.vatRate);
+
+        // On vérifie les calculs de TVA
+        const index = accountDetail.input.getAttribute('data-index');
+        this.calculateVAT(index);
 
     }
 
@@ -57,47 +67,6 @@ class Operation {
 
         const newVatAmount = Math.round(amount * vatRate) / 100;
         qs('[name="vatValue[' + index + ']"').setAttribute('value', newVatAmount);
-
-    }
-
-    static enableShippingButton() {
-
-        qs('#journal-operation-create-shipping-button').classList.remove('disabled');
-        qs('#journal-operation-create-shipping-button').removeAttribute('disabled');
-
-    }
-
-    static disableShippingButton() {
-
-        qs('#journal-operation-create-shipping-button').classList.add('disabled');
-        qs('#journal-operation-create-shipping-button').setAttribute('disabled', true);
-
-    }
-
-    static checkShippingButtonStatus() {
-
-        const operations = qsa('[data-field="amount"]').length;
-        const account = qs('[name="account[0]"]')?.value;
-        const accountClass = qs('[data-autocomplete-field="account[0]"]').value;
-
-        if(operations === 1 && account !== undefined && [6, 7].includes(parseInt(accountClass.substring(0, 1))) === true) {
-            Operation.enableShippingButton();
-        } else {
-            Operation.disableShippingButton();
-        }
-    }
-
-    static addShippingBlock() {
-
-        const company = qs('#journal-operation-create').form().get('company');
-
-        new Ajax.Query()
-            .url(company + '/journal/operation:addShipping?'+ new URLSearchParams({
-                company,
-                ...Operation.getFormValues(),
-            }))
-            .method('get')
-            .fetch();
 
     }
 }

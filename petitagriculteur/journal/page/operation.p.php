@@ -45,38 +45,37 @@ new \journal\OperationPage(
 		throw new ViewAction($data);
 
 	})
-	->get('addShipping', function($data) {
+	->post('addOperation', function($data) {
 
+		$data->index = POST('index');
 		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
-
-		$eAccountOriginalOperation = get_exists('account') ? \accounting\AccountLib::getById(GET('account', 'int')) : new \accounting\Account();
-		if($eAccountOriginalOperation->exists() === FALSE) {
-			throw new NotExpectedAction('Account should have been given before creating shipping operation');
-		}
-		// Search for the corresponding shipping account
-		$eAccount = \accounting\AccountLib::getShippingAccountByOperationAccount($eAccountOriginalOperation);
-
-		$thirdParty = \journal\ThirdPartyLib::getByName(GET('thirdParty'));
-
-		$data->eOperation = new \journal\Operation([
-      'company' => $data->eCompany['id'],
-      'account' => $eAccount,
-      'vatRate' => $eAccount['vatRate'] ?? 0,
-      'thirdParty' => $thirdParty,
-			'date' => GET('date'),
-			'description' => GET('description'),
-			'document' => GET('document'),
-			'type' => GET('type'),
-    ]);
 
 		throw new ViewAction($data);
 
 	})
 	->post('doCreate', function($data) {
 
-		\journal\OperationLib::createOperation($_POST);
+		$fw = new FailWatch();
 
-		throw new ReloadAction('journal', 'Operation::created');
+		\journal\Operation::model()->beginTransaction();
+
+		$accounts = post('account', 'array', []);
+
+		if(count($accounts) === 0) {
+			Fail::log('Operation::allocate.accountsCheck');
+		}
+
+		$cOperation = \journal\OperationLib::prepareOperations($_POST, new \journal\Operation());
+
+		if($cOperation->empty() === TRUE) {
+			\Fail::log('Operation::allocate.noOperation');
+		}
+
+		$fw->validate();
+
+		\journal\Operation::model()->commit();
+
+		throw new ReloadAction('journal', $cOperation->count() > 1 ? 'Operation::createdSeveral' : 'Operation::created');
 
 	});
 
