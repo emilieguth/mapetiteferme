@@ -113,15 +113,8 @@ class Cashflow {
     static copyDocument(target) {
 
         const documentValue = target.value;
-        const operationDocuments = qsa('#cashflow-create-operation-list [name^="document"]');
 
-        Array.from(operationDocuments).forEach((operationDocument) => {
-
-            if(operationDocument.getAttribute('value') === null) {
-                operationDocument.setAttribute('value', documentValue);
-            }
-
-        });
+        qsa('#cashflow-create-operation-list [name^="document"]', node => node.getAttribute('value') === '' ? node.setAttribute('value', documentValue) : null);
 
         return true;
 
