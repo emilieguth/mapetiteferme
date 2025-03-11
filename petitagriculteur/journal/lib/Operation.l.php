@@ -130,6 +130,7 @@ class OperationLib extends OperationCrud {
 	public static function prepareOperations(array $input, Operation $eOperationDefault): \Collection {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
+		$vatValues = var_filter($input['vatValue'] ?? [], 'array');
 		$document = $input['cashflow']['document'] ?? NULL;
 
 		$fw = new \FailWatch();
@@ -163,7 +164,8 @@ class OperationLib extends OperationCrud {
 
 			// Ce type d'écriture a un compte de TVA correspondant
 			$eAccount = $cAccounts[$account] ?? new \accounting\Account();
-			$hasVatAccount = $eAccount['vatAccount']->exists() === TRUE;
+			$vatValue = var_filter($vatValues[$index] ?? NULL, 'float', 0.0);
+			$hasVatAccount = ($eAccount['vatAccount']->exists() === TRUE and $vatValue !== 0.0);
 			if($hasVatAccount === TRUE) {
 				$eOperation['vatAccount'] = $eAccount['vatAccount'];
 			}
