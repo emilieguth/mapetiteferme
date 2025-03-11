@@ -142,7 +142,7 @@ class OperationLib extends OperationCrud {
 			$properties[] = 'date';
 		}
 
-		$firstThirdParty = NULL;
+		$eOperationDefault['thirdParty'] = NULL;
 
 		foreach($accounts as $index => $account) {
 
@@ -156,7 +156,9 @@ class OperationLib extends OperationCrud {
 			$thirdParty = $input['thirdParty'][$index] ?? null;
 			if($thirdParty !== null) {
 				$eOperation['thirdParty'] = \journal\ThirdPartyLib::getByName($thirdParty);
-				$firstThirdParty = $firstThirdParty ?? $eOperation['thirdParty'];
+				if($eOperationDefault['thirdParty'] === NULL) {
+					$eOperationDefault['thirdParty'] = $eOperation['thirdParty'];
+				}
 			}
 
 			// Ce type d'écriture a un compte de TVA correspondant
@@ -177,7 +179,7 @@ class OperationLib extends OperationCrud {
 					$eAccount,
 					$input['vatValue'][$index],
 					$eOperationDefault->offsetExists('cashflow') === TRUE
-						? ['date' => $eOperationDefault['cashflow']['date'], 'description' => $eOperationDefault['cashflow']['memo'], 'cashflow' => $eOperationDefault['cashflow']]
+						? ['date' => $eOperationDefault['cashflow']['date'], 'description' => $eOperation['description'] ?? $eOperationDefault['cashflow']['memo'], 'cashflow' => $eOperationDefault['cashflow']]
 						: $eOperation->getArrayCopy(),
 				);
 
@@ -188,7 +190,7 @@ class OperationLib extends OperationCrud {
 		// Ajout de la transaction sur la classe de compte bancaire 512
 		if($eOperationDefault->offsetExists('cashflow') === TRUE) {
 
-			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow($eOperationDefault['cashflow'], $document, $firstThirdParty);
+			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow($eOperationDefault['cashflow'], $document, $eOperationDefault['thirdParty']);
 			$cOperation->append($eOperationBank);
 
 		}
