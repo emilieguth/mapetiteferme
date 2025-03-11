@@ -168,7 +168,6 @@ class CompanyLib extends CompanyCrud {
 			->select(\main\Account::getSelection())
 			->getCollection();
 		foreach($cAccount as $eAccount) {
-			unset($eAccount['id']);
 			\accounting\Account::model()->insert($eAccount);
 		}
 	}

@@ -130,7 +130,7 @@ class OperationLib extends OperationCrud {
 	public static function prepareOperations(array $input, Operation $eOperationDefault): \Collection {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
-		$document = $input['cashflow']['document'] ?? null;
+		$document = $input['cashflow']['document'] ?? NULL;
 
 		$fw = new \FailWatch();
 
@@ -141,6 +141,8 @@ class OperationLib extends OperationCrud {
 		if($eOperationDefault->offsetExists('date') === FALSE) {
 			$properties[] = 'date';
 		}
+
+		$firstThirdParty = NULL;
 
 		foreach($accounts as $index => $account) {
 
@@ -154,6 +156,7 @@ class OperationLib extends OperationCrud {
 			$thirdParty = $input['thirdParty'][$index] ?? null;
 			if($thirdParty !== null) {
 				$eOperation['thirdParty'] = \journal\ThirdPartyLib::getByName($thirdParty);
+				$firstThirdParty = $firstThirdParty ?? $eOperation['thirdParty'];
 			}
 
 			// Ce type d'écriture a un compte de TVA correspondant
@@ -185,7 +188,7 @@ class OperationLib extends OperationCrud {
 		// Ajout de la transaction sur la classe de compte bancaire 512
 		if($eOperationDefault->offsetExists('cashflow') === TRUE) {
 
-			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow($eOperationDefault['cashflow'], $document);
+			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow($eOperationDefault['cashflow'], $document, $firstThirdParty);
 			$cOperation->append($eOperationBank);
 
 		}
@@ -306,7 +309,7 @@ class OperationLib extends OperationCrud {
 		return $updated;
 	}
 
-	public static function createBankOperationFromCashflow(\bank\Cashflow $eCashflow, ?string $document = NULL): Operation {
+	public static function createBankOperationFromCashflow(\bank\Cashflow $eCashflow, ?string $document = NULL, ?ThirdParty $eThirdParty = NULL): Operation {
 
 		$eOperationBank = new Operation();
 
@@ -327,6 +330,7 @@ class OperationLib extends OperationCrud {
 			\bank\Cashflow::DEBIT => Operation::CREDIT,
 		};
 		$eOperationBank['amount'] = abs($eCashflow['amount']);
+		$eOperationBank['thirdParty'] = $eThirdParty;
 
 		\journal\Operation::model()->insert($eOperationBank);
 
