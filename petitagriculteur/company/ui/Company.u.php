@@ -108,9 +108,9 @@ class CompanyUi {
 
 			$h .= $form->group(
 				self::p('vignette')->label,
-				(new \media\CompanyVignetteUi())->getCamera($eCompany, size: '10rem')
+				new \media\CompanyVignetteUi()->getCamera($eCompany, size: '10rem')
 			);
-			$h .= $form-> group(self::p('siret'), $form->text('siret', $eCompany['siret'], ['oninput' => 'Company.getCompanyDataBySiret(this)']));
+			$h .= $form->group(self::p('siret'), $form->text('siret', $eCompany['siret'], ['disabled' => TRUE]));
 			$h .= $form->dynamicGroups($eCompany, ['nafCode', 'name', 'accountingType', 'url', 'addressLine1', 'addressLine2', 'postalCode', 'city']);
 
 			$h .= $form->group(
@@ -195,7 +195,7 @@ class CompanyUi {
 		$h = '<nav id="company-subnav">';
 			$h .= '<div class="company-subnav-wrapper">';
 
-				foreach($this->getSettingsCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+				foreach(self::getSettingsCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 					$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'">'.$label.'</a> ';
 				}
 
@@ -379,7 +379,7 @@ class CompanyUi {
 
 		$h = '<div class="company-subnav-wrapper">';
 
-			foreach($this->getBankCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+			foreach(self::getBankCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 
 				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
 					$h .= $prefix.'<span>'.$label.'</span>';
@@ -423,7 +423,7 @@ class CompanyUi {
 
 		$h = '<div class="company-subnav-wrapper">';
 
-			foreach($this->getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+			foreach(self::getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 
 				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
 					$h .= $prefix.'<span>'.$label.'</span>';
@@ -442,7 +442,7 @@ class CompanyUi {
 
 		$h = '<div class="company-subnav-wrapper">';
 
-			foreach($this->getStatementCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+			foreach(self::getStatementCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 
 				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
 					$h .= $prefix.'<span>'.$label.'</span>';
@@ -604,8 +604,8 @@ class CompanyUi {
 
 			case 'accountingType' :
 				$d->values = [
-					Company::ACCRUAL => s("Comptabilité à l'engagement"),
-					Company::CASH => s("Comptabilité de trésorerie"),
+					CompanyElement::ACCRUAL => s("Comptabilité à l'engagement"),
+					CompanyElement::CASH => s("Comptabilité de trésorerie"),
 				];
 				break;
 
