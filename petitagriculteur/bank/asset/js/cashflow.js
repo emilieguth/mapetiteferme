@@ -114,7 +114,13 @@ class Cashflow {
 
         const documentValue = target.value;
 
-        qsa('#cashflow-create-operation-list [name^="document"]', node => node.getAttribute('value') === '' ? node.setAttribute('value', documentValue) : null);
+        const operations = qsa('#cashflow-create-operation-list [name^="document"]');
+        Array.from(operations).forEach((operation) => {
+            if(operation.getAttribute('value') !== '' && operation.getAttribute('value') !== null) {
+                return;
+            }
+            operation.setAttribute('value', documentValue);
+        })
 
         return true;
 
