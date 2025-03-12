@@ -2,6 +2,7 @@
 # www.petitagriculteur.fr  #
 ############################
 
+*/5 * * * * php /var/www/petitagriculteur/framework/lime.php -e prod -a petitagriculteur configure/backup
 */5 * * * * php /var/www/petitagriculteur/framework/lime.php -e prod -a petitagriculteur session/cron/sessionClean
 0 * * * * php /var/www/petitagriculteur/framework/lime.php -e prod -a petitagriculteur mail/cron/mail
 0 * * * * php /var/www/petitagriculteur/framework/lime.php -e prod -a petitagriculteur storage/cron/buffer
