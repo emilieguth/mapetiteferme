@@ -51,11 +51,11 @@ class Operation {
         accountDetail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', accountDetail.vatRate);
 
         // On vérifie les calculs de TVA
-        this.calculateVAT(index);
+        this.updateVatValue(index);
 
     }
 
-    static calculateVAT(index) {
+    static updateVatValue(index) {
 
         const amount = qs('[name="amount[' + index + ']"')?.value || 0;
         const vatRate = qs('[name="vatRate[' + index + ']"')?.value || 0;

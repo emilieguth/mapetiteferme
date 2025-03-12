@@ -110,9 +110,12 @@ class OperationUi {
 
 		\Asset::js('journal', 'operation.js');
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
-		$onchange = $cashflowAmount !== NULL
-			? 'Cashflow.fillShowHideAmountWarning('.abs($cashflowAmount).')'
-			: 'Operation.calculateVAT('.$index.')';
+		$onchangeUpdateVat = $cashflowAmount !== NULL
+			? 'Cashflow.updateVatValue('.$index.');'
+			: 'Operation.updateVatValue('.$index.');';
+		$onchangeWarnVat = $cashflowAmount !== NULL
+			? 'Cashflow.fillShowHideAmountWarning();'
+			: 'Operation.updateVatValue('.$index.');';
 
 		$h = '<div class="operation-write">';
 
@@ -152,7 +155,7 @@ class OperationUi {
 							[
 								'min' => 0, 'step' => 0.01, 'data-field' => 'amount',
 								'data-index' => $index,
-								'onchange' => $onchange
+								'onchange' => $onchangeUpdateVat
 							]
 						)
 						.$form->addon('€ ')
@@ -166,7 +169,7 @@ class OperationUi {
 					self::p('type')->values[Operation::DEBIT],
 					$defaultValues['type'] ?? '',
 					[
-						'onchange' => $onchange
+						'onchange' => $onchangeUpdateVat
 					]
 				).
 				$form->radio(
@@ -174,7 +177,7 @@ class OperationUi {
 					self::p('type')->values[Operation::CREDIT],
 					$defaultValues['type'] ?? '',
 					[
-						'onchange' => $onchange
+						'onchange' => $onchangeUpdateVat
 					]
 				)
 			);
@@ -193,11 +196,11 @@ class OperationUi {
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(
 				s("Taux de TVA").' '.\util\FormUi::asterisk(),
-				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => $onchange]).$form->addon('% '))
+				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => $onchangeUpdateVat]).$form->addon('% '))
 			);
 			$h .= $form->group(
-				s("Valeur de TVA (calcul automatique)"),
-				$form->inputGroup($form->number('vatValue'.$suffix,  $vatAmountDefault, ['data-field' => 'vatValue', 'min' => 0.0, 'step' => 0.01, 'onchange' => $onchange]).$form->addon('€'))
+				s("Valeur de TVA"),
+				$form->inputGroup($form->number('vatValue'.$suffix,  $vatAmountDefault, ['data-field' => 'vatValue', 'min' => 0.0, 'step' => 0.01, 'onchange' => $onchangeWarnVat]).$form->addon('€'))
 			);
 
 		$h .= '</div>';

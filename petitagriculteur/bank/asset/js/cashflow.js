@@ -33,7 +33,6 @@ class Cashflow {
 
         // On vérifie les calculs de TVA
         this.updateVatValue(index);
-        this.fillShowHideAmountWarning();
     }
 
     static updateVatValue(index) {
@@ -43,6 +42,8 @@ class Cashflow {
         const vatValue = Math.round(amountValue * vatRate) / 100;
 
         qs('#cashflow-create-operation-list [name="vatValue[' + index + ']"]').setAttribute('value', vatValue);
+
+        this.fillShowHideAmountWarning();
 
     }
 
