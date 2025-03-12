@@ -103,26 +103,6 @@ new \bank\CashflowPage(
 		throw new ReloadAction('bank', 'Cashflow::allocated');
 
 	})
-	->post('deAllocate', function($data) {
-
-		$fw = new FailWatch();
-
-		if($data->eCashflow->exists() === FALSE) {
-			\bank\Cashflow::fail('internal');
-		}
-
-		$fw->validate();
-
-		\journal\Operation::model()
-			->whereCashflow('=', $data->eCashflow['id'])
-			->delete();
-
-		$data->eCashflow['status'] = \bank\CashflowElement::WAITING;
-		\bank\CashflowLib::update($data->eCashflow, ['status']);
-
-		throw new ReloadAction('bank', 'Cashflow::deallocated');
-
-	})
 	->get('attach', function($data) {
 
 		$data->cOperation = \journal\OperationLib::getOperationsForAttach($data->eCashflow);
@@ -149,4 +129,35 @@ new \bank\CashflowPage(
 		throw new ReloadAction('bank', 'Cashflow::attached');
 
 	});
+
+new \bank\CashflowPage(
+	function($data) {
+		\user\ConnectionLib::checkLogged();
+		$company = GET('company');
+
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'));
+
+		\Setting::set('main\viewBank', 'import');
+		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+	}
+)
+->post('deAllocate', function($data) {
+
+	$fw = new FailWatch();
+
+	if($data->eCashflow->exists() === FALSE) {
+		\bank\Cashflow::fail('internal');
+	}
+
+	$fw->validate();
+
+	\journal\OperationLib::deleteByCashflow($data->eCashflow);
+
+	$data->eCashflow['status'] = \bank\CashflowElement::WAITING;
+	\bank\CashflowLib::update($data->eCashflow, ['status']);
+
+	throw new ReloadAction('bank', 'Cashflow::deallocated');
+
+})
 ?>

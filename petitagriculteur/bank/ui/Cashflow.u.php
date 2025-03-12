@@ -229,6 +229,7 @@ class CashflowUi {
 	public static function getAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow): \Panel {
 
 		\Asset::js('bank', 'cashflow.js');
+		\Asset::js('journal', 'thirdParty.js');
 		$h = CashflowUi::getCashflowHeader($eCashflow);
 
 		$form = new \util\FormUi();
@@ -243,7 +244,7 @@ class CashflowUi {
 
 		$h .= $form->openAjax(
 			\company\CompanyUi::urlBank($eCompany).'/cashflow:doAllocate',
-			['id' => 'bank-cashflow-allocate', 'data-account' => 'bank-cashflow-allocate', 'data-thirdParty' => 'bank-cashflow-allocate', 'autocomplete' => 'off']
+			['id' => 'bank-cashflow-allocate', 'third-party-create-index' => 0, 'autocomplete' => 'off']
 		);
 
 			$h .= $form->hidden('company', $eCompany['id']);

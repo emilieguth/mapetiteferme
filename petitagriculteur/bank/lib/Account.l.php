@@ -3,6 +3,19 @@ namespace bank;
 
 class AccountLib extends AccountCrud {
 
+	public static function getByClass(string $class): Account {
+
+		$eAccount = new Account();
+
+		\accounting\Account::model()
+       ->select(\accounting\Account::getSelection())
+       ->whereClass('=', \Setting::get('accounting\bankAccountClass'))
+       ->get($eAccount);
+
+		return $eAccount;
+
+	}
+
 	public static function getAll(): \Collection {
 
 		return Account::model()

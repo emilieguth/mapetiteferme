@@ -156,7 +156,7 @@ class OperationLib extends OperationCrud {
 
 			$thirdParty = $input['thirdParty'][$index] ?? null;
 			if($thirdParty !== null) {
-				$eOperation['thirdParty'] = \journal\ThirdPartyLib::getByName($thirdParty);
+				$eOperation['thirdParty'] = \journal\ThirdPartyLib::getById($thirdParty);
 				if($eOperationDefault['thirdParty'] === NULL) {
 					$eOperationDefault['thirdParty'] = $eOperation['thirdParty'];
 				}
@@ -169,6 +169,8 @@ class OperationLib extends OperationCrud {
 			if($hasVatAccount === TRUE) {
 				$eOperation['vatAccount'] = $eAccount['vatAccount'];
 			}
+
+			$fw->validate();
 
 			\journal\Operation::model()->insert($eOperation);
 			$cOperation->append($eOperation);
@@ -206,23 +208,32 @@ class OperationLib extends OperationCrud {
 
 	public static function createVatOperation(Operation $eOperationLinked, \accounting\Account $eAccount, float $vatValue, array $defaultValues): Operation {
 
-		$eOperationVat = new \journal\Operation();
-		$eOperationVat['cashflow'] = $defaultValues['cashflow'];
-		$eOperationVat['date'] = $defaultValues['date'];
-		$eOperationVat['account'] = $eAccount['vatAccount'];
-		$eOperationVat['description'] = $defaultValues['description'];
-		$eOperationVat['document'] = $eOperationLinked['document'];
-		$eOperationVat['thirdParty'] = $eOperationLinked['thirdParty'];
-		$eOperationVat['type'] = match(mb_substr($eAccount['class'], 0, 1)) {
-			'7' => \journal\OperationElement::CREDIT,
-			'2' => \journal\OperationElement::DEBIT,
-			'6' => \journal\OperationElement::DEBIT,
-			default => NULL,
-		};
-		$eOperationVat['amount'] = abs($vatValue);
-		$eOperationVat['operation'] = $eOperationLinked;
+		$values = [
+			...$defaultValues,
+			'account' => $eAccount['vatAccount']['id'] ?? NULL,
+			'document' => $eOperationLinked['document'],
+			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
+			'type' => match(mb_substr($eAccount['class'], 0, 1)) {
+				'7' => OperationElement::CREDIT,
+				'2' => OperationElement::DEBIT,
+				'6' => OperationElement::DEBIT,
+				default => NULL,
+			},
+			'amount' => abs($vatValue),
+			'operation' => $eOperationLinked,
+		];
+		if($eOperationLinked['cashflow']->exists() === TRUE) {
+			$values['cashflow'] = $eOperationLinked['cashflow']['id'];
+		}
+		$eOperationVat = new Operation();
 
-		\journal\Operation::model()->insert($eOperationVat);
+		$fw = new \FailWatch();
+
+		$eOperationVat->build(['cashflow', 'date', 'account', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
+
+		$fw->validate();
+
+		Operation::model()->insert($eOperationVat);
 
 		return $eOperationVat;
 
@@ -315,31 +326,47 @@ class OperationLib extends OperationCrud {
 
 	public static function createBankOperationFromCashflow(\bank\Cashflow $eCashflow, ?string $document = NULL, ?ThirdParty $eThirdParty = NULL): Operation {
 
+		$eAccountBank = \bank\AccountLib::getByClass(\Setting::get('accounting\bankAccountClass'));
+
+		$values = [
+			'date' => $eCashflow['date'],
+			'cashflow' => $eCashflow['id'] ?? NULL,
+			'account' => $eAccountBank['id'] ?? NULL,
+			'accountLabel' => $eCashflow['import']['account']['label'] ?? \Setting::get('accounting\defaultBankAccountLabel'),
+			'description' => $eCashflow['memo'],
+			'document' => $document,
+			'thirdParty' => $eThirdParty['id'] ?? NULL,
+			'type' => match($eCashflow['type']) {
+				\bank\Cashflow::CREDIT => Operation::DEBIT,
+				\bank\Cashflow::DEBIT => Operation::CREDIT,
+			},
+			'amount' => abs($eCashflow['amount']),
+		];
+
 		$eOperationBank = new Operation();
 
-		$eAccountBank = new \accounting\Account();
-		\accounting\Account::model()
-			->select(\accounting\Account::getSelection())
-			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
-			->get($eAccountBank);
+		$fw = new \FailWatch();
 
-		$eOperationBank['date'] = $eCashflow['date'];
-		$eOperationBank['cashflow'] = $eCashflow;
-		$eOperationBank['account'] = $eAccountBank;
-		$eOperationBank['accountLabel'] = $eCashflow['import']['account']['label'] ?? \Setting::get('accounting\defaultBankAccountLabel');
-		$eOperationBank['description'] = $eCashflow['memo'];
-		$eOperationBank['document'] = $document;
-		$eOperationBank['type'] = match($eCashflow['type']) {
-			\bank\Cashflow::CREDIT => Operation::DEBIT,
-			\bank\Cashflow::DEBIT => Operation::CREDIT,
-		};
-		$eOperationBank['amount'] = abs($eCashflow['amount']);
-		$eOperationBank['thirdParty'] = $eThirdParty;
+		$eOperationBank->build(['cashflow', 'date', 'account', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
+
+		$fw->validate();
 
 		\journal\Operation::model()->insert($eOperationBank);
 
+
 		return $eOperationBank;
 
+	}
+
+	public static function deleteByCashflow(\bank\Cashflow $eCashflow): void {
+
+		if($eCashflow->exists() === FALSE) {
+			return;
+		}
+
+		\journal\Operation::model()
+      ->whereCashflow('=', $eCashflow['id'])
+      ->delete();
 	}
 }
 ?>

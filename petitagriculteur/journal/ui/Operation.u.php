@@ -10,6 +10,7 @@ class OperationUi {
 	public function create(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
 
 		\Asset::js('journal', 'operation.js');
+		\Asset::js('journal', 'thirdParty.js');
 		$form = new \util\FormUi();
 
 		$h = '';
@@ -18,8 +19,7 @@ class OperationUi {
 			\company\CompanyUi::urlJournal($eCompany).'/operation:doCreate',
 			[
 				'id' => 'journal-operation-create',
-				'data-thirdParty' => 'journal-operation-create',
-				'data-account' => 'journal-operation-create',
+				'third-party-create-index' => 0,
 			],
 		);
 
@@ -117,11 +117,12 @@ class OperationUi {
 		$h = '<div class="operation-write">';
 
 			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled) {
-				$d->autocompleteDispatch = '[data-thirdParty="'.$form->getId().'"]';
+				$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"]';
 				$d->attributes['data-index'] = $index;
 				if(in_array('thirdParty', $disabled) === TRUE) {
 					$d->attributes['disabled'] = TRUE;
 				}
+				$d->attributes['data-third-party'] = $form->getId();
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled) {
@@ -130,6 +131,7 @@ class OperationUi {
 				if(in_array('account', $disabled) === TRUE) {
 					$d->attributes['disabled'] = TRUE;
 				}
+				$d->attributes['data-account'] = $form->getId();
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);

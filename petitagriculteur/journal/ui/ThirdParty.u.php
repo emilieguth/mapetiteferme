@@ -28,7 +28,7 @@ class ThirdPartyUi {
 
 		$h = '';
 
-		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/thirdParty:doCreate', ['id' => 'journal-thirdParty-create', 'autocomplete' => 'off']);
+		$h .= $form->openAjax(\company\CompanyUi::urlJournal($eCompany).'/thirdParty:doCreate', ['id' => 'journal-thirdParty-create', 'autocomplete' => 'off', 'onrender' => 'ThirdParty.focusInput();']);
 
 		$h .= $form->asteriskInfo();
 
@@ -82,10 +82,10 @@ class ThirdPartyUi {
 		\Asset::css('media', 'media.css');
 
 		return [
-			'value' => encode($eThirdParty['name']),
+			'value' => $eThirdParty['id'],
 			'company' => $company,
-			'itemHtml' => encode($eThirdParty['name']),
-			'itemText' => encode($eThirdParty['name'])
+			'itemHtml' => $eThirdParty['name'],
+			'itemText' => $eThirdParty['name']
 		];
 
 	}
