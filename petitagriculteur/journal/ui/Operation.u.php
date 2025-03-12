@@ -41,7 +41,7 @@ class OperationUi {
 				$h .= self::addOperation($eOperation, $eFinancialYear, NULL, $index, $form, $defaultValues);
 			$h .= '</div>';
 
-			$buttons = '<a id="add-operation" onclick="Operation.addOperation(); return TRUE;" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" class="btn btn-outline-secondary">';
+			$buttons = '<a id="add-operation" onclick="Operation.addOperation(); return TRUE;" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
 				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';

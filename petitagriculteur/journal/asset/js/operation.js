@@ -1,7 +1,16 @@
 document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"]', function(e) {
     Operation.refreshCreate(e.detail);
 });
+
+document.delegateEventListener('autocompleteSelect', '[data-third-party="journal-operation-create"]', function(e) {
+    Operation.updateThirdParty(e.detail);
+});
+
 class Operation {
+
+    static updateThirdParty(detail) {
+        detail.input.firstParent('form').qs('#add-operation').setAttribute('post-third-party', detail.value);
+    }
 
     static deleteOperation(target) {
 

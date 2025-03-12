@@ -289,7 +289,7 @@ class CashflowUi {
 				$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
 			$h .= '</div>';
 
-			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-amount="" class="btn btn-outline-secondary">';
+			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
 				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';
@@ -307,11 +307,10 @@ class CashflowUi {
 
 	}
 
-	public static function addAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, int $index): string {
+	public static function addAllocate(\journal\Operation $eOperation, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, int $index): string {
 
 		$form = new \util\FormUi();
 		$form->open('bank-cashflow-allocate');
-		$eOperation = new \journal\Operation(['account' => new Account()]);
 		$defaultValues = [
 			'date' => $eCashflow['date'],
 			'type' => $eCashflow['type'],

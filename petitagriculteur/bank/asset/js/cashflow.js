@@ -10,7 +10,15 @@ document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashfl
     Cashflow.refreshAllocate(e);
 });
 
+document.delegateEventListener('autocompleteSelect', '[data-third-party="bank-cashflow-allocate"]', function(e) {
+    Cashflow.updateThirdParty(e);
+});
+
 class Cashflow {
+
+    static updateThirdParty(event) {
+        event.detail.input.firstParent('form').qs('#cashflow-add-operation').setAttribute('post-third-party', event.detail.value);
+    }
 
     static refreshAllocate(event) {
 
