@@ -13,12 +13,14 @@ class CashflowUi {
 
 		$form = new \util\FormUi();
 		$url = LIME_REQUEST_PATH.'?financialYear='.$eFinancialYearSelected['id'];
+		$statuses = CashflowUi::p('status')->values;
 
 		$h .= $form->openAjax($url, ['method' => 'get', 'id' => 'form-search']);
 
 		$h .= '<div>';
 			$h .= $form->month('date', $search->get('date'), ['placeholder' => s("Mois")]);
 			$h .= $form->text('memo', $search->get('memo'), ['placeholder' => s("Libellé")]);
+			$h .= $form->select('status', $statuses, $search->get('status'), ['placeholder' => s("Statut")]);
 		$h .= '</div>';
 		$h .= '<div>';
 			$h .= $form->submit(s("Chercher"), ['class' => 'btn btn-secondary']);

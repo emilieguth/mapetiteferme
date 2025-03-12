@@ -25,6 +25,7 @@ new Page(
 			'date' => GET('date'),
 			'fitid' => GET('fitid'),
 			'memo' => GET('memo'),
+			'status' => GET('status'),
 		], GET('sort'));
 		$hasSort = get_exists('sort') === TRUE;
 		$data->search = clone $search;

@@ -12,6 +12,7 @@ class CashflowLib extends CashflowCrud {
 			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))
 			->whereFitid('LIKE', '%'.$search->get('fitid').'%', if: $search->get('fitid'))
 			->whereMemo('LIKE', '%'.mb_strtolower($search->get('memo')).'%', if: $search->get('memo'))
+			->whereStatus('=', $search->get('status'), if: $search->get('status'))
 			->sort($hasSort === TRUE ? $search->buildSort() : ['date' => SORT_DESC, 'fitid' => SORT_DESC])
 			->getCollection();
 	}

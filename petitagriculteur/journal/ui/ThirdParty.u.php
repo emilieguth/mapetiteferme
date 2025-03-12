@@ -95,7 +95,7 @@ class ThirdPartyUi {
 		$d->prepend = \Asset::icon('person-rolodex');
 		$d->field = 'autocomplete';
 
-		$d->placeholder ??= s("Commencez à saisir le tiers...");
+		$d->placeholder ??= s("Tiers...");
 		$d->multiple = $multiple;
 		$d->group += ['wrapper' => 'thirdParty'];
 

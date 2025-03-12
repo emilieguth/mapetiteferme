@@ -30,7 +30,8 @@ class OperationLib extends OperationCrud {
 			->whereDocument('LIKE', '%'.$search->get('document').'%', if: $search->get('document'))
 			->whereCashflow('=', $search->get('cashflow'), if: $search->get('cashflow'))
 			->whereCashflow(NULL, if: $search->get('cashflowFilter') === TRUE)
-			->whereType($search->get('type'), if: $search->get('type'));
+			->whereType($search->get('type'), if: $search->get('type'))
+			->whereThirdParty('=', $search->get('thirdParty'), if: $search->get('thirdParty'));
 
 	}
 
@@ -70,7 +71,7 @@ class OperationLib extends OperationCrud {
 			->select(
 				Operation::getSelection()
 				+ ['account' => ['class', 'description']]
-				+ ['thirdParty' => ['name']]
+				+ ['thirdParty' => ['id', 'name']]
 			)
 			->sort($hasSort === TRUE ? $search->buildSort() : ['date' => SORT_ASC, 'id' => SORT_ASC])
 			->getCollection();

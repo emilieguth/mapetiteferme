@@ -28,7 +28,9 @@ class JournalUi {
 
 	}
 
-	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected, \bank\Cashflow $eCashflow): string {
+	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected, \bank\Cashflow $eCashflow, ?ThirdParty $eThirdParty): string {
+
+		\Asset::js('journal', 'operation.js');
 
 		$h = '<div id="journal-search" class="util-block-search stick-xs '.($search->empty(['ids']) === TRUE ? 'hide' : '').'">';
 
@@ -40,16 +42,21 @@ class JournalUi {
 			$h .= $form->openAjax($url, ['method' => 'get', 'id' => 'form-search']);
 
 				$h .= '<div>';
-						$h .= $form->month('date', $search->get('date'), ['placeholder' => s("Mois")]);
-						$h .= $form->text('accountLabel', $search->get('accountLabel'), ['placeholder' => s("Classe de compte")]);
-						$h .= $form->text('description', $search->get('description'), ['placeholder' => s("Description")]);
-						$h .= $form->select('type', $statuses, $search->get('type'), ['placeholder' => s("Type")]);
-						$h .= $form->text('document', $search->get('document'), ['placeholder' => s("Pièce comptable")]);
-						$h .= $form->checkbox('cashflowFilter', 1, ['checked' => $search->get('cashflowFilter'), 'callbackLabel' => fn($input) => $input.' '.s("Filtrer les écritures non rattachées")]);
-					$h .= '</div>';
-					$h .= '<div>';
-						$h .= $form->submit(s("Chercher"), ['class' => 'btn btn-secondary']);
-						$h .= '<a href="'.$url.'" class="btn btn-secondary">'.\Asset::icon('x-lg').'</a>';
+					$h .= $form->month('date', $search->get('date'), ['placeholder' => s("Mois")]);
+					$h .= $form->text('accountLabel', $search->get('accountLabel'), ['placeholder' => s("Classe de compte")]);
+					$h .= $form->text('description', $search->get('description'), ['placeholder' => s("Description")]);
+					$h .= $form->select('type', $statuses, $search->get('type'), ['placeholder' => s("Type")]);
+					$h .= $form->dynamicField(new Operation(['thirdParty' => $eThirdParty]), 'thirdParty', function($d) use($form) {
+						$d->autocompleteDispatch = '[data-third-party="form-search"]';
+						$d->attributes['data-index'] = 0;
+						$d->attributes['data-third-party'] = 'form-search';
+					});
+					$h .= $form->text('document', $search->get('document'), ['placeholder' => s("Pièce comptable")]);
+					$h .= $form->checkbox('cashflowFilter', 1, ['checked' => $search->get('cashflowFilter'), 'callbackLabel' => fn($input) => $input.' '.s("Filtrer les écritures non rattachées")]);
+				$h .= '</div>';
+				$h .= '<div>';
+					$h .= $form->submit(s("Chercher"), ['class' => 'btn btn-secondary']);
+					$h .= '<a href="'.$url.'" class="btn btn-secondary">'.\Asset::icon('x-lg').'</a>';
 				$h .= '</div>';
 
 			$h .= $form->close();

@@ -19,12 +19,17 @@
 			? \accounting\FinancialYearLib::getById(GET('financialYear'))
 			: $data->eFinancialYearCurrent;
 
+		$data->eThirdParty = get_exists('thirdParty')
+			? \journal\ThirdPartyLib::getById(GET('thirdParty', 'int'))
+			: NULL;
+
 		$search = new Search([
 			'date' => GET('date'),
 			'accountLabel' => GET('accountLabel'),
 			'description' => GET('description'),
 			'type' => GET('type'),
 			'document' => GET('document'),
+			'thirdParty' => GET('thirdParty'),
 		], GET('sort'));
 
 		$search->set('cashflowFilter', GET('cashflowFilter', 'bool'));
