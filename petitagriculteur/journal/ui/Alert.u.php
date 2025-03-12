@@ -16,6 +16,8 @@ class AlertUi {
 			'Operation::date.check' => s("La date doit correspondre à l'exercice fiscal actuellement ouvert."),
 			'Operation::account.check' => s("N'oubliez pas de choisir une classe de compte !"),
 
+			'ThirdParty::name.duplicate' => s("Ce tiers existe déjà, utilisez-le directement ?"),
+
 			default => null
 
 		};

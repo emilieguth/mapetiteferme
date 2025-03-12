@@ -37,11 +37,15 @@ class ThirdPartyModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
-			'name' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
+			'name' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'unique' => TRUE, 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
 			'id', 'name'
+		]);
+
+		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
+			['name']
 		]);
 
 	}

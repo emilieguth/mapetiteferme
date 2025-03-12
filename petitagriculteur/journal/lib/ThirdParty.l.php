@@ -25,5 +25,6 @@ class ThirdPartyLib extends ThirdPartyCrud {
 			->get();
 
 	}
+
 }
 ?>
