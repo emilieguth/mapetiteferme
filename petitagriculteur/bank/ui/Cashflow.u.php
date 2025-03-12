@@ -263,19 +263,19 @@ class CashflowUi {
 					$h .= '<h4>'.s("Opération bancaire #{id}", ['id' => $eCashflow['id']]).'</h4>';
 				$h .= '</div>';
 
+				$h .= '<div class="util-info">';
+					$h .= s(
+						"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
+						['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
+					);
+				$h .= '</div>';
+
 				$h .= $form->group(
 					self::p('document'),
 					$form->text(
 						'document',
 						attributes: ['name' => 'cashflow[document]'] + self::p('document')->attributes)
 					.self::p('document')->after
-				);
-			$h .= '</div>';
-
-			$h .= '<div class="util-info">';
-				$h .= s(
-					"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
-					['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
 				);
 			$h .= '</div>';
 
