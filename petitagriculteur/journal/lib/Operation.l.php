@@ -213,12 +213,7 @@ class OperationLib extends OperationCrud {
 			'account' => $eAccount['vatAccount']['id'] ?? NULL,
 			'document' => $eOperationLinked['document'],
 			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
-			'type' => match(mb_substr($eAccount['class'], 0, 1)) {
-				'7' => OperationElement::CREDIT,
-				'2' => OperationElement::DEBIT,
-				'6' => OperationElement::DEBIT,
-				default => NULL,
-			},
+			'type' => $eOperationLinked['type'],
 			'amount' => abs($vatValue),
 			'operation' => $eOperationLinked,
 		];
