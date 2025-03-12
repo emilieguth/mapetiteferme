@@ -13,6 +13,12 @@ document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashfl
 class Cashflow {
 
     static refreshAllocate(event) {
+
+        const index = event.detail.input.getAttribute('data-index');
+
+        // On saisit le libellé
+        qs('[name="accountLabel[' + index + ']"]').setAttribute('value', event.detail.class.padEnd(8, 0));
+
         // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
         const amountElement = event.detail.input.firstParent('div.operation-write').qs('[name^="amount["]');
         const amount = amountElement.getAttribute('value');
@@ -26,7 +32,6 @@ class Cashflow {
         event.detail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', event.detail.vatRate);
 
         // On vérifie les calculs de TVA
-        const index = event.detail.input.getAttribute('data-index');
         this.updateVatValue(index);
         this.fillShowHideAmountWarning();
     }

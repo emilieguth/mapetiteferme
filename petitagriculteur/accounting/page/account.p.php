@@ -1,10 +1,10 @@
 <?php
-(new Page(function($data) {
+new Page(function($data) {
 
 	\user\ConnectionLib::checkLogged();
 
 	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
-}))
+})
 	->get('index', function($data) {
 
 		$data->cAccount = \accounting\AccountLib::getAll();
@@ -15,7 +15,7 @@
 	->post('query', function($data) {
 
 		$query = POST('query');
-		$thirdParty = POST('thirdParty');
+		$thirdParty = POST('thirdParty', '?int');
 
 		$data->cAccount = \accounting\AccountLib::getAll($query);
 

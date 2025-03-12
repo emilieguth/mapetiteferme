@@ -33,6 +33,11 @@ class Operation {
 
     static refreshCreate(accountDetail) {
 
+        const index = accountDetail.input.getAttribute('data-index');
+
+        // On saisit le libellé
+        qs('[name="accountLabel[' + index + ']"]').setAttribute('value', event.detail.class.padEnd(8, 0));
+
         // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
         const amountElement = accountDetail.input.firstParent('div.operation-write').qs('[name^="amount["]');
         const amount = amountElement.getAttribute('value');
@@ -46,7 +51,6 @@ class Operation {
         accountDetail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', accountDetail.vatRate);
 
         // On vérifie les calculs de TVA
-        const index = accountDetail.input.getAttribute('data-index');
         this.calculateVAT(index);
 
     }

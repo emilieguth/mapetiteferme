@@ -69,9 +69,9 @@ class AccountLib extends AccountCrud {
 
 	}
 
-	public static function orderAccountsWithThirdParty(string $thirdParty, \Collection $cAccount): \Collection {
+	public static function orderAccountsWithThirdParty(int $thirdParty, \Collection $cAccount): \Collection {
 
-		$eThirdParty = \journal\ThirdPartyLib::getByName($thirdParty);
+		$eThirdParty = \journal\ThirdPartyLib::getById($thirdParty);
 
 		$cOperationThirdParty = \journal\OperationLib::getByThirdPartyAndOrderedByUsage($eThirdParty);
 
