@@ -9,7 +9,7 @@
    id="svg8"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="logo.svg"
-   inkscape:export-filename="/var/www/petitagriculteur/petitagriculteur/main/asset/image/favicon.png"
+   inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/favicon.png"
    inkscape:export-xdpi="91"
    inkscape:export-ydpi="91"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -238,7 +238,7 @@
        inkscape:export-xdpi="338.84"
        inkscape:export-ydpi="338.84"
        sodipodi:arc-type="slice"
-       inkscape:export-filename="/var/www/petitagriculteur/petitagriculteur/main/asset/image/logo.png" />
+       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/logo.png" />
     <path
        style="fill:#505075;fill-opacity:1;fill-rule:evenodd;stroke-width:1.27953"
        id="path1338-0"
@@ -254,7 +254,7 @@
        inkscape:export-xdpi="338.84"
        inkscape:export-ydpi="338.84"
        sodipodi:arc-type="slice"
-       inkscape:export-filename="/var/www/petitagriculteur/petitagriculteur/main/asset/image/logo.png" />
+       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/logo.png" />
     <ellipse
        style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.264583;filter:url(#filter1144);stroke:none"
        id="path828"
@@ -263,7 +263,7 @@
        inkscape:export-xdpi="169.42276"
        inkscape:export-ydpi="169.42276"
        transform="matrix(0.91467437,0,0,0.91467437,5.2911448,11.31308)"
-       inkscape:export-filename="/var/www/petitagriculteur/petitagriculteur/main/asset/image/favicon-dev.png"
+       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/favicon-dev.png"
        rx="8.5002928"
        ry="8.5" />
     <text
@@ -272,7 +272,7 @@
        x="46.845886"
        y="130.32448"
        id="text3013"
-       inkscape:export-filename="/var/www/petitagriculteur/petitagriculteur/main/asset/image/blog-logo.png"
+       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/blog-logo.png"
        inkscape:export-xdpi="485.10501"
        inkscape:export-ydpi="485.10501"><tspan
          sodipodi:role="line"
