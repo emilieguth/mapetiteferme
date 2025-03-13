@@ -6,7 +6,7 @@ Operation:
   thirdParty: ?journal\ThirdParty
   date: date(PHP(toDate('NOW - 2 YEARS')), PHP(toDate('NOW + 1 YEARS')))
   # Libellé de l'opération
-  description: text24(1, null)
+  description: text24(1, null) @collate(general)
   document: ?text8(1, null) @collate(general)
   # Une opération est toujours HT
   amount: decimal(8, 2)

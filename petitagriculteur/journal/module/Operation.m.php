@@ -44,7 +44,7 @@ class OperationModel extends \ModuleModel {
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'thirdParty' => ['element32', 'journal\ThirdParty', 'null' => TRUE, 'cast' => 'element'],
 			'date' => ['date', 'min' => toDate('NOW - 2 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'cast' => 'string'],
-			'description' => ['text24', 'min' => 1, 'max' => NULL, 'cast' => 'string'],
+			'description' => ['text24', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'document' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'type' => ['enum', [\journal\Operation::DEBIT, \journal\Operation::CREDIT], 'cast' => 'enum'],
