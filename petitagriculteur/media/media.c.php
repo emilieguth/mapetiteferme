@@ -207,7 +207,9 @@ Setting::register('media', [
 
 		return null;
 
-	}
+	},
+
+	'basePath' => '/var/www/petitagriculteur-storage',
 
 ]);
 
