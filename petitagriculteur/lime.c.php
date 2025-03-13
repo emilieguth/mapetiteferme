@@ -58,6 +58,7 @@ switch(LIME_ENV) {
 Feature::set('user\ban', TRUE);
 Setting::set('user\signUpRoles', ['employee']);
 Setting::set('user\signUpView', 'main/index:signUp');
+Setting::set('storage\basePath', '/var/www/petitagriculteur-storage');
 
 Page::construct(function($data) {
 

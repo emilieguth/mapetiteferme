@@ -186,7 +186,7 @@ Setting::register('media', [
 
 	'mediaDriver' => function () {
 
-		return new \util\XyzLib();
+		return new \storage\XyzLib();
 
 	},
 
@@ -195,7 +195,7 @@ Setting::register('media', [
 
 		$driver = Setting::get('mediaDriver');
 
-		if($driver instanceof \util\XyzLib) {
+		if($driver instanceof \storage\XyzLib) {
 
 			if(LIME_ENV === 'dev') {
 				return 'http://media.dev-petitagriculteur.fr';
