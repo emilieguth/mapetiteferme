@@ -46,23 +46,19 @@ class OperationLib extends OperationCrud {
 
 	}
 
-	public static function getAllForBook(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
+	public static function getAllForBook(\Search $search = new \Search()): \Collection {
 
-		$ccOperation = self::applySearch($search)
+		return self::applySearch($search)
 			->select(
 				Operation::getSelection()
-				+ ['account' => ['class', 'description']]
 				+ ['thirdParty' => ['name']]
+				+ ['class' => new \Sql('SUBSTRING(IF(accountLabel IS NULL, m2.class, accountLabel), 1, 3)')]
+				+ ['accountLabel' => new \Sql('IF(accountLabel IS NULL, RPAD(m2.class, 8, "0"), accountLabel)')]
+				+ ['account' => ['description']]
 			)
-			->sort(['date' => SORT_ASC])
-			->getCollection()
-			->reindex(['account', 'class']);
-
-		$cccOperation = new \Collection();
-		foreach($ccOperation as $class => $cOperation) {
-			$cccOperation[$class] = $cOperation->reindex(['accountLabel']);
-		}
-		return $cccOperation;
+			->join(\accounting\Account::model(), 'm1.account = m2.id')
+			->sort(['m1_accountLabel' => SORT_ASC, 'date' => SORT_ASC])
+			->getCollection();
 
 	}
 	public static function getAllForJournal(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
@@ -78,18 +74,6 @@ class OperationLib extends OperationCrud {
 
 	}
 
-	public static function getGrouped(\Search $search = new \Search()): \Collection {
-		return self::applySearch($search)
-			->select([
-				'account' => ['id', 'class', 'description'],
-				'credit' => new \Sql('SUM(IF(type = "'.OperationElement::CREDIT.'", amount, 0))'),
-				'debit' => new \Sql('SUM(IF(type = "'.OperationElement::DEBIT.'", amount, 0))'),
-			])
-			->group('account')
-			->getCollection()
-			->reindex(['account', 'class']);
-
-	}
 	public static function updateAccountLabels(\bank\Account $eAccount): bool {
 
 		$eOperation = ['accountLabel' => $eAccount['label']];

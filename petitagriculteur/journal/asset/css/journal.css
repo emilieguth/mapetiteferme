@@ -17,8 +17,5 @@ table.no-background tbody {
     background-color: white;
 }
 tr.sub-header {
-    background-color: var(--background-dark);
-}
-tr.sub-total {
-    background-color: var(--background-dark);
+    background-color: var(--background-dark) !important;
 }
