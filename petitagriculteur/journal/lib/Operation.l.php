@@ -128,6 +128,7 @@ class OperationLib extends OperationCrud {
 			}
 		}
 	}
+
 	public static function prepareOperations(array $input, Operation $eOperationDefault): \Collection {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
@@ -166,7 +167,14 @@ class OperationLib extends OperationCrud {
 			// Ce type d'écriture a un compte de TVA correspondant
 			$eAccount = $cAccounts[$account] ?? new \accounting\Account();
 			$vatValue = var_filter($vatValues[$index] ?? NULL, 'float', 0.0);
-			$hasVatAccount = ($eAccount['vatAccount']->exists() === TRUE and $vatValue !== 0.0);
+			$hasVatAccount = (
+				$eAccount['vatAccount']->exists() === TRUE
+				and (
+					$vatValue !== 0.0
+					// Cas où on enregistre quand même une entrée de TVA à 0% : Si c'est explicitement indiqué dans eAccount.
+					or $eAccount['vatRate'] === 0.0
+				)
+			);
 			if($hasVatAccount === TRUE) {
 				$eOperation['vatAccount'] = $eAccount['vatAccount'];
 			}

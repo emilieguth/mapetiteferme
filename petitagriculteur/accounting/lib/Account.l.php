@@ -22,11 +22,11 @@ class AccountLib extends AccountCrud {
 	public static function getByIdsWithVatAccount(array $ids): \Collection {
 
 		return Account::model()
-			->select([
-				'name' => new \Sql('CONCAT(class, ". ", description)')]
+			->select(
+				['name' => new \Sql('CONCAT(class, ". ", description)')]
 				+ Account::getSelection()
-				+ ['vatAccount' => ['class', 'vatRate', 'description']
-			])
+				+ ['vatAccount' => ['class', 'vatRate', 'description']]
+			)
 			->whereId('IN', $ids)
 			->getCollection(NULL, NULL, 'id');
 

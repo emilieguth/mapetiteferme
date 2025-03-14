@@ -77,10 +77,10 @@ class AccountUi {
 						$h .= '</td>';
 
 						$h .= '<td>';
-							if($eAccount['vatAccount']->exists() === TRUE) {
+							if($eAccount['vatAccount']->exists() === TRUE and $eAccount['vatAccount']['vatRate'] !== NULL) {
 								$h .= encode($eAccount['vatAccount']['vatRate']).'%';
 							} else {
-								$h .= $eAccount['vatRate'] ? $eAccount['vatRate'].'%' : '';
+								$h .= $eAccount['vatRate'] !== NULL ? $eAccount['vatRate'].'%' : '';
 							}
 						$h .= '</td>';
 
