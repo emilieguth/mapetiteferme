@@ -12,7 +12,7 @@ class ThirdPartyUi {
 			$h .= '</h1>';
 
 			$h .= '<div>';
-				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-thirdParty-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
+				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#thirdParty-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
 				$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/thirdParty:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Créer un tiers").'</a>';
 			$h .= '</div>';
 
@@ -48,17 +48,7 @@ class ThirdPartyUi {
 
 	}
 
-	public static function p(string $property): \PropertyDescriber {
-
-		$d = ThirdParty::model()->describer($property, [
-			'name' => s("Nom"),
-		]);
-
-		return $d;
-
-	}
-
-	public static function manage(\company\Company $eCompany, \Collection $cThirdParty): string {
+	public static function manage(\company\Company $eCompany, \Collection $cThirdParty, \Search $search): string {
 
 		if($cThirdParty->empty() === TRUE) {
 			return '<div class="util-info">'.
@@ -66,17 +56,72 @@ class ThirdPartyUi {
 				'</div>';
 		}
 
-		$h = '<ul>';
-		foreach($cThirdParty as $eThirdParty) {
-			$h .= '<li>'.encode($eThirdParty['name']).'</li>';
-		}
-		$h .= '</ul>';
+		$h = '';
+
+		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+
+			$h .= '<table class="table-block tr-even td-vertical-top tr-hover">';
+
+				$h .= '<thead>';
+					$h .= '<tr>';
+					$h .= '<th>';
+						$label = s("#");
+						$h .= ($search ? $search->linkSort('id', $label) : $label);
+					$h .= '</th>';
+					$h .= '<th>';
+						$label = s("Nom");
+						$h .= ($search ? $search->linkSort('name', $label) : $label);
+					$h .= '</th>';
+					$h .= '<th>'.s("Nombre d'écritures comptables").'</th>';
+					$h .= '<th>';
+				$h .= '</thead>';
+
+				$h .= '<tbody>';
+					foreach($cThirdParty as $eThirdParty) {
+
+						$h .= '<tr>';
+							$h .= '<td>';
+								$h .= $eThirdParty['id'];
+							$h .= '</td>';
+							$h .= '<td>';
+								$eThirdParty->setQuickAttribute('company', $eCompany['id']);
+								$h .= $eThirdParty->quick('name', encode($eThirdParty['name']));
+							$h .= '</td>';
+							$h .= '<td>';
+								$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?thirdParty='.$eThirdParty['id'].'">'.$eThirdParty['operations'].'</a>';
+							$h .= '</td>';
+						$h .= '</tr>';
+
+					}
+				$h .= '</tbody>';
+			$h .= '</table>';
 
 		return $h;
 
-
 	}
 
+	public function getSearch(\Search $search): string {
+
+		$h = '<div id="thirdParty-search" class="util-block-search stick-xs '.($search->empty(['ids']) === TRUE ? 'hide' : '').'">';
+
+			$form = new \util\FormUi();
+			$url = LIME_REQUEST_PATH;
+
+			$h .= $form->openAjax($url, ['method' => 'get', 'id' => 'form-search']);
+
+				$h .= '<div>';
+						$h .= $form->text('name', $search->get('name'), ['placeholder' => s("Nom")]);
+						$h .= $form->submit(s("Chercher"), ['class' => 'btn btn-secondary']);
+						$h .= '<a href="'.$url.'" class="btn btn-secondary">'.\Asset::icon('x-lg').'</a>';
+				$h .= '</div>';
+
+			$h .= $form->close();
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
 	public static function getAutocomplete(int $company, ThirdParty $eThirdParty): array {
 
 		\Asset::css('media', 'media.css');
@@ -116,6 +161,20 @@ class ThirdPartyUi {
 			'link' => \company\CompanyUi::urlJournal($eCompany).'/thirdParty:create',
 			'itemHtml' => $item
 		];
+
+	}
+/*[
+				'firstName' => function($d) use($form) {
+					$d->after =  \util\FormUi::info(s("Facultatif"));
+				}
+			]*/
+	public static function p(string $property): \PropertyDescriber {
+
+		$d = ThirdParty::model()->describer($property, [
+			'name' => s("Nom"),
+		]);
+
+		return $d;
 
 	}
 

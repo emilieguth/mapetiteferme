@@ -8,7 +8,8 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	$t->mainTitle = new \journal\ThirdPartyUi()->getThirdPartyTitle($data->eCompany);
 
-	echo new \journal\ThirdPartyUi()->manage($data->eCompany, $data->cThirdParty);
+	echo new \journal\ThirdPartyUi()->getSearch($data->search);
+	echo new \journal\ThirdPartyUi()->manage($data->eCompany, $data->cThirdParty, $data->search);
 
 });
 

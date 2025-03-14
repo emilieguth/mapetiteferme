@@ -2,14 +2,22 @@
 new \journal\ThirdPartyPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
-		$company = GET('company');
+		$company = REQUEST('company');
 
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 	}
 )
 	->get('index', function($data) {
 
-		$data->cThirdParty = \journal\ThirdPartyLib::getAll();
+		$data->search = new Search([
+			'name' => GET('name'),
+		], GET('sort'));
+
+		$data->cThirdParty = \journal\ThirdPartyLib::getAll($data->search);
+		$cOperation = \journal\OperationLib::countGroupByThirdParty();
+		foreach($data->cThirdParty as &$eThirdParty) {
+			$eThirdParty['operations'] = $cOperation[$eThirdParty['id']]['count'] ?? 0;
+		}
 
 		throw new ViewAction($data);
 
@@ -23,7 +31,8 @@ new \journal\ThirdPartyPage(
 
 		throw new ViewAction($data);
 
-	});
+	})
+	->quick(['name']);
 
 new Page(function($data) {
 
@@ -33,9 +42,11 @@ new Page(function($data) {
 })
 ->post('query', function($data) {
 
-	$query = POST('query');
+	$data->search = new Search([
+		'name' => POST('query'),
+	], GET('sort'));
 
-	$data->cThirdParty = \journal\ThirdPartyLib::getAll($query);
+	$data->cThirdParty = \journal\ThirdPartyLib::getAll($data->search);
 
 	throw new \ViewAction($data);
 

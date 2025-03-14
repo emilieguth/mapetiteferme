@@ -6,6 +6,7 @@
 	--todo: slategray;
 	--done: teal;
 	--muted: #707079;
+	--muted-light: #d5d5d5;
 	--selling: #722583;
 	--basket: #b17e2f;
 	--background: #ededf1;
@@ -716,4 +717,8 @@ tr.row-highlight {
 
 tr.row-bold > td {
 	font-weight: bold;
+}
+
+.util-quick-dropdown .form-info {
+	color: var(--muted-light);
 }

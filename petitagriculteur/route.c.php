@@ -102,6 +102,16 @@ Route::register([
 			'priority' => 5,
 			'route' => ['@module', 'journal', 'Operation', 'quick'],
 		],
+		'/@module/journal/ThirdParty/doQuick' => [
+			'request' => 'journal/thirdParty',
+			'priority' => 5,
+			'route' => ['@module', 'journal', 'ThirdParty', 'doQuick'],
+		],
+		'/@module/journal/ThirdParty/quick' => [
+			'request' => 'journal/thirdParty',
+			'priority' => 5,
+			'route' => ['@module', 'journal', 'ThirdParty', 'quick'],
+		],
 	],
 	'PUT' => [
 	],

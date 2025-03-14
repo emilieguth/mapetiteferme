@@ -364,5 +364,14 @@ class OperationLib extends OperationCrud {
       ->whereCashflow('=', $eCashflow['id'])
       ->delete();
 	}
+
+	public static function countGroupByThirdParty(): \Collection {
+
+		return Operation::model()
+			->select(['count' => new \Sql('COUNT(*)', 'int'), 'thirdParty'])
+			->group('thirdParty')
+			->getCollection(NULL, NULL, 'thirdParty');
+
+	}
 }
 ?>

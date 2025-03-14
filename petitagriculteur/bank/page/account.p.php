@@ -1,5 +1,5 @@
 <?php
-(new \bank\AccountPage(
+new \bank\AccountPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
 		$company = REQUEST('company');
@@ -9,7 +9,7 @@
 
 		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 	}
-))
+)
 	->quick(['label'])
 	->get('index', function($data) {
 
