@@ -36,11 +36,11 @@ class AccountLib extends AccountCrud {
 
 		$eAccount = new Account();
 		Account::model()
-			->select([
-				'name' => new \Sql('CONCAT(class, ". ", description)')]
+			->select(
+				['name' => new \Sql('CONCAT(class, ". ", description)')]
 				+ Account::getSelection()
-				+ ['vatAccount' => ['class', 'vatRate', 'description']
-			])
+				+ ['vatAccount' => ['class', 'vatRate', 'description']]
+			)
 			->whereId('=', $id)
 			->get($eAccount);
 
@@ -50,11 +50,11 @@ class AccountLib extends AccountCrud {
 	public static function getAll($query = ''): \Collection {
 
 		return Account::model()
-			->select([
-				'name' => new \Sql('CONCAT(class, ". ", description)')] +
-				Account::getSelection() +
-				['vatAccount' => ['class', 'vatRate']
-			])
+      ->select(
+        ['name' => new \Sql('CONCAT(class, ". ", description)')]
+        + Account::getSelection()
+        + ['vatAccount' => ['class', 'vatRate', 'description']]
+      )
 			->sort('class')
 			->where('class LIKE "%'.$query.'%" OR description LIKE "%'.strtolower($query).'%"', if: $query !== '')
 			->getCollection(NULL, NULL, 'id');
