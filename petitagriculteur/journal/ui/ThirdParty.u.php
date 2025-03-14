@@ -163,17 +163,18 @@ class ThirdPartyUi {
 		];
 
 	}
-/*[
-				'firstName' => function($d) use($form) {
-					$d->after =  \util\FormUi::info(s("Facultatif"));
-				}
-			]*/
+
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = ThirdParty::model()->describer($property, [
 			'name' => s("Nom"),
 		]);
 
+		switch($property) {
+			case 'name':
+				$d->before = fn(\util\FormUi $form, $e) => $e->isQuick() ? \util\FormUi::info(s("Attention, ce changement sera répercuté sur toutes les opérations déjà créées")) : '';
+				break;
+		}
 		return $d;
 
 	}
