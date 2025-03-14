@@ -89,8 +89,14 @@ class JournalUi {
 	): string {
 
 		if($cOperation->empty() === TRUE) {
-			return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
+
+			if($search->empty(['ids']) === TRUE) {
+				return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
+			}
+			return '<div class="util-info">'.s("Aucune écriture ne correspond à vos critères de recherche").'</div>';
+
 		}
+
 		\Asset::js('util', 'form.js');
 		\Asset::css('util', 'form.css');
 

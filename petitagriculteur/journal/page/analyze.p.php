@@ -1,5 +1,5 @@
 <?php
-(new \bank\CashflowPage(
+new \bank\CashflowPage(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
@@ -11,7 +11,7 @@
 			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
 		}
 	}
-))
+)
 ->get(['/journal/analyze/bank', '/journal/analyze/bank/{financialYear}'], function($data) {
 
 	Setting::set('main\viewAnalyze', 'bank');

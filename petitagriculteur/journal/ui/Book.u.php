@@ -24,6 +24,7 @@ class BookUi {
 	public function getBook(
 		\company\Company $eCompany,
 		\Collection $cOperation,
+		\accounting\FinancialYear $eFinancialYear,
 	): string {
 
 		if($cOperation->empty() === TRUE) {
@@ -100,7 +101,7 @@ class BookUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
-								$h .= encode($eOperation['document']);
+								$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?document='.encode($eOperation['document']).'&financialYear='.$eFinancialYear['id'].'">'.encode($eOperation['document']).'</a>';
 							$h .= '</td>';
 
 							$h .= '<td>';

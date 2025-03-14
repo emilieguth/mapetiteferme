@@ -27,7 +27,7 @@ class OperationLib extends OperationCrud {
 			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))
 			->whereAccountLabel('LIKE', '%'.$search->get('accountLabel').'%', if: $search->get('accountLabel'))
 			->whereDescription('LIKE', '%'.$search->get('description').'%', if: $search->get('description'))
-			->whereDocument('LIKE', '%'.$search->get('document').'%', if: $search->get('document'))
+			->whereDocument($search->get('document'), if: $search->get('document'))
 			->whereCashflow('=', $search->get('cashflow'), if: $search->get('cashflow'))
 			->whereCashflow(NULL, if: $search->get('cashflowFilter') === TRUE)
 			->whereType($search->get('type'), if: $search->get('type'))
