@@ -29,10 +29,9 @@ new AdaptativeView('logged', function($data, MainTemplate $t) {
 
 	if(Privilege::can('company\access')) {
 
-		echo (new \main\HomeUi())->getCompanies($data->cCompanyUser);
+		echo new \main\HomeUi()->getCompanies($data->cCompanyUser);
 
 	}
-
 
 });
 
