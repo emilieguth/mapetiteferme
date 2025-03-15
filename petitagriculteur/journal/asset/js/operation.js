@@ -1,3 +1,11 @@
+document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journal-operation-create"]', function(e) {
+    if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
+        return;
+    }
+    const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
+    e.detail.body.append('thirdParty', thirdParty);
+});
+
 document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"]', function(e) {
     Operation.refreshCreate(e.detail);
 });
