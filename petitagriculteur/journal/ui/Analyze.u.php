@@ -226,7 +226,7 @@ class AnalyzeUi {
 		$h = '<div class="util-action">';
 
 		$h .= '<h1>';
-			$h .= s("Analyse du résultat");
+			$h .= s("Résultat");
 		$h .= '</h1>';
 
 		$h .= '</div>';
@@ -235,18 +235,116 @@ class AnalyzeUi {
 
 	}
 
-	public function getResult(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
+	public function getResult(array $result, \Collection $cAccount): string {
 
-		if($cOperation->empty() === TRUE) {
+		if(empty($result) === TRUE) {
 
 			$h = '<div class="util-info">';
-				$h .= s("Le suivi du résultat sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");
+				$h .= s("Le compte de résultat sera disponible lorsque vous aurez créé des écritures pour cet exercice.");
 			$h .= '</div>';
 
 			return $h;
 		}
 
-		$h = '<div class="analyze-chart-table">';
+		$h = '<h2>'.s("Compte de résultat").'</h2>';
+
+		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+
+			$h .= '<table class="table-block tr-even td-vertical-top tr-hover">';
+
+				$h .= '<thead>';
+					$h .= '<tr>';
+						$h .= '<th>'.s("Comptes").'</th>';
+						$h .= '<th>'.s("Libellé").'</th>';
+						$h .= '<th>'.s("Montant").'</th>';
+					$h .= '</tr>';
+				$h .= '</thead>';
+
+				$debit = 0;
+				$credit = 0;
+				$total = 0;
+				$class = NULL;
+				$h .= '<tbody>';
+
+					foreach($result as $accountClass => $line) {
+
+						if($class !== NULL and $class !== mb_substr($accountClass, 0, 1)) {
+
+							$h .= $this->getResultSubTotalLine($class, $debit, $credit);
+							$debit = 0;
+							$credit = 0;
+
+						}
+
+						$class = mb_substr($accountClass, 0, 1);
+
+						$h .= '<tr>';
+							$h .= '<td>'.encode($accountClass).'</td>';
+							$h .= '<td>'.encode($cAccount->offsetGet($accountClass)['description']).'</td>';
+							$h .= '<td class="text-end">'.number_format(abs($line['credit'] - $line['debit']), thousands_separator: ' ').'</td>';
+						$h .= '</tr>';
+
+						$debit += $line['debit'];
+						$credit += $line['credit'];
+
+						$total += $line['credit'];
+						$total -= $line['debit'];
+
+					}
+
+					$h .= $this->getResultSubTotalLine($class, $debit, $credit);
+					$h .= $this->getResultTotalLine($total);
+
+				$h .= '</tbody>';
+
+			$h .= '</table>';
+
+		$h .= '</div>';
+		//d($result, $cAccount);
+		return $h;
+
+	}
+
+	private function getResultTotalLine(float $total): string {
+
+		$h = '<tr class="row-highlight row-bold">';
+			$h .= '<td>12</td>';
+			$h .= '<td class="text-end">'.s("Résultat (Produits - Charges)").'</td>';
+			$h .= '<td class="text-end">'.number_format($total, thousands_separator: ' ').'</td>';
+		$h .= '</tr>';
+
+		return $h;
+
+	}
+
+	private function getResultSubTotalLine(string $class, float $debit, float $credit): string {
+
+		$h = '<tr class="row-highlight row-bold">';
+			$h .= '<td></td>';
+			$h .= '<td class="text-end">'.match((int)$class) {
+				\Setting::get('accounting\chargeAccountClass') => s("Total Charges"),
+				\Setting::get('accounting\productAccountClass') => s("Total Produits")
+				}.'</td>';
+			$h .= '<td class="text-end">'.number_format(abs($credit - $debit), thousands_separator: ' ').'</td>';
+		$h .= '</tr>';
+
+		return $h;
+
+	}
+
+	public function getResultByMonth(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
+
+		if($cOperation->empty() === TRUE) {
+
+			$h = '<div class="util-info">';
+				$h .= s("Le suivi du résultat sera disponible lorsque vous aurez créé des écritures pour cet exercice.");
+			$h .= '</div>';
+
+			return $h;
+		}
+
+		$h = '<h2>'.s("Le résultat mois par mois").'</h2>';
+		$h .= '<div class="analyze-chart-table">';
 			$h .= $this->getResultChart($eFinancialYear, $cOperation);
 			$h .= $this->getResultTable($eFinancialYear, $cOperation);
 		$h .= '</div>';

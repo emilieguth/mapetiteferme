@@ -56,6 +56,7 @@ new \bank\CashflowPage(
 	$data->eFinancialYearSelected = $eFinancialYearSelected->exists() === TRUE ? $eFinancialYearSelected : $data->eFinancialYearCurrent;
 
 	$data->cOperation = \journal\AnalyzeLib::getResultOperationsByMonth($data->eFinancialYearSelected);
+	[$data->result, $data->cAccount] = \journal\AnalyzeLib::getResult($data->eFinancialYearSelected);
 
 	throw new ViewAction($data, ':analyseResult');
 

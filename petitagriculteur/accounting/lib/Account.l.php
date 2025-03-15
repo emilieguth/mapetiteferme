@@ -19,6 +19,20 @@ class AccountLib extends AccountCrud {
 		return $eAccount;
 
 	}
+
+	public static function getByClasses(array $classes, string $index = 'id'): \Collection {
+
+		return Account::model()
+			->select(
+				['name' => new \Sql('CONCAT(class, ". ", description)')]
+				+ Account::getSelection()
+				+ ['vatAccount' => ['class', 'vatRate', 'description']]
+			)
+			->whereClass('IN', $classes)
+			->getCollection(NULL, NULL, $index);
+
+	}
+
 	public static function getByIdsWithVatAccount(array $ids): \Collection {
 
 		return Account::model()

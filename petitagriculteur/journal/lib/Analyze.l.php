@@ -3,10 +3,49 @@ namespace journal;
 
 class AnalyzeLib {
 
+	public static function getResultForFinancialYear(\accounting\FinancialYear $eFinancialYear): array {
 
-	public static function getResultOperationsByMonth(\accounting\FinancialYear $eFinancialYear): \Collection {
+		$eOperation = new Operation();
+
+		Operation::model()
+       ->select([
+         'charge' => new \Sql('SUM(IF(SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\chargeAccountClass').'", amount, 0))'),
+         'product' => new \Sql('SUM(IF(SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\productAccountClass').'", amount, 0))'),
+       ])
+       ->whereDate('>=', $eFinancialYear['startDate'])
+       ->whereDate('<=', $eFinancialYear['endDate'])
+       ->where(new \Sql('SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\chargeAccountClass').'" OR SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\productAccountClass').'"'))
+       ->join(\accounting\Account::model(), 'm1.account = m2.id')
+			->get($eOperation);
+
+		return $eOperation->getArrayCopy();
+
+	}
+
+	public static function getResult(\accounting\FinancialYear $eFinancialYear): array {
 
 		$cOperation = Operation::model()
+      ->select([
+				'class' => new \Sql('m2.class'),
+	      'credit' => new \Sql('SUM(IF(type = "credit", amount, 0))'),
+	      'debit' => new \Sql('SUM(IF(type = "debit", amount, 0))'),
+      ])
+      ->whereDate('>=', $eFinancialYear['startDate'])
+      ->whereDate('<=', $eFinancialYear['endDate'])
+      ->where(new \Sql('SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\chargeAccountClass').'" OR SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\productAccountClass').'"'))
+      ->join(\accounting\Account::model(), 'm1.account = m2.id')
+      ->group(['class'])
+			->sort(['class' => SORT_ASC])
+      ->getCollection(NULL, NULL, ['class']);
+
+		$cAccount = \accounting\AccountLib::getByClasses($cOperation->getColumn('class'), 'class');
+
+		return [$cOperation->getArrayCopy(), $cAccount];
+
+	}
+	public static function getResultOperationsByMonth(\accounting\FinancialYear $eFinancialYear): \Collection {
+
+		return Operation::model()
 			->select([
 				'month' => new \Sql('DATE_FORMAT(date, "%Y-%m")'),
 				'charge' => new \Sql('SUM(IF(SUBSTRING(m2.class, 1, 1) = "'.\Setting::get('accounting\chargeAccountClass').'", amount, 0))'),
@@ -19,7 +58,6 @@ class AnalyzeLib {
 			->group(['m1_month'])
 			->getCollection(NULL, NULL, ['month']);
 
-		return $cOperation;
 	}
 
 	public static function getChargeOperationsByMonth(\accounting\FinancialYear $eFinancialYear): array {
