@@ -2,7 +2,7 @@ Operation:
   id: serial32
   # Compte concerné par l'opération
   account: accounting\Account
-  accountLabel: ?text8(1, null) @collate(general)
+  accountLabel: text8(1, null) @collate(general)
   thirdParty: ?journal\ThirdParty
   date: date(PHP(toDate('NOW - 2 YEARS')), PHP(toDate('NOW + 1 YEARS')))
   # Libellé de l'opération

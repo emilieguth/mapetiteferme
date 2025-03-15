@@ -204,6 +204,7 @@ class OperationLib extends OperationCrud {
 		$values = [
 			...$defaultValues,
 			'account' => $eAccount['vatAccount']['id'] ?? NULL,
+			'accountLabel' => str_pad($eAccount['vatAccount']['class'], 8, '0'),
 			'document' => $eOperationLinked['document'],
 			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
 			'type' => $eOperationLinked['type'],
@@ -316,11 +317,17 @@ class OperationLib extends OperationCrud {
 
 		$eAccountBank = \bank\AccountLib::getByClass(\Setting::get('accounting\bankAccountClass'));
 
+		if($eCashflow['import']['account']['label'] !== NULL) {
+			$label = $eCashflow['import']['account']['label'];
+		} else {
+			$label = str_pad(\Setting::get('accounting\defaultBankAccountLabel'), 8, '0');
+		}
+
 		$values = [
 			'date' => $eCashflow['date'],
 			'cashflow' => $eCashflow['id'] ?? NULL,
 			'account' => $eAccountBank['id'] ?? NULL,
-			'accountLabel' => $eCashflow['import']['account']['label'] ?? \Setting::get('accounting\defaultBankAccountLabel'),
+			'accountLabel' => $label,
 			'description' => $eCashflow['memo'],
 			'document' => $document,
 			'thirdParty' => $eThirdParty['id'] ?? NULL,

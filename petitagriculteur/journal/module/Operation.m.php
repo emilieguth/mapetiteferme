@@ -41,7 +41,7 @@ class OperationModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'account' => ['element32', 'accounting\Account', 'cast' => 'element'],
-			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
+			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'thirdParty' => ['element32', 'journal\ThirdParty', 'null' => TRUE, 'cast' => 'element'],
 			'date' => ['date', 'min' => toDate('NOW - 2 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'cast' => 'string'],
 			'description' => ['text24', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],

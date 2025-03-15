@@ -126,6 +126,7 @@ class OperationUi {
 					$d->attributes['disabled'] = TRUE;
 				}
 				$d->attributes['data-third-party'] = $form->getId();
+				$d->label .=  ' '.\util\FormUi::asterisk();
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled) {
@@ -135,9 +136,12 @@ class OperationUi {
 					$d->attributes['disabled'] = TRUE;
 				}
 				$d->attributes['data-account'] = $form->getId();
+				$d->label .=  ' '.\util\FormUi::asterisk();
 			});
 
-			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix);
+			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix, function($d) {
+				$d->label .=  ' '.\util\FormUi::asterisk();
+			});
 			$h .= $form->group(
 				self::p('date')->label.' '.\util\FormUi::asterisk(),
 				$form->date('date'.$suffix, $defaultValues['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
