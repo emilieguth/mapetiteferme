@@ -260,47 +260,50 @@ class AnalyzeUi {
 					$h .= '</tr>';
 				$h .= '</thead>';
 
-				$debit = 0;
-				$credit = 0;
-				$total = 0;
-				$class = NULL;
 				$h .= '<tbody>';
 
-					foreach($result as $accountClass => $line) {
-
-						if($class !== NULL and $class !== mb_substr($accountClass, 0, 1)) {
-
-							$h .= $this->getResultSubTotalLine($class, $debit, $credit);
-							$debit = 0;
-							$credit = 0;
-
-						}
-
-						$class = mb_substr($accountClass, 0, 1);
-
-						$h .= '<tr>';
-							$h .= '<td>'.encode($accountClass).'</td>';
-							$h .= '<td>'.encode($cAccount->offsetGet($accountClass)['description']).'</td>';
-							$h .= '<td class="text-end">'.number_format(abs($line['credit'] - $line['debit']), thousands_separator: ' ').'</td>';
-						$h .= '</tr>';
-
-						$debit += $line['debit'];
-						$credit += $line['credit'];
-
-						$total += $line['credit'];
-						$total -= $line['debit'];
-
-					}
-
-					$h .= $this->getResultSubTotalLine($class, $debit, $credit);
-					$h .= $this->getResultTotalLine($total);
+					$h .= $this->getResultByClass(\Setting::get('accounting\productAccountClass'), $result, $cAccount);
+					$h .= $this->getResultByClass(\Setting::get('accounting\chargeAccountClass'), $result, $cAccount);
+					$h .= $this->getResultTotalLine(array_sum(array_column($result, 'credit')) - array_sum(array_column($result, 'debit')));
 
 				$h .= '</tbody>';
 
 			$h .= '</table>';
 
 		$h .= '</div>';
-		//d($result, $cAccount);
+
+		return $h;
+
+	}
+
+	private function getResultByClass(int $class, array $result, \Collection $cAccount): string {
+
+		$debit = 0;
+		$credit = 0;
+
+		$h = '';
+
+		foreach($result as $accountClass => $line) {
+
+			$currentClass = mb_substr($accountClass, 0, 1);
+			if((int)$currentClass !== $class) {
+				continue;
+			}
+
+			$h .= '<tr>';
+				$h .= '<td>'.encode($accountClass).'</td>';
+				$h .= '<td>'.encode($cAccount->offsetGet($accountClass)['description']).'</td>';
+				$h .= '<td class="text-end">'.number_format(abs($line['credit'] - $line['debit']), thousands_separator: ' ').'</td>';
+			$h .= '</tr>';
+
+			$debit += $line['debit'];
+			$credit += $line['credit'];
+
+
+		}
+
+		$h .= $this->getResultSubTotalLine($class, $debit, $credit);
+
 		return $h;
 
 	}
@@ -317,11 +320,11 @@ class AnalyzeUi {
 
 	}
 
-	private function getResultSubTotalLine(string $class, float $debit, float $credit): string {
+	private function getResultSubTotalLine(int $class, float $debit, float $credit): string {
 
 		$h = '<tr class="row-highlight row-bold">';
 			$h .= '<td></td>';
-			$h .= '<td class="text-end">'.match((int)$class) {
+			$h .= '<td class="text-end">'.match($class) {
 				\Setting::get('accounting\chargeAccountClass') => s("Total Charges"),
 				\Setting::get('accounting\productAccountClass') => s("Total Produits")
 				}.'</td>';
