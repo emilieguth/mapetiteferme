@@ -19,4 +19,12 @@ new JsonView('query', function($data, AjaxTemplate $t) {
 
 });
 
+new JsonView('queryLabel', function($data, AjaxTemplate $t) {
+
+	$results = array_map(function($label) use ($data) { return \accounting\AccountUi::getAutocompleteLabel($data->eCompany['id'], $label); }, $data->labels);
+
+	$t->push('results', $results);
+
+});
+
 ?>

@@ -70,7 +70,7 @@ class AccountLib extends AccountCrud {
         + ['vatAccount' => ['class', 'vatRate', 'description']]
       )
 			->sort('class')
-			->where('class LIKE "%'.$query.'%" OR description LIKE "%'.strtolower($query).'%"', if: $query !== '')
+			->where('class LIKE "%'.$query.'%" OR description LIKE "%'.$query.'%"', if: $query !== '')
 			->getCollection(NULL, NULL, 'id');
 	}
 

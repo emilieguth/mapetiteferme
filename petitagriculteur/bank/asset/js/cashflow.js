@@ -6,6 +6,20 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account="bank-c
     e.detail.body.append('thirdParty', thirdParty);
 });
 
+document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="bank-cashflow-allocate"]', function(e) {
+
+    if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') !== null) {
+        const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
+        e.detail.body.append('thirdParty', thirdParty);
+    }
+
+    if(e.detail.input.firstParent('div.operation-write').qs('[name^="account"]') !== null) {
+        const account = e.detail.input.firstParent('div.operation-write').qs('[name^="account"]').getAttribute('value');
+        e.detail.body.append('account', account);
+    }
+
+});
+
 document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashflow-allocate"]', function(e) {
     Cashflow.refreshAllocate(e);
 });
@@ -25,7 +39,7 @@ class Cashflow {
         const index = event.detail.input.getAttribute('data-index');
 
         // On saisit le libellé
-        qs('[name="accountLabel[' + index + ']"]').setAttribute('value', event.detail.class.padEnd(8, 0));
+//        qs('[name="accountLabel[' + index + ']"]').setAttribute('value', event.detail.class.padEnd(8, 0));
 
         // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
         const amountElement = event.detail.input.firstParent('div.operation-write').qs('[name^="amount["]');

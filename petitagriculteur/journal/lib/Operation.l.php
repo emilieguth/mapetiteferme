@@ -152,7 +152,8 @@ class OperationLib extends OperationCrud {
 			$eAccount = $cAccounts[$account] ?? new \accounting\Account();
 			$vatValue = var_filter($vatValues[$index] ?? NULL, 'float', 0.0);
 			$hasVatAccount = (
-				$eAccount['vatAccount']->exists() === TRUE
+				$eAccount->exists() === TRUE
+				and $eAccount['vatAccount']->exists() === TRUE
 				and (
 					$vatValue !== 0.0
 					// Cas où on enregistre quand même une entrée de TVA à 0% : Si c'est explicitement indiqué dans eAccount.
@@ -370,6 +371,21 @@ class OperationLib extends OperationCrud {
 			->select(['count' => new \Sql('COUNT(*)', 'int'), 'thirdParty'])
 			->group('thirdParty')
 			->getCollection(NULL, NULL, 'thirdParty');
+
+	}
+
+	public static function getLabels(string $query, ?int $thirdParty, ?int $account): array {
+
+		$labels = Operation::model()
+			->select(['accountLabel' => new \Sql('DISTINCT(accountLabel)')])
+			->whereThirdParty($thirdParty, if: $thirdParty !== NULL)
+			->whereAccount($account, if: $account !== NULL)
+			->where('accountLabel LIKE "%'.$query.'%"', if: $query !== '')
+			->sort(['accountLabel' => SORT_ASC])
+			->getCollection()
+			->getColumn('accountLabel');
+
+		return $labels;
 
 	}
 }

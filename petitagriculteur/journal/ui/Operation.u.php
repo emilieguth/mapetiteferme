@@ -139,7 +139,10 @@ class OperationUi {
 				$d->label .=  ' '.\util\FormUi::asterisk();
 			});
 
-			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix, function($d) {
+			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix, function($d) use($form, $index) {
+				$d->autocompleteDispatch = '[data-account-label="'.$form->getId().'"]';
+				$d->attributes['data-index'] = $index;
+				$d->attributes['data-account-label'] = $form->getId();
 				$d->label .=  ' '.\util\FormUi::asterisk();
 			});
 			$h .= $form->group(
@@ -245,6 +248,14 @@ class OperationUi {
 					];
 				};
 				new \accounting\AccountUi()->query($d, GET('company', '?int'));
+				break;
+
+			case 'accountLabel':
+				$d->autocompleteBody = function(\util\FormUi $form, Operation $e) {
+					return [
+					];
+				};
+				new \accounting\AccountUi()->queryLabel($d, GET('company', '?int'));
 				break;
 
 			case 'amount' :

@@ -27,6 +27,32 @@ new Page(function($data) {
 
 		throw new \ViewAction($data);
 
+	})
+	->post('queryLabel', function($data) {
+
+		$query = POST('query');
+		$thirdParty = POST('thirdParty', '?int');
+		$account = POST('account', '?int');
+
+		$labels = \journal\OperationLib::getLabels($query, $thirdParty, $account);
+
+		if(post_exists('account')) {
+			$eAccount = \accounting\AccountLib::getById($account);
+			$accountClass = str_pad($eAccount['class'], 8, '0');
+			if($eAccount->exists() === TRUE and in_array($accountClass, $labels) === FALSE) {
+				$labels[] = $accountClass;
+			}
+		}
+
+		if(mb_strlen($query) > 0) {
+			$accountClass = str_pad(post('query'), 8, '0');
+			if(in_array($accountClass, $labels) === FALSE) {
+				array_unshift($labels, $accountClass);
+			}
+		}
+		$data->labels = $labels;
+		throw new \ViewAction($data);
+
 	});
 
 ?>
