@@ -218,7 +218,7 @@ class OperationLib extends OperationCrud {
 
 		$fw = new \FailWatch();
 
-		$eOperationVat->build(['cashflow', 'date', 'account', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
+		$eOperationVat->build(['cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
 
 		$fw->validate();
 
@@ -342,7 +342,7 @@ class OperationLib extends OperationCrud {
 
 		$fw = new \FailWatch();
 
-		$eOperationBank->build(['cashflow', 'date', 'account', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
+		$eOperationBank->build(['cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
 
 		$fw->validate();
 
