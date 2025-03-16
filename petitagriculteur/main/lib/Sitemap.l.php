@@ -18,13 +18,6 @@ class SitemapLib {
 			'priority' => '0.9'
 		];
 
-		$sitemapArray[] = [
-			'loc' => \Lime::getUrl().'/presentation/producteur',
-			'lastmod' => NULL,
-			'changefreq' => 'daily',
-			'priority' => '1'
-		];
-
 		$sitemap = [
 			'sitemap' => self::generateSitemap($sitemapArray),
 			'lastUpdate' => currentDatetime(),

@@ -1,5 +1,6 @@
 <?php
-$hostname = match(GET('limeGender', 'string', 'm')) { 'f' => 'petiteagricultrice', default => 'petitagriculteur'};
+define('LIME_GENDER', in_array(GET('limeGender', 'string', 'm'), ['f', 'm']) === TRUE ? GET('limeGender', 'string', 'm') : 'm');
+$hostname = match(LIME_GENDER) { 'f' => 'petiteagricultrice', default => 'petitagriculteur'};
 Lime::setUrls([
   'dev' => 'http://www.dev-'.$hostname.'.fr',
   'prod' => 'https://www.'.$hostname.'.fr',
