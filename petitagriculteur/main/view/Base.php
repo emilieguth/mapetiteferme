@@ -54,7 +54,7 @@ class BaseTemplate extends SmartTemplate {
 		parent::__construct();
 
 		$this->base = \Lime::getProtocol().'://'.SERVER('HTTP_HOST');
-		$this->favicon = \Asset::path('main', LIME_ENV === 'dev' ? 'favicon-dev.png' : 'favicon.png', 'image');
+		$this->favicon = \Asset::getPath('main', LIME_ENV === 'dev' ? 'favicon-dev.png' : 'favicon.png', 'image');
 
 		\Asset::css('util', 'font-open-sans.css');
 
@@ -204,7 +204,7 @@ class BaseTemplate extends SmartTemplate {
 
 		$ogUrl = Lime::getUrl().LIME_REQUEST_PATH;
 		$ogSiteName = \Lime::getName();
-		$ogImg = $this->og['image'] ?? Lime::getUrl().'/'.\Asset::path('main', 'open-graph-default.jpg', 'image');
+		$ogImg = $this->og['image'] ?? Lime::getUrl().'/'.\Asset::getPath('main', 'open-graph-default.jpg', 'image');
 
 		$ogType = $this->og['type'] ?? 'website';
 		$ogDescription = $this->og['description'] ?? $this->metaDescription;
