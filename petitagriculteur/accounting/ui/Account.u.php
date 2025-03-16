@@ -118,7 +118,7 @@ class AccountUi {
 
 	}
 
-	public function query(\PropertyDescriber $d, int $company, bool $multiple = FALSE) {
+	public function query(\PropertyDescriber $d, int $company, bool $multiple = FALSE): void {
 
 		$d->prepend = \Asset::icon('journal-text');
 		$d->field = 'autocomplete';
@@ -134,20 +134,20 @@ class AccountUi {
 
 	}
 
-	public static function getAutocompleteLabel(int $company, string $label): array {
+	public static function getAutocompleteLabel(string $query, int $company, string $label): array {
 
 		\Asset::css('media', 'media.css');
 
 		return [
 			'value' => $label,
 			'company' => $company,
-			'itemHtml' => encode($label),
+			'itemHtml' => str_replace($query, '<b>'.$query.'</b>', $label),
 			'itemText' => encode($label),
 		];
 
 	}
 
-	public function queryLabel(\PropertyDescriber $d, int $company, bool $multiple = FALSE) {
+	public function queryLabel(\PropertyDescriber $d, int $company, ?string $query, bool $multiple = FALSE): void {
 
 		$d->prepend = \Asset::icon('123');
 		$d->field = 'autocomplete';
@@ -157,8 +157,8 @@ class AccountUi {
 		$d->group += ['wrapper' => 'accountLabel'];
 
 		$d->autocompleteUrl = \company\CompanyUi::urlAccounting($company).'/account:queryLabel';
-		$d->autocompleteResults = function(string $label) use ($company) {
-			return self::getAutocompleteLabel($company, $label);
+		$d->autocompleteResults = function(string $label) use ($company, $query) {
+			return self::getAutocompleteLabel($query, $company, $label);
 		};
 
 	}

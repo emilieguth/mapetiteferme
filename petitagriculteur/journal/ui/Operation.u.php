@@ -255,7 +255,7 @@ class OperationUi {
 					return [
 					];
 				};
-				new \accounting\AccountUi()->queryLabel($d, GET('company', '?int'));
+				new \accounting\AccountUi()->queryLabel($d, GET('company', '?int'), query: GET('query'));
 				break;
 
 			case 'amount' :
