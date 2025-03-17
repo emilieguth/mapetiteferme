@@ -108,11 +108,18 @@ class OperationUi {
 		array $disabled
 	): string {
 
+		\Asset::js('journal', 'asset.js');
 		\Asset::js('journal', 'operation.js');
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
-		$onchangeUpdateVat = 'Operation.updateVatValue('.$index.');';
 
 		$h = '<div class="operation-write">';
+
+			$h .= $form->group(
+				self::p('date')->label.' '.\util\FormUi::asterisk(),
+				$form->date('date'.$suffix, $defaultValues['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+			);
+
+			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
 
 			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled) {
 				$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"]';
@@ -121,7 +128,6 @@ class OperationUi {
 					$d->attributes['disabled'] = TRUE;
 				}
 				$d->attributes['data-third-party'] = $form->getId();
-				$d->label .=  ' '.\util\FormUi::asterisk();
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled) {
@@ -141,10 +147,6 @@ class OperationUi {
 				$d->label .=  ' '.\util\FormUi::asterisk();
 			});
 			$h .= $form->group(
-				self::p('date')->label.' '.\util\FormUi::asterisk(),
-				$form->date('date'.$suffix, $defaultValues['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
-			);
-			$h .= $form->group(
 				self::p('description')->label.' '.\util\FormUi::asterisk(),
 				$form->text('description'.$suffix, $defaultValues['description'] ?? '')
 			);
@@ -157,12 +159,56 @@ class OperationUi {
 							[
 								'min' => 0, 'step' => 0.01, 'data-field' => 'amount',
 								'data-index' => $index,
-								'onchange' => $onchangeUpdateVat
 							]
 						)
 						.$form->addon('€ ')
 					)
 			);
+
+			$h .= '<div data-asset="'.$form->getId().'" data-index="'.$index.'" class="util-block bg-white hide">';
+				$h .= '<h4>'.s("Immobilisation").'</h4>';
+					$h .= $form->group(
+						AssetUi::p('type')->label.' '.\util\FormUi::asterisk(),
+						$form->radio(
+							'asset'.$suffix.'[type]',
+							AssetElement::LINEAR,
+							AssetUi::p('type')->values[AssetElement::LINEAR],
+							''
+						)
+						.$form->radio(
+							'asset'.$suffix.'[type]',
+							AssetElement::WITHOUT,
+							AssetUi::p('type')->values[AssetElement::WITHOUT],
+							'',
+						)
+					);
+					$h .= $form->group(
+						AssetUi::p('acquisitionDate')->label.' '.\util\FormUi::asterisk(),
+						$form->date('asset'.$suffix.'[acquisitionDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+					);
+					$h .= $form->group(
+						AssetUi::p('startDate')->label.' '.\util\FormUi::asterisk(),
+						$form->date('asset'.$suffix.'[startDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+					);
+					$h .= $form->group(
+						AssetUi::p('value')->label.' '.\util\FormUi::asterisk(),
+							$form->inputGroup(
+								$form->number(
+									'asset'.$suffix.'[value]',
+									'',
+									[
+										'min' => 0, 'step' => 0.01,
+									]
+								)
+								.$form->addon('€ ')
+							)
+					);
+					$h .= $form->group(
+						AssetUi::p('duration')->label.' '.\util\FormUi::asterisk(),
+						$form->number('asset'.$suffix.'[duration]', '')
+					);
+			$h .= '</div>';
+
 			$h .= $form->group(
 				self::p('type')->label.' '.\util\FormUi::asterisk(),
 				$form->radio(
@@ -171,7 +217,7 @@ class OperationUi {
 					self::p('type')->values[Operation::DEBIT],
 					$defaultValues['type'] ?? '',
 					[
-						'onchange' => $onchangeUpdateVat
+						'data-index' => $index
 					]
 				).
 				$form->radio(
@@ -179,11 +225,10 @@ class OperationUi {
 					self::p('type')->values[Operation::CREDIT],
 					$defaultValues['type'] ?? '',
 					[
-						'onchange' => $onchangeUpdateVat
+						'data-index' => $index
 					]
 				)
 			);
-			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
 
 			$vatRateDefault = 0;
 			if($eOperation['account']->exists() === TRUE) {
@@ -198,7 +243,7 @@ class OperationUi {
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(
 				s("Taux de TVA").' '.\util\FormUi::asterisk(),
-				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => $onchangeUpdateVat]).$form->addon('% '))
+				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1]).$form->addon('% '))
 			);
 			$h .= $form->group(
 				s("Valeur de TVA"),

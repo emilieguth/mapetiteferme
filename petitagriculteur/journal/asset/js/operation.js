@@ -28,6 +28,12 @@ document.delegateEventListener('autocompleteSelect', '[data-third-party="journal
     Operation.updateThirdParty(e.detail);
 });
 
+document.delegateEventListener('change', '[data-field="amount"], [data-field="vatRate"]', function() {
+    const index = this.dataset.index;
+    Operation.updateVatValue(index);
+    Asset.initializeData(index);
+})
+
 class Operation {
 
     static updateThirdParty(detail) {

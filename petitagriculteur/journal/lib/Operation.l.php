@@ -164,7 +164,12 @@ class OperationLib extends OperationCrud {
 				$eOperation['vatAccount'] = $eAccount['vatAccount'];
 			}
 
+			// Class 2 => Vérification et création de l'immobilisation
+			$eAsset = AssetLib::prepareAsset($eOperation, $input['asset'][$index] ?? [], $index);
+
 			$fw->validate();
+
+			$eOperation['asset'] = $eAsset;
 
 			\journal\Operation::model()->insert($eOperation);
 			$cOperation->append($eOperation);
@@ -177,7 +182,11 @@ class OperationLib extends OperationCrud {
 					$eAccount,
 					$input['vatValue'][$index],
 					$eOperationDefault->offsetExists('cashflow') === TRUE
-						? ['date' => $eOperationDefault['cashflow']['date'], 'description' => $eOperation['description'] ?? $eOperationDefault['cashflow']['memo'], 'cashflow' => $eOperationDefault['cashflow']]
+						? [
+							'date' => $eOperationDefault['cashflow']['date'],
+							'description' => $eOperation['description'] ?? $eOperationDefault['cashflow']['memo'],
+							'cashflow' => $eOperationDefault['cashflow'],
+						]
 						: $eOperation->getArrayCopy(),
 				);
 
@@ -188,7 +197,11 @@ class OperationLib extends OperationCrud {
 		// Ajout de la transaction sur la classe de compte bancaire 512
 		if($eOperationDefault->offsetExists('cashflow') === TRUE) {
 
-			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow($eOperationDefault['cashflow'], $document, $eOperationDefault['thirdParty']);
+			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow(
+				$eOperationDefault['cashflow'],
+				$document,
+				$eOperationDefault['thirdParty'],
+			);
 			$cOperation->append($eOperationBank);
 
 		}
@@ -231,14 +244,22 @@ class OperationLib extends OperationCrud {
 
 	public static function delete(Operation $e): void {
 
-		$e->expects(['id']);
+		\journal\Operation::model()->beginTransaction();
 
-		// Deletes related operations (like TVA)
+		$e->expects(['id', 'asset']);
+
+		// Deletes related operations (like assets... or VAT?)
+		if($e['asset']->exists() === TRUE) {
+			AssetLib::deleteByIds([$e['asset']['id']]);
+		}
+
 		Operation::model()
-			->whereOperation($e)
+			->whereId($e['id'])
 			->delete();
 
 		parent::delete($e);
+
+		\journal\Operation::model()->commit();
 
 	}
 
@@ -354,15 +375,34 @@ class OperationLib extends OperationCrud {
 
 	}
 
+	public static function getByCashflow(\bank\Cashflow $eCashflow): \Collection {
+
+		return Operation::model()
+			->select(['id', 'asset'])
+      ->whereCashflow($eCashflow)
+      ->getCollection();
+	}
+
 	public static function deleteByCashflow(\bank\Cashflow $eCashflow): void {
 
 		if($eCashflow->exists() === FALSE) {
 			return;
 		}
 
+		Operation::model()->beginTransaction();
+
+		// Get all the operation and check if we have to delete the assets too
+		$cAsset = OperationLib::getByCashflow($eCashflow)->getColumnCollection('asset');
+		if($cAsset->empty() === FALSE) {
+			AssetLib::deleteByIds($cAsset->getIds());
+		}
+
 		\journal\Operation::model()
       ->whereCashflow('=', $eCashflow['id'])
       ->delete();
+
+		Operation::model()->commit();
+
 	}
 
 	public static function countGroupByThirdParty(): \Collection {
@@ -388,5 +428,6 @@ class OperationLib extends OperationCrud {
 		return $labels;
 
 	}
+
 }
 ?>

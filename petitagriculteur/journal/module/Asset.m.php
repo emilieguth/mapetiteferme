@@ -10,11 +10,9 @@ abstract class AssetElement extends \Element {
 	const LINEAR = 'linear';
 	const WITHOUT = 'without';
 
-	const ECONOMIC = 'economic';
-	const FISCAL = 'fiscal';
-
 	const ONGOING = 'ongoing';
 	const SOLD = 'sold';
+	const ENDED = 'ended';
 
 	public static function getSelection(): array {
 		return Asset::model()->getProperties();
@@ -46,19 +44,34 @@ class AssetModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
+			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'value' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
+			'description' => ['text24', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'type' => ['enum', [\journal\Asset::LINEAR, \journal\Asset::WITHOUT], 'cast' => 'enum'],
-			'mode' => ['enum', [\journal\Asset::ECONOMIC, \journal\Asset::FISCAL], 'cast' => 'enum'],
 			'acquisitionDate' => ['date', 'cast' => 'string'],
 			'startDate' => ['date', 'cast' => 'string'],
 			'endDate' => ['date', 'cast' => 'string'],
 			'duration' => ['int8', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
-			'status' => ['enum', [\journal\Asset::ONGOING, \journal\Asset::SOLD], 'cast' => 'enum'],
+			'status' => ['enum', [\journal\Asset::ONGOING, \journal\Asset::SOLD, \journal\Asset::ENDED], 'cast' => 'enum'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'value', 'type', 'mode', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status'
+			'id', 'accountLabel', 'value', 'description', 'type', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status'
 		]);
+
+	}
+
+	public function getDefaultValue(string $property) {
+
+		switch($property) {
+
+			case 'status' :
+				return Asset::ONGOING;
+
+			default :
+				return parent::getDefaultValue($property);
+
+		}
 
 	}
 
@@ -67,9 +80,6 @@ class AssetModel extends \ModuleModel {
 		switch($property) {
 
 			case 'type' :
-				return ($value === NULL) ? NULL : (string)$value;
-
-			case 'mode' :
 				return ($value === NULL) ? NULL : (string)$value;
 
 			case 'status' :
@@ -94,16 +104,20 @@ class AssetModel extends \ModuleModel {
 		return $this->where('id', ...$data);
 	}
 
+	public function whereAccountLabel(...$data): AssetModel {
+		return $this->where('accountLabel', ...$data);
+	}
+
 	public function whereValue(...$data): AssetModel {
 		return $this->where('value', ...$data);
 	}
 
-	public function whereType(...$data): AssetModel {
-		return $this->where('type', ...$data);
+	public function whereDescription(...$data): AssetModel {
+		return $this->where('description', ...$data);
 	}
 
-	public function whereMode(...$data): AssetModel {
-		return $this->where('mode', ...$data);
+	public function whereType(...$data): AssetModel {
+		return $this->where('type', ...$data);
 	}
 
 	public function whereAcquisitionDate(...$data): AssetModel {

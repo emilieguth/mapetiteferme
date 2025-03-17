@@ -5,6 +5,7 @@ Privilege::register('accounting', [
 ]);
 
 Setting::register('accounting', [
+	'assetClass' => 2,
 	'thirdAccountGeneralClass' => 4,
 	'bankAccountGeneralClass' => 5,
 	'chargeAccountClass' => 6,

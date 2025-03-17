@@ -1,10 +1,10 @@
 Asset:
   id: serial32
+  accountLabel: text8(1, null) @collate(general)
   # Valeur d'acquisition
   value: decimal(8, 2)
+  description: text24(1, null) @collate(general)
   type: enum(LINEAR, WITHOUT)
-  # ECONOMIC n'est pas encore utilisé et aura besoin d'un taux
-  mode: enum(ECONOMIC, FISCAL)
   # Date d'achat
   acquisitionDate: date
   # Date de mise en service (= début de l'amortissement)
@@ -12,8 +12,8 @@ Asset:
   # Date de fin d'amortissement (calculé)
   endDate: date
   # Durée en années
-  duration: int8(0, NULL)
-  status: enum(ONGOING, SOLD)
+  duration: int8(0, null)
+  status: enum(ONGOING, SOLD, ENDED) = ONGOING
 
 Operation:
   id: serial32

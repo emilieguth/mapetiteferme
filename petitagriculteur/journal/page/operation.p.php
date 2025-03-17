@@ -92,7 +92,10 @@ new \journal\OperationPage(
 			$data->eOperation = \journal\OperationLib::getById(REQUEST('id', 'int'))->validate('canUpdate');
 		}
 	)
-	->doDelete(function($data) {
+	->post('doDelete', function($data) {
+
+		\journal\OperationLib::delete($data->eOperation);
+
 		throw new ReloadAction('journal', 'Operation::deleted');
 	});
 ?>
