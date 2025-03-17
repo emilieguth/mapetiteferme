@@ -1,3 +1,20 @@
+Asset:
+  id: serial32
+  # Valeur d'acquisition
+  value: decimal(8, 2)
+  type: enum(LINEAR, WITHOUT)
+  # ECONOMIC n'est pas encore utilisé et aura besoin d'un taux
+  mode: enum(ECONOMIC, FISCAL)
+  # Date d'achat
+  acquisitionDate: date
+  # Date de mise en service (= début de l'amortissement)
+  startDate: date
+  # Date de fin d'amortissement (calculé)
+  endDate: date
+  # Durée en années
+  duration: int8(0, NULL)
+  status: enum(ONGOING, SOLD)
+
 Operation:
   id: serial32
   # Compte concerné par l'opération
@@ -16,6 +33,8 @@ Operation:
   vatAccount: ?accounting\Account
   # Opération à laquelle celle-ci est liée (ex: opération de TVA reliée à une autre opération)
   operation: ?journal\Operation
+  # Immobilisation à laquelle cette opération est liée (obligatoire pour une classe 2)
+  asset: ?journal\Asset
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
 

@@ -1,0 +1,248 @@
+<?php
+namespace journal;
+
+abstract class AssetElement extends \Element {
+
+	use \FilterElement;
+
+	private static ?AssetModel $model = NULL;
+
+	const LINEAR = 'linear';
+	const WITHOUT = 'without';
+
+	const ECONOMIC = 'economic';
+	const FISCAL = 'fiscal';
+
+	const ONGOING = 'ongoing';
+	const SOLD = 'sold';
+
+	public static function getSelection(): array {
+		return Asset::model()->getProperties();
+	}
+
+	public static function model(): AssetModel {
+		if(self::$model === NULL) {
+			self::$model = new AssetModel();
+		}
+		return self::$model;
+	}
+
+	public static function fail(string|\FailException $failName, array $arguments = [], ?string $wrapper = NULL): bool {
+		return \Fail::log('Asset::'.$failName, $arguments, $wrapper);
+	}
+
+}
+
+
+class AssetModel extends \ModuleModel {
+
+	protected string $module = 'journal\Asset';
+	protected string $package = 'journal';
+	protected string $table = 'journalAsset';
+
+	public function __construct() {
+
+		parent::__construct();
+
+		$this->properties = array_merge($this->properties, [
+			'id' => ['serial32', 'cast' => 'int'],
+			'value' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
+			'type' => ['enum', [\journal\Asset::LINEAR, \journal\Asset::WITHOUT], 'cast' => 'enum'],
+			'mode' => ['enum', [\journal\Asset::ECONOMIC, \journal\Asset::FISCAL], 'cast' => 'enum'],
+			'acquisitionDate' => ['date', 'cast' => 'string'],
+			'startDate' => ['date', 'cast' => 'string'],
+			'endDate' => ['date', 'cast' => 'string'],
+			'duration' => ['int8', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
+			'status' => ['enum', [\journal\Asset::ONGOING, \journal\Asset::SOLD], 'cast' => 'enum'],
+		]);
+
+		$this->propertiesList = array_merge($this->propertiesList, [
+			'id', 'value', 'type', 'mode', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status'
+		]);
+
+	}
+
+	public function encode(string $property, $value) {
+
+		switch($property) {
+
+			case 'type' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			case 'mode' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			case 'status' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			default :
+				return parent::encode($property, $value);
+
+		}
+
+	}
+
+	public function select(...$fields): AssetModel {
+		return parent::select(...$fields);
+	}
+
+	public function where(...$data): AssetModel {
+		return parent::where(...$data);
+	}
+
+	public function whereId(...$data): AssetModel {
+		return $this->where('id', ...$data);
+	}
+
+	public function whereValue(...$data): AssetModel {
+		return $this->where('value', ...$data);
+	}
+
+	public function whereType(...$data): AssetModel {
+		return $this->where('type', ...$data);
+	}
+
+	public function whereMode(...$data): AssetModel {
+		return $this->where('mode', ...$data);
+	}
+
+	public function whereAcquisitionDate(...$data): AssetModel {
+		return $this->where('acquisitionDate', ...$data);
+	}
+
+	public function whereStartDate(...$data): AssetModel {
+		return $this->where('startDate', ...$data);
+	}
+
+	public function whereEndDate(...$data): AssetModel {
+		return $this->where('endDate', ...$data);
+	}
+
+	public function whereDuration(...$data): AssetModel {
+		return $this->where('duration', ...$data);
+	}
+
+	public function whereStatus(...$data): AssetModel {
+		return $this->where('status', ...$data);
+	}
+
+
+}
+
+
+abstract class AssetCrud extends \ModuleCrud {
+
+ private static array $cache = [];
+
+	public static function getById(mixed $id, array $properties = []): Asset {
+
+		$e = new Asset();
+
+		if(empty($id)) {
+			Asset::model()->reset();
+			return $e;
+		}
+
+		if($properties === []) {
+			$properties = Asset::getSelection();
+		}
+
+		if(Asset::model()
+			->select($properties)
+			->whereId($id)
+			->get($e) === FALSE) {
+				$e->setGhost($id);
+		}
+
+		return $e;
+
+	}
+
+	public static function getByIds(mixed $ids, array $properties = [], mixed $sort = NULL, mixed $index = NULL): \Collection {
+
+		if(empty($ids)) {
+			return new \Collection();
+		}
+
+		if($properties === []) {
+			$properties = Asset::getSelection();
+		}
+
+		if($sort !== NULL) {
+			Asset::model()->sort($sort);
+		}
+
+		return Asset::model()
+			->select($properties)
+			->whereId('IN', $ids)
+			->getCollection(NULL, NULL, $index);
+
+	}
+
+	public static function getCache(mixed $key, \Closure $callback): mixed {
+
+		self::$cache[$key] ??= $callback();
+		return self::$cache[$key];
+
+	}
+
+	public static function getCreateElement(): Asset {
+
+		return new Asset(['id' => NULL]);
+
+	}
+
+	public static function create(Asset $e): void {
+
+		Asset::model()->insert($e);
+
+	}
+
+	public static function update(Asset $e, array $properties): void {
+
+		$e->expects(['id']);
+
+		Asset::model()
+			->select($properties)
+			->update($e);
+
+	}
+
+	public static function updateCollection(\Collection $c, Asset $e, array $properties): void {
+
+		Asset::model()
+			->select($properties)
+			->whereId('IN', $c)
+			->update($e->extracts($properties));
+
+	}
+
+	public static function delete(Asset $e): void {
+
+		$e->expects(['id']);
+
+		Asset::model()->delete($e);
+
+	}
+
+}
+
+
+class AssetPage extends \ModulePage {
+
+	protected string $module = 'journal\Asset';
+
+	public function __construct(
+	   ?\Closure $start = NULL,
+	   \Closure|array|null $propertiesCreate = NULL,
+	   \Closure|array|null $propertiesUpdate = NULL
+	) {
+		parent::__construct(
+		   $start,
+		   $propertiesCreate ?? AssetLib::getPropertiesCreate(),
+		   $propertiesUpdate ?? AssetLib::getPropertiesUpdate()
+		);
+	}
+
+}
+?>
