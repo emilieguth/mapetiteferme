@@ -263,7 +263,19 @@ class OperationLib extends OperationCrud {
 
 	}
 
+	private static function addOpenFinancialYearCondition(): OperationModel {
+
+		$cFinancialYear = \accounting\FinancialYearLib::getOpenFinancialYears();
+		$dateConditions = [];
+		foreach($cFinancialYear as $eFinancialYear) {
+			$dateConditions[] = 'date BETWEEN "'.$eFinancialYear['startDate'].'" AND "'.$eFinancialYear['endDate'].'"';
+		}
+
+		return Operation::model()->where(join(' OR ', $dateConditions), if: empty($dateConditions) === FALSE);
+
+	}
 	public static function getOperationsForAttach(\bank\Cashflow $eCashflow): \Collection {
+
 
 		$amount = abs($eCashflow['amount']);
 
@@ -271,7 +283,7 @@ class OperationLib extends OperationCrud {
 			+ ['account' => ['class', 'description']]
 			+ ['thirdParty' => ['name']];
 
-		$cOperation = Operation::model()
+		$cOperation = self::addOpenFinancialYearCondition()
 			->select($properties)
 			->whereCashflow(NULL)
 			->whereOperation(NULL)
@@ -316,7 +328,7 @@ class OperationLib extends OperationCrud {
 		$properties = ['cashflow', 'updatedAt'];
 		$eOperation = new Operation(['cashflow' => $eCashflow, 'updatedAt' => Operation::model()->now()]);
 
-		$updated = Operation::model()
+		$updated = self::addOpenFinancialYearCondition()
 			->select($properties)
 			->whereId('IN', $operationIds)
 			->whereCashflow(NULL)

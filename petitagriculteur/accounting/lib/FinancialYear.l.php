@@ -85,6 +85,15 @@ class FinancialYearLib extends FinancialYearCrud {
 		return FALSE;
 
 	}
+
+	public static function getOpenFinancialYears(): \Collection {
+
+		return FinancialYear::model()
+			->select(FinancialYear::getSelection())
+			->whereStatus(FinancialYearElement::OPEN)
+			->getCollection();
+
+	}
 }
 
 ?>

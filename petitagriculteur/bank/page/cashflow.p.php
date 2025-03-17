@@ -116,6 +116,14 @@ new \bank\CashflowPage(
 	})
 	->post('doAttach', function($data) {
 
+		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'),
+			\bank\Cashflow::getSelection() +
+			[
+				'import' => \bank\Import::getSelection() +
+					['account' => \bank\Account::getSelection()]
+			]
+		);
+
 		$fw = new FailWatch();
 
 		if($data->eCashflow->exists() === FALSE) {
