@@ -8,7 +8,7 @@ new \journal\OperationPage(
 		\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 	}
 )
-	->quick(['document'], [], ['canQuickDocument'])
+	->quick(['document', 'description', 'amount'], [], ['canQuickUpdate'])
 	->create(function($data) {
 
 		$eAccount = get_exists('account') ? \accounting\AccountLib::getByIdWithVatAccount(GET('account', 'int')) : new \accounting\Account();

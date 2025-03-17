@@ -94,6 +94,20 @@ class FinancialYearLib extends FinancialYearCrud {
 			->getCollection();
 
 	}
+
+	public static function isDateInOpenFinancialYear(string $date): bool {
+
+		$cFinancialYear = self::getOpenFinancialYears();
+
+		foreach($cFinancialYear as $eFinancialYear) {
+			if($date >= $eFinancialYear['startDate'] and $date <= $eFinancialYear['endDate']) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+
+	}
 }
 
 ?>

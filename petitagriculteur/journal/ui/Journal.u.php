@@ -132,6 +132,12 @@ class JournalUi {
 
 					foreach($cOperation as $eOperation) {
 
+						$canUpdate = $eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
+							and $eOperation['date'] <= $eFinancialYearSelected['endDate']
+							and $eOperation['date'] >= $eFinancialYearSelected['startDate'];
+
+						$eOperation->setQuickAttribute('company', $eCompany['id']);
+
 						$h .= '<tr>';
 
 							$h .= '<td>';
@@ -148,8 +154,11 @@ class JournalUi {
 
 							$h .= '<td>';
 								$h .= '<div class="operation-info">';
-									$eOperation->setQuickAttribute('company', $eCompany['id']);
-									$h .= $eOperation->quick('document', $eOperation['document'] ? encode($eOperation['document']) : '<i>'.s("Non définie").'</i>', validate:['canQuickDocument']);
+									if($canUpdate === TRUE) {
+										$h .= $eOperation->quick('document', $eOperation['document'] ? encode($eOperation['document']) : '<i>'.s("Non définie").'</i>');
+									} else {
+										$h .= encode($eOperation['document']);
+									}
 								$h .= '</div>';
 							$h .= '</td>';
 
@@ -166,7 +175,11 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
-								$h .= encode($eOperation['description']);
+								if($canUpdate === TRUE) {
+									$h .= $eOperation->quick('description', encode($eOperation['description']));
+								} else {
+									$h .= encode($eOperation['description']);
+								}
 							$h .= '</td>';
 
 							$h .= '<td>';
@@ -176,26 +189,34 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td class="text-end">';
-								$h .= match($eOperation['type']) {
+								$debitDisplay = match($eOperation['type']) {
 									Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
 									default => '',
 								};
+								if($canUpdate === TRUE) {
+									$h .= $eOperation->quick('amount', $debitDisplay);
+								} else {
+									$h .= $debitDisplay;
+								}
 							$h .= '</td>';
 
 							$h .= '<td class="text-end">';
-								$h .= match($eOperation['type']) {
+								$creditDisplay = match($eOperation['type']) {
 									Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
 									default => '',
 								};
+								if($canUpdate === TRUE) {
+									$h .= $eOperation->quick('amount', $creditDisplay);
+								} else {
+									$h .= $creditDisplay;
+								}
 							$h .= '</td>';
 
 							$h .= '<td>';
 								if(
-									$eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
-									&& $eOperation['date'] <= $eFinancialYearSelected['endDate']
-									&& $eOperation['date'] >= $eFinancialYearSelected['startDate']
+									$canUpdate === TRUE
 									// On ne supprime pas une opération unitaire : il faut refaire l'attribution
-									&& $eOperation['cashflow']->exists() === FALSE
+									and $eOperation['cashflow']->exists() === FALSE
 								) {
 									if($eOperation['vatAccount']->exists() === TRUE) {
 										$message = s("En supprimant cette écriture, l'entrée de TVA associée sera également supprimée. Confirmez-vous la suppression de cette écriture ?");

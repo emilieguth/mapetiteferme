@@ -7,6 +7,7 @@ Privilege::register('accounting', [
 Setting::register('accounting', [
 	'assetClass' => 2,
 	'thirdAccountGeneralClass' => 4,
+	'vatClass' => 445,
 	'bankAccountGeneralClass' => 5,
 	'chargeAccountClass' => 6,
 	'productAccountClass' => 7,
