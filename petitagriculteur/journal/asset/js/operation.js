@@ -21,6 +21,7 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="
 });
 
 document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
+    Operation.updateType(e);
     Operation.refreshVAT(e.detail);
 });
 
@@ -28,11 +29,17 @@ document.delegateEventListener('autocompleteSelect', '[data-third-party="journal
     Operation.updateThirdParty(e.detail);
 });
 
-document.delegateEventListener('change', '[data-field="amount"], [data-field="vatRate"]', function() {
+document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"]', function(e) {
     const index = this.dataset.index;
+    Operation.updateAmountValue(index);
     Operation.updateVatValue(index);
     Asset.initializeData(index);
-})
+
+    const formId = e.delegateTarget.form.getAttribute('id');
+    if(formId === 'bank-cashflow-allocate') {
+        Cashflow.fillShowHideAmountWarning();
+    }
+});
 
 class Operation {
 
@@ -68,6 +75,19 @@ class Operation {
         qs('#submit-save-operation').innerHTML = qs('#submit-save-operation').getAttribute(operations > 1 ? 'data-text-plural' : 'data-text-singular');
     }
 
+    static updateType(event) {
+
+        const index = event.delegateTarget.dataset.index;
+
+        if(qs('[name="type[' + index + ']"]:checked') !== null) {
+            return;
+        }
+        const classValue = parseInt(event.detail.itemText.substring(0, 1));
+        const value = [4, 6].includes(classValue) ? 'debit' : 'credit';
+        qs('[name="type[' + index + ']"][value="' + value + '"]').setAttribute('checked', true);
+
+    }
+
     static refreshVAT(accountDetail) {
 
         const index = accountDetail.input.getAttribute('data-index');
@@ -86,6 +106,32 @@ class Operation {
 
         // On vérifie les calculs de TVA
         this.updateVatValue(index);
+
+    }
+
+    // Fonction utilisée uniquement pour mettre à jour le montant HT / la TVA
+    // si montant TTC ET taux de TVA remplis ET montant HT + montant TVA non remplis
+    static updateAmountValue(index) {
+
+        const amount = parseFloat(qs('[name="amount[' + index + ']"').valueAsNumber || 0);
+        const vatValue = parseFloat(qs('[name="vatValue[' + index + ']"]').valueAsNumber || 0);
+        const amountIncludingVAT = parseFloat(qs('[name="amountIncludingVAT[' + index + ']"]').valueAsNumber || 0);
+        const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"]').valueAsNumber || 0);
+
+        if(
+            amount !== 0
+            || vatValue !== 0
+            || amountIncludingVAT === 0
+            || vatRate === 0
+        ) {
+            return;
+        }
+
+        const amountWithoutVAT = Math.round(100 * 100 * amountIncludingVAT / (100 + vatRate)) / 100;
+        const amountVAT = amountIncludingVAT - amountWithoutVAT
+        qs('[name="amount[' + index + ']"]').setAttribute('value', amountWithoutVAT);
+        qs('[name="vatValue[' + index + ']"]').setAttribute('value', amountVAT);
+
 
     }
 

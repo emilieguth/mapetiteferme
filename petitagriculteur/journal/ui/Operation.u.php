@@ -151,6 +151,20 @@ class OperationUi {
 				$form->text('description'.$suffix, $defaultValues['description'] ?? '')
 			);
 			$h .= $form->group(
+				s("Montant TTC").\util\FormUi::info(s("Facultatif, ne sera pas enregistré")),
+					$form->inputGroup(
+						$form->number(
+							'amountIncludingVAT'.$suffix,
+							$defaultValues['amountIncludingVAT'] ?? '',
+							[
+								'min' => 0, 'step' => 0.01, 'data-field' => 'amountIncludingVAT',
+								'data-index' => $index,
+							]
+						)
+						.$form->addon('€ ')
+					)
+			);
+			$h .= $form->group(
 				self::p('amount')->label.' '.\util\FormUi::asterisk(),
 					$form->inputGroup(
 						$form->number(
@@ -243,7 +257,7 @@ class OperationUi {
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(
 				s("Taux de TVA").' '.\util\FormUi::asterisk(),
-				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1]).$form->addon('% '))
+				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-index' => $index, 'data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1]).$form->addon('% '))
 			);
 			$h .= $form->group(
 				s("Valeur de TVA"),

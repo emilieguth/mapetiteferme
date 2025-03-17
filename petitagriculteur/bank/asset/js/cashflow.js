@@ -1,4 +1,4 @@
-document.delegateEventListener('change', '[data-vat-value="bank-cashflow-allocate"], [data-vat-rate="bank-cashflow-allocate"]', function() {
+document.delegateEventListener('change', '[data-vat-value="bank-cashflow-allocate"]', function() {
     Cashflow.fillShowHideAmountWarning();
 });
 
