@@ -1,77 +1,12 @@
-document.delegateEventListener('autocompleteBeforeQuery', '[data-account="bank-cashflow-allocate"]', function(e) {
-    if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
-        return;
-    }
-    const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
-    e.detail.body.append('thirdParty', thirdParty);
-});
-
-document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="bank-cashflow-allocate"]', function(e) {
-
-    if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') !== null) {
-        const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
-        e.detail.body.append('thirdParty', thirdParty);
-    }
-
-    if(e.detail.input.firstParent('div.operation-write').qs('[name^="account"]') !== null) {
-        const account = e.detail.input.firstParent('div.operation-write').qs('[name^="account"]').getAttribute('value');
-        e.detail.body.append('account', account);
-    }
-
-});
-
-document.delegateEventListener('autocompleteSelect', '[data-account="bank-cashflow-allocate"]', function(e) {
-    Cashflow.refreshAllocate(e);
-});
-
-document.delegateEventListener('autocompleteSelect', '[data-third-party="bank-cashflow-allocate"]', function(e) {
-    Cashflow.updateThirdParty(e);
+document.delegateEventListener('change', '[data-vat-value="bank-cashflow-allocate"], [data-vat-rate="bank-cashflow-allocate"]', function() {
+    Cashflow.fillShowHideAmountWarning();
 });
 
 class Cashflow {
 
-    static updateThirdParty(event) {
-        event.detail.input.firstParent('form').qs('#cashflow-add-operation').setAttribute('post-third-party', event.detail.value);
-    }
-
-    static refreshAllocate(event) {
-
-        const index = event.detail.input.getAttribute('data-index');
-
-        // On saisit le libellé
-//        qs('[name="accountLabel[' + index + ']"]').setAttribute('value', event.detail.class.padEnd(8, 0));
-
-        // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
-        const amountElement = event.detail.input.firstParent('div.operation-write').qs('[name^="amount["]');
-        const amount = amountElement.getAttribute('value');
-        const vatRate = parseFloat(event.detail.input.firstParent('div.operation-write').qs('[name^="vatRate["]').getAttribute('value'));
-        if(vatRate === 0.0) {
-            const newAmount = (amount / (1 + event.detail.vatRate / 100)).toFixed(2);
-            amountElement.setAttribute('value', Math.abs(newAmount));
-        }
-
-        // On remplit ensuite le taux de TVA
-        event.detail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', event.detail.vatRate);
-
-        // On vérifie les calculs de TVA
-        this.updateVatValue(index);
-    }
-
-    static updateVatValue(index) {
-
-        const amountValue = qs('#cashflow-create-operation-list [name="amount[' + index + ']"]').valueAsNumber;
-        const vatRate = qs('#cashflow-create-operation-list [name="vatRate[' + index + ']"]').valueAsNumber;
-        const vatValue = Math.round(amountValue * vatRate) / 100;
-
-        qs('#cashflow-create-operation-list [name="vatValue[' + index + ']"]').setAttribute('value', vatValue);
-
-        this.fillShowHideAmountWarning();
-
-    }
-
     static recalculateAmounts() {
 
-        const amounts = qsa('#cashflow-create-operation-list [data-field="amount"]');
+        const amounts = qsa('#create-operation-list [data-field="amount"]');
 
         return Math.round(Array.from(amounts).reduce((accumulator, amount) => {
 
@@ -79,9 +14,9 @@ class Cashflow {
 
             const amountValue = (isNaN(amount.valueAsNumber) ? 0 : amount.valueAsNumber);
 
-            const vatValue = qs('#cashflow-create-operation-list [name="vatValue[' + index + ']"]').valueAsNumber;
+            const vatValue = qs('#create-operation-list [name="vatValue[' + index + ']"]').valueAsNumber;
 
-            const type = Array.from(qsa('#cashflow-create-operation-list [name="type[' + index + ']"]')).find((checkboxType) => checkboxType.checked === true);
+            const type = Array.from(qsa('#create-operation-list [name="type[' + index + ']"]')).find((checkboxType) => checkboxType.checked === true);
 
             const amountToAdd = Math.abs(amountValue);
             const vatAmountToAdd = Math.abs((isNaN(vatValue) ? 0 : vatValue));
@@ -95,32 +30,14 @@ class Cashflow {
 
     static updateNewOperationLine(index) {
 
-        this.updateVatValue(index);
+        Operation.updateVatValue(index);
 
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 
-        qs('#cashflow-create-operation-list [name="amount[' + index + ']"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
-        qs('#cashflow-create-operation-list [name="document[' + index + ']"]').setAttribute('value', qs('#bank-cashflow-allocate [name="cashflow[document]"]').value || '');
-        qs('#cashflow-create-operation-list [name="description[' + index + ']"]').setAttribute('value', qs('#cashflow-create-operation-list [name="description[' + (index - 1) + ']"]').value);
-
-    }
-
-    static deleteOperation(target) {
-
-        target.firstParent('.cashflow-create-operation').remove();
-        const index = Number(qs('#cashflow-add-operation').getAttribute('post-index'));
-        qs('#cashflow-add-operation').setAttribute('post-index', index - 1);
-
-        Cashflow.showOrHideDeleteOperation();
-
-    }
-
-    static showOrHideDeleteOperation() {
-
-        const operations = qsa('#cashflow-create-operation-list .cashflow-create-operation').length;
-
-        qsa('#cashflow-create-operation-list .cashflow-create-operation-delete', node => (operations > 1 && Number(node.getAttribute('data-index')) === operations - 1) ? node.classList.remove('hide') : node.classList.add('hide'));
+        qs('#create-operation-list [name="amount[' + index + ']"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
+        qs('#create-operation-list [name="document[' + index + ']"]').setAttribute('value', qs('#bank-cashflow-allocate [name="cashflow[document]"]').value || '');
+        qs('#create-operation-list [name="description[' + index + ']"]').setAttribute('value', qs('#create-operation-list [name="description[' + (index - 1) + ']"]').value);
 
     }
 
@@ -143,7 +60,7 @@ class Cashflow {
 
         const documentValue = target.value;
 
-        const operations = qsa('#cashflow-create-operation-list [name^="document"]');
+        const operations = qsa('#create-operation-list [name^="document"]');
         Array.from(operations).forEach((operation) => {
             if(operation.getAttribute('value') !== '' && operation.getAttribute('value') !== null) {
                 return;

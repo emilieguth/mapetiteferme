@@ -52,12 +52,13 @@ class OperationModel extends \ModuleModel {
 			'vatRate' => ['decimal', 'digits' => 5, 'decimal' => 2, 'cast' => 'float'],
 			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
 			'operation' => ['element32', 'journal\Operation', 'null' => TRUE, 'cast' => 'element'],
+			'asset' => ['element32', 'journal\Asset', 'null' => TRUE, 'cast' => 'element'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'createdAt', 'updatedAt'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'createdAt', 'updatedAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -66,6 +67,7 @@ class OperationModel extends \ModuleModel {
 			'cashflow' => 'bank\Cashflow',
 			'vatAccount' => 'accounting\Account',
 			'operation' => 'journal\Operation',
+			'asset' => 'journal\Asset',
 		];
 
 	}
@@ -162,6 +164,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereOperation(...$data): OperationModel {
 		return $this->where('operation', ...$data);
+	}
+
+	public function whereAsset(...$data): OperationModel {
+		return $this->where('asset', ...$data);
 	}
 
 	public function whereCreatedAt(...$data): OperationModel {

@@ -110,12 +110,7 @@ class OperationUi {
 
 		\Asset::js('journal', 'operation.js');
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
-		$onchangeUpdateVat = $cashflowAmount !== NULL
-			? 'Cashflow.updateVatValue('.$index.');'
-			: 'Operation.updateVatValue('.$index.');';
-		$onchangeWarnVat = $cashflowAmount !== NULL
-			? 'Cashflow.fillShowHideAmountWarning();'
-			: 'Operation.updateVatValue('.$index.');';
+		$onchangeUpdateVat = 'Operation.updateVatValue('.$index.');';
 
 		$h = '<div class="operation-write">';
 
@@ -203,11 +198,11 @@ class OperationUi {
 			$eOperation['vatRate'.$suffix] = '';
 			$h .= $form->group(
 				s("Taux de TVA").' '.\util\FormUi::asterisk(),
-				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => $onchangeUpdateVat]).$form->addon('% '))
+				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1, 'onchange' => $onchangeUpdateVat]).$form->addon('% '))
 			);
 			$h .= $form->group(
 				s("Valeur de TVA"),
-				$form->inputGroup($form->number('vatValue'.$suffix,  $vatAmountDefault, ['data-field' => 'vatValue', 'min' => 0.0, 'step' => 0.01, 'onchange' => $onchangeWarnVat]).$form->addon('€'))
+				$form->inputGroup($form->number('vatValue'.$suffix,  $vatAmountDefault, ['data-field' => 'vatValue', 'data-vat-value' => $form->getId(), 'min' => 0.0, 'step' => 0.01]).$form->addon('€'))
 			);
 
 		$h .= '</div>';

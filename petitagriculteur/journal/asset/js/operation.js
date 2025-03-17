@@ -1,4 +1,4 @@
-document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journal-operation-create"]', function(e) {
+document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
     if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
         return;
     }
@@ -6,7 +6,7 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journa
     e.detail.body.append('thirdParty', thirdParty);
 });
 
-document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="journal-operation-create"]', function(e) {
+document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="journal-operation-create"], [data-account-label="bank-cashflow-allocate"]', function(e) {
 
     if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') !== null) {
         const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
@@ -20,11 +20,11 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="
 
 });
 
-document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"]', function(e) {
-    Operation.refreshCreate(e.detail);
+document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
+    Operation.refreshVAT(e.detail);
 });
 
-document.delegateEventListener('autocompleteSelect', '[data-third-party="journal-operation-create"]', function(e) {
+document.delegateEventListener('autocompleteSelect', '[data-third-party="journal-operation-create"], [data-third-party="bank-cashflow-allocate"]', function(e) {
     Operation.updateThirdParty(e.detail);
 });
 
@@ -62,12 +62,9 @@ class Operation {
         qs('#submit-save-operation').innerHTML = qs('#submit-save-operation').getAttribute(operations > 1 ? 'data-text-plural' : 'data-text-singular');
     }
 
-    static refreshCreate(accountDetail) {
+    static refreshVAT(accountDetail) {
 
         const index = accountDetail.input.getAttribute('data-index');
-
-        // On saisit le libellé
-        //qs('[name="accountLabel[' + index + ']"]').setAttribute('value', event.detail.class.padEnd(8, 0));
 
         // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
         const amountElement = accountDetail.input.firstParent('div.operation-write').qs('[name^="amount["]');
@@ -88,8 +85,8 @@ class Operation {
 
     static updateVatValue(index) {
 
-        const amount = qs('[name="amount[' + index + ']"')?.value || 0;
-        const vatRate = qs('[name="vatRate[' + index + ']"')?.value || 0;
+        const amount = qs('[name="amount[' + index + ']"').valueAsNumber;
+        const vatRate = qs('[name="vatRate[' + index + ']"').valueAsNumber;
 
         const newVatAmount = Math.round(amount * vatRate) / 100;
         qs('[name="vatValue[' + index + ']"').setAttribute('value', newVatAmount);

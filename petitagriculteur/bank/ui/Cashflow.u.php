@@ -68,7 +68,7 @@ class CashflowUi {
 
 			$h .= '<div class="util-block-search stick-xs">';
 			$h .= s(
-				"Vous visualisez actuellement les opérations bancaires correspondant à l'import #{id} du {date}.",
+				"Vous visualisez actuellemen@t les opérations bancaires correspondant à l'import #{id} du {date}.",
 				[
 					'id' => GET('import'),
 					'date' => \util\DateUi::numeric($eImport['createdAt'], \util\DateUi::DATE),
@@ -237,6 +237,7 @@ class CashflowUi {
 	public static function getAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow): \Panel {
 
 		\Asset::js('bank', 'cashflow.js');
+		\Asset::js('journal', 'operation.js');
 		\Asset::js('journal', 'thirdParty.js');
 		$h = CashflowUi::getCashflowHeader($eCashflow);
 
@@ -261,7 +262,7 @@ class CashflowUi {
 			$h .= $form->asteriskInfo();
 
 			$h .= '<div>';
-				$h .= '<div class="cashflow-create-operation-title">';
+				$h .= '<div class="create-operation-title">';
 					$h .= '<h4>'.s("Opération bancaire #{id}", ['id' => $eCashflow['id']]).'</h4>';
 				$h .= '</div>';
 
@@ -281,7 +282,7 @@ class CashflowUi {
 				);
 			$h .= '</div>';
 
-			$h .= '<div id="cashflow-create-operation-list">';
+			$h .= '<div id="create-operation-list">';
 				$h .= \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $eCashflow['amount'], $index, $form, $defaultValues);
 			$h .= '</div>';
 
@@ -289,11 +290,14 @@ class CashflowUi {
 				$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
 			$h .= '</div>';
 
-			$buttons = '<a id="cashflow-add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
+			$buttons = '<a id="add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
 				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';
-			$buttons .= $form->submit(s("Attribuer des écritures"));
+			$buttons .= $form->submit(
+				s("Attribuer l'écriture"),
+				['id' => 'submit-save-operation', 'data-text-singular' => s("Attribuer l'écriture"), 'data-text-plural' => s(("Attribuer les écritures"))],
+			);
 
 			$h .= $form->group(content: $buttons);
 
