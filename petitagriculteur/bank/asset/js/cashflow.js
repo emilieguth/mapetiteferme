@@ -1,7 +1,3 @@
-document.delegateEventListener('change', '[data-vat-value="bank-cashflow-allocate"]', function() {
-    Cashflow.fillShowHideAmountWarning();
-});
-
 class Cashflow {
 
     static recalculateAmounts() {

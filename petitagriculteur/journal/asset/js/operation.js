@@ -36,7 +36,9 @@ document.delegateEventListener('autocompleteSelect', '[data-third-party="journal
 });
 
 document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"]', function(e) {
+
     const index = this.dataset.index;
+
     Operation.updateAmountValue(index);
     Operation.updateVatValue(index);
     Asset.initializeData(index);
@@ -45,6 +47,18 @@ document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [da
     if(formId === 'bank-cashflow-allocate') {
         Cashflow.fillShowHideAmountWarning();
     }
+
+    Operation.checkVatConsistency(index);
+});
+document.delegateEventListener('change', '[data-vat-value="journal-operation-create"], [data-vat-value="bank-cashflow-allocate"]', function() {
+
+    const index = this.dataset.index;
+
+    if(this.dataset.vatValue === 'bank-cashflow-allocate') {
+        Cashflow.fillShowHideAmountWarning();
+    }
+
+    Operation.checkVatConsistency(index);
 });
 
 class Operation {
@@ -169,6 +183,23 @@ class Operation {
 
         const newVatAmount = Math.round(amount * vatRate) / 100;
         qs('[name="vatValue[' + index + ']"').setAttribute('value', newVatAmount);
+
+    }
+
+    static checkVatConsistency(index) {
+
+        const amount = qs('[name="amount[' + index + ']"]').valueAsNumber;
+        const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
+        const vatValue = Math.round(qs('[name="vatValue[' + index + ']"]').valueAsNumber * 100) / 100;
+        const expectedVatValue = Math.round(amount * vatRate) / 100;
+
+        if(vatValue !== expectedVatValue) {
+            qs('[data-vat-warning][data-index="' + index + '"]').removeHide();
+            qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.add('form-warning-wrapper'));
+        } else {
+            qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.remove('form-warning-wrapper'));
+            qs('[data-vat-warning][data-index="' + index + '"]').hide();
+        }
 
     }
 }

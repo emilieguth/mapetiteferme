@@ -273,8 +273,17 @@ class OperationUi {
 			);
 			$h .= $form->group(
 				s("Valeur de TVA"),
-				$form->inputGroup($form->number('vatValue'.$suffix,  $vatAmountDefault, ['data-field' => 'vatValue', 'data-vat-value' => $form->getId(), 'min' => 0.0, 'step' => 0.01]).$form->addon('€'))
+				$form->inputGroup(
+					$form->number(
+						'vatValue'.$suffix,
+						$vatAmountDefault,
+						['data-field' => 'vatValue', 'data-vat-value' => $form->getId(), 'min' => 0.0, 'step' => 0.01, 'data-index' => $index],
+					).$form->addon('€'))
 			);
+
+		$h .= '<div data-index="'.$index.'" class="util-warning hide" data-vat-warning>';
+			$h .= s("Attention, le montant de TVA ne correspond pas au montant HT et au taux de TVA indiqués. Notez que pourrez tout de même enregistrer.");
+		$h .= '</div>';
 
 		$h .= '</div>';
 
