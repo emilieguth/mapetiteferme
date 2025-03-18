@@ -20,6 +20,7 @@ Employee:
   user: ?user\User
   company: company\Company
   companyStatus: enum(ACTIVE, CLOSED) = ACTIVE
+  viewFinancialYear: ?int16(0, null)
   status: enum(INVITED, IN, OUT) = INVITED
   createdAt: datetime = SPECIAL(now)
   UNIQUE: [

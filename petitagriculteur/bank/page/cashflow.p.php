@@ -16,10 +16,7 @@ new Page(
 			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
 		}
 
-		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
-		$data->eFinancialYearSelected = get_exists('financialYear')
-			? \accounting\FinancialYearLib::getById(GET('financialYear'))
-			: $data->eFinancialYearCurrent;
+		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
 		$search = new Search([
 			'date' => GET('date'),
@@ -54,7 +51,7 @@ new \bank\CashflowPage(
 		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'))->validate('canAllocate');
 
 		\Setting::set('main\viewBank', 'import');
-		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 	}
 )
 	->get('allocate', function($data) {
@@ -151,7 +148,7 @@ new \bank\CashflowPage(
 		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'));
 
 		\Setting::set('main\viewBank', 'import');
-		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 	}
 )
 ->post('deAllocate', function($data) {

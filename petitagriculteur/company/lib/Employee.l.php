@@ -177,4 +177,57 @@ class EmployeeLib extends EmployeeCrud {
 
 	}
 
+	/**
+	 * Get financialYear from $financialYear or from Employee::$viewFinancialYear
+	 */
+	public static function getDynamicFinancialYear(Company $eCompany, int $financialYear): \accounting\FinancialYear {
+
+
+		if($financialYear) {
+
+			$eFinancialYear = \accounting\FinancialYearLib::getById($financialYear);
+
+			if($eFinancialYear->exists() === FALSE) {
+				$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+				$financialYear = $eFinancialYear['id'];
+			}
+
+			self::setView('viewFinancialYear', $eCompany, $financialYear);
+
+			return $eFinancialYear;
+
+		} else {
+
+			return \accounting\FinancialYearLib::getById($eCompany->getView('viewFinancialYear'));
+
+		}
+
+	}
+	public static function setView(string $field, Company $eCompany, mixed $newView): mixed {
+
+		$eEmployee = $eCompany->getEmployee();
+
+		if($eEmployee->empty()) {
+			return $newView;
+		}
+
+		if($newView === $eEmployee[$field]) {
+			return $eEmployee[$field];
+		}
+
+		if(Employee::model()->check($field, $newView)) {
+
+			$eEmployee[$field] = $newView;
+
+			Employee::model()
+			      ->select($field)
+			      ->update($eEmployee);
+
+		}
+
+		return $eEmployee[$field];
+
+
+	}
+
 }

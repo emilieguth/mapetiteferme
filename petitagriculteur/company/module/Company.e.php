@@ -25,6 +25,9 @@ class Company extends CompanyElement {
 
 	}
 
+	public function getView(string $name): mixed {
+		return $this->getEmployee()[$name];
+	}
 
 	// Peut gérer l'entreprise
 	public function canManage(): bool {

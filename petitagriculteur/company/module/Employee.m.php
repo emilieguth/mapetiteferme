@@ -47,12 +47,13 @@ class EmployeeModel extends \ModuleModel {
 			'user' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
 			'company' => ['element32', 'company\Company', 'cast' => 'element'],
 			'companyStatus' => ['enum', [\company\Employee::ACTIVE, \company\Employee::CLOSED], 'cast' => 'enum'],
+			'viewFinancialYear' => ['int16', 'min' => 0, 'max' => NULL, 'null' => TRUE, 'cast' => 'int'],
 			'status' => ['enum', [\company\Employee::INVITED, \company\Employee::IN, \company\Employee::OUT], 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'user', 'company', 'companyStatus', 'status', 'createdAt'
+			'id', 'user', 'company', 'companyStatus', 'viewFinancialYear', 'status', 'createdAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -125,6 +126,10 @@ class EmployeeModel extends \ModuleModel {
 
 	public function whereCompanyStatus(...$data): EmployeeModel {
 		return $this->where('companyStatus', ...$data);
+	}
+
+	public function whereViewFinancialYear(...$data): EmployeeModel {
+		return $this->where('viewFinancialYear', ...$data);
 	}
 
 	public function whereStatus(...$data): EmployeeModel {

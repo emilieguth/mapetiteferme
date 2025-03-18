@@ -62,6 +62,10 @@ class Operation {
 
         qsa('[data-autocomplete-field]', (node) => {
             const field = node.dataset.autocompleteField;
+            // Exemple : formulaire de recherche
+            if(node.firstParent('[data-wrapper]') === null) {
+                return;
+            }
             node.firstParent('[data-wrapper]').setAttribute('data-wrapper', field);
         });
     }

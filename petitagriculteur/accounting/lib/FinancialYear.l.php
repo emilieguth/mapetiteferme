@@ -91,6 +91,7 @@ class FinancialYearLib extends FinancialYearCrud {
 		return FinancialYear::model()
 			->select(FinancialYear::getSelection())
 			->whereStatus(FinancialYearElement::OPEN)
+			->sort(['endDate' => SORT_DESC])
 			->getCollection();
 
 	}

@@ -7,7 +7,7 @@ new \bank\AccountPage(
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 		\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 
-		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 	}
 )
 	->quick(['label'])

@@ -21,13 +21,13 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 new AdaptativeView('allocate', function($data, PanelTemplate $t) {
 
-	return new \bank\CashflowUi()->getAllocate($data->eCompany, $data->eFinancialYearCurrent, $data->eCashflow);
+	return new \bank\CashflowUi()->getAllocate($data->eCompany, $data->eFinancialYearSelected, $data->eCashflow);
 
 });
 
 new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 
-	$t->qs('#create-operation-list')->insertAdjacentHtml('beforeend', new \bank\CashflowUi()->addAllocate($data->eOperation, $data->eFinancialYearCurrent, $data->eCashflow, $data->index));
+	$t->qs('#create-operation-list')->insertAdjacentHtml('beforeend', new \bank\CashflowUi()->addAllocate($data->eOperation, $data->eFinancialYearSelected, $data->eCashflow, $data->index));
 	$t->qs('#add-operation')->setAttribute('post-index', $data->index + 1);
 	$t->js()->eval('Cashflow.updateNewOperationLine('.$data->index.')');
 	$t->js()->eval('Cashflow.fillShowHideAmountWarning('.$data->eCashflow['amount'].')');
@@ -37,7 +37,7 @@ new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 
 new AdaptativeView('attach', function($data, PanelTemplate $t) {
 
-		return new \bank\CashflowUi()->getAttach($data->eCompany, $data->eFinancialYearCurrent, $data->eCashflow, $data->cOperation);
+		return new \bank\CashflowUi()->getAttach($data->eCompany, $data->eFinancialYearSelected, $data->eCashflow, $data->cOperation);
 
 });
 ?>

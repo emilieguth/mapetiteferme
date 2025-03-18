@@ -1,5 +1,5 @@
 <?php
-(new Page(
+new Page(
 	function($data) {
 		\user\ConnectionLib::checkLogged();
 		$company = INPUT('company');
@@ -8,7 +8,7 @@
 
 		\Setting::set('main\viewBank', 'import');
 	}
-))
+)
 	->get('index', function($data) {
 
 		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
@@ -17,10 +17,7 @@
 			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
 		}
 
-		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
-		$data->eFinancialYearSelected = get_exists('financialYear')
-			? \accounting\FinancialYearLib::getById(GET('financialYear'))
-			: $data->eFinancialYearCurrent;
+		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
 		$data->imports = \bank\ImportLib::formatCurrentFinancialYearImports($data->eFinancialYearSelected);
 		$data->cImport = \bank\ImportLib::getAll($data->eFinancialYearSelected);

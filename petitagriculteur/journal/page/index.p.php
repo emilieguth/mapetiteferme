@@ -1,5 +1,5 @@
 <?php
-(new Page())
+new Page()
 	->get('index', function($data) {
 
 		\Setting::set('main\viewJournal', 'journal');
@@ -14,10 +14,7 @@
 			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
 		}
 
-		$data->eFinancialYearCurrent = \accounting\FinancialYearLib::selectDefaultFinancialYear();
-		$data->eFinancialYearSelected = get_exists('financialYear')
-			? \accounting\FinancialYearLib::getById(GET('financialYear'))
-			: $data->eFinancialYearCurrent;
+		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
 		$data->eThirdParty = get_exists('thirdParty')
 			? \journal\ThirdPartyLib::getById(GET('thirdParty', 'int'))
