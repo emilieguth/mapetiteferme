@@ -137,6 +137,11 @@ class JournalUi {
 							and $eOperation['date'] >= $eFinancialYearSelected['startDate'];
 
 						$eOperation->setQuickAttribute('company', $eCompany['id']);
+						if($eOperation['cashflow']->exists() === TRUE) {
+							$cashflowLink = \company\CompanyUi::urlBank($eCompany).'/cashflow?id='.$eOperation['cashflow']['id'];
+						} else {
+							$cashflowLink = NULL;
+						}
 
 						$h .= '<tr>';
 
@@ -146,7 +151,7 @@ class JournalUi {
 
 							$h .= '<td>';
 								if($eOperation['cashflow']->exists() === TRUE) {
-									$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow?id='.$eOperation['cashflow']['id'].'" class="color-text">'.$eOperation['cashflow']['id'].'</a>';
+									$h .= '<a href="'.$cashflowLink.'" class="color-text">'.$eOperation['cashflow']['id'].'</a>';
 								} else {
 									$h .= '';
 								}
@@ -213,17 +218,20 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
-								if(
-									$canUpdate === TRUE
-									// On ne supprime pas une opération unitaire : il faut refaire l'attribution
-									and $eOperation['cashflow']->exists() === FALSE
-								) {
-									if($eOperation['vatAccount']->exists() === TRUE) {
-										$message = s("En supprimant cette écriture, l'entrée de TVA associée sera également supprimée. Confirmez-vous la suppression de cette écriture ?");
+								if($canUpdate === TRUE) {
+									if($eOperation['cashflow']->exists() === FALSE) {
+										if($eOperation['vatAccount']->exists() === TRUE) {
+											$message = s("En supprimant cette écriture, l'entrée de TVA associée sera également supprimée. Confirmez-vous la suppression de cette écriture ?");
+										} else {
+											$message = s("Confirmez-vous la suppression de cette écriture ?");
+										}
+										$h .= '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:doDelete" post-id="'.$eOperation['id'].'" data-confirm="'.$message.'" class="btn btn-outline-secondary btn-outline-danger">'.\Asset::icon('trash').'</a>';
 									} else {
-										$message = s("Confirmez-vous la suppression de cette écriture ?");
+										$h .= '<a href="'.$cashflowLink.'" class="btn btn-outline-secondary" data-dropdown-id="operation-trash-'.$eOperation['id'].'" data-dropdown-hover="true" data-dropdown="bottom-start" data-dropdown-offset-x="-25">'.\Asset::icon('trash').'</a>';
+										$h .= '<div data-dropdown-id="operation-trash-'.$eOperation['id'].'-list" class="dropdown-list bg-secondary">';
+											$h .= '<a href="'.$cashflowLink.'" class="dropdown-item">'.s("Allez sur l'opération bancaire et annulez les écritures liées.").'</a>';
+										$h .= '</div>';
 									}
-									$h .= '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:doDelete" post-id="'.$eOperation['id'].'" data-confirm="'.$message.'" class="btn btn-outline-secondary btn-outline-danger">'.\Asset::icon('trash').'</a>';
 								}
 							$h .= '</td>';
 
