@@ -46,6 +46,22 @@ class AccountLib extends AccountCrud {
 
 	}
 
+	public static function getByPrefixWithVatAccount(string $prefix): Account {
+
+		$eAccount = new Account();
+		Account::model()
+		       ->select(
+			       ['name' => new \Sql('CONCAT(class, ". ", description)')]
+			       + Account::getSelection()
+			       + ['vatAccount' => ['class', 'vatRate', 'description']]
+		       )
+		       ->whereClass('LIKE', $prefix.'%')
+		       ->get($eAccount);
+
+		return $eAccount;
+
+	}
+
 	public static function getByIdWithVatAccount(int $id): Account {
 
 		$eAccount = new Account();

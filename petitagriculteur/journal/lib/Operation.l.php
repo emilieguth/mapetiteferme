@@ -124,7 +124,7 @@ class OperationLib extends OperationCrud {
 		$cAccounts = \accounting\AccountLib::getByIdsWithVatAccount($accounts);
 
 		$cOperation = new \Collection();
-		$properties = ['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate'];
+		$properties = ['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate', 'cashflow'];
 		if($eOperationDefault->offsetExists('date') === FALSE) {
 			$properties[] = 'date';
 		}

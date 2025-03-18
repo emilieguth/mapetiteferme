@@ -283,7 +283,7 @@ class CashflowUi {
 			$h .= '</div>';
 
 			$h .= '<div id="create-operation-list">';
-				$h .= \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $eCashflow['amount'], $index, $form, $defaultValues);
+				$h .= \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 			$h .= '</div>';
 
 			$h .= '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
@@ -321,7 +321,7 @@ class CashflowUi {
 			'description' => $eCashflow['memo'],
 		];
 
-		return \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $eCashflow['amount'], $index, $form, $defaultValues);
+		return \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 
 	}
 

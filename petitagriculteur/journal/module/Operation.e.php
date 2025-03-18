@@ -9,6 +9,13 @@ class Operation extends OperationElement {
 
 	}
 
+	public function isClassAccount(int $class): bool {
+
+		$stringClass = (string)$class;
+		return str_starts_with($this['accountLabel'], $stringClass);
+
+	}
+
 	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {
 
 		$p
@@ -42,6 +49,17 @@ class Operation extends OperationElement {
 				$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 
 				return ($date >= $eFinancialYear['startDate'] && $date <= $eFinancialYear['endDate']);
+
+			})
+			->setCallback('cashflow.check', function(?\bank\Cashflow $eCashflow): bool {
+
+				if($eCashflow->exists() === FALSE) {
+					return TRUE;
+				}
+
+				$eCashflow = \bank\CashflowLib::getById($eCashflow['id']);
+
+				return $eCashflow->exists();
 
 			});
 

@@ -11,8 +11,19 @@ new \journal\OperationPage(
 	->quick(['document', 'description', 'amount'], [], ['canQuickUpdate'])
 	->create(function($data) {
 
-		$eAccount = get_exists('account') ? \accounting\AccountLib::getByIdWithVatAccount(GET('account', 'int')) : new \accounting\Account();
+		if(get_exists('account') === TRUE) {
+			$eAccount = \accounting\AccountLib::getByIdWithVatAccount(GET('account', 'int'));
+		} elseif(get_exists('accountPrefix') === TRUE) {
+			$eAccount = \accounting\AccountLib::getByPrefixWithVatAccount(GET('accountPrefix', 'int'));
+		} else {
+			$eAccount = new \accounting\Account();
+		}
 
+		if(get_exists('cashflow') === TRUE) {
+			$eCashflow = \bank\CashflowLib::getById(GET('cashflow', 'int'));
+		} else {
+			$eCashflow = new \bank\Cashflow();
+		}
 		// Apply default bank account label if the class is a bank account class.
 		$label = '';
 		if(get_exists('accountLabel') and mb_strlen(GET('accountLabel') > 0)) {
@@ -25,7 +36,7 @@ new \journal\OperationPage(
 		}
 
 		// Third party
-		$thirdParty = \journal\ThirdPartyLib::getByName(GET('thirdParty'));
+		$thirdParty = \journal\ThirdPartyLib::getById(GET('thirdParty', 'int'));
 
 		$data->e->merge([
 			'company' => $data->eCompany['id'],
@@ -38,6 +49,7 @@ new \journal\OperationPage(
 			'document' => GET('document'),
 			'type' => GET('type'),
 			'amount' => GET('amount', 'float'),
+			'cashflow' => $eCashflow,
 		]);
 
 		$data->eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();

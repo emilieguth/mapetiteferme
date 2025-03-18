@@ -7,6 +7,12 @@ class OperationUi {
 		\Asset::css('journal', 'journal.css');
 	}
 
+	public static function getAccountLabelFromAccountPrefix(string $accountPrefix): string {
+
+		return str_pad($accountPrefix, 8, 0);
+
+	}
+
 	public function create(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
 
 		\Asset::js('journal', 'operation.js');
@@ -35,10 +41,10 @@ class OperationUi {
 			$h .= '</div>';
 
 			$index = 0;
-			$defaultValues = [];
+			$defaultValues = $eOperation->getArrayCopy();
 
 			$h .= '<div id="create-operation-list">';
-				$h .= self::addOperation($eOperation, $eFinancialYear, NULL, $index, $form, $defaultValues);
+				$h .= self::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 			$h .= '</div>';
 
 			$buttons = '<a id="add-operation" onclick="Operation.addOperation(); return TRUE;" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
@@ -65,7 +71,6 @@ class OperationUi {
 	public static function addOperation(
 		Operation $eOperation,
 		\accounting\FinancialYear $eFinancialYear,
-		?float $cashflowAmount,
 		int $index,
 		\util\FormUi $form,
 		array $defaultValues,
@@ -89,7 +94,7 @@ class OperationUi {
 
 				$h .= '</div>';
 
-				$h .= \journal\OperationUi::getFieldsCreate($form, $eOperation, $eFinancialYear, $cashflowAmount, $suffix, $defaultValues, []);
+				$h .= \journal\OperationUi::getFieldsCreate($form, $eOperation, $eFinancialYear, $suffix, $defaultValues, []);
 
 			$h .= '</div>';
 
@@ -102,7 +107,6 @@ class OperationUi {
 		\util\FormUi $form,
 		Operation $eOperation,
 		\accounting\FinancialYear $eFinancialYear,
-		?float $cashflowAmount,
 		?string $suffix,
 		array $defaultValues,
 		array $disabled
@@ -113,6 +117,8 @@ class OperationUi {
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
 
 		$h = '<div class="operation-write">';
+
+			$h .= $form->hidden('cashflow'.$suffix, $defaultValues['cashflow']);
 
 			$h .= $form->group(
 				self::p('date')->label.' '.\util\FormUi::asterisk(),
@@ -128,6 +134,7 @@ class OperationUi {
 					$d->attributes['disabled'] = TRUE;
 				}
 				$d->attributes['data-third-party'] = $form->getId();
+				$d->default = fn($e, $property) => get('thirdParty');
 			});
 
 			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled) {

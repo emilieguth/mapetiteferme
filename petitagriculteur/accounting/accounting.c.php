@@ -15,7 +15,6 @@ Setting::register('accounting', [
 	'bankAccountClass' => '512',
 	'defaultBankAccountLabel' => '5121',
 
-	'shippingProductAccountClass' => '6242', // Produits
-	'shippingChargeAccountClass' => '6241', // Achats
+	'shippingChargeAccountClass' => '624',
 ]);
 ?>

@@ -11,7 +11,7 @@ new JsonView('addOperation', function($data, AjaxTemplate $t) {
 	$form->open('journal-operation-create');
 	$defaultValues = [];
 
-	$t->qs('#create-operation-list')->insertAdjacentHtml('beforeend', new \journal\OperationUi()::addOperation($data->eOperation, $data->eFinancialYear, NULL, $data->index, $form, $defaultValues));
+	$t->qs('#create-operation-list')->insertAdjacentHtml('beforeend', new \journal\OperationUi()::addOperation($data->eOperation, $data->eFinancialYear, $data->index, $form, $defaultValues));
 	$t->qs('#add-operation')->setAttribute('post-index', $data->index + 1);
 	$t->js()->eval('Operation.showOrHideDeleteOperation()');
 
