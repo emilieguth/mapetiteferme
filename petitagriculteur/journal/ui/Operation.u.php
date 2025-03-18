@@ -48,13 +48,20 @@ class OperationUi {
 				$h .= self::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 			$h .= '</div>';
 
-			$buttons = '<a id="add-operation" onclick="Operation.addOperation(); return TRUE;" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
+			$buttons = '<a id="add-operation" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
 				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$buttons .= '</a>';
 			$buttons .= '&nbsp;';
 			$buttons .= $form->submit(
 				s("Enregistrer l'écriture"),
-				['id' => 'submit-save-operation', 'data-text-singular' => s("Enregistrer l'écriture"), 'data-text-plural' => s(("Enregistrer les écritures"))],
+				[
+					'id' => 'submit-save-operation',
+					'data-text-singular' => s("Enregistrer l'écriture"),
+					'data-text-plural' => s(("Enregistrer les écritures")),
+					'data-confirm-text-singular' => s("Il y a une incohérence de valeur de TVA, voulez-vous quand même enregistrer ?"),
+					'data-confirm-text-plural' => s("Il y a plusieurs incohérences de valeur de TVA, voulez-vous quand même enregistrer ?"),
+					'onclick' => 'return Operation.warnVatConsistency(this);',
+				],
 			);
 
 			$h .= $form->group(content: $buttons);

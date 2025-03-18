@@ -202,4 +202,18 @@ class Operation {
         }
 
     }
+
+    static warnVatConsistency(element) {
+
+        let needsConfirm = 0;
+        qsa('[data-vat-warning]', (node) => needsConfirm += node.classList.contains('hide') === false ? 1 : 0);
+
+        if(needsConfirm === 0) {
+            return;
+        }
+
+        const text = needsConfirm === 1 ? element.dataset.confirmTextSingular : element.dataset.confirmTextPlural;
+        return confirm(text);
+
+    }
 }
