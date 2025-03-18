@@ -225,7 +225,6 @@ class OperationLib extends OperationCrud {
 			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
 			'type' => $eOperationLinked['type'],
 			'amount' => abs($vatValue),
-			'operation' => $eOperationLinked,
 		];
 		if($eOperationLinked['cashflow']->exists() === TRUE) {
 			$values['cashflow'] = $eOperationLinked['cashflow']['id'];
@@ -235,6 +234,7 @@ class OperationLib extends OperationCrud {
 		$fw = new \FailWatch();
 
 		$eOperationVat->build(['cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
+		$eOperationVat['operation'] = $eOperationLinked;
 
 		$fw->validate();
 
