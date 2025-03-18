@@ -253,7 +253,7 @@ class CashflowUi {
 
 		$h .= $form->openAjax(
 			\company\CompanyUi::urlBank($eCompany).'/cashflow:doAllocate',
-			['id' => 'bank-cashflow-allocate', 'third-party-create-index' => 0, 'autocomplete' => 'off']
+			['id' => 'bank-cashflow-allocate', 'third-party-create-index' => 0, 'autocomplete' => 'off', 'onrender' => 'Operation.initAutocomplete();',]
 		);
 
 			$h .= $form->hidden('company', $eCompany['id']);

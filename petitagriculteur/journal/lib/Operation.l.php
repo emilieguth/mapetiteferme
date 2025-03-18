@@ -164,6 +164,8 @@ class OperationLib extends OperationCrud {
 				$eOperation['vatAccount'] = $eAccount['vatAccount'];
 			}
 
+			$fw->validate();
+
 			// Class 2 => Vérification et création de l'immobilisation
 			$eAsset = AssetLib::prepareAsset($eOperation, $input['asset'][$index] ?? [], $index);
 

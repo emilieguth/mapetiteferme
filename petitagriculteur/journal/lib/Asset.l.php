@@ -12,6 +12,8 @@ class AssetLib extends \journal\AssetCrud {
 
 	public static function prepareAsset(Operation $eOperation, array $assetData, int $index): ?Asset {
 
+		$eOperation->expects(['accountLabel']);
+
 		if((int)mb_substr($eOperation['accountLabel'], 0, 1) !== \Setting::get('accounting\assetClass')) {
 			return NULL;
 		}

@@ -26,6 +26,7 @@ class OperationUi {
 			[
 				'id' => 'journal-operation-create',
 				'third-party-create-index' => 0,
+				'onrender' => 'Operation.initAutocomplete();',
 			],
 		);
 
@@ -118,7 +119,9 @@ class OperationUi {
 
 		$h = '<div class="operation-write">';
 
-			$h .= $form->hidden('cashflow'.$suffix, $defaultValues['cashflow']);
+			if(isset($defaultValues['cashflow']) === TRUE) {
+				$h .= $form->hidden('cashflow'.$suffix, $defaultValues['cashflow']);
+			}
 
 			$h .= $form->group(
 				self::p('date')->label.' '.\util\FormUi::asterisk(),
@@ -127,7 +130,7 @@ class OperationUi {
 
 			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
 
-			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled) {
+			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
 				$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"]';
 				$d->attributes['data-index'] = $index;
 				if(in_array('thirdParty', $disabled) === TRUE) {
@@ -137,8 +140,9 @@ class OperationUi {
 				$d->default = fn($e, $property) => get('thirdParty');
 			});
 
-			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled) {
+			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
 				$d->autocompleteDispatch = '[data-account="'.$form->getId().'"]';
+				$d->attributes['data-wrapper'] = 'account'.$suffix;
 				$d->attributes['data-index'] = $index;
 				if(in_array('account', $disabled) === TRUE) {
 					$d->attributes['disabled'] = TRUE;
@@ -147,8 +151,9 @@ class OperationUi {
 				$d->label .=  ' '.\util\FormUi::asterisk();
 			});
 
-			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix, function($d) use($form, $index) {
+			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix, function($d) use($form, $index, $suffix) {
 				$d->autocompleteDispatch = '[data-account-label="'.$form->getId().'"]';
+				$d->attributes['data-wrapper'] = 'accountLabel'.$suffix;
 				$d->attributes['data-index'] = $index;
 				$d->attributes['data-account-label'] = $form->getId();
 				$d->label .=  ' '.\util\FormUi::asterisk();

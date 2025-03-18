@@ -23,10 +23,16 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="
 document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
     Operation.updateType(e);
     Operation.refreshVAT(e.detail);
+    Operation.checkAutocompleteStatus(e);
+});
+
+document.delegateEventListener('autocompleteUpdate', '[data-third-party="journal-operation-create"], [data-third-party="bank-cashflow-allocate"]', function(e) {
+    Operation.checkAutocompleteStatus(e);
 });
 
 document.delegateEventListener('autocompleteSelect', '[data-third-party="journal-operation-create"], [data-third-party="bank-cashflow-allocate"]', function(e) {
     Operation.updateThirdParty(e.detail);
+    Operation.checkAutocompleteStatus(e);
 });
 
 document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"]', function(e) {
@@ -42,6 +48,23 @@ document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [da
 });
 
 class Operation {
+
+    static checkAutocompleteStatus(e) {
+
+        const field = e.delegateTarget.dataset.autocompleteField;
+        qs('[data-wrapper="' + field + '"]', node => node.classList.remove('form-error-wrapper'));
+        if(e.detail.value === undefined) {
+            qs('[data-wrapper="' + field + '"]', node => node.classList.add('form-error-wrapper'));
+        }
+    }
+
+    static initAutocomplete() {
+
+        qsa('[data-autocomplete-field]', (node) => {
+            const field = node.dataset.autocompleteField;
+            node.firstParent('[data-wrapper]').setAttribute('data-wrapper', field);
+        });
+    }
 
     static updateThirdParty(detail) {
         detail.input.firstParent('form').qs('#add-operation').setAttribute('post-third-party', detail.value);
