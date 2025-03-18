@@ -2,7 +2,7 @@
 new Page()
 	->get('index', function($data) {
 
-		\Setting::set('main\viewJournal', 'book');
+		\Setting::set('main\viewJournal', 'asset');
 
 		$company = GET('company');
 
@@ -14,11 +14,7 @@ new Page()
 		}
 
 		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
-
-		$search = new Search(['financialYear' => $data->eFinancialYearSelected]);
-
-		$data->cOperation = \journal\OperationLib::getAllForBook($search);
-		$data->cAccount = \accounting\AccountLib::getAll();
+		$data->assetSummary = \journal\AssetLib::getSummary($data->eFinancialYearSelected);
 
 		throw new ViewAction($data);
 

@@ -3,6 +3,25 @@ namespace journal;
 
 Class AssetUi {
 
+	public static function getTitle(): string {
+
+		$h = '<div class="util-action">';
+
+			$h .= '<h1>';
+				$h .= s("État des immobilisations");
+			$h .= '</h1>';
+
+		$h .= '</div>';
+
+		return $h;
+	}
+
+	public static function getSummary(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cAsset): string {
+
+		return '';
+
+	}
+
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Operation::model()->describer($property, [

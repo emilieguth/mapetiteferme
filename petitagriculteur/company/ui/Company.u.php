@@ -319,9 +319,13 @@ class CompanyUi {
 				'label' => s("Journal")
 			],
 			'book' => [
-			'url' => CompanyUi::urlJournal($eCompany).'/book',
-			'label' => s("Grand livre")
-		]
+				'url' => CompanyUi::urlJournal($eCompany).'/book',
+				'label' => s("Grand livre")
+			],
+			/*'asset' => [
+				'url' => CompanyUi::urlJournal($eCompany).'/asset',
+				'label' => s("Immobilisations")
+			],*/
 		];
 
 	}
