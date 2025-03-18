@@ -90,15 +90,6 @@ class AccountLib extends AccountCrud {
 			->getCollection(NULL, NULL, 'id');
 	}
 
-	public static function getBankClassAccount(): \Element {
-
-		return Account::model()
-			->select(Account::getSelection())
-			->whereClass('=', \Setting::get('accounting\bankAccountClass'))
-			->get();
-
-	}
-
 	public static function orderAccountsWithThirdParty(int $thirdParty, \Collection $cAccount): \Collection {
 
 		$eThirdParty = \journal\ThirdPartyLib::getById($thirdParty);

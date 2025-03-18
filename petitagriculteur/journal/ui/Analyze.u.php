@@ -22,9 +22,11 @@ class AnalyzeUi {
 
 	}
 
-	public function getBank(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation): string {
+	public function getBank(array $operations): string {
 
-		if($cOperation->empty() === TRUE) {
+		[$cOperationBank, $cOperationCash] = $operations;
+
+		if($cOperationBank->empty() === TRUE) {
 
 			$h = '<div class="util-info">';
 				$h .= s("Le suivi de la trésorerie sera disponible lorsque vous aurez attribué des écritures à vos opérations bancaires pour cet exercice.");
@@ -33,11 +35,26 @@ class AnalyzeUi {
 			return $h;
 		}
 
-			$h = '<div class="analyze-chart-table">';
-				$h .= $this->getBankChart($cOperation);
-				$h .= $this->getBankTable($cOperation);
-			$h .= '</div>';
+		$h = '<h2>'.s("Compte bancaire").'</h2>';
 
+		$h .= '<div class="analyze-chart-table">';
+
+			$h .= $this->getBankChart($cOperationBank);
+			$h .= $this->getBankTable($cOperationBank);
+
+		$h .= '</div>';
+
+		if($cOperationCash->empty() === FALSE) {
+
+			$h .= '<h2>'.s("Caisse").'</h2>';
+
+			$h .= '<div class="analyze-chart-table">';
+
+				$h .= $this->getBankChart($cOperationCash);
+				$h .= $this->getBankTable($cOperationCash);
+
+			$h .= '</div>';
+		}
 
 		return $h;
 	}

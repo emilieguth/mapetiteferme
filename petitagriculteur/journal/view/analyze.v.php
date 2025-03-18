@@ -14,7 +14,7 @@ new AdaptativeView('analyseBank', function($data, CompanyTemplate $t) {
 		$data->eFinancialYearSelected,
 	);
 
-	echo new \journal\AnalyzeUi()->getBank($data->eCompany, $data->eFinancialYearSelected, $data->cOperation);
+	echo new \journal\AnalyzeUi()->getBank([$data->cOperationBank, $data->cOperationCash]);
 
 });
 

@@ -88,9 +88,9 @@ class AnalyzeLib {
 
 	}
 
-	public static function getBankOperationsByMonth(\accounting\FinancialYear $eFinancialYear): \Collection {
+	public static function getBankOperationsByMonth(\accounting\FinancialYear $eFinancialYear, string $type): \Collection {
 
-		$eAccountBankClass = \accounting\AccountLib::getBankClassAccount();
+		$accountClass = $type === 'bank' ? \Setting::get('accounting\bankAccountClass') : \Setting::get('accounting\cashAccountClass');
 
 		$cOperation = Operation::model()
 			->select([
@@ -101,11 +101,12 @@ class AnalyzeLib {
 			])
 			->whereDate('>=', $eFinancialYear['startDate'])
 			->whereDate('<=', $eFinancialYear['endDate'])
-			->whereAccount($eAccountBankClass)
+			->where('SUBSTRING(accountLabel, 1, '.strlen((string)$accountClass).') = "'.$accountClass.'"')
 			->group(['month'])
 			->sort(['month' => SORT_ASC])
 			->getCollection();
 
+		// Total en cumulatif
 		$lastSolde = 0;
 		foreach($cOperation as &$eOperation) {
 			$eOperation['total'] += $lastSolde;
@@ -113,9 +114,7 @@ class AnalyzeLib {
 		}
 
 		return $cOperation;
-
 	}
-
 
 }
 ?>

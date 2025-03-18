@@ -16,7 +16,8 @@ new \bank\CashflowPage(
 
 	Setting::set('main\viewAnalyze', 'bank');
 
-	$data->cOperation = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYearSelected);
+	$data->cOperationBank = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYearSelected, 'bank');
+	$data->cOperationCash = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYearSelected, 'cash');
 
 	throw new ViewAction($data, ':analyseBank');
 

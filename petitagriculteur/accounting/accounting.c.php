@@ -13,6 +13,7 @@ Setting::register('accounting', [
 	'productAccountClass' => 7,
 
 	'bankAccountClass' => '512',
+	'cashAccountClass' => '5310', // caisse
 	'defaultBankAccountLabel' => '5121',
 
 	'shippingChargeAccountClass' => '624',
