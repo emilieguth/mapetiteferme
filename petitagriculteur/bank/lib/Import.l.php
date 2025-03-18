@@ -7,17 +7,21 @@ class ImportLib extends ImportCrud {
 
 		$cImport = self::getAll($eFinancialYear);
 		$startDate = $eFinancialYear['startDate'];
-		if($eFinancialYear['endDate']) {
-			$endDate = date('Y-m-d');
-		} else {
+
+		if($eFinancialYear['endDate'] !== NULL) {
 			$endDate = $eFinancialYear['endDate'];
+		} else {
+			$endDate = date('Y-m-d');
 		}
+
 		$imports = [];
 
 		$startPeriod = NULL;
 		$endPeriod = NULL;
 		$currentPeriod = new Import();
+
 		for($currentDate = $startDate; $currentDate <= $endDate; $currentDate = date('Y-m-d', strtotime($currentDate.' +1 day'))) {
+
 			if($startPeriod === NULL) {
 				$startPeriod = $currentDate;
 			}

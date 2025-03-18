@@ -7,7 +7,7 @@ class JournalUi {
 		\Asset::css('journal', 'journal.css');
 	}
 
-	public function getJournalTitle(\company\Company $eCompany): string {
+	public function getJournalTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
 
 		$h = '<div class="util-action">';
 
@@ -17,7 +17,7 @@ class JournalUi {
 
 			$h .= '<div>';
 				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-				if(get_exists('cashflow') === FALSE) {
+				if(get_exists('cashflow') === FALSE and $eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN) {
 					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
 				}
 			$h .= '</div>';
@@ -223,6 +223,7 @@ class JournalUi {
 										$eOperation->isClassAccount(\Setting::get('accounting\chargeAccountClass')) === TRUE
 										// On ne rajoute pas des frais de port sur des frais de port
 										and mb_substr($eOperation['accountLabel'], 0, strlen((string)\Setting::get('accounting\shippingChargeAccountClass'))) !== (string)\Setting::get('accounting\shippingChargeAccountClass')
+										and $canUpdate === TRUE
 									) {
 										$args = [
 											'accountPrefix' => \Setting::get('accounting\shippingChargeAccountClass'),

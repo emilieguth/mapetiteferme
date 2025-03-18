@@ -6,7 +6,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->subNav = new \company\CompanyUi()->getJournalSubNav($data->eCompany);
 	$t->canonical = \company\CompanyUi::urlJournal($data->eCompany);
 
-	$t->mainTitle = new \journal\JournalUi()->getJournalTitle($data->eCompany);
+	$t->mainTitle = new \journal\JournalUi()->getJournalTitle($data->eCompany, $data->eFinancialYearSelected);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlJournal($data->eCompany).'/?financialYear='.$eFinancialYear['id']; },

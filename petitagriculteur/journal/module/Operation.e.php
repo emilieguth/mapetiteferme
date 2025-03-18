@@ -46,9 +46,17 @@ class Operation extends OperationElement {
 			})
 			->setCallback('date.check', function(string $date): bool {
 
-				$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
+				$cFinancialYear = \accounting\FinancialYearLib::getOpenFinancialYears();
 
-				return ($date >= $eFinancialYear['startDate'] && $date <= $eFinancialYear['endDate']);
+				foreach($cFinancialYear as $eFinancialYear) {
+
+					if($date >= $eFinancialYear['startDate'] && $date <= $eFinancialYear['endDate']) {
+						return TRUE;
+					}
+
+				}
+
+				return FALSE;
 
 			})
 			->setCallback('cashflow.check', function(?\bank\Cashflow $eCashflow): bool {

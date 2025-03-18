@@ -6,17 +6,21 @@ class ImportUi {
 	public function __construct() {
 	}
 
-	public function getImportTitle(\company\Company $eCompany): string {
+	public function getImportTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
 
 		$h = '<div class="util-action">';
 
-		$h .= '<h1>';
-		$h .= s("Historique des imports de relevés bancaires");
-		$h .= '</h1>';
+			$h .= '<h1>';
+				$h .= s("Historique des imports de relevés bancaires");
+			$h .= '</h1>';
 
-		$h .= '<div>';
-		$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/import:import" class="btn btn-primary">'.\Asset::icon('file-earmark-plus').' '.s("Importer un relevé .ofx").'</a>';
-		$h .= '</div>';
+			if($eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN and $eFinancialYear['endDate'] >= date('Y-m-d')) {
+
+				$h .= '<div>';
+					$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/import:import" class="btn btn-primary">'.\Asset::icon('file-earmark-plus').' '.s("Importer un relevé .ofx").'</a>';
+				$h .= '</div>';
+
+			}
 
 		$h .= '</div>';
 

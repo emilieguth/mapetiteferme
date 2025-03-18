@@ -14,20 +14,20 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$this->getCompanySubNav(),
 	);
 
-	$t->mainTitle = (new \bank\ImportUi())->getImportTitle($data->eCompany);
+	$t->mainTitle = new \bank\ImportUi()->getImportTitle($data->eCompany, $data->eFinancialYearSelected);
 
-	$t->mainYear = (new \accounting\FinancialYearUi())->getFinancialYearTabs(
+	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlBank($data->eCompany).'/import?financialYear='.$eFinancialYear['id']; },
 		$data->cFinancialYear,
 		$data->eFinancialYearSelected,
 	);
 
-	echo (new \bank\ImportUi())->getImport($data->eCompany, $data->cImport, $data->imports, $data->eFinancialYearSelected);
+	echo new \bank\ImportUi()->getImport($data->eCompany, $data->cImport, $data->imports, $data->eFinancialYearSelected);
 
 });
 
 new AdaptativeView('import', function($data, PanelTemplate $t) {
 
-	return (new \bank\CashflowUi())->import($data->eCompany);
+	return new \bank\CashflowUi()->import($data->eCompany);
 
 });
