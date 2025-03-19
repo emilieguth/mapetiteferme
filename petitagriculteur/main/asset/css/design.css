@@ -722,3 +722,14 @@ tr.row-bold > td {
 .util-quick-dropdown .form-info {
 	color: var(--muted-light);
 }
+
+div.table-sticky-container {
+	overflow: auto;
+	height: calc(100vh - var(--mainSticky));
+}
+
+table.table-sticky thead {
+	position: sticky;
+	top: 0;
+	background-color: var(--background-dark);
+}

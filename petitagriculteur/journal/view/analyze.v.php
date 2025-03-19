@@ -9,7 +9,9 @@ new AdaptativeView('analyseBank', function($data, CompanyTemplate $t) {
 	$t->mainTitle = new \journal\AnalyzeUi()->getBankTitle($data->eCompany);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
-		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlJournal($data->eCompany).'/analyze/bank/'.$eFinancialYear['id']; },
+		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
+			return \company\CompanyUi::urlJournal($data->eCompany).'/analyze/bank/'.$eFinancialYear['id'];
+		},
 		$data->cFinancialYear,
 		$data->eFinancialYearSelected,
 	);
@@ -28,7 +30,9 @@ new AdaptativeView('analyseCharge', function($data, CompanyTemplate $t) {
 	$t->mainTitle = new \journal\AnalyzeUi()->getChargesTitle($data->eCompany);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
-		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlJournal($data->eCompany).'/analyze/charges/'.$eFinancialYear['id']; },
+		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
+			return \company\CompanyUi::urlJournal($data->eCompany).'/analyze/charges/'.$eFinancialYear['id'];
+		},
 		$data->cFinancialYear,
 		$data->eFinancialYearSelected,
 	);
@@ -47,7 +51,9 @@ new AdaptativeView('analyseResult', function($data, CompanyTemplate $t) {
 	$t->mainTitle = new \journal\AnalyzeUi()->getResultTitle($data->eCompany);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
-		function(\accounting\FinancialYear $eFinancialYear) use ($data) { return \company\CompanyUi::urlJournal($data->eCompany).'/analyze/result/'.$eFinancialYear['id']; },
+		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
+			return \company\CompanyUi::urlJournal($data->eCompany).'/analyze/result/'.$eFinancialYear['id'];
+		},
 		$data->cFinancialYear,
 		$data->eFinancialYearSelected,
 	);

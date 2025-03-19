@@ -68,7 +68,7 @@ class CashflowUi {
 
 			$h .= '<div class="util-block-search stick-xs">';
 			$h .= s(
-				"Vous visualisez actuellemen@t les opérations bancaires correspondant à l'import #{id} du {date}.",
+				"Vous visualisez actuellement les opérations bancaires correspondant à l'import #{id} du {date}.",
 				[
 					'id' => GET('import'),
 					'date' => \util\DateUi::numeric($eImport['createdAt'], \util\DateUi::DATE),
@@ -77,9 +77,9 @@ class CashflowUi {
 			$h .= '</div>';
 		}
 
-		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').' data-render-timeout="1">';
+		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm table-sticky-container" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').' data-render-timeout="1">';
 
-			$h .= '<table class="table-block tr-even tr-hover">';
+			$h .= '<table class="tr-even tr-hover table-sticky">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
@@ -371,7 +371,7 @@ class CashflowUi {
 				$h .= '<span class="hide" name="cashflowAmount">'.$eCashflow['amount'].'</span>';
 
 				$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
-					$h .= '<table class="table-block tr-even tr-hover">';
+					$h .= '<table class="tr-even tr-hover">';
 
 						$h .= '<thead>';
 							$h .= '<tr>';

@@ -60,7 +60,7 @@ class ThirdPartyUi {
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="table-block tr-even td-vertical-top tr-hover">';
+			$h .= '<table class="tr-even td-vertical-top tr-hover">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';

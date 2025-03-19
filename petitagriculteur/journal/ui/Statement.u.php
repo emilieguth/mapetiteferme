@@ -56,24 +56,25 @@ class StatementUi {
 		if(empty($accountingBalanceSheet) === TRUE) {
 			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
 		}
+		\Asset::css('company', 'design.css');
 
 		$h = '<h2>'.s("Balance comptable").'</h2>';
-		$h .= '<div class="util-overflow-sm">';
+		$h .= '<div class="util-overflow-sm table-sticky-container">';
 
-		$h .= '<table id="account-list" class="table-block tr-even tr-hover">';
+		$h .= '<table id="account-list" class="table-sticky tr-even tr-hover">';
 
 			$h .= '<thead>';
 				$h .= '<tr>';
-					$h .= '<th>'.s("Compte").'</th>';
-					$h .= '<th>'.s("Libellé").'</th>';
-					$h .= '<th>'.s("Début débit").'</th>';
-					$h .= '<th>'.s("Début crédit").'</th>';
-					$h .= '<th>'.s("Mouvement débit").'</th>';
-					$h .= '<th>'.s("Mouvement crédit").'</th>';
-					$h .= '<th>'.s("Solde fin débiteur N").'</th>';
-					$h .= '<th>'.s("Solde fin créditeur N").'</th>';
-					$h .= '<th>'.s("Solde fin débiteur N-1").'</th>';
-					$h .= '<th>'.s("Solde fin créditeur N-1").'</th>';
+					$h .= '<th class="text-end">'.s("Compte").'</th>';
+					$h .= '<th class="text-end">'.s("Libellé").'</th>';
+					$h .= '<th class="text-end">'.s("Début débit").'</th>';
+					$h .= '<th class="text-end">'.s("Début crédit").'</th>';
+					$h .= '<th class="text-end">'.s("Mouvement débit").'</th>';
+					$h .= '<th class="text-end">'.s("Mouvement crédit").'</th>';
+					$h .= '<th class="text-end">'.s("Solde fin débiteur N").'</th>';
+					$h .= '<th class="text-end">'.s("Solde fin créditeur N").'</th>';
+					$h .= '<th class="text-end">'.s("Solde fin débiteur N-1").'</th>';
+					$h .= '<th class="text-end">'.s("Solde fin créditeur N-1").'</th>';
 				$h .= '</tr>';
 			$h .= '</thead>';
 

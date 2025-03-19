@@ -102,9 +102,9 @@ class JournalUi {
 
 		$h = '';
 
-		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm table-sticky-container">';
 
-			$h .= '<table class="table-block tr-even td-vertical-top tr-hover">';
+			$h .= '<table class="tr-even td-vertical-top tr-hover table-sticky">';
 
 				$h .= '<thead>';
 					$h .= '<tr>';
@@ -125,6 +125,7 @@ class JournalUi {
 						$h .= '<th>'.s("Tiers").'</th>';
 						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
 						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
+						$h .= '<th class="text-end"></th>';
 					$h .= '</tr>';
 				$h .= '</thead>';
 
