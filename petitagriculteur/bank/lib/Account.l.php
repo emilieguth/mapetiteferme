@@ -9,7 +9,7 @@ class AccountLib extends AccountCrud {
 
 		\accounting\Account::model()
        ->select(\accounting\Account::getSelection())
-       ->whereClass('=', \Setting::get('accounting\bankAccountClass'))
+       ->whereClass('=', $class)
        ->get($eAccount);
 
 		return $eAccount;

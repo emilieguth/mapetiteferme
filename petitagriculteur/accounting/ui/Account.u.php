@@ -41,6 +41,9 @@ class AccountUi {
 							$h .= s("Libellé");
 						$h .= '</th>';
 						$h .= '<th>';
+							$h .= s("Personnalisé ?");
+						$h .= '</th>';
+						$h .= '<th>';
 							$h .= s("Compte de TVA");
 						$h .= '</th>';
 						$h .= '<th>';
@@ -72,6 +75,12 @@ class AccountUi {
 								$h .= $classNumber === 0 ? '</b>' : '';
 						$h .= '</td>';
 
+						$h .= '<td class="text-center">';
+							if($eAccount['custom'] === TRUE) {
+								$h .= 'oui';
+							}
+						$h .= '</td>';
+
 						$h .= '<td>';
 							$h .= ($eAccount['vatAccount']->exists() === TRUE ? '<a '.attr('onclick', 'Settings.scrollTo('.$eAccount['vatAccount']['id'].');').'>'.encode($eAccount['vatAccount']['class']).'</a>' : '');
 						$h .= '</td>';
@@ -88,7 +97,7 @@ class AccountUi {
 				}
 
 				$h .= '<tbody>';
-			$h .= '</table';
+			$h .= '</table>';
 
 		$h .= '</div>';
 

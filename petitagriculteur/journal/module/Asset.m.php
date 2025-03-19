@@ -46,7 +46,7 @@ class AssetModel extends \ModuleModel {
 			'id' => ['serial32', 'cast' => 'int'],
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'value' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
-			'description' => ['text24', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
+			'description' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'type' => ['enum', [\journal\Asset::LINEAR, \journal\Asset::WITHOUT], 'cast' => 'enum'],
 			'acquisitionDate' => ['date', 'cast' => 'string'],
 			'startDate' => ['date', 'cast' => 'string'],

@@ -24,6 +24,10 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
+	public static function urlStatement(int|Company $company): string {
+		return self::urlJournal($company).'/statement';
+	}
+
 	public static function urlBank(int|Company $company): string {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/bank';
 	}
@@ -162,11 +166,11 @@ class CompanyUi {
 
 				$h .= $this->getAnalyzeMenu($eCompany, prefix: $prefix, tab: $tab);
 
-				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/statement" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
+				$h .= '<a href="'.CompanyUi::urlStatement($eCompany).'/" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Bilans (TODO)");
+						$h .= s("Bilans");
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -472,7 +476,21 @@ class CompanyUi {
 
 	protected static function getStatementCategories(Company $eCompany): array {
 
-		return [];
+		return [
+			'balance-sheet' => [
+				'url' => CompanyUi::urlStatement($eCompany).'/balance-sheet',
+				'label' => s("Bilans (TODO)")
+			],
+			'accounting-balance' => [
+				'url' => CompanyUi::urlStatement($eCompany).'/accounting',
+				'label' => s("Balances")
+			],
+			'p-and-l' => [
+				'url' => CompanyUi::urlStatement($eCompany).'/p-and-l',
+				'label' => s("Comptes de résultat (TODO)")
+			]
+			// immos (état + amortissements), TVA (achat + vente)
+		];
 
 	}
 

@@ -18,4 +18,5 @@ table.no-background tbody {
 }
 tr.sub-header {
     background-color: var(--background-dark) !important;
+    font-weight: bold;
 }

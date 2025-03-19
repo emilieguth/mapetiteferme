@@ -26,6 +26,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
     })(document, window, "BrevoConversations");
 	</script>
 <!-- /Brevo Conversations {/literal} -->';
+
 	echo new \company\CompanyUi()->getSettings($data->eCompany);
 
 });

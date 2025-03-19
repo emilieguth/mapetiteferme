@@ -85,10 +85,10 @@ class BookUi {
 							$h .= '</tbody>';
 							$h .= '<tr class="sub-header">';
 								$h .= '<td colspan="5">';
-								$h .= '<strong>'.s("{class} - {description}", [
+								$h .= s("{class} - {description}", [
 										'class' => $currentAccountLabel,
 										'description' => $eOperation['account']['description'],
-									]).'</strong>';
+									]);
 								$h .= '</td>';
 							$h .= '</tr>';
 							$h .= '<tbody>';
