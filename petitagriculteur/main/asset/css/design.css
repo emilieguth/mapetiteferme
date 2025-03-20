@@ -733,3 +733,14 @@ table.table-sticky thead {
 	top: 0;
 	background-color: var(--background-dark);
 }
+
+tr.row-header {
+	background-color: var(--background-dark) !important;
+	font-weight: bold;
+}
+
+table.table-bordered,
+tr.row-bordered,
+td.cell-bordered {
+	border: 1px solid var(--border);
+}

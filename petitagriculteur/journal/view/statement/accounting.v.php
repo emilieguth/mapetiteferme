@@ -17,6 +17,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	);
 
 	echo new \journal\StatementUi()->displayAccountingBalanceSheet($data->accountingBalanceSheet);
+	echo new \journal\StatementUi()->displaySummaryAccountingBalance($data->summaryAccountingBalance);
 
 });
 

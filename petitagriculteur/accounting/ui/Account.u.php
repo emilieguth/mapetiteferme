@@ -260,6 +260,63 @@ class AccountUi {
 
 	}
 
+	public static function getSummaryBalanceCategories(): array {
+		return [
+			['min' => 10, 'max' => 12, 'name' => s("Capital, report, résultat")],
+			['min' => 13, 'max' => 13, 'name' => s("Subventions d'investissement")],
+			['min' => 14, 'max' => 15, 'name' => s("Provisions")],
+			['min' => 16, 'max' => 16, 'name' => s("Emprunts")],
+			['min' => 17, 'max' => 18, 'name' => s("Dettes rattachées, comptes de liaisons")],
+			['min' => 20, 'max' => 20, 'name' => s("Immobilisations incorporelles")],
+			['min' => 21, 'max' => 24, 'name' => s("Immobilisations corporelles et en cours")],
+			['min' => 25, 'max' => 27, 'name' => s("Participations et autres immo. financières")],
+			['min' => 28, 'max' => 28, 'name' => s("Amortissments")],
+			['min' => 29, 'max' => 29, 'name' => s("Provisions pour dépréciations")],
+			['min' => 30, 'max' => 30, 'name' => s("Approvisionnements et marchandises")],
+			['min' => 31, 'max' => 32, 'name' => s("Animaux")],
+			['min' => 33, 'max' => 34, 'name' => s("Végétaux en terre")],
+			['min' => 35, 'max' => 36, 'name' => s("En cours de production")],
+			['min' => 37, 'max' => 37, 'name' => s("Produits")],
+			['min' => 38, 'max' => 38, 'name' => s("Inventaire permanent")],
+			['min' => 40, 'max' => 40, 'name' => s("Fournisseurs")],
+			['min' => 41, 'max' => 41, 'name' => s("Clients")],
+			['min' => 42, 'max' => 42, 'name' => s("Personnels")],
+			['min' => 43, 'max' => 43, 'name' => s("MSA et autres organismes sociaux")],
+			['min' => 44, 'max' => 44, 'name' => s("État et autres collectivités publiques")],
+			['min' => 45, 'max' => 45, 'name' => s("Groupe, communautés d'exploitation")],
+			['min' => 46, 'max' => 46, 'name' => s("Débiteurs et créditeurs divers")],
+			['min' => 47, 'max' => 47, 'name' => s("Comptes transitoires")],
+			['min' => 48, 'max' => 48, 'name' => s("Comptes de régularisation")],
+			['min' => 49, 'max' => 49, 'name' => s("Provisions pour dépréciation")],
+			['min' => 50, 'max' => 50, 'name' => s("Valeurs mobilières de placement")],
+			['min' => 51, 'max' => 51, 'name' => s("Banques")],
+			['min' => 52, 'max' => 52, 'name' => s("Instruments de trésorerie")],
+			['min' => 53, 'max' => 53, 'name' => s("Caisse")],
+			['min' => 54, 'max' => 54, 'name' => s("Règles d'avance")],
+			['min' => 58, 'max' => 58, 'name' => s("Virements internes")],
+			['min' => 59, 'max' => 59, 'name' => s("Provisions pour dépréciation")],
+			['min' => 603, 'max' => 603, 'name' => s("Variation des stocks")],
+			['min' => 60, 'max' => 60, 'name' => s("Achats")],
+			['min' => 61, 'max' => 62, 'name' => s("Charges externes")],
+			['min' => 63, 'max' => 63, 'name' => s("Impôts et taxes")],
+			['min' => 64, 'max' => 64, 'name' => s("Charges de personnels")],
+			['min' => 65, 'max' => 65, 'name' => s("Autres charges de gestion")],
+			['min' => 66, 'max' => 66, 'name' => s("Charges financières")],
+			['min' => 67, 'max' => 67, 'name' => s("Charges exceptionnelles")],
+			['min' => 68, 'max' => 68, 'name' => s("Dotations aux amortissements")],
+			['min' => 69, 'max' => 69, 'name' => s("IS et participation des salariés")],
+			['min' => 70, 'max' => 70, 'name' => s("Ventes")],
+			['min' => 71, 'max' => 72, 'name' => s("Variation inventaire")],
+			['min' => 73, 'max' => 73, 'name' => s("Production immobilisée")],
+			['min' => 74, 'max' => 74, 'name' => s("Produits nets partiels")],
+			['min' => 75, 'max' => 75, 'name' => s("Indemnités et subventions")],
+			['min' => 76, 'max' => 76, 'name' => s("Produits financiers")],
+			['min' => 77, 'max' => 77, 'name' => s("Produits exceptionnels")],
+			['min' => 78, 'max' => 78, 'name' => s("Reprises sur amortissements")],
+			['min' => 79, 'max' => 79, 'name' => s("Transferts de charges")],
+		];
+	}
+
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Account::model()->describer($property, [

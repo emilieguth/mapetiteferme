@@ -29,7 +29,9 @@ class Account extends AccountElement {
 			})
 			->setCallback('class.unknown', function(string $class): bool {
 
-				return in_array((int)substr($class, 0, 1), [8, 9]) === FALSE;
+				return
+					in_array((int)substr($class, 0, 1), [8, 9]) === FALSE
+					and in_array((int)substr($class, 0, 2), [19, 39, 55, 56, 57]) === FALSE;
 
 			});
 

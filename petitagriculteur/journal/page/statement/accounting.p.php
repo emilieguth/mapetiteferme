@@ -18,6 +18,7 @@ new Page(function($data) {
 	->get('index', function($data) {
 
 		$data->accountingBalanceSheet = \journal\StatementLib::getAccountingBalanceSheet($data->eFinancialYear);
+		$data->summaryAccountingBalance = \journal\StatementLib::getSummaryAccountingBalance($data->accountingBalanceSheet);
 
 		throw new \ViewAction($data);
 	});

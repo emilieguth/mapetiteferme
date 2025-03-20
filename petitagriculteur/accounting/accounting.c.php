@@ -17,5 +17,7 @@ Setting::register('accounting', [
 	'defaultBankAccountLabel' => '5121',
 
 	'shippingChargeAccountClass' => '624',
+
+	'summaryAccountingBalanceCategories' => \accounting\AccountUi::getSummaryBalanceCategories(),
 ]);
 ?>

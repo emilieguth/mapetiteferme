@@ -30,6 +30,90 @@ Class StatementLib {
 
 	}
 
+	private static function extractCategoryFromBalance(array $categories, string $accountLabel): array {
+
+		foreach($categories as $category) {
+			$min = (int)substr($accountLabel, 0, strlen((string)$category['min']));
+			$max = (int)substr($accountLabel, 0, strlen((string)$category['max']));
+			if(
+				$min >= $category['min']
+				and $min <= $category['max']
+				and $max >= $category['min']
+				and $max <= $category['max']
+			) {
+				return $category;
+			}
+		}
+
+		throw new \Exception('Cannot find category for accountLabel "'.$accountLabel.'"');
+	}
+
+	public static function getSummaryAccountingBalance($accountingBalanceSheet): array {
+
+		$categories = \Setting::get('accounting\summaryAccountingBalanceCategories');
+		$emptyBalance = [
+			'startCredit' => 0,
+			'startDebit' => 0,
+			'moveCredit' => 0,
+			'moveDebit' => 0,
+			'balanceCredit' => 0,
+			'balanceDebit' => 0,
+			'lastBalanceCredit' => 0,
+			'lastBalanceDebit' => 0,
+		];
+
+			// Take off the "total" line.
+		array_pop($accountingBalanceSheet);
+		$summaryAccountingBalance = [];
+
+		foreach($accountingBalanceSheet as $balance) {
+
+			$category = self::extractCategoryFromBalance($categories, $balance['accountLabel']);
+			$index = $category['min'].'-'.$category['max'];
+
+			if(isset($summaryAccountingBalance[$index]) === FALSE) {
+
+				$summaryAccountingBalance[$index] = $emptyBalance;
+			}
+
+			$summaryAccountingBalance[$index]['accountLabel'] = $balance['accountLabel'];
+
+			foreach(['startCredit', 'startDebit', 'moveCredit', 'moveDebit', 'balanceCredit', 'balanceDebit', 'lastBalanceCredit', 'lastBalanceDebit'] as $col) {
+
+				$summaryAccountingBalance[$index][$col] += $balance[$col];
+
+			}
+
+		}
+
+		$totals = [];
+
+		for($i = 1; $i <= 7; $i++) {
+
+			$total = $emptyBalance;
+
+			foreach($summaryAccountingBalance as $balance) {
+
+				$class = mb_substr((string)$balance['accountLabel'], 0, 1);
+				if($class !== (string)$i) {
+					continue;
+				}
+
+				foreach(['startCredit', 'startDebit', 'moveCredit', 'moveDebit', 'balanceCredit', 'balanceDebit', 'lastBalanceCredit', 'lastBalanceDebit'] as $col) {
+
+					$total[$col] += $balance[$col];
+
+				}
+			}
+
+			$totals['total-'.$i] = $total;
+
+		}
+
+		return array_merge($summaryAccountingBalance, $totals);
+
+	}
+
 	public static function getAccountingBalanceSheet(\accounting\FinancialYear $eFinancialYear): array {
 
 		$cOperation = Operation::model()
