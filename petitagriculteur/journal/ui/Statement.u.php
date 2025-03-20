@@ -240,7 +240,7 @@ class StatementUi {
 
 						$isTotal = $balance['accountLabel'] === 'total';
 
-						$h .= '<tr'.($isTotal === TRUE ? ' class="sub-header"' : '').'>';
+						$h .= '<tr'.($isTotal === TRUE ? ' class="row-header"' : '').'>';
 
 							$h .= '<td>'.($isTotal === TRUE ? s("Totaux") : encode($balance['accountLabel'])).'</td>';
 							$h .= '<td>'.($isTotal === TRUE ? s("comptes") : encode($balance['description'])).'</td>';
