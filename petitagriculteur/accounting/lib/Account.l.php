@@ -20,6 +20,14 @@ class AccountLib extends AccountCrud {
 
 	}
 
+	public static function countByClass(string $class): int {
+
+		return Account::model()
+			->whereClass($class)
+			->count();
+
+	}
+
 	public static function getByClasses(array $classes, string $index = 'id'): \Collection {
 
 		return Account::model()
@@ -77,7 +85,7 @@ class AccountLib extends AccountCrud {
 		return $eAccount;
 	}
 
-	public static function getAll($query = ''): \Collection {
+	public static function getAll(?\Search $search = new \Search(), string $query = ''): \Collection {
 
 		return Account::model()
       ->select(
@@ -85,8 +93,13 @@ class AccountLib extends AccountCrud {
         + Account::getSelection()
         + ['vatAccount' => ['class', 'vatRate', 'description']]
       )
-			->sort('class')
+			->sort(['class' => SORT_ASC])
 			->where('class LIKE "%'.$query.'%" OR description LIKE "%'.$query.'%"', if: $query !== '')
+			->where('class LIKE "'.$search->get('classPrefix').'%"', if: $search->get('classPrefix'))
+			->whereClass('LIKE', '%'.$search->get('class').'%', if: $search->get('class'))
+			->whereDescription('LIKE', '%'.$search->get('description').'%', if: $search->get('description'))
+			->whereCustom(TRUE, if: $search->get('customFilter') === TRUE)
+			->where('vatAccount IS NOT NULL', if: $search->get('vatFilter') === TRUE)
 			->getCollection(NULL, NULL, 'id');
 	}
 
@@ -140,6 +153,35 @@ class AccountLib extends AccountCrud {
 		}
 
 		return $cAccountByThirdParty->mergeCollection($cAccountOthers);
+
+	}
+
+	public static function createCustomClass(array $input): void {
+
+		$fw = new \FailWatch();
+
+		$eAccount = new Account();
+		$eAccount->build(['class', 'description', 'vatAccount', 'vatRate'], $input);
+
+		$fw->validate();
+
+		$eAccount['custom'] = TRUE;
+
+		Account::model()->insert($eAccount);
+
+	}
+
+	public static function delete(Account $e): void {
+
+		if($e['custom'] === FALSE) {
+			throw new \NotExpectedAction();
+		}
+
+		if(\journal\OperationLib::countByAccount($e) > 0) {
+			throw new \NotExpectedAction();
+		}
+
+		Account::model()->delete($e);
 
 	}
 

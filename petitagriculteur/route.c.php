@@ -82,6 +82,16 @@ Route::register([
 	'HEAD' => [
 	],
 	'POST' => [
+		'/@module/accounting/Account/doQuick' => [
+			'request' => 'accounting/account',
+			'priority' => 5,
+			'route' => ['@module', 'accounting', 'Account', 'doQuick'],
+		],
+		'/@module/accounting/Account/quick' => [
+			'request' => 'accounting/account',
+			'priority' => 5,
+			'route' => ['@module', 'accounting', 'Account', 'quick'],
+		],
 		'/@module/bank/Account/doQuick' => [
 			'request' => 'bank/account',
 			'priority' => 5,

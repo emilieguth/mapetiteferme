@@ -443,5 +443,27 @@ class OperationLib extends OperationCrud {
 
 	}
 
+	public static function countByAccounts(\Collection $cAccount): \Collection {
+
+		return Operation::model()
+			->select([
+				'count' => new \Sql('COUNT(*)', 'int'),
+				'account'
+			])
+			->whereAccount('IN', $cAccount->getIds())
+			->group('account')
+			->getCollection(NULL, NULL, 'account');
+
+	}
+
+	public static function countByAccount(\accounting\Account $eAccount): int {
+
+		$eAccount->expects(['id']);
+
+		return Operation::model()
+			->whereAccount($eAccount)
+			->count();
+
+	}
 }
 ?>
