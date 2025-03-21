@@ -26,12 +26,24 @@ class Account extends AccountElement {
 
 				return AccountLib::countByClass($class) === 0;
 
+
 			})
 			->setCallback('class.unknown', function(string $class): bool {
 
 				return
 					in_array((int)substr($class, 0, 1), [8, 9]) === FALSE
 					and in_array((int)substr($class, 0, 2), [19, 39, 55, 56, 57]) === FALSE;
+
+			})
+			->setCallback('vatAccount.check', function(Account $eAccountVat): bool {
+
+				if($eAccountVat->exists() === FALSE) {
+					return TRUE;
+				}
+
+				$eAccountVatDb = AccountLib::getById($eAccountVat['id']);
+
+				return str_starts_with($eAccountVatDb['class'], \Setting::get('accounting\vatClass'));
 
 			});
 

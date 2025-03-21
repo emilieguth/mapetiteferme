@@ -188,7 +188,6 @@ class AccountUi {
 
 		$d->placeholder ??= s("Commencez à saisir la classe...");
 		$d->multiple = $multiple;
-		$d->group += ['wrapper' => 'account'];
 
 		$d->autocompleteUrl = \company\CompanyUi::urlAccounting($company).'/account:query?'.http_build_query($query);
 		$d->autocompleteResults = function(Account $e) use ($company) {
@@ -217,7 +216,6 @@ class AccountUi {
 
 		$d->placeholder ??= s("Commencez à saisir le compte...");
 		$d->multiple = $multiple;
-		$d->group += ['wrapper' => 'accountLabel'];
 
 		$d->autocompleteUrl = \company\CompanyUi::urlAccounting($company).'/account:queryLabel';
 		$d->autocompleteResults = function(string $label) use ($company, $query) {
@@ -334,6 +332,7 @@ class AccountUi {
 					return [
 					];
 				};
+				$d->group += ['wrapper' => 'vatAccount'];
 				new \accounting\AccountUi()->query($d, GET('company', '?int'), query: ['classPrefix' => \Setting::get('accounting\vatClass')]);
 				break;
 

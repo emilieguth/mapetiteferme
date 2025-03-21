@@ -329,6 +329,7 @@ class OperationUi {
 					return [
 					];
 				};
+				$d->group += ['wrapper' => 'account'];
 				new \accounting\AccountUi()->query($d, GET('company', '?int'));
 				break;
 
@@ -337,6 +338,7 @@ class OperationUi {
 					return [
 					];
 				};
+				$d->group += ['wrapper' => 'accountLabel'];
 				new \accounting\AccountUi()->queryLabel($d, GET('company', '?int'), query: GET('query'));
 				break;
 
