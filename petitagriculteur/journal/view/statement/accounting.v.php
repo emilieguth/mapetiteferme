@@ -6,7 +6,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->subNav = new \company\CompanyUi()->getStatementSubNav($data->eCompany);
 	$t->canonical = \company\CompanyUi::urlStatement($data->eCompany).'/accounting';
 
-	$t->mainTitle = new \journal\StatementUi()->getBalanceTitle($data->eCompany, $data->eFinancialYear);
+	$t->mainTitle = new journal\StatementUi()->getBalanceTitle($data->eCompany, $data->eFinancialYear);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
@@ -16,8 +16,8 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYear,
 	);
 
-	echo new \journal\StatementUi()->displayAccountingBalanceSheet($data->accountingBalanceSheet);
-	echo new \journal\StatementUi()->displaySummaryAccountingBalance($data->summaryAccountingBalance);
+	echo new \journal\StatementAccountingUi()->displayAccountingBalanceSheet($data->accountingBalanceSheet);
+	echo new \journal\StatementAccountingUi()->displaySummaryAccountingBalance($data->summaryAccountingBalance);
 
 });
 

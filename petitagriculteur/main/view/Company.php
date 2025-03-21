@@ -39,6 +39,7 @@ class CompanyTemplate extends MainTemplate {
 				'bank' => \Setting::get('main\viewBank'),
 				'journal' => \Setting::get('main\viewJournal'),
 				'analyze' => \Setting::get('main\viewAnalyze'),
+				'statement' => \Setting::get('main\viewStatement'),
 				default => NULL,
 			};
 
