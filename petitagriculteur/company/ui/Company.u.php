@@ -24,8 +24,8 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
-	public static function urlStatement(int|Company $company): string {
-		return self::urlJournal($company).'/statement';
+	public static function urlOverview(int|Company $company): string {
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/overview';
 	}
 
 	public static function urlBank(int|Company $company): string {
@@ -166,7 +166,7 @@ class CompanyUi {
 
 				$h .= $this->getAnalyzeMenu($eCompany, prefix: $prefix, tab: $tab);
 
-				$h .= '<a href="'.CompanyUi::urlStatement($eCompany).'/" class="company-tab '.($tab === 'statement' ? 'selected' : '').'" data-tab="statement">';
+				$h .= '<a href="'.CompanyUi::urlOverview($eCompany).'/" class="company-tab '.($tab === 'overview' ? 'selected' : '').'" data-tab="statement">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
@@ -174,7 +174,7 @@ class CompanyUi {
 					$h .= '</span>';
 				$h .= '</a>';
 
-				$h .= $this->getStatementMenu($eCompany, prefix: $prefix, tab: $tab);
+				$h .= $this->getOverviewMenu($eCompany, prefix: $prefix, tab: $tab);
 
 				$h .= '<a href="'.CompanyUi::urlSettings($eCompany).'" class="company-tab '.($tab === 'settings' ? 'selected' : '').'" data-tab="settings">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('gear').'</span>';
@@ -444,9 +444,9 @@ class CompanyUi {
 
 	}
 
-	public function getStatementMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
+	public function getOverviewMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
 
-		$selectedView = ($tab === 'statement') ? \Setting::get('main\viewStatement') : NULL;
+		$selectedView = ($tab === 'overview') ? \Setting::get('main\viewOverview') : NULL;
 
 		$h = '<div class="company-subnav-wrapper">';
 
@@ -464,10 +464,10 @@ class CompanyUi {
 	}
 
 
-	public function getStatementSubNav(Company $eCompany): string {
+	public function getOverviewSubNav(Company $eCompany): string {
 
 		$h = '<nav id="company-subnav">';
-			$h .= $this->getStatementMenu($eCompany, tab: 'statement');
+			$h .= $this->getOverviewMenu($eCompany, tab: 'overview');
 		$h .= '</nav>';
 
 		return $h;
@@ -478,15 +478,15 @@ class CompanyUi {
 
 		return [
 			'balance-sheet' => [
-				'url' => CompanyUi::urlStatement($eCompany).'/balance-sheet',
+				'url' => CompanyUi::urlOverview($eCompany).'/balance-sheet',
 				'label' => s("Bilans (TODO)")
 			],
 			'accounting-balance' => [
-				'url' => CompanyUi::urlStatement($eCompany).'/accounting',
+				'url' => CompanyUi::urlOverview($eCompany).'/accounting',
 				'label' => s("Balances")
 			],
 			'p-and-l' => [
-				'url' => CompanyUi::urlStatement($eCompany).'/p-and-l',
+				'url' => CompanyUi::urlOverview($eCompany).'/p-and-l',
 				'label' => s("Comptes de résultat (TODO)")
 			]
 			// immos (état + amortissements), TVA (achat + vente)

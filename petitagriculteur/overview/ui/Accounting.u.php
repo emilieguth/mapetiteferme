@@ -1,7 +1,7 @@
 <?php
-namespace journal;
+namespace overview;
 
-class StatementAccountingUi {
+class AccountingUi {
 
 	private function number(mixed $number, ?string $valueIfEmpty): string {
 

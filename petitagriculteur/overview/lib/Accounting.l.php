@@ -1,7 +1,7 @@
 <?php
-namespace journal;
+namespace overview;
 
-Class StatementLib {
+Class AccountingLib {
 
 	static $BALANCE_SQL = 'SUM(IF(type = "credit", amount, 0) - IF(type = "debit", amount, 0))';
 
@@ -116,8 +116,8 @@ Class StatementLib {
 
 	public static function getAccountingBalanceSheet(\accounting\FinancialYear $eFinancialYear): array {
 
-		$cOperation = Operation::model()
-			->select([
+		$cOperation = \journal\Operation::model()
+		                                ->select([
 				'accountLabel',
 				'accountId' => new \Sql('ANY_VALUE(account)', 'int'),
 				'descriptionAny' => new \Sql('ANY_VALUE(description)'),
@@ -172,15 +172,15 @@ Class StatementLib {
 		$startDate = date('Y-m-d', strtotime($eFinancialYear['startDate'].' - 1 year'));
 		$endDate = date('Y-m-d', strtotime($eFinancialYear['endDate']. ' - 1 year'));
 
-		return Operation::model()
-       ->select([
+		return \journal\Operation::model()
+		                         ->select([
          'accountLabel',
          'balanceCredit' => new \Sql('IF('.self::$BALANCE_SQL.' > 0, '.self::$BALANCE_SQL.', 0)', 'float'),
          'balanceDebit' => new \Sql('IF('.self::$BALANCE_SQL.' < 0, -1 * '.self::$BALANCE_SQL.', 0)', 'float'),
        ])
-       ->where(new \Sql('date BETWEEN "'.$startDate.'" AND "'.$endDate.'"'))
-       ->group('accountLabel')
-       ->getCollection(NULL, NULL, 'accountLabel');
+		                         ->where(new \Sql('date BETWEEN "'.$startDate.'" AND "'.$endDate.'"'))
+		                         ->group('accountLabel')
+		                         ->getCollection(NULL, NULL, 'accountLabel');
 	}
 
 }

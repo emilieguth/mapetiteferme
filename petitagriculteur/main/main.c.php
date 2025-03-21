@@ -10,7 +10,7 @@ Setting::register('main', [
 	'viewJournal' => 'journal',
 	'viewBank' => 'cashflow',
 	'viewAnalyze' => 'bank',
-	'viewStatement' => 'statement',
+	'viewOverview' => 'overview',
 
 ]);
 ?>

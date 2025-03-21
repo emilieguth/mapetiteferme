@@ -1,13 +1,13 @@
 <?php
-namespace journal;
+namespace overview;
 
-class StatementUi {
+class OverviewUi {
 
 	public function __construct() {
 		\Asset::css('journal', 'journal.css');
 	}
 
-	public function getStatementTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
+	public function getOverviewTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
 
 		$h = '<div class="util-action">';
 
