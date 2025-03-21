@@ -123,7 +123,7 @@ class StatementAccountingUi {
 
 							$h .= '</body>';
 							$h .= '<tbody>';
-							$h .= '<tr class="row-bordered row-header">';
+							$h .= '<tr class="row-bordered row-emphasis row-bold">';
 								$h .= '<td colspan="2" class="cell-bordered text-center">';
 									$h .= $currentClass;
 								$h .= '</td>';

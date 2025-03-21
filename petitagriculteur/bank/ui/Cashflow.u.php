@@ -109,10 +109,10 @@ class CashflowUi {
 					if($lastMonth === '' or $lastMonth !== substr($eCashflow['date'], 0, 7)) {
 						$lastMonth = substr($eCashflow['date'], 0, 7);
 
-							$h .= '<tr class="group-row">';
+							$h .= '<tr class="row-emphasis row-bold">';
 
 								$h .= '<td class="td-min-content" colspan="8">';
-									$h .= '<strong>'.mb_ucfirst(\util\DateUi::textual($eCashflow['date'], \util\DateUi::MONTH_YEAR)).'</strong>';
+									$h .= mb_ucfirst(\util\DateUi::textual($eCashflow['date'], \util\DateUi::MONTH_YEAR));
 								$h .= '</td>';
 
 							$h .= '</tr>';
