@@ -715,6 +715,10 @@ tr.row-highlight {
 	background-color: var(--background-highlight) !important;
 }
 
+tr.row-upper {
+	text-transform: uppercase;
+}
+
 tr.row-bold > td {
 	font-weight: bold;
 }
@@ -739,8 +743,7 @@ tr.row-header {
 	font-weight: bold;
 }
 
-table.table-bordered,
-tr.row-bordered,
-td.cell-bordered {
+table.table-bordered tr th,
+table.table-bordered tr td {
 	border: 1px solid var(--border);
 }

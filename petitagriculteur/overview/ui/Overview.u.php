@@ -35,5 +35,21 @@ class OverviewUi {
 
 	}
 
+	public function number(mixed $number, ?string $valueIfEmpty, ?int $decimals = NULL): string {
+
+		if(is_null($number) === true or $number === 0 or $number === 0.0) {
+
+			if(is_null($valueIfEmpty) === FALSE) {
+				return $valueIfEmpty;
+			}
+
+			return number_format(0, $decimals ?? 2, '.', ' ');
+
+		}
+
+		return number_format($number, $decimals ?? 2, '.', ' ');
+
+	}
+
 }
 ?>

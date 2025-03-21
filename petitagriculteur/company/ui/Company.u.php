@@ -170,7 +170,7 @@ class CompanyUi {
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet-fill').'</span>';
 					$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Bilans");
+						$h .= s("Synthèse");
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -477,11 +477,11 @@ class CompanyUi {
 	protected static function getStatementCategories(Company $eCompany): array {
 
 		return [
-			'balance-sheet' => [
-				'url' => CompanyUi::urlOverview($eCompany).'/balance-sheet',
-				'label' => s("Bilans (TODO)")
+			'balance' => [
+				'url' => CompanyUi::urlOverview($eCompany).'/balance',
+				'label' => s("Bilans")
 			],
-			'accounting-balance' => [
+			'accounting' => [
 				'url' => CompanyUi::urlOverview($eCompany).'/accounting',
 				'label' => s("Balances")
 			],

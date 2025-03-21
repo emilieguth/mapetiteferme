@@ -315,6 +315,286 @@ class AccountUi {
 		];
 	}
 
+	public static function getLiabilityBalanceCategories(): array {
+
+		return [
+			'capitaux-propres' => [
+				'name' => s("Capitaux propres"),
+				'categories' => [
+					[
+						'name' => s("Capital social"),
+						'accounts' => [1015],
+					],
+					[
+						'name' => s("Primes d'émission, de fusion, d'apport"),
+						'accounts' => [108],
+					],
+					[
+						'name' => s("Écarts de réévaluation"),
+						'accounts' => [],
+					],
+					[
+						'name' => s("Réserves"),
+						'accounts' => [106],
+					],
+					[
+						'name' => s("Résultats de l'exercice (bénéfice ou perte)"),
+						'accounts' => [120, 129],
+					],
+					[
+						'name' => s("Subventions d'investissement"),
+						'accounts' => [131, 138, 139],
+					],
+					[
+						'name' => s("Amortissements dérogatoires"),
+						'accounts' => [145],
+					],
+					[
+						'name' => s("Autres provisions réglementées"),
+						'accounts' => [],
+					],
+				]
+			],
+			'provisions' => [
+				'name' => s("Provisions"),
+				'categories' => [
+					[
+						'name' => s("Provisions pour risques et charges"),
+						'accounts' => [15],
+					],
+				]
+			],
+			'dettes' => [
+				'name' => s("Dettes"),
+				'categories' => [
+					[
+						'name' => s("Dettes financières"),
+						'accounts' => [164],
+					],
+					[
+						'name' => s("Avances et acomptes reçus sur commandes"),
+						'accounts' => [419],
+					],
+					[
+						'name' => s("Autres dettes"),
+						'accounts' => [401, 408, 421, 455],
+					],
+					[
+						'name' => s("Instruments de trésorerie"),
+						'accounts' => [],
+					],
+					[
+						'name' => s("Produits constatés d'avance"),
+						'accounts' => [487],
+					],
+					[
+						'name' => s("Écarts de conversion - Passif"),
+						'accounts' => [],
+					],
+				],
+			],
+		];
+
+	}
+	public static function getAssetBalanceCategories(): array {
+
+		return [
+			'actif-immobilise' => [
+				'name' => s("Actif immobilisé"),
+				'categories' => [
+					[
+						'name' => s("Capital souscrit non appelé"),
+						'accounts' => [109],
+					],
+					[
+						'name' => s("Immobilisations incorporelles"),
+						'accounts' => [201, /*203, */205, 206, 207, 208, /*232, */237],
+					],
+					[
+						'name' => s("Immobilisations corporelles hors biens vivants"),
+						'accounts' => [211, 212, 213, 214, 215, 218, 231, 238],
+					],
+					[
+						'name' => s("Immobilisations corporelles biens vivants"),
+						'accounts' => [241, 243, 246],
+					],
+					[
+						'name' => s("Immobilisations financières"),
+						'accounts' => [/*261, 266, 267, 268, 271, 272, 273, 274, 275, 276, 277*/],
+					],
+				]
+			],
+			'actif-circulant' => [
+				'name' => s("Actif circulant"),
+				'categories' => [
+					[
+						'name' => s("Biens vivants et en-cours (cycle long)"),
+						'accounts' => [31, 341, 332, 338],
+					],
+					[
+						'name' => s("Biens vivants et en-cours (cycle court)"),
+						'accounts' => [32, 348],
+					],
+					[
+						'name' => s("Stocks"),
+						'accounts' => [30, 371, 374, 375, 376],
+					],
+					[
+						'name' => s("Avances & acomptes versés / commandes créances"),
+						'accounts' => [],
+					],
+					[
+						'name' => s("Créances"),
+						'accounts' => [411, 46, 445, /*455*/],
+					],
+					[
+						'name' => s("Valeurs mobilières de placement"),
+						'accounts' => [50],
+					],
+					[
+						'name' => s("Instruments de trésorerie"),
+						'accounts' => [],
+					],
+					[
+						'name' => s("Disponibilités"),
+						'accounts' => [512, 531],
+					],
+					[
+						'name' => s("Charges constatées d'avance"),
+						'accounts' => [486],
+					],
+					[
+						'name' => s("Charges à répartir sur plusieurs exercices"),
+						'accounts' => [],
+					],
+					[
+						'name' => s("Écarts de conversion - Actif"),
+						'accounts' => [],
+					],
+				],
+			],
+		];
+
+	}
+
+	public static function getLabelByAccount(int $account): string {
+
+		switch($account) {
+			case 109:
+				return s("Apporteurs, capital souscrit non appelé");
+			case 201:
+				return s("Frais d'établissement");
+			case 205:
+				return s("Cessions et droits");
+			case 206:
+				return s("Droit au bail");
+			case 207:
+				return s("Fonds commercial");
+			case 208:
+				return s("Autres immo incorporelles");
+			case 237:
+				return s("Avances et acomptes versés");
+			case 211:
+				return s("Terrains");
+			case 212:
+				return s("Aménagements fonciers");
+			case 213:
+				return s("Améliorations du fonds");
+			case 214:
+				return s("Constructions");
+			case 215:
+				return s("Installations techniques, matériel et outillage");
+			case 218:
+				return s("Autres");
+			case 231:
+				return s("Immobilisations corporelles en cours");
+			case 238: // PAS SURE
+				return s("Avances et acomptes");
+			case 241:
+				return s("Animaux reproducteurs (adultes)");
+			case 242:
+				return s("Animaux reproducteurs (jeunes de renouvel.)");
+			case 243:
+				return s("Animaux de service");
+			case 246:
+				return s("Plantations pérennes");
+			case 31:
+				return s("Animaux cycle long");
+			case 341:
+				return s("Avances aux cultures");
+			case 332:
+				return s("Pépinières (cycle long)");
+			case 338:
+				return s("Autres végétaux en terre (cycle long)");
+			case 32:
+				return s("Animaux cycle court");
+			case 348:
+				return s("Pépinières (cycle court)");
+			case 30:
+				return s("Stocks");
+			case 371:
+				return s("Stocks produits intermédiaires végétaux");
+			case 374:
+				return s("Stocks produits finis végétaux");
+			case 375:
+				return s("Stocks produits animaux");
+			case 376:
+				return s("Stocks produits finis transformés");
+			case 411:
+				return s("Créances (clients)");
+			case 46:
+				return s("Débiteurs créditeurs divers");
+			case 445:
+				return s("État (TVA et taxes assimilées)");
+			case 455:
+				return s("Associés - compte courant");
+			case 50:
+				return s("Placement");
+			case 512:
+				return s("Banque");
+			case 531:
+				return s("Caisse");
+			case 486:
+				return s("Charges constatées d'avance");
+			case 1015:
+				return s("Capital social");
+			case 108:
+				return s("Compte de l'exploitant");
+			case 106:
+				return s("Réserves");
+			case 120:
+				return s("Résultat d'exercice (bénéfice)");
+			case 129:
+				return s("Résultat d'exercice (perte)");
+			case 131:
+				return s("Subvention d'investissement");
+			case 138:
+				return s("Autres types de subventions");
+			case 139:
+				return s("Amortissement de subventions d'investissements et autres");
+			case 145:
+				return s("Amortissements dérogatoires");
+			case 15:
+				return s("Provisions");
+			case 164:
+				return s("Emprunts");
+			case 419:
+				return s("Acomptes perçus");
+			case 401:
+				return s("Dettes (fournisseurs)");
+			case 408:
+				return s("Fournisseurs");
+			case 421:
+				return s("Personnel (rémunérations dues)");
+			case 487:
+				return s("Produit constaté d'avance");
+
+		}
+
+		return '';
+	}
+
+
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = Account::model()->describer($property, [

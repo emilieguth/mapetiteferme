@@ -3,32 +3,16 @@ namespace overview;
 
 class AccountingUi {
 
-	private function number(mixed $number, ?string $valueIfEmpty): string {
-
-		if(is_null($number) === true or $number === 0 or $number === 0.0) {
-
-			if(is_null($valueIfEmpty) === FALSE) {
-				return $valueIfEmpty;
-			}
-
-			return number_format(0, 2, '.', ' ');
-
-		}
-
-		return number_format($number, 2, '.', ' ');
-
-	}
-
 	private function displayDebitCredit(array $line): string {
 
-		$h = '<td class="cell-bordered text-end util-unit">'.$this->number($line['startDebit'], '').'</td>';
-		$h .= '<td class="cell-bordered text-end util-unit">'.$this->number($line['startCredit'], '').'</td>';
-		$h .= '<td class="cell-bordered text-end util-unit">'.$this->number($line['moveDebit'], '').'</td>';
-		$h .= '<td class="cell-bordered text-end util-unit">'.$this->number($line['moveCredit'], '').'</td>';
-		$h .= '<td class="cell-bordered text-end util-unit">'.$this->number($line['balanceDebit'], '').'</td>';
-		$h .= '<td class="cell-bordered text-end util-unit">'.$this->number($line['balanceCredit'], '').'</td>';
-		$h .= '<td class="cell-bordered text-end util-unit">'.$this->number($line['lastBalanceDebit'], '').'</td>';
-		$h .= '<td class="cell-bordered text-end util-unit">'.$this->number($line['lastBalanceCredit'], '').'</td>';
+		$h = '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['startDebit'], '')).'</td>';
+		$h .= '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['startCredit'], '')).'</td>';
+		$h .= '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['moveDebit'], '')).'</td>';
+		$h .= '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['moveCredit'], '')).'</td>';
+		$h .= '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['balanceDebit'], '')).'</td>';
+		$h .= '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['balanceCredit'], '')).'</td>';
+		$h .= '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['lastBalanceDebit'], '')).'</td>';
+		$h .= '<td class="cell-bordered text-end util-unit">'.(new OverviewUi()->number($line['lastBalanceCredit'], '')).'</td>';
 
 		return $h;
 
@@ -206,14 +190,14 @@ class AccountingUi {
 
 				$h .= '<td>'.($isTotal === TRUE ? \s("Totaux") : \encode($balance['accountLabel'])).'</td>';
 				$h .= '<td>'.($isTotal === TRUE ? \s("comptes") : \encode($balance['description'])).'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['startDebit'], '').'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['startCredit'], '').'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['moveDebit'], '').'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['moveCredit'], '').'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['balanceDebit'], '').'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['balanceCredit'], '').'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['lastBalanceDebit'], '').'</td>';
-				$h .= '<td class="text-end util-unit">'.$this->number($balance['lastBalanceCredit'], '').'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['startDebit'], '')).'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['startCredit'], '')).'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['moveDebit'], '')).'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['moveCredit'], '')).'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['balanceDebit'], '')).'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['balanceCredit'], '')).'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['lastBalanceDebit'], '')).'</td>';
+				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['lastBalanceCredit'], '')).'</td>';
 
 				$h .= '</tr>';
 			}

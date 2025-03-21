@@ -18,6 +18,9 @@ Setting::register('accounting', [
 
 	'shippingChargeAccountClass' => '624',
 
-	'summaryAccountingBalanceCategories' => \accounting\AccountUi::getSummaryBalanceCategories(),
+	'summaryAccountingBalanceCategories' => accounting\AccountUi::getSummaryBalanceCategories(),
+	'balanceAssetCategories' => accounting\AccountUi::getAssetBalanceCategories(),
+	'balanceLiabilityCategories' => accounting\AccountUi::getLiabilityBalanceCategories(),
+
 ]);
 ?>

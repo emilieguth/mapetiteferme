@@ -12,13 +12,12 @@ new Page(function($data) {
 	}
 
 	$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
-	\Setting::set('main\viewOverview', 'accounting');
+	\Setting::set('main\viewOverview', 'balance');
 
 })
 	->get('index', function($data) {
 
-		$data->accountingBalanceSheet = \overview\AccountingLib::getAccountingBalanceSheet($data->eFinancialYear);
-		$data->summaryAccountingBalance = \overview\AccountingLib::getSummaryAccountingBalance($data->accountingBalanceSheet);
+		$data->balance = \overview\BalanceLib::getBalance($data->eFinancialYear);
 
 		throw new \ViewAction($data);
 	});
