@@ -8,11 +8,13 @@
 			$username = GET('username');
 			$password = GET('password');
 
-			exec('mysqldump -u '.$username.' "'.$password.'" petitagriculteur > /var/www/mysql-backup/petitagriculteur.sql');
+			$date = date('Y-m-d');
+
+			exec('mysqldump -u '.$username.' "'.$password.'" petitagriculteur > /var/www/mysql-backup/petitagriculteur-'.$date.'.sql');
 			foreach($cCompany as $eCompany) {
 
 				$database = \company\CompanyLib::getDatabaseName($eCompany);
-				exec('mysqldump -u '.$username.' "'.$password.'" '.$database.' > /var/www/mysql-backup/'.$database.'.sql');
+				exec('mysqldump -u '.$username.' "'.$password.'" '.$database.' > /var/www/mysql-backup/'.$database.'-'.$date.'.sql');
 
 			}
 
