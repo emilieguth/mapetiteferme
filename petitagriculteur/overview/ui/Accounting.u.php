@@ -23,7 +23,7 @@ class AccountingUi {
 		$h = '<tr class="row-bordered row-header">';
 
 			$h .= '<td class="cell-bordered"></td>';
-			$h .= '<td class="cell-bordered">'.\s("Totaux").'</td>';
+			$h .= '<td class="cell-bordered">'.s("Totaux").'</td>';
 			$h .= $this->displayDebitCredit($balance);
 
 		$h .= '</tr>';
@@ -45,7 +45,7 @@ class AccountingUi {
 		$h .= '<tr class="row-bordered row-header">';
 
 			$h .= '<td class="cell-bordered"></td>';
-			$h .= '<td class="cell-bordered">'.\s("Soldes").'</td>';
+			$h .= '<td class="cell-bordered">'.s("Soldes").'</td>';
 			$h .= $this->displayDebitCredit($balanceLine);
 
 		$h .= '</tr>';
@@ -56,18 +56,18 @@ class AccountingUi {
 
 	private function displayBalanceHeader(): string {
 
-		$h = '<thead>';
+		$h = '<thead class="thead-sticky">';
 			$h .= '<tr>';
-				$h .= '<th class="text-end">'.\s("Compte").'</th>';
-				$h .= '<th class="text-end">'.\s("Libellé").'</th>';
-				$h .= '<th class="text-end">'.\s("Début débit").'</th>';
-				$h .= '<th class="text-end">'.\s("Début crédit").'</th>';
-				$h .= '<th class="text-end">'.\s("Mouvement débit").'</th>';
-				$h .= '<th class="text-end">'.\s("Mouvement crédit").'</th>';
-				$h .= '<th class="text-end">'.\s("Solde fin débiteur N").'</th>';
-				$h .= '<th class="text-end">'.\s("Solde fin créditeur N").'</th>';
-				$h .= '<th class="text-end">'.\s("Solde fin débiteur N-1").'</th>';
-				$h .= '<th class="text-end">'.\s("Solde fin créditeur N-1").'</th>';
+				$h .= '<th class="text-end">'.s("Compte").'</th>';
+				$h .= '<th class="text-end">'.s("Libellé").'</th>';
+				$h .= '<th class="text-end">'.s("Début débit").'</th>';
+				$h .= '<th class="text-end">'.s("Début crédit").'</th>';
+				$h .= '<th class="text-end">'.s("Mouvement débit").'</th>';
+				$h .= '<th class="text-end">'.s("Mouvement crédit").'</th>';
+				$h .= '<th class="text-end">'.s("Solde fin débiteur N").'</th>';
+				$h .= '<th class="text-end">'.s("Solde fin créditeur N").'</th>';
+				$h .= '<th class="text-end">'.s("Solde fin débiteur N-1").'</th>';
+				$h .= '<th class="text-end">'.s("Solde fin créditeur N-1").'</th>';
 			$h .= '</tr>';
 		$h .= '</thead>';
 
@@ -81,14 +81,14 @@ class AccountingUi {
 		$categories = \Setting::get('accounting\summaryAccountingBalanceCategories');
 
 		if(empty($accountingBalanceSheet) === TRUE) {
-			return '<div class="util-info">'.\s("Il n'y a rien à afficher pour le moment.").'</div>';
+			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
 		}
 
-		$h = '<h2>'.\s("Balance synthétique").'</h2>';
+		$h = '<h2>'.s("Balance synthétique").'</h2>';
 
-		$h .= '<div class="util-overflow-sm table-sticky-container">';
+		$h .= '<div class="util-overflow-sm">';
 
-			$h .= '<table id="account-list" class="table-sticky tr-even tr-hover table-bordered">';
+			$h .= '<table id="account-list" class=" tr-even tr-hover table-bordered">';
 
 				$h .= $this->displayBalanceHeader();
 				$h .= '<tbody>';
@@ -170,10 +170,10 @@ class AccountingUi {
 	public function displayAccountingBalanceSheet(array $accountingBalanceSheet): string {
 
 		if(empty($accountingBalanceSheet) === TRUE) {
-			return '<div class="util-info">'.\s("Il n'y a rien à afficher pour le moment.").'</div>';
+			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
 		}
 
-		$h = '<h2>'.\s("Balance comptable").'</h2>';
+		$h = '<h2>'.s("Balance comptable").'</h2>';
 		$h .= '<div class="util-overflow-sm table-sticky-container">';
 
 		$h .= '<table id="account-list" class="table-sticky tr-even tr-hover">';

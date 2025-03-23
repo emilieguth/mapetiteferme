@@ -102,11 +102,11 @@ class JournalUi {
 
 		$h = '';
 
-		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm table-sticky-container">';
+		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="tr-even td-vertical-top tr-hover table-sticky">';
+			$h .= '<table class="tr-even td-vertical-top tr-hover">';
 
-				$h .= '<thead>';
+				$h .= '<thead class="thead-sticky">';
 					$h .= '<tr>';
 						$h .= '<th>';
 							$label = s("Date de l'écriture");

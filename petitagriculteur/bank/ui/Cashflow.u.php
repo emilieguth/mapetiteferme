@@ -77,11 +77,11 @@ class CashflowUi {
 			$h .= '</div>';
 		}
 
-		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm table-sticky-container" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').' data-render-timeout="1">';
+		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').' data-render-timeout="1">';
 
-			$h .= '<table class="tr-even tr-hover table-sticky">';
+			$h .= '<table class="tr-even tr-hover">';
 
-				$h .= '<thead>';
+				$h .= '<thead class="thead-sticky">';
 					$h .= '<tr>';
 						$h .= '<th>';
 							$h .= s("Numéro");

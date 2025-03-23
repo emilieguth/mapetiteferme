@@ -727,15 +727,11 @@ tr.row-bold > td {
 	color: var(--muted-light);
 }
 
-div.table-sticky-container {
-	overflow: auto;
-	max-height: calc(100vh - var(--mainSticky));
-}
-
-table.table-sticky thead {
+thead.thead-sticky {
 	position: sticky;
-	top: 0;
 	background-color: var(--background-dark);
+	top: calc(var(--mainSticky) - 1px);
+	z-index: 10;
 }
 
 tr.row-header {

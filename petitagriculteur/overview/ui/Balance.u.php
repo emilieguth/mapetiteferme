@@ -119,12 +119,12 @@ class BalanceUi {
 
 
 		$h = '<h2>'.\s("Bilan comptable").'</h2>';
-		$h .= '<div class="util-overflow-sm table-sticky-container">';
+		$h .= '<div class="util-overflow-sm">';
 
 			$balanceAssetCategories = \Setting::get('accounting\balanceAssetCategories');
-			$h .= '<table id="balance-assets" class="table-sticky tr-even tr-hover table-bordered">';
+			$h .= '<table id="balance-assets" class="tr-even tr-hover table-bordered">';
 
-				$h .= '<tbody>';
+				$h .= '<thead class="thead-sticky">';
 
 					$h .= '<tr class="row-header row-upper">';
 						$h .= '<td class="text-center">'.s("ACTIF").'</td>';
@@ -141,7 +141,7 @@ class BalanceUi {
 			$balanceLiabilityCategories = \Setting::get('accounting\balanceLiabilityCategories');
 			$h .= '<table id="balance-liabilities" class="table-sticky tr-even tr-hover table-bordered">';
 
-				$h .= '<tbody>';
+				$h .= '<thead class="thead-sticky">';
 
 					$h .= '<tr class="row-header row-upper">';
 						$h .= '<td class="text-center">'.s("PASSIF").'</td>';
