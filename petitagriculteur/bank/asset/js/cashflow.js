@@ -74,8 +74,9 @@ class CashflowList {
 
         if(parseInt(cashflowId) > 0) {
             const { top: mainTop} = qs('main').getBoundingClientRect();
+            const stickyHeight = qs('[name="cashflow-' + cashflowId + '"]').firstParent('table')?.qs('.thead-sticky')?.scrollHeight || 0;
             const { top: divTop } = qs('#cashflow-list [name="cashflow-' + cashflowId + '"]').getBoundingClientRect();
-            window.scrollTo({top: divTop - mainTop, behavior: 'smooth'});
+            window.scrollTo({top: divTop - mainTop - stickyHeight, behavior: 'smooth'});
         }
 
     }

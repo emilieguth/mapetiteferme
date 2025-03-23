@@ -8,7 +8,7 @@ new \journal\OperationPage(
 		\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 	}
 )
-	->quick(['document', 'description', 'amount'], [], ['canQuickUpdate'])
+	->quick(['document', 'description', 'amount', 'comment'], [], ['canQuickUpdate'])
 	->create(function($data) {
 
 		if(get_exists('account') === TRUE) {

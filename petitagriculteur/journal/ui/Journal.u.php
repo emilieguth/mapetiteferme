@@ -144,7 +144,7 @@ class JournalUi {
 							$cashflowLink = NULL;
 						}
 
-						$h .= '<tr>';
+						$h .= '<tr name="operation-'.$eOperation['id'].'" name-linked="operation-linked-'.($eOperation['operation']['id'] ?? '').'">';
 
 							$h .= '<td>';
 								$h .= \util\DateUi::numeric($eOperation['date']);
@@ -220,40 +220,7 @@ class JournalUi {
 
 							$h .= '<td>';
 								$h .= '<div class="util-unit text-end">';
-									if(
-										$eOperation->isClassAccount(\Setting::get('accounting\chargeAccountClass')) === TRUE
-										// On ne rajoute pas des frais de port sur des frais de port
-										and mb_substr($eOperation['accountLabel'], 0, strlen((string)\Setting::get('accounting\shippingChargeAccountClass'))) !== (string)\Setting::get('accounting\shippingChargeAccountClass')
-										and $canUpdate === TRUE
-									) {
-										$args = [
-											'accountPrefix' => \Setting::get('accounting\shippingChargeAccountClass'),
-											'accountLabel' => encode(OperationUi::getAccountLabelFromAccountPrefix(\Setting::get('accounting\shippingChargeAccountClass'))),
-											'document' => $eOperation['document'],
-											'type' => $eOperation['type'],
-											'date' => $eOperation['date'],
-											'thirdParty' => $eOperation['thirdParty']['id'] ?? NULL,
-											'description' => $eOperation['description'],
-											'cashflow' => $eOperation['cashflow']['id'] ?? NULL,
-										];
-										$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create?'.http_build_query($args).'" class="btn btn-outline-secondary" title="'.s("Ajouter des frais de livraison").'">'.\Asset::icon('truck').'</a>';
-										$h .= '&nbsp;';
-									}
-									if($canUpdate === TRUE) {
-										if($eOperation['cashflow']->exists() === FALSE) {
-											if($eOperation['vatAccount']->exists() === TRUE) {
-												$message = s("En supprimant cette écriture, l'entrée de TVA associée sera également supprimée. Confirmez-vous la suppression de cette écriture ?");
-											} else {
-												$message = s("Confirmez-vous la suppression de cette écriture ?");
-											}
-											$h .= '<a data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:doDelete" post-id="'.$eOperation['id'].'" data-confirm="'.$message.'" class="btn btn-outline-secondary btn-outline-danger">'.\Asset::icon('trash').'</a>';
-										} else {
-											$h .= '<a href="'.$cashflowLink.'" class="btn btn-outline-secondary" data-dropdown-id="operation-trash-'.$eOperation['id'].'" data-dropdown-hover="true" data-dropdown="bottom-start" data-dropdown-offset-x="-25">'.\Asset::icon('trash').'</a>';
-											$h .= '<div data-dropdown-id="operation-trash-'.$eOperation['id'].'-list" class="dropdown-list bg-secondary">';
-												$h .= '<a href="'.$cashflowLink.'" class="dropdown-item">'.s("Allez sur l'opération bancaire et annulez les écritures liées.").'</a>';
-											$h .= '</div>';
-										}
-									}
+									$h .= $this->displayActions($eCompany, $eOperation, $canUpdate, $cashflowLink);
 								$h .= '</div>';
 							$h .= '</td>';
 
@@ -266,6 +233,115 @@ class JournalUi {
 
 		return $h;
 
+	}
+
+	protected function displayActions(\company\Company $eCompany, Operation $eOperation, bool $canUpdate, ?string $cashflowLink): string {
+
+		if($canUpdate === FALSE) {
+			return '';
+		}
+
+		$h = '';
+
+		if(
+			$eOperation['comment'] !== NULL
+		) {
+
+			$icon = 'send-fill';
+			$content = encode($eOperation['comment']);
+
+		} else {
+
+			$icon = 'send';
+			$content = s("Ajouter un commentaire");
+
+		}
+
+		$buttonComment = '<span class="btn btn-outline-secondary"  data-dropdown="bottom-end" data-dropdown-hover="TRUE" data-dropdown-offset-x="0" >'.\Asset::icon($icon).'</span>';
+		$buttonComment .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+			$buttonComment .= $content;
+		$buttonComment .= '</div>';
+		$h .= $eOperation->quick('comment', $buttonComment);
+		$h .= '&nbsp;';
+
+		if(
+			$eOperation->isClassAccount(\Setting::get('accounting\chargeAccountClass')) === TRUE
+			// On ne rajoute pas des frais de port sur des frais de port
+			and mb_substr($eOperation['accountLabel'], 0, strlen((string)\Setting::get('accounting\shippingChargeAccountClass'))) !== (string)\Setting::get('accounting\shippingChargeAccountClass')
+			and $canUpdate === TRUE
+		) {
+
+			$args = [
+				'accountPrefix' => \Setting::get('accounting\shippingChargeAccountClass'),
+				'accountLabel' => encode(OperationUi::getAccountLabelFromAccountPrefix(\Setting::get('accounting\shippingChargeAccountClass'))),
+				'document' => $eOperation['document'],
+				'type' => $eOperation['type'],
+				'date' => $eOperation['date'],
+				'thirdParty' => $eOperation['thirdParty']['id'] ?? NULL,
+				'description' => $eOperation['description'],
+				'cashflow' => $eOperation['cashflow']['id'] ?? NULL,
+			];
+
+			$buttonDelivery = '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create?'.http_build_query($args).'" class="btn btn-outline-secondary" class="btn btn-outline-secondary"  data-dropdown="bottom-end" data-dropdown-hover="TRUE" data-dropdown-offset-x="0" >'.\Asset::icon('truck').'</a>';
+			$buttonDelivery .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+				$buttonDelivery .= s("Ajouter des frais de livraison");
+			$buttonDelivery .= '</div>';
+			$h .= $buttonDelivery;
+
+		} else {
+
+			$h .= '<span class="not-visible btn btn-outline-secondary">'.\Asset::icon('truck').'</span>';
+
+		}
+
+		$h .= '&nbsp;';
+
+		if($eOperation['cashflow']->exists() === FALSE) {
+
+			$attributes = [
+				'data-ajax' => \company\CompanyUi::urlJournal($eCompany).'/operation:doDelete" post-id="'.$eOperation['id'],
+				'data-confirm' => s("Confirmez-vous la suppression de cette écriture ?"),
+				'class' => 'btn btn-outline-secondary btn-outline-danger',
+			];
+			if($eOperation['vatAccount']->exists() === TRUE || $eOperation['operation']->exists() === TRUE) {
+				$attributes += [
+					'data-dropdown' => 'bottom-end',
+					'data-dropdown-hover' => 'TRUE',
+					'data-dropdown-offset-x' => '0',
+					'data-highlight' => $eOperation['vatAccount']->exists()
+						? 'operation-linked-'.$eOperation['id']
+						: 'operation-'.$eOperation['operation']['id'],
+				];
+			}
+			$buttonDelete = '<a '.attrs($attributes).'>'.\Asset::icon('trash').'</a>';
+
+			if($eOperation['vatAccount']->exists() === TRUE) {
+
+				$buttonDelete .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+					$buttonDelete .= s("En supprimant cette écriture, l'écriture de TVA associée sera également supprimée.");
+				$buttonDelete .= '</div>';
+
+			} else if($eOperation['operation']->exists() === TRUE) {
+
+				$buttonDelete .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+					$buttonDelete .= s("Attention, cette écriture est liée à une autre écriture.");
+				$buttonDelete .= '</div>';
+
+			}
+
+			$h .= $buttonDelete;
+
+		} else {
+
+			$h .= '<a href="'.$cashflowLink.'" class="btn btn-outline-secondary" data-dropdown-id="operation-trash-'.$eOperation['id'].'" data-dropdown-hover="true" data-dropdown="bottom-start" data-dropdown-offset-x="-25">'.\Asset::icon('trash').'</a>';
+
+			$h .= '<div data-dropdown-id="operation-trash-'.$eOperation['id'].'-list" class="dropdown-list bg-secondary">';
+				$h .= '<a href="'.$cashflowLink.'" class="dropdown-item">'.s("Allez sur l'opération bancaire et annulez les écritures liées.").'</a>';
+			$h .= '</div>';
+
+		}
+
+		return $h;
 	}
 
 	protected function getUpdate(\company\Company $eCompany, Operation $eOperation, string $btn): string {

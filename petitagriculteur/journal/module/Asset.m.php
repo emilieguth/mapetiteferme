@@ -53,10 +53,12 @@ class AssetModel extends \ModuleModel {
 			'endDate' => ['date', 'cast' => 'string'],
 			'duration' => ['int8', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
 			'status' => ['enum', [\journal\Asset::ONGOING, \journal\Asset::SOLD, \journal\Asset::ENDED], 'cast' => 'enum'],
+			'createdAt' => ['datetime', 'cast' => 'string'],
+			'updatedAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'accountLabel', 'value', 'description', 'type', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status'
+			'id', 'accountLabel', 'value', 'description', 'type', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status', 'createdAt', 'updatedAt'
 		]);
 
 	}
@@ -67,6 +69,12 @@ class AssetModel extends \ModuleModel {
 
 			case 'status' :
 				return Asset::ONGOING;
+
+			case 'createdAt' :
+				return new \Sql('NOW()');
+
+			case 'updatedAt' :
+				return new \Sql('NOW()');
 
 			default :
 				return parent::getDefaultValue($property);
@@ -138,6 +146,14 @@ class AssetModel extends \ModuleModel {
 
 	public function whereStatus(...$data): AssetModel {
 		return $this->where('status', ...$data);
+	}
+
+	public function whereCreatedAt(...$data): AssetModel {
+		return $this->where('createdAt', ...$data);
+	}
+
+	public function whereUpdatedAt(...$data): AssetModel {
+		return $this->where('updatedAt', ...$data);
 	}
 
 

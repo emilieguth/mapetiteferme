@@ -35,6 +35,15 @@ document.delegateEventListener('autocompleteSelect', '[data-third-party="journal
     Operation.checkAutocompleteStatus(e);
 });
 
+document.delegateEventListener('mouseover', '[data-highlight]', function(e) {
+    const highlight = e.delegateTarget.dataset.highlight;
+    Operation.highlight(highlight);
+});
+document.delegateEventListener('mouseout', '[data-highlight]', function(e) {
+    const highlight = e.delegateTarget.dataset.highlight;
+    Operation.unhighlight(highlight);
+});
+
 document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"]', function(e) {
 
     const index = this.dataset.index;
@@ -62,6 +71,18 @@ document.delegateEventListener('change', '[data-vat-value="journal-operation-cre
 });
 
 class Operation {
+
+    static highlight(selector) {
+        selector.indexOf('linked') > 0
+            ? qs('[name-linked="' + selector + '"]').classList.add('row-highlight')
+            : qs('[name="' + selector + '"]').classList.add('row-highlight');
+    }
+
+    static unhighlight(selector) {
+        selector.indexOf('linked') > 0
+             ? qs('[name-linked="' + selector + '"]').classList.remove('row-highlight')
+             : qs('[name="' + selector + '"]').classList.remove('row-highlight');
+    }
 
     static preFillNewOperation(index) {
 

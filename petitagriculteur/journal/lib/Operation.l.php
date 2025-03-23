@@ -66,6 +66,7 @@ class OperationLib extends OperationCrud {
 		return self::applySearch($search)
 			->select(
 				Operation::getSelection()
+				+ ['operation' => ['id']]
 				+ ['account' => ['class', 'description']]
 				+ ['thirdParty' => ['id', 'name']]
 			)
@@ -76,10 +77,11 @@ class OperationLib extends OperationCrud {
 
 	public static function updateAccountLabels(\bank\Account $eAccount): bool {
 
-		$eOperation = ['accountLabel' => $eAccount['label']];
+		$eOperation = ['accountLabel' => $eAccount['label'], 'updatedAt' => new \Sql('NOW()')];
 		$eFinancialYear = \accounting\FinancialYearLib::selectDefaultFinancialYear();
 
 		Operation::model()
+			->select(['accountLabel', 'updatedAt'])
 			// Liée aux cashflow de ce compte bancaire
 			->join(\bank\Cashflow::model(), 'm1.cashflow = m2.id')
 			->where('m2.account = '.$eAccount['id'])
@@ -96,6 +98,8 @@ class OperationLib extends OperationCrud {
 
 	public static function update(Operation $e, array $properties): void {
 
+		$e['updatedAt'] = new \Sql('NOW()');
+		$properties[] = 'updatedAt';
 		parent::update($e, $properties);
 
 		// Quick document update
@@ -124,7 +128,7 @@ class OperationLib extends OperationCrud {
 		$cAccounts = \accounting\AccountLib::getByIdsWithVatAccount($accounts);
 
 		$cOperation = new \Collection();
-		$properties = ['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate', 'cashflow'];
+		$properties = ['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate', 'cashflow', 'comment'];
 		if($eOperationDefault->offsetExists('date') === FALSE) {
 			$properties[] = 'date';
 		}
@@ -256,7 +260,7 @@ class OperationLib extends OperationCrud {
 		}
 
 		Operation::model()
-			->whereId($e['id'])
+			->whereOperation($e)
 			->delete();
 
 		parent::delete($e);

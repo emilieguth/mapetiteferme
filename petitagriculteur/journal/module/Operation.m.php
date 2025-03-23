@@ -53,12 +53,13 @@ class OperationModel extends \ModuleModel {
 			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
 			'operation' => ['element32', 'journal\Operation', 'null' => TRUE, 'cast' => 'element'],
 			'asset' => ['element32', 'journal\Asset', 'null' => TRUE, 'cast' => 'element'],
+			'comment' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'createdAt', 'updatedAt'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'createdAt', 'updatedAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -69,6 +70,11 @@ class OperationModel extends \ModuleModel {
 			'operation' => 'journal\Operation',
 			'asset' => 'journal\Asset',
 		];
+
+		$this->indexConstraints = array_merge($this->indexConstraints, [
+			['document'],
+			['cashflow']
+		]);
 
 	}
 
@@ -168,6 +174,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereAsset(...$data): OperationModel {
 		return $this->where('asset', ...$data);
+	}
+
+	public function whereComment(...$data): OperationModel {
+		return $this->where('comment', ...$data);
 	}
 
 	public function whereCreatedAt(...$data): OperationModel {

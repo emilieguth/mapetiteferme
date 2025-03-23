@@ -170,6 +170,10 @@ class OperationUi {
 				$form->text('description'.$suffix, $defaultValues['description'] ?? '')
 			);
 			$h .= $form->group(
+				self::p('comment')->label,
+				$form->text('comment'.$suffix, $defaultValues['comment'] ?? '')
+			);
+			$h .= $form->group(
 				s("Montant TTC").\util\FormUi::info(s("Facultatif, ne sera pas enregistré")),
 					$form->inputGroup(
 						$form->number(
@@ -309,6 +313,7 @@ class OperationUi {
 			'amount' => s("Montant (HT)"),
 			'type' => s("Type (débit / crédit)"),
 			'thirdParty' => s("Tiers"),
+			'comment' => s("Commentaire"),
 		]);
 
 		switch($property) {
@@ -349,6 +354,7 @@ class OperationUi {
 				$d->before = fn(\util\FormUi $form, $e) => $e->isQuick() && (int)substr($e['accountLabel'], 0, 3) !== \Setting::get('accounting\vatClass') ? \util\FormUi::info(s("Attention, pensez à répercuter ce changement sur la ligne de TVA si elle existe")) : '';
 				break;
 
+
 			case 'thirdParty':
 				$d->autocompleteBody = function(\util\FormUi $form, Operation $e) {
 					return [
@@ -358,11 +364,11 @@ class OperationUi {
 				break;
 
 			case 'document':
-				$d->attributes = [
-					//'onchange' => 'Cashflow.copyDocument(this)'
-				];
 				break;
 
+			case 'comment' :
+				$d->after = s("(maximum 250 caractères)");
+				break;
 
 		}
 

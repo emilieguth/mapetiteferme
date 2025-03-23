@@ -743,3 +743,16 @@ table.table-bordered tr th,
 table.table-bordered tr td {
 	border: 1px solid var(--border);
 }
+
+div.operation-comment-dropdown {
+	border-radius: calc(var(--radius) / 2);
+	background-color: var(--primary);
+	color: white;
+	padding: 0.5rem;
+	line-height: 1.4;
+	max-width: 30rem;
+}
+
+div.util-unit > div.util-quick {
+	border: 0;
+}

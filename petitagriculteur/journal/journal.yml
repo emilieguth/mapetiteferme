@@ -14,6 +14,8 @@ Asset:
   # Durée en années
   duration: int8(0, null)
   status: enum(ONGOING, SOLD, ENDED) = ONGOING
+  createdAt: datetime = SPECIAL(now)
+  updatedAt: datetime = SPECIAL(now)
 
 Operation:
   id: serial32
@@ -35,8 +37,13 @@ Operation:
   operation: ?journal\Operation
   # Immobilisation à laquelle cette opération est liée (obligatoire pour une classe 2)
   asset: ?journal\Asset
+  comment: ?text8(1, null)
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
+  INDEX: [
+    ["document"],
+    ["cashflow"]
+  ]
 
 ThirdParty:
   id: serial32
