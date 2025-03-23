@@ -63,6 +63,14 @@ document.delegateEventListener('change', '[data-vat-value="journal-operation-cre
 
 class Operation {
 
+    static preFillNewOperation(index) {
+
+        qs('[name="date[' + index + ']"]').setAttribute('value', qs('[name="date[' + (index - 1) + ']"]').value)
+        qs('[name="document[' + index + ']"]').setAttribute('value', qs('[name="document[' + (index - 1) + ']"]').value)
+        qs('[name="description[' + index + ']"]').setAttribute('value', qs('[name="description[' + (index - 1) + ']"]').value)
+
+    }
+
     static checkAutocompleteStatus(e) {
 
         const field = e.delegateTarget.dataset.autocompleteField;
