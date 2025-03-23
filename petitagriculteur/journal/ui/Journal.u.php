@@ -235,10 +235,28 @@ class JournalUi {
 
 	}
 
+	private function getCommentButton(string $icon, string $content): string {
+
+		$buttonComment = '<span class="btn btn-outline-secondary"  data-dropdown="bottom-end" data-dropdown-hover="TRUE" data-dropdown-offset-x="0" >'.\Asset::icon($icon).'</span>';
+		$buttonComment .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+			$buttonComment .= $content;
+		$buttonComment .= '</div>';
+
+		return $buttonComment;
+	}
+
 	protected function displayActions(\company\Company $eCompany, Operation $eOperation, bool $canUpdate, ?string $cashflowLink): string {
 
 		if($canUpdate === FALSE) {
-			return '';
+
+			if($eOperation['comment'] === NULL) {
+				return '';
+			}
+
+			$icon = 'send-fill';
+			$content = encode($eOperation['comment']);
+
+			return $this->getCommentButton($icon, $content);
 		}
 
 		$h = '';
@@ -257,11 +275,7 @@ class JournalUi {
 
 		}
 
-		$buttonComment = '<span class="btn btn-outline-secondary"  data-dropdown="bottom-end" data-dropdown-hover="TRUE" data-dropdown-offset-x="0" >'.\Asset::icon($icon).'</span>';
-		$buttonComment .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
-			$buttonComment .= $content;
-		$buttonComment .= '</div>';
-		$h .= $eOperation->quick('comment', $buttonComment);
+		$h .= $eOperation->quick('comment', $this->getCommentButton($icon, $content));
 		$h .= '&nbsp;';
 
 		if(
