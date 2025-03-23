@@ -21,7 +21,7 @@ document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="
 });
 
 document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
-    Operation.updateType(e);
+    Operation.updateType(e.detail);
     Operation.refreshVAT(e.detail);
     Operation.checkAutocompleteStatus(e);
 });
@@ -116,14 +116,14 @@ class Operation {
         qs('#submit-save-operation').innerHTML = qs('#submit-save-operation').getAttribute(operations > 1 ? 'data-text-plural' : 'data-text-singular');
     }
 
-    static updateType(event) {
+    static updateType(accountDetail) {
 
-        const index = event.delegateTarget.dataset.index;
+        const index = accountDetail.input.getAttribute('data-index');
 
         if(qs('[name="type[' + index + ']"]:checked') !== null) {
             return;
         }
-        const classValue = parseInt(event.detail.itemText.substring(0, 1));
+        const classValue = parseInt(accountDetail.itemText.substring(0, 1));
         const value = [4, 6].includes(classValue) ? 'debit' : 'credit';
         qs('[name="type[' + index + ']"][value="' + value + '"]').setAttribute('checked', true);
 
