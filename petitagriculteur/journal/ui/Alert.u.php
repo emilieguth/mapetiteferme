@@ -15,6 +15,7 @@ class AlertUi {
 			'Operation::allocate.noOperation' => s("Aucune opération n'a pu être enregistrée."),
 			'Operation::date.check' => s("La date doit correspondre à l'exercice fiscal actuellement ouvert."),
 			'Operation::account.check' => s("N'oubliez pas de choisir une classe de compte !"),
+			'Operation::accountLabel.inconsistency' => s("Le compte doit commencer par les mêmes chiffres que la classe de compte."),
 
 			'ThirdParty::name.duplicate' => s("Ce tiers existe déjà, utilisez-le directement ?"),
 

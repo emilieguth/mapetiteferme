@@ -24,6 +24,15 @@ class Operation extends OperationElement {
 				return $account !== NULL;
 
 			})
+			->setCallback('accountLabel.inconsistency', function(?string $accountLabel): bool {
+
+				$this->expects(['account']);
+
+				$eAccount = \accounting\AccountLib::getById($this['account']['id']);
+
+				return str_starts_with($accountLabel, $eAccount['class']) === true;
+
+			})
 			->setCallback('date.empty', function(?string $date): bool {
 
 				return $date !== NULL;
