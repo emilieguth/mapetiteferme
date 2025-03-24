@@ -39,6 +39,7 @@ class MainTemplate extends BaseTemplate {
 		parent::__construct();
 
 		\Asset::css('main', 'design.css');
+		\Asset::js('main', 'main.js');
 
 		$this->base = \Lime::getProtocol().'://'.SERVER('HTTP_HOST');
 
@@ -253,9 +254,14 @@ class MainTemplate extends BaseTemplate {
 			$this->data->eUserOnline->notEmpty() and
 			$this->data->logInExternal !== NULL
 		) {
-			$h .= (new user\UserUi())->logOutExternal($this->data->logInExternal[0]);
+			$h .= new user\UserUi()->logOutExternal($this->data->logInExternal[0]);
 		}
 
+		$h .= \Asset::jsContent('<script>
+				document.addEventListener("DOMContentLoaded", () => {
+					Main.checkBrevo('.($this->hasCRM ? 'true' : 'false').');
+				})
+			</script>');
 		return $h;
 
 	}

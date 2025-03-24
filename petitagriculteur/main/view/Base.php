@@ -34,6 +34,8 @@ class BaseTemplate extends SmartTemplate {
 	 */
 	public ?string $canonical = NULL;
 
+	public bool $hasCRM = FALSE;
+
 	/**
 	 * OpenGraph data
 	 */
@@ -134,6 +136,7 @@ class BaseTemplate extends SmartTemplate {
 		$t->qs('nav')->innerHtml($this->getNav());
 		$t->qs('main')->innerHtml($this->getMain($stream));
 		$t->qs('footer')->innerHtml($this->getFooter());
+		$t->js()->eval('Main.checkBrevo('.($this->hasCRM ? 'true' : 'false').')');
 
 		$this->buildAjaxHeader($t);
 		$this->buildAjaxScroll($t);
