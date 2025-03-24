@@ -15,12 +15,16 @@ class BalanceUi {
 		return $accountLabels;
 	}
 
-	private function displayLine(string $text, float $value, float $amort, float $net, ?float $total): string {
+	private function displayLine(string $text, float $value, ?float $amort, float $net, ?float $total): string {
 
 		$h = '<td>'.($total === NULL ? '<span class="ml-1">'.$text.'</span>' : $text).'</td>';
 		$h .= '<td class="text-end">'.(new OverviewUi()->number($value, valueIfEmpty: '', decimals: 0)).'</td>';
-		$h .= '<td class="text-end">'.(new OverviewUi()->number(abs($amort), valueIfEmpty: '', decimals: 0)).'</td>';
-		$h .= '<td class="text-end">'.(new OverviewUi()->number($net, valueIfEmpty: '', decimals: 0)).'</td>';
+
+		if($amort !== NULL) {
+			$h .= '<td class="text-end">'.(new OverviewUi()->number(abs($amort), valueIfEmpty: '', decimals: 0)).'</td>';
+			$h .= '<td class="text-end">'.(new OverviewUi()->number($net, valueIfEmpty: '', decimals: 0)).'</td>';
+		}
+
 		$h .= '<td class="text-center">'.($total === NULL ? '' : (new OverviewUi()->number(round($net / $total * 100), valueIfEmpty: '', decimals: 0))).'</td>';
 
 		return $h;
@@ -36,8 +40,8 @@ class BalanceUi {
 				$class = match($line['type']) {
 					'line' => '',
 					'subcategory' => 'row-bold',
-					'category' => 'row-upper row-emphasis row-bold',
-					'total' => 'row-upper row-emphasis row-bold',
+					'category' => 'row-upper row-emphasis row-bold text-end',
+					'total' => 'row-upper row-emphasis row-bold text-end',
 				};
 
 				$label = match($line['type']) {
@@ -103,6 +107,92 @@ class BalanceUi {
 					$h .= '</tr>';
 
 					$h .= $this->displaySubCategoryBody($balance['liability'], s("Total du passif"));
+
+			$h .= '</table>';
+
+		$h .= '</div>';
+
+		return $h;
+	}
+
+
+	private function displayDetailedSubCategoryBody(array $balance, string $type): string {
+
+		$totalText = match($type) {
+			'asset' => s("Total de l'actif"),
+			'liability' => s("Total du passif"),
+		};
+
+		$h = '<tbody>';
+
+		foreach($balance as $line) {
+
+			$class = match($line['type']) {
+				'line' => '',
+				'subcategory' => 'row-bold',
+				'category' => 'row-upper row-emphasis row-bold text-end',
+				'total' => 'row-upper row-emphasis row-bold text-end',
+			};
+
+			$label = match($line['type']) {
+				'line' => $line['accountClass'].' '.$line['label'],
+				'subcategory' => $line['label'],
+				'category' => s("Total {category}", ['category' => $line['label']]),
+				'total' => $totalText,
+			};
+
+			$h .= '<tr class="'.$class.'">';
+			$h .= $this->displayLine(
+				$label,
+				$line['value'],
+				$type === 'liability' ? NULL : $line['valueAmort'],
+				$line['net'],
+				$line['total']
+			);
+			$h .= '</tr>';
+		}
+
+		$h .= '</tbody>';
+
+		return $h;
+
+	}
+	public function displayDetailedBalance(array $balance): string {
+
+		if(empty($balance) === TRUE) {
+			return '<div class="util-info">'.\s("Il n'y a rien à afficher pour le moment.").'</div>';
+		}
+
+		$h = '<h2>'.\s("Bilan comptable détaillé").'</h2>';
+		$h .= '<div class="util-overflow-sm">';
+
+			$h .= '<table id="balance-assets" class="tr-even tr-hover table-bordered">';
+
+				$h .= '<thead class="thead-sticky">';
+
+					$h .= '<tr class="row-header row-upper">';
+						$h .= '<td class="text-center">'.s("ACTIF").'</td>';
+						$h .= '<td class="text-center">'.s("Brut").'</td>';
+						$h .= '<td class="text-center">'.s("Amort prov.").'</td>';
+						$h .= '<td class="text-center">'.s("Net").'</td>';
+						$h .= '<td class="text-center">'.s("% actif").'</td>';
+					$h .= '</tr>';
+
+					$h .= $this->displayDetailedSubCategoryBody($balance['asset'],'asset');
+
+			$h .= '</table>';
+
+			$h .= '<table id="balance-liabilities" class="table-sticky tr-even tr-hover table-bordered">';
+
+				$h .= '<thead class="thead-sticky">';
+
+					$h .= '<tr class="row-header row-upper">';
+						$h .= '<td class="text-center">'.s("PASSIF").'</td>';
+						$h .= '<td class="text-center">'.s("N").'</td>';
+						$h .= '<td class="text-center">'.s("% passif").'</td>';
+					$h .= '</tr>';
+
+					$h .= $this->displayDetailedSubCategoryBody($balance['liability'], 'liability');
 
 			$h .= '</table>';
 

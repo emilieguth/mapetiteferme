@@ -17,7 +17,8 @@ new Page(function($data) {
 })
 	->get('index', function($data) {
 
-		$data->balance = \overview\BalanceLib::getBalance($data->eFinancialYear);
+		$data->balanceSummarized = \overview\BalanceLib::getSummarizedBalance($data->eFinancialYear);
+		$data->balanceDetailed = \overview\BalanceLib::getDetailedBalance($data->eFinancialYear);
 
 		throw new \ViewAction($data);
 	});

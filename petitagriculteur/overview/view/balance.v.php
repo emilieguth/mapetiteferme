@@ -16,7 +16,8 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYear,
 	);
 
-	echo new \overview\BalanceUi()->displaySummarizedBalance($data->balance);
+	echo new \overview\BalanceUi()->displaySummarizedBalance($data->balanceSummarized);
+	echo new \overview\BalanceUi()->displayDetailedBalance($data->balanceDetailed);
 
 });
 
