@@ -222,8 +222,6 @@ class MainTemplate extends BaseTemplate {
 
 		if($this->footer === NULL) {
 
-			if(Lime::getHost() === LIME_HOST) {
-
 				$h .= '<div class="footer-content">';
 					$h .= '<div class="footer-content-text">';
 						$h .= Lime::getHost();
@@ -233,7 +231,7 @@ class MainTemplate extends BaseTemplate {
 							$h .= '<h4>'.s("Ressources").'</h4>';
 							//$h .= '<a href="/presentation/faq">'.s("Foire aux questions").'</a><br/>';
 							//$h .= '<a href="/presentation/engagements">'.s("Engagements environnementaux").'</a><br/>';
-							$h .= s("[Bientôt] Signaler un problème").'<br/>';
+							$h .= '<a href="https://discord.gg/jAFFrhCWsS">'.Asset::icon('discord').'&nbsp;'.s("Signaler un problème").'</a><br/>';
 						$h .= '</div>';
 						$h .= '<div>';
 							$h .= '<h4>'.s("Usage").'</h4>';
@@ -243,8 +241,6 @@ class MainTemplate extends BaseTemplate {
 						$h .= '</div>';
 					$h .= '</div>';
 				$h .= '</div>';
-
-			}
 
 		} else {
 			$h .= $this->footer;
@@ -257,11 +253,12 @@ class MainTemplate extends BaseTemplate {
 			$h .= new user\UserUi()->logOutExternal($this->data->logInExternal[0]);
 		}
 
-		$h .= \Asset::jsContent('<script>
+		\Asset::jsContent('<script>
 				document.addEventListener("DOMContentLoaded", () => {
 					Main.checkBrevo('.($this->hasCRM ? 'true' : 'false').');
 				})
 			</script>');
+
 		return $h;
 
 	}
