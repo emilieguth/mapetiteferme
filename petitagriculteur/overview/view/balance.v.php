@@ -10,7 +10,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
-			return \company\CompanyUi::urlOverview($data->eCompany).'/accounting?financialYear='.$eFinancialYear['id'];
+			return \company\CompanyUi::urlOverview($data->eCompany).'/balance?financialYear='.$eFinancialYear['id'];
 		},
 		$data->cFinancialYear,
 		$data->eFinancialYear,

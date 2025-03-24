@@ -27,83 +27,36 @@ class BalanceUi {
 
 	}
 
-	private function displaySubCategoryBody(array $categories, array $balance, string $totalText): string {
+	private function displaySubCategoryBody(array $balance, string $totalText): string {
 
-		$totalValue = 0;
-		$totalAmort = 0;
-		$totalNet = 0;
-
-		$allLabels = $this->extractLabelsFromCategories($categories);
-		foreach($balance as $balanceLine) {
-
-			if(in_array((int)$balanceLine['accountPrefix'], $allLabels) === FALSE) {
-				continue;
-			}
-
-			if(mb_substr($balanceLine['accountPrefix'], 1, 1) === '8') {
-				$totalAmort += $balanceLine['amount'];
-			} else {
-				$totalValue += $balanceLine['amount'];
-			}
-
-		}
-
-		$totalNet += $totalValue - $totalAmort;
-		
 		$h = '<tbody>';
 
-			foreach($categories as $subCategories) {
-				$name = $subCategories['name'];
-				$categories = $subCategories['categories'];
+			foreach($balance as $line) {
 
-				$totalCategoryValue = 0;
-				$totalCategoryAmort = 0;
-				$totalCategoryNet = 0;
+				$class = match($line['type']) {
+					'line' => '',
+					'subcategory' => 'row-bold',
+					'category' => 'row-upper row-emphasis row-bold',
+					'total' => 'row-upper row-emphasis row-bold',
+				};
 
-				foreach($categories as $categoryDetails) {
+				$label = match($line['type']) {
+					'line' => $line['label'],
+					'subcategory' => $line['label'],
+					'category' => s("Total {category}", ['category' => $line['label']]),
+					'total' => $totalText,
+				};
 
-					$categoryName = $categoryDetails['name'];
-					$accounts = $categoryDetails['accounts'];
-
-					$totalSubCategoryValue = 0;
-					$totalSubCategoryAmort = 0;
-					$totalSubCategoryNet = 0;
-					foreach($accounts as $account) {
-
-						$value = $balance[$account]['amount'] ?? 0;
-						$accountAmort = mb_substr($account, 0, 1).'8'.mb_substr($account, 1);
-						$valueAmort = $balance[$accountAmort]['amount'] ?? 0;
-						$net = $value + $valueAmort;
-
-						$totalSubCategoryValue += $value;
-						$totalSubCategoryAmort += $valueAmort;
-						$totalSubCategoryNet += $net;
-
-						$h .= '<tr>';
-							$h .= $this->displayLine(\accounting\AccountUi::getLabelByAccount($account), $value, $valueAmort, $net, null);
-						$h .= '<tr>';
-
-					}
-
-					$h .= '<tr class="row-bold">';
-						$h .= $this->displayLine($categoryName, $totalSubCategoryValue, $totalSubCategoryAmort, $totalSubCategoryNet, $totalNet);
-					$h .= '</tr>';
-
-					$totalCategoryValue += $totalSubCategoryValue;
-					$totalCategoryAmort += $totalSubCategoryAmort;
-					$totalCategoryNet += $totalSubCategoryNet;
-				}
-
-				$h .= '<tr class="row-upper row-emphasis row-bold">';
-					$h .= $this->displayLine(s("Total {category}", ['category' => $name]), $totalCategoryValue, $totalCategoryAmort, $totalCategoryNet, $totalNet);
+				$h .= '<tr class="'.$class.'">';
+					$h .= $this->displayLine(
+						$label,
+						$line['value'],
+						$line['valueAmort'],
+						$line['net'],
+						$line['total']
+					);
 				$h .= '</tr>';
-
-
 			}
-
-			$h .= '<tr class="row-upper row-emphasis row-bold">';
-				$h .= $this->displayLine($totalText, $totalValue, $totalAmort, $totalNet, $totalNet);
-			$h .= '</tr>';
 
 		$h .= '</tbody>';
 
@@ -121,7 +74,6 @@ class BalanceUi {
 		$h = '<h2>'.\s("Bilan comptable").'</h2>';
 		$h .= '<div class="util-overflow-sm">';
 
-			$balanceAssetCategories = \Setting::get('accounting\balanceAssetCategories');
 			$h .= '<table id="balance-assets" class="tr-even tr-hover table-bordered">';
 
 				$h .= '<thead class="thead-sticky">';
@@ -134,11 +86,10 @@ class BalanceUi {
 						$h .= '<td class="text-center">'.s("% actif").'</td>';
 					$h .= '</tr>';
 
-					$h .= $this->displaySubCategoryBody($balanceAssetCategories, $balance, s("Total de l'actif"));
+					$h .= $this->displaySubCategoryBody($balance['asset'], s("Total de l'actif"));
 
 			$h .= '</table>';
 
-			$balanceLiabilityCategories = \Setting::get('accounting\balanceLiabilityCategories');
 			$h .= '<table id="balance-liabilities" class="table-sticky tr-even tr-hover table-bordered">';
 
 				$h .= '<thead class="thead-sticky">';
@@ -151,7 +102,7 @@ class BalanceUi {
 						$h .= '<td class="text-center">'.s("% passif").'</td>';
 					$h .= '</tr>';
 
-					$h .= $this->displaySubCategoryBody($balanceLiabilityCategories, $balance, s("Total du passif"));
+					$h .= $this->displaySubCategoryBody($balance['liability'], s("Total du passif"));
 
 			$h .= '</table>';
 
