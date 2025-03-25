@@ -338,7 +338,7 @@ class AccountUi {
 						'accounts' => [106],
 					],
 					[
-						'name' => s("Résultats de l'exercice (bénéfice ou perte)"),
+						'name' => s("Résultat de l'exercice (bénéfice ou perte)"),
 						'accounts' => [120, 129],
 					],
 					[
