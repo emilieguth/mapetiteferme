@@ -82,7 +82,7 @@ Setting::register('media', [
 	// Max size of an image in Mo (change also rewrite.cfg if needed : client_max_body_size 20m;)
 	'maxImageSize' => 20,
 
-	'images' => ['user-vignette', 'editor', 'gallery', 'company-vignette', 'company-logo', 'company-banner', 'website-logo', 'website-favicon'],
+	'images' => ['user-vignette', 'editor', 'gallery', 'company-vignette', 'company-logo', 'company-banner', 'pdf-content', 'website-logo', 'website-favicon'],
 
 	'user-vignette' => [
 		'class' => 'UserVignette',
@@ -144,6 +144,12 @@ Setting::register('media', [
 		'element' => 'company\Company',
 		'field' => 'vignette'
 	] + getMediaVignette(),
+
+	'pdf-content' => [
+		'class' => 'PdfContent',
+		'element' => 'journal\PdfContent',
+		'field' => 'hash'
+	],
 
 	'website-favicon' => [
 		'class' => 'WebsiteFavicon',

@@ -12,5 +12,7 @@ Setting::register('main', [
 	'viewAnalyze' => 'bank',
 	'viewOverview' => 'overview',
 
+	'remoteKey' => 'toto',
+
 ]);
 ?>
