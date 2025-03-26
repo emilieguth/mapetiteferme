@@ -30,6 +30,7 @@ class AssetLib extends \journal\AssetCrud {
 			return NULL;
 		}
 
+		$eAsset['account'] = $eOperation['account'];
 		$eAsset['accountLabel'] = $eOperation['accountLabel'];
 		$eAsset['description'] = $eOperation['description'];
 		$eAsset['endDate'] = date('Y-m-d', strtotime($eAsset['startDate'].' + '.$eAsset['duration'].' year'));
