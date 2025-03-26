@@ -728,21 +728,9 @@ tr.row-bold > td {
 	color: var(--muted-light);
 }
 
-thead.thead-sticky {
-	position: sticky;
-	background-color: var(--background-dark);
-	top: calc(var(--mainSticky) - 1px);
-	z-index: 1;
-}
-
 tr.row-header {
 	background-color: var(--background-dark) !important;
 	font-weight: bold;
-}
-
-table.table-bordered tr th,
-table.table-bordered tr td {
-	border: 1px solid var(--border);
 }
 
 div.operation-comment-dropdown {
@@ -757,3 +745,37 @@ div.operation-comment-dropdown {
 div.util-unit > div.util-quick {
 	border: 0;
 }
+
+table.table-bordered {
+	width: 100%;
+	border-collapse: separate; /* Don't collapse */
+	border-spacing: 0;
+}
+
+table.table-bordered thead.thead-sticky td,
+table.table-bordered thead.thead-sticky th {
+	/* Apply both top and bottom borders to the <th> */
+	border-top: 1px solid var(--border);
+	border-bottom: 1px solid var(--border);
+	border-right: 1px solid var(--border);
+}
+
+table.table-bordered tbody td {
+	/* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
+	border-bottom: 1px solid var(--border);
+	border-right: 1px solid var(--border);
+}
+
+table.table-bordered th:first-child,
+table.table-bordered td:first-child {
+	/* Apply a left border on the first <td> or <th> in a row */
+	border-left: 1px solid var(--border);
+}
+
+thead.thead-sticky td,
+thead.thead-sticky th {
+	position: sticky;
+	top: calc(var(--mainSticky) - 1px);
+	background-color: #edecec;
+}
+

@@ -6,6 +6,13 @@ const puppeteer = require('puppeteer-core');
 // CLI Args
 const url = argv.url;
 const destination = argv.destination;
+const headerTemplate = argv.header || null;
+const footerTemplate = argv.footer || null;
+const headerFooterArgs = {
+	...headerTemplate ? {headerTemplate: decodeURIComponent((headerTemplate + '').replace(/\+/g, '%20'))} : {},
+	...footerTemplate ? {footerTemplate: decodeURIComponent((footerTemplate + '').replace(/\+/g, '%20'))} : {},
+	...(headerTemplate || footerTemplate) ? {displayHeaderFooter : true, margin: {top: '150px'}} : {},
+};
 
 (async() => {
 
@@ -23,7 +30,8 @@ const destination = argv.destination;
 	await page.pdf({
 		path: destination,
 		printBackground: true,
-		format: 'A4'
+		format: 'A4',
+		...headerFooterArgs,
 	});
 
 	await browser.close();

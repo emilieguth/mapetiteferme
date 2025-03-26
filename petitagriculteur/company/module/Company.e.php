@@ -45,6 +45,10 @@ class Company extends CompanyElement {
 
 	}
 
+	public function canRemote(): bool {
+		return GET('key') === \Setting::get('main\remoteKey') || LIME_ENV === 'dev';
+	}
+
 	// Peut voir les données personnelles des clients et la page de gestion d'équipe
 	public function canPersonalData(): bool {
 		return $this->canWrite();

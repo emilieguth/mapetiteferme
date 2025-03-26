@@ -38,18 +38,18 @@ class PageLib {
 
 			$data->userDeletedAt = \session\SessionLib::get('userDeletedAt');
 			$data->cCompanyUser = \company\CompanyLib::getOnline();
-			$data->eCompany = \company\CompanyLib::getById(REQUEST('company'));
-
-			if($data->eCompany->empty() === FALSE) {
-				\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
-			}
 
 		} else {
 
 			$data->userDeletedAt = NULL;
 			$data->cCompanyUser = new \Collection();
-			$data->eCompany = NULL;
 
+		}
+
+		$data->eCompany = \company\CompanyLib::getById(REQUEST('company'));
+
+		if($data->eCompany->empty() === FALSE) {
+			\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 		}
 
 		$data->nCompanyUser = $data->cCompanyUser->count();

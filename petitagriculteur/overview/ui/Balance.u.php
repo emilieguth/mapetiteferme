@@ -31,7 +31,7 @@ class BalanceUi {
 
 	}
 
-	private function displaySubCategoryBody(array $balance, string $totalText): string {
+	public function displaySubCategoryBody(array $balance, string $totalText): string {
 
 		$h = '<tbody>';
 
@@ -116,7 +116,7 @@ class BalanceUi {
 	}
 
 
-	private function displayDetailedSubCategoryBody(array $balance, string $type): string {
+	public function displayDetailedSubCategoryBody(array $balance, string $type): string {
 
 		$totalText = match($type) {
 			'asset' => s("Total de l'actif"),
