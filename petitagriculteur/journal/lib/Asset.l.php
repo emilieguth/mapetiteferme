@@ -14,9 +14,9 @@ class AssetLib extends \journal\AssetCrud {
 
 		return Asset::model()
 			->select(Asset::getSelection())
-			->whereAcquisitionDate('>', $eFinancialYear['startDate'])
-			->whereAcquisitionDate('<', $eFinancialYear['endDate'])
-			->sort(['startDate' => SORT_ASC])
+			->whereAcquisitionDate('>=', $eFinancialYear['startDate'])
+			->whereAcquisitionDate('<=', $eFinancialYear['endDate'])
+			->sort(['accountLabel' => SORT_ASC, 'startDate' => SORT_ASC])
 			->getCollection();
 
 	}

@@ -70,6 +70,7 @@ Class AssetUi {
 
 				$h .= '<tbody>';
 
+				$total = 0;
 					foreach($cAsset as $eAsset) {
 						$h .= '<tr>';
 
@@ -99,7 +100,19 @@ Class AssetUi {
 							$h .= '<td></td>';
 
 						$h .= '</tr>';
+						$total += $eAsset['value'];
 					}
+					$h .= '<tr class="row-bold">';
+						$h .= '<td></td>';
+						$h .= '<td></td>';
+						$h .= '<td>'.s("Total immobilisations").'</td>';
+						$h .= '<td></td>';
+						$h .= '<td></td>';
+						$h .= '<td></td>';
+						$h .= '<td></td>';
+						$h .= '<td class="text-end">'.$this->number($total, '', 2).'</td>';
+						$h .= '<td></td>';
+					$h .= '</tr>';
 
 				$h .= '</tbody>';
 
