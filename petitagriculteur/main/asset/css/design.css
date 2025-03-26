@@ -772,10 +772,12 @@ table.table-bordered td:first-child {
 	border-left: 1px solid var(--border);
 }
 
-thead.thead-sticky td,
-thead.thead-sticky th {
+thead.thead-sticky {
 	position: sticky;
 	top: calc(var(--mainSticky) - 1px);
+}
+thead.thead-sticky td,
+thead.thead-sticky th {
 	background-color: #edecec;
 }
 

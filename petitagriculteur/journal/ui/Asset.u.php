@@ -3,6 +3,19 @@ namespace journal;
 
 Class AssetUi {
 
+	public static function getAcquisitionTitle(): string {
+
+		$h = '<div class="util-action">';
+
+			$h .= '<h1>';
+				$h .= s("Tableau des acquisitions");
+			$h .= '</h1>';
+
+		$h .= '</div>';
+
+		return $h;
+	}
+
 	public static function getTitle(): string {
 
 		$h = '<div class="util-action">';
@@ -32,6 +45,71 @@ Class AssetUi {
 
 	}
 
+	public function getAcquisitionTable(\Collection $cAsset): string {
+
+		$h = '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+
+			$h .= '<table class="tr-even td-vertical-top tr-hover table-bordered">';
+
+				$h .= '<thead class="thead-sticky">';
+					$h .= '<tr>';
+						$h .= '<th class="text-center" rowspan="2">'.s("Code").'</th>';
+						$h .= '<th class="text-center" rowspan="2">'.s("Compte").'</th>';
+						$h .= '<th class="text-center" rowspan="2">'.s("Désignation").'</th>';
+						$h .= '<th class="text-center" colspan="2">'.s("Type").'</th>';
+						$h .= '<th class="text-center" rowspan="2">'.s("Durée (en années)").'</th>';
+						$h .= '<th class="text-center" rowspan="2">'.s("Date").'</th>';
+						$h .= '<th class="text-center" rowspan="2">'.s("Valeur").'</th>';
+						$h .= '<th class="text-center" rowspan="2">'.s("DPI affectée").'</th>';
+					$h .= '</tr>';
+					$h .= '<tr>';
+						$h .= '<th class="text-center">'.s("Eco").'</th>';
+						$h .= '<th class="text-center">'.s("Fiscal").'</th>';
+					$h .= '</tr>';
+				$h .= '</thead>';
+
+				$h .= '<tbody>';
+
+					foreach($cAsset as $eAsset) {
+						$h .= '<tr>';
+
+							$h .= '<td></td>';
+							$h .= '<td>'.encode($eAsset['accountLabel']).'</td>';
+							$h .= '<td>'.encode($eAsset['description']).'</td>';
+							$h .= '<td>';
+								$h .= match($eAsset['type']) {
+									AssetElement::LINEAR => s("LIN"),
+									AssetElement::WITHOUT => s("SANS"),
+								};
+							$h .= '</td>';
+							$h .= '<td>';
+								$h .= match($eAsset['type']) {
+									AssetElement::LINEAR => s("LIN"),
+									AssetElement::WITHOUT => s("SANS"),
+								};
+							$h .= '</td>';
+							$h .= '<td class="text-center">';
+								$h .= match($eAsset['type']) {
+									AssetElement::LINEAR => encode($eAsset['duration']),
+									AssetElement::WITHOUT => '',
+								};
+							$h .= '</td>';
+							$h .= '<td class="text-end">'.\util\DateUi::numeric($eAsset['startDate'], \util\DateUi::DATE).'</td>';
+							$h .= '<td class="text-end">'.$this->number($eAsset['value'], '', 2).'</td>';
+							$h .= '<td></td>';
+
+						$h .= '</tr>';
+					}
+
+				$h .= '</tbody>';
+
+			$h .= '</table>';
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
 	public static function getSummary(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, array $assetSummary): string {
 
 		$h = '<h1>'.s("Amortissement des immobilisations").'</h1>';

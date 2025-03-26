@@ -10,6 +10,17 @@ class AssetLib extends \journal\AssetCrud {
 		return ['value', 'type', 'description', 'mode', 'acquisitionDate', 'startDate', 'duration', 'status'];
 	}
 
+	public static function getAcquisitions(\accounting\FinancialYear $eFinancialYear): \Collection {
+
+		return Asset::model()
+			->select(Asset::getSelection())
+			->whereAcquisitionDate('>', $eFinancialYear['startDate'])
+			->whereAcquisitionDate('<', $eFinancialYear['endDate'])
+			->sort(['startDate' => SORT_ASC])
+			->getCollection();
+
+	}
+
 	public static function prepareAsset(Operation $eOperation, array $assetData, int $index): ?Asset {
 
 		$eOperation->expects(['accountLabel']);

@@ -155,6 +155,16 @@ class CompanyUi {
 
 				$h .= $this->getJournalMenu($eCompany, prefix: $prefix, tab: $tab);
 
+				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/asset/" class="company-tab '.($tab === 'asset' ? 'selected' : '').'" data-tab="asset">';
+					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('house-door').'</span>';
+					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('house-door-fill').'</span>';
+					$h .= '<span class="company-tab-label hide-xs-down">';
+						$h .= s("Immobilisations");
+					$h .= '</span>';
+				$h .= '</a>';
+
+				$h .= $this->getAssetMenu($eCompany, prefix: $prefix, tab: $tab);
+
 
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/analyze/bank" class="company-tab '.($tab === 'analyze' ? 'selected' : '').'" data-tab="analyze">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('bar-chart').'</span>';
@@ -305,10 +315,20 @@ class CompanyUi {
 
 	}
 
+	public function getAssetSubNav(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
+
+		$h = '<nav id="company-subnav">';
+			$h .= $this->getAssetMenu($eCompany, tab: 'asset');
+		$h .= '</nav>';
+
+		return $h;
+
+	}
+
 	public function getJournalSubNav(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
 
 		$h = '<nav id="company-subnav">';
-		$h .= $this->getJournalMenu($eCompany, tab: 'journal');
+			$h .= $this->getJournalMenu($eCompany, tab: 'journal');
 		$h .= '</nav>';
 
 		return $h;
@@ -327,6 +347,25 @@ class CompanyUi {
 				'label' => s("Grand livre")
 			],
 			/*'asset' => [
+				'url' => CompanyUi::urlJournal($eCompany).'/asset',
+				'label' => s("Immobilisations")
+			],*/
+		];
+
+	}
+
+	protected static function getAssetCategories(Company $eCompany): array {
+
+		return [
+			'acquisition' => [
+				'url' => CompanyUi::urlJournal($eCompany).'/asset/',
+				'label' => s("Acquisitions")
+			],
+			/*'state' => [
+				'url' => CompanyUi::urlJournal($eCompany).'/asset/',
+				'label' => s("État des immos")
+			],
+			'depreciation' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/asset',
 				'label' => s("Immobilisations")
 			],*/
@@ -432,6 +471,24 @@ class CompanyUi {
 		$h = '<div class="company-subnav-wrapper">';
 
 			foreach(self::getJournalCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
+
+				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
+					$h .= $prefix.'<span>'.$label.'</span>';
+				$h .= '</a>';
+			}
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+	public function getAssetMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
+
+		$selectedView = ($tab === 'asset') ? \Setting::get('main\viewAsset') : NULL;
+
+		$h = '<div class="company-subnav-wrapper">';
+
+			foreach(self::getAssetCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
 
 				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
 					$h .= $prefix.'<span>'.$label.'</span>';

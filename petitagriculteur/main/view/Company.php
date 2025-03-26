@@ -38,6 +38,7 @@ class CompanyTemplate extends MainTemplate {
 			$subTab = match($this->tab) {
 				'bank' => \Setting::get('main\viewBank'),
 				'journal' => \Setting::get('main\viewJournal'),
+				'asset' => \Setting::get('main\viewAsset'),
 				'analyze' => \Setting::get('main\viewAnalyze'),
 				'overview' => \Setting::get('main\viewOverview'),
 				default => NULL,
@@ -132,7 +133,7 @@ class CompanyTemplate extends MainTemplate {
 
 			} else {
 				$company .= '<div class="nav-title-company">';
-					$company .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '1.75rem').'</div>';
+					$company .= '<div>'.\company\CompanyUi::getVignette($this->data->eCompany, '4rem').'</div>';
 					$company .= '<div>'.encode($this->data->eCompany['name']).'</div>';
 				$company .= '</div>';
 			}
