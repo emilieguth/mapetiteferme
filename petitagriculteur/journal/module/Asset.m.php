@@ -44,6 +44,7 @@ class AssetModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
+			'account' => ['element32', 'accounting\Account', 'cast' => 'element'],
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'value' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'description' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
@@ -58,8 +59,12 @@ class AssetModel extends \ModuleModel {
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'accountLabel', 'value', 'description', 'type', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status', 'createdAt', 'updatedAt'
+			'id', 'account', 'accountLabel', 'value', 'description', 'type', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status', 'createdAt', 'updatedAt'
 		]);
+
+		$this->propertiesToModule += [
+			'account' => 'accounting\Account',
+		];
 
 	}
 
@@ -110,6 +115,10 @@ class AssetModel extends \ModuleModel {
 
 	public function whereId(...$data): AssetModel {
 		return $this->where('id', ...$data);
+	}
+
+	public function whereAccount(...$data): AssetModel {
+		return $this->where('account', ...$data);
 	}
 
 	public function whereAccountLabel(...$data): AssetModel {

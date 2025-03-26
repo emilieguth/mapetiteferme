@@ -90,6 +90,7 @@ a.nav-year:hover {
 		height: calc(100vh - var(--nav-height));
 		background: linear-gradient(145deg, var(--secondary) 0, var(--secondary) 50%, var(--secondary-dark) 100%);
 		box-shadow: 0 0 1rem #8888;
+		z-index: 2;
 	}
 
 	body[data-template~="company"] main  {

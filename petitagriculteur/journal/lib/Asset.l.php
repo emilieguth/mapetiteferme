@@ -48,10 +48,46 @@ class AssetLib extends \journal\AssetCrud {
 
 	}
 
+	protected static function calculateThisFinancialYearDepreciation(\accounting\FinancialYear $eFinancialYear, Asset $eAsset): float {
+
+		if($eAsset['type'] === AssetElement::WITHOUT) {
+			return 0;
+		}
+
+		$base = $eAsset['value'];
+		$rate = 1 / $eAsset['duration']; // Durée en années
+
+		// Calcul du nombre de mois complets
+		$startDatetime = new \DateTime(max($eFinancialYear['startDate'], $eAsset['startDate']));
+		$endDatetime = new \DateTime(min($eFinancialYear['endDate'], $eAsset['endDate']));
+		$interval = $startDatetime->diff($endDatetime);
+		$months = (int)$interval->format('%m');
+		$days = $months * 30; // En comptabilité, un mois fait 30 jours.
+
+		// Ajout du nombre de jours de prorata (début)
+		if($eAsset['startDate'] > $eFinancialYear['startDate']) {
+			$lastDayOfMonth = date("Y-m-d", mktime(0, 0, 0, (int)date('m', strtotime($eAsset['startDate'])) + 1, 0, date('Y', strtotime($eAsset['startDate']))));
+
+			$days += min(30, (int)date('d', strtotime($lastDayOfMonth)) - (int)date('d', strtotime($eAsset['startDate'])) + 1);
+		}
+
+		// Ajout du nombre de jours de prorata (fin)
+		if($eAsset['endDate'] < $eFinancialYear['endDate']) {
+			$days += min(date('d', $eAsset['endDate']), 30);
+		}
+
+		d($eAsset['description'], $base, $days, $base * $rate * $days / 360, $interval->format('%a'));
+		return $base * $rate * $days / 360;
+
+	}
+
 	public static function getSummary(\accounting\FinancialYear $eFinancialYear): array {
 
 		$cAsset = Asset::model()
-			->select(Asset::getSelection())
+			->select(
+				Asset::getSelection()
+				+ ['account' => \accounting\Account::getSelection()]
+			)
 			->whereEndDate('>=', $eFinancialYear['startDate'])
 			->whereStartDate('<=', $eFinancialYear['endDate'])
 			->getCollection();
@@ -63,8 +99,17 @@ class AssetLib extends \journal\AssetCrud {
 
 			if(isset($assets[$accountLabel]) === FALSE) {
 				$assets[$accountLabel] = [
-					'accountName' => '', // Chercher un moyen de récupérer le nom du compte via le accountLabel qui peut être différent >.<
 					'accountLabel' => $accountLabel,
+					'description' => $eAsset['account']['description'],
+
+					'status' => $eAsset['status'],
+					'type' => $eAsset['type'],
+
+					'acquisitionDate' => $eAsset['acquisitionDate'],
+					'startDate' => $eAsset['startDate'],
+					'endDate' => $eAsset['endDate'],
+
+					'duration' => $eAsset['duration'],
 
 					// Valeurs brutes
 					'grossValue' => [
@@ -72,6 +117,7 @@ class AssetLib extends \journal\AssetCrud {
 						'startValue' => 0, // Valeur en début d'exercice fiscal
 						'buyValue' => 0, // Valeur d'achat (si achat en cours d'exercice fiscal)
 						'decrease' => 0, // ??
+						'out' => 0, // ??
 						'endValue' => 0, // Valeur en fin d'exercice
 
 					],
@@ -114,11 +160,21 @@ class AssetLib extends \journal\AssetCrud {
 
 			}
 
+			$assets[$accountLabel]['grossValue']['endValue'] += $eAsset['value'];
+
+			$depreciation = self::calculateThisFinancialYearDepreciation($eFinancialYear, $eAsset);
+			$assets[$accountLabel]['economic']['globalIncrease'] += $depreciation;
+			$assets[$accountLabel]['economic']['linearIncrease'] += $depreciation;
+			$assets[$accountLabel]['economic']['endFinancialYear'] += $depreciation;
+
+			$assets[$accountLabel]['netBookValue'] += $eAsset['value'] - $depreciation;
+
+
 		}
 
 		$total = [
-			'accountName' => 'total',
-			'accountLabel' => 'total',
+			'accountLabel' => 'Total',
+			'description' => '',
 
 			// Valeurs brutes
 			'grossValue' => [
@@ -126,6 +182,7 @@ class AssetLib extends \journal\AssetCrud {
 				'startValue' => array_reduce($assets, fn($res, $asset) => $res + $asset['grossValue']['startValue'], 0),
 				'buyValue' => array_reduce($assets, fn($res, $asset) => $res + $asset['grossValue']['buyValue'], 0),
 				'decrease' => array_reduce($assets, fn($res, $asset) => $res + $asset['grossValue']['decrease'], 0),
+				'out' => array_reduce($assets, fn($res, $asset) => $res + $asset['grossValue']['out'], 0),
 				'endValue' => array_reduce($assets, fn($res, $asset) => $res + $asset['grossValue']['endValue'], 0),
 
 			],

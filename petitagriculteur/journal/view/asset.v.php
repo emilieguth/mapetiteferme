@@ -16,6 +16,6 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYearSelected,
 	);
 
-	echo new \journal\AssetUi()->getSummary($data->eCompany, $data->eFinancialYearSelected, $data->cAsset);
+	echo new \journal\AssetUi()->getSummary($data->eCompany, $data->eFinancialYearSelected, $data->assetSummary);
 
 });

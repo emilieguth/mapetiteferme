@@ -732,7 +732,7 @@ thead.thead-sticky {
 	position: sticky;
 	background-color: var(--background-dark);
 	top: calc(var(--mainSticky) - 1px);
-	z-index: 10;
+	z-index: 1;
 }
 
 tr.row-header {
