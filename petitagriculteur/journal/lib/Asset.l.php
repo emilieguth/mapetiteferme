@@ -88,7 +88,6 @@ class AssetLib extends \journal\AssetCrud {
 			$days += min(date('d', $eAsset['endDate']), 30);
 		}
 
-		d($eAsset['description'], $base, $days, $base * $rate * $days / 360, $interval->format('%a'));
 		return $base * $rate * $days / 360;
 
 	}
