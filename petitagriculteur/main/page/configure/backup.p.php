@@ -10,11 +10,11 @@
 
 			$date = date('Y-m-d');
 
-			exec('mysqldump -u '.$username.' "'.$password.'" petitagriculteur > /var/www/mysql-backup/petitagriculteur-'.$date.'.sql');
+			exec('mysqldump -u '.$username.' "'.$password.'" petitagriculteur > /var/www/mysql-backup/'.$date.'.petitagriculteur.sql');
 			foreach($cCompany as $eCompany) {
 
 				$database = \company\CompanyLib::getDatabaseName($eCompany);
-				exec('mysqldump -u '.$username.' "'.$password.'" '.$database.' > /var/www/mysql-backup/'.$database.'-'.$date.'.sql');
+				exec('mysqldump -u '.$username.' "'.$password.'" '.$database.' > /var/www/mysql-backup/'.$date.'-'.$database.'.sql');
 
 			}
 
