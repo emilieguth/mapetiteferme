@@ -13,7 +13,10 @@ new Page()
 			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
 		}
 
-		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+		$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+
+		$data->assetDepreciations = \asset\DepreciationLib::getByFinancialYear($data->eFinancialYear, 'asset');
+		$data->subventionDepreciations = \asset\DepreciationLib::getByFinancialYear($data->eFinancialYear, 'subvention');
 
 		throw new ViewAction($data);
 

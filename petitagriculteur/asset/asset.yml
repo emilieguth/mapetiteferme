@@ -23,5 +23,7 @@ Depreciation:
   id: serial32
   asset: asset\Asset
   amount: decimal(8, 2)
+  type: enum(ECONOMIC, EXCESS)
+  date: datetime = SPECIAL(now)
   financialYear: accounting\FinancialYear
   createdAt: datetime = SPECIAL(now)

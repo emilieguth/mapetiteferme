@@ -7,6 +7,9 @@ abstract class DepreciationElement extends \Element {
 
 	private static ?DepreciationModel $model = NULL;
 
+	const ECONOMIC = 'economic';
+	const EXCESS = 'excess';
+
 	public static function getSelection(): array {
 		return Depreciation::model()->getProperties();
 	}
@@ -39,12 +42,13 @@ class DepreciationModel extends \ModuleModel {
 			'id' => ['serial32', 'cast' => 'int'],
 			'asset' => ['element32', 'asset\Asset', 'cast' => 'element'],
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
+			'type' => ['enum', [\asset\Depreciation::ECONOMIC, \asset\Depreciation::EXCESS], 'cast' => 'enum'],
 			'financialYear' => ['element32', 'accounting\FinancialYear', 'cast' => 'element'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'asset', 'amount', 'financialYear', 'createdAt'
+			'id', 'asset', 'amount', 'type', 'financialYear', 'createdAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -68,6 +72,20 @@ class DepreciationModel extends \ModuleModel {
 
 	}
 
+	public function encode(string $property, $value) {
+
+		switch($property) {
+
+			case 'type' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			default :
+				return parent::encode($property, $value);
+
+		}
+
+	}
+
 	public function select(...$fields): DepreciationModel {
 		return parent::select(...$fields);
 	}
@@ -86,6 +104,10 @@ class DepreciationModel extends \ModuleModel {
 
 	public function whereAmount(...$data): DepreciationModel {
 		return $this->where('amount', ...$data);
+	}
+
+	public function whereType(...$data): DepreciationModel {
+		return $this->where('type', ...$data);
 	}
 
 	public function whereFinancialYear(...$data): DepreciationModel {

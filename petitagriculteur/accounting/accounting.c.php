@@ -5,7 +5,10 @@ Privilege::register('accounting', [
 ]);
 
 Setting::register('accounting', [
+	'assetClasses' => [2, 13],
 	'assetClass' => 2,
+	'subventionAssetClass' => 13,
+
 	'thirdAccountGeneralClass' => 4,
 	'vatClass' => 445,
 	'bankAccountGeneralClass' => 5,

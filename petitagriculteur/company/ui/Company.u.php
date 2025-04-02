@@ -364,7 +364,7 @@ class CompanyUi {
 			$more = [
 				'depreciation' => [
 					'url' => CompanyUi::urlAsset($eCompany).'/depreciation',
-					'label' => s("Immobilisations (TODO)")
+					'label' => s("Immobilisations")
 				],
 				'state' => [
 					'url' => CompanyUi::urlAsset($eCompany).'/state',
