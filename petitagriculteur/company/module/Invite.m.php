@@ -46,7 +46,7 @@ class InviteModel extends \ModuleModel {
 			'expiresAt' => ['date', 'cast' => 'string'],
 			'key' => ['text8', 'null' => TRUE, 'cast' => 'string'],
 			'status' => ['enum', [\company\Invite::PENDING, \company\Invite::ACCEPTED], 'cast' => 'enum'],
-			'createdBy' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
+			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [

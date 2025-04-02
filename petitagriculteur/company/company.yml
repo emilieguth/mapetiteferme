@@ -35,7 +35,7 @@ Invite:
   expiresAt: date = SQL(NOW() + INTERVAL 3 DAY)
   key: ?text8 = PHP(bin2hex(random_bytes(16)))
   status: enum(PENDING, ACCEPTED) = PENDING
-  createdBy: ?user\User = SPECIAL(user)
+  createdBy: user\User = SPECIAL(user)
   INDEX: [
     ["email"],
     ["key"]
