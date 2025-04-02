@@ -43,12 +43,13 @@ class DepreciationModel extends \ModuleModel {
 			'asset' => ['element32', 'asset\Asset', 'cast' => 'element'],
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'type' => ['enum', [\asset\Depreciation::ECONOMIC, \asset\Depreciation::EXCESS], 'cast' => 'enum'],
+			'date' => ['date', 'cast' => 'string'],
 			'financialYear' => ['element32', 'accounting\FinancialYear', 'cast' => 'element'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'asset', 'amount', 'type', 'financialYear', 'createdAt'
+			'id', 'asset', 'amount', 'type', 'date', 'financialYear', 'createdAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -61,6 +62,9 @@ class DepreciationModel extends \ModuleModel {
 	public function getDefaultValue(string $property) {
 
 		switch($property) {
+
+			case 'date' :
+				return new \Sql('CURDATE()');
 
 			case 'createdAt' :
 				return new \Sql('NOW()');
@@ -108,6 +112,10 @@ class DepreciationModel extends \ModuleModel {
 
 	public function whereType(...$data): DepreciationModel {
 		return $this->where('type', ...$data);
+	}
+
+	public function whereDate(...$data): DepreciationModel {
+		return $this->where('date', ...$data);
 	}
 
 	public function whereFinancialYear(...$data): DepreciationModel {

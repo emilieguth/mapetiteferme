@@ -123,6 +123,7 @@ class DepreciationLib extends \asset\DepreciationCrud {
 		$ccDepreciation = Depreciation::model()
 			->select(['asset', 'financialYear', 'amount', 'type'])
 			->whereAsset('IN', $cAsset)
+			->whereDate('<=', $eFinancialYear['endDate'])
 			->getCollection(NULL, NULL, ['asset', 'financialYear']);
 
 		$depreciations = [];
