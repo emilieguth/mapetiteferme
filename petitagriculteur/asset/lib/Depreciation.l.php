@@ -104,6 +104,8 @@ class DepreciationLib extends \asset\DepreciationCrud {
 
 		}
 
+		DepreciationUi::addTotalLine($generalTotal, $total);
+
 		$lines[] = $total;
 		$lines[] = $generalTotal;
 
