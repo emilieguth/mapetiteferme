@@ -116,8 +116,8 @@ class DepreciationLib extends \asset\DepreciationCrud {
 	public static function getByFinancialYear(\accounting\FinancialYear $eFinancialYear, string $type): array {
 
 		$cAsset = match($type) {
-			'asset' => AssetLib::getOngoingAssets($eFinancialYear),
-			'subvention' => AssetLib::getOngoingSubventions($eFinancialYear),
+			'asset' => AssetLib::getAssetsByFinancialYear($eFinancialYear),
+			'subvention' => AssetLib::getSubventionsByFinancialYear($eFinancialYear),
 		};
 
 		$ccDepreciation = Depreciation::model()

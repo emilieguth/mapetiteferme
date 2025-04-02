@@ -25,28 +25,26 @@ class AssetLib extends \asset\AssetCrud {
 
 	}
 
-	public static function getOngoingSubventions(\accounting\FinancialYear $eFinancialYear): \Collection {
+	public static function getSubventionsByFinancialYear(\accounting\FinancialYear $eFinancialYear): \Collection {
 
 		return Asset::model()
       ->select(
         Asset::getSelection()
         + ['account' => \accounting\Account::getSelection()]
       )
-      ->whereStatus(AssetElement::ONGOING)
       ->whereStartDate('<=', $eFinancialYear['endDate'])
 			->whereAccountLabel('LIKE', \Setting::get('accounting\subventionAssetClass').'%')
       ->sort(['accountLabel' => SORT_ASC, 'startDate' => SORT_ASC])
       ->getCollection();
 	}
 
-	public static function getOngoingAssets(\accounting\FinancialYear $eFinancialYear): \Collection {
+	public static function getAssetsByFinancialYear(\accounting\FinancialYear $eFinancialYear): \Collection {
 
 		return Asset::model()
 			->select(
 				Asset::getSelection()
 				+ ['account' => \accounting\Account::getSelection()]
 			)
-			->whereStatus(AssetElement::ONGOING)
 			->whereStartDate('<=', $eFinancialYear['endDate'])
 			->whereAccountLabel('LIKE', \Setting::get('accounting\assetClass').'%')
 			->sort(['accountLabel' => SORT_ASC, 'startDate' => SORT_ASC])
