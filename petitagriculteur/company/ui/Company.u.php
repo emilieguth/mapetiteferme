@@ -362,10 +362,6 @@ class CompanyUi {
 
 		if(LIME_ENV === 'dev') {
 			$more = [
-				'depreciation' => [
-					'url' => CompanyUi::urlAsset($eCompany).'/depreciation',
-					'label' => s("Immobilisations")
-				],
 				'state' => [
 					'url' => CompanyUi::urlAsset($eCompany).'/state',
 					'label' => s("État des immos (WIP)")
@@ -378,6 +374,10 @@ class CompanyUi {
 			'acquisition' => [
 				'url' => CompanyUi::urlAsset($eCompany).'/acquisition',
 				'label' => s("Acquisitions")
+			],
+			'depreciation' => [
+				'url' => CompanyUi::urlAsset($eCompany).'/depreciation',
+				'label' => s("Amortissements")
 			],
 			...$more,
 		];
