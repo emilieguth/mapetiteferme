@@ -1,7 +1,7 @@
 <?php
 new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
-	$t->title = s("Toutes les immobilisations de {company}", ['company' => $data->eCompany['name']]);
+	$t->title = s("Les acquisitions de {company}", ['company' => $data->eCompany['name']]);
 	$t->tab = 'asset';
 	$t->subNav = new \company\CompanyUi()->getAssetSubNav($data->eCompany);
 	$t->canonical = \company\CompanyUi::urlJournal($data->eCompany).'/asset/acquisition';

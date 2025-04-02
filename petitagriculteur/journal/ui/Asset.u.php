@@ -29,6 +29,19 @@ Class AssetUi {
 		return $h;
 	}
 
+	public static function getDepreciationTitle(): string {
+
+		$h = '<div class="util-action">';
+
+			$h .= '<h1>';
+				$h .= s("Amortissement des immobilisations");
+			$h .= '</h1>';
+
+		$h .= '</div>';
+
+		return $h;
+	}
+
 	public function number(mixed $number, ?string $valueIfEmpty, ?int $decimals = NULL): string {
 
 		if(is_null($number) === true or $number === 0 or $number === 0.0) {
@@ -125,7 +138,15 @@ Class AssetUi {
 	}
 	public static function getSummary(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, array $assetSummary): string {
 
-		$h = '<h1>'.s("Amortissement des immobilisations").'</h1>';
+		$h = '';
+
+		if($eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN) {
+			$h .= '<div class="util-warning">';
+				$h .= s("L'exercice fiscal n'étant pas terminé, les données affichées sont une projection de l'actuel à la fin de l'exercice.");
+			$h .= '</div>';
+		}
+
+		$h .= '<h1>'.s("Amortissement des immobilisations").'</h1>';
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 

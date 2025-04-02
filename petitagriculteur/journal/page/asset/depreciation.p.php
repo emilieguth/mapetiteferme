@@ -2,7 +2,7 @@
 new Page()
 	->get('index', function($data) {
 
-		\Setting::set('main\viewJournal', 'asset');
+		\Setting::set('main\viewAsset', 'depreciation');
 
 		$company = GET('company');
 
@@ -14,7 +14,6 @@ new Page()
 		}
 
 		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
-		$data->assetSummary = \journal\AssetLib::getSummary($data->eFinancialYearSelected);
 
 		throw new ViewAction($data);
 

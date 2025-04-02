@@ -2,7 +2,7 @@
 new Page()
 	->get('index', function($data) {
 
-		\Setting::set('main\viewAsset', 'index');
+		\Setting::set('main\viewAsset', 'acquisition');
 
 		$company = GET('company');
 

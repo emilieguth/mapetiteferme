@@ -356,19 +356,26 @@ class CompanyUi {
 
 	protected static function getAssetCategories(Company $eCompany): array {
 
+		if(LIME_ENV === 'dev') {
+			$more = [
+				'depreciation' => [
+					'url' => CompanyUi::urlJournal($eCompany).'/asset/depreciation',
+					'label' => s("Immobilisations (TODO)")
+				],
+				'state' => [
+					'url' => CompanyUi::urlJournal($eCompany).'/asset/state',
+					'label' => s("État des immos (WIP)")
+				]
+			];
+		} else {
+			$more = [];
+		}
 		return [
 			'acquisition' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/asset/',
+				'url' => CompanyUi::urlJournal($eCompany).'/asset/acquisition',
 				'label' => s("Acquisitions")
 			],
-			/*'state' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/asset/',
-				'label' => s("État des immos")
-			],
-			'depreciation' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/asset',
-				'label' => s("Immobilisations")
-			],*/
+			...$more,
 		];
 
 	}
