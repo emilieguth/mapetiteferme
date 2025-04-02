@@ -65,7 +65,7 @@ Class DepreciationUi {
 
 			$h .= '<td class="util-unit text-end">'.new AssetUi()->number($depreciation['excess']['startFinancialYearValue'], $default, 2).'</td>';
 			$h .= '<td class="util-unit text-end">'.new AssetUi()->number($depreciation['excess']['currentFinancialYearDepreciation'], $default, 2).'</td>';
-			$h .= '<td class="util-unit text-end">'.new AssetUi()->number($depreciation['excess']['financialYearDiminution'], $default, 2).'</td>';
+			$h .= '<td class="util-unit text-end">'.new AssetUi()->number($depreciation['excess']['reversal'], $default, 2).'</td>';
 			$h .= '<td class="util-unit text-end">'.new AssetUi()->number($depreciation['excess']['endFinancialYearValue'], $default, 2).'</td>';
 
 			$h .= '<td class="util-unit text-end">'.new AssetUi()->number($depreciation['fiscalNetValue'], $default, 2).'</td>';
@@ -75,7 +75,7 @@ Class DepreciationUi {
 		return $h;
 	}
 
-	private static function addTotalLine(array &$total, array $line): void {
+	public static function addTotalLine(array &$total, array $line): void {
 
 		$total['acquisitionValue'] += $line['acquisitionValue'];
 		$total['economic']['startFinancialYearValue'] += $line['economic']['startFinancialYearValue'];
@@ -86,13 +86,13 @@ Class DepreciationUi {
 		$total['netFinancialValue'] += $line['netFinancialValue'];
 		$total['excess']['startFinancialYearValue'] += $line['excess']['startFinancialYearValue'];
 		$total['excess']['currentFinancialYearDepreciation'] += $line['excess']['currentFinancialYearDepreciation'];
-		$total['excess']['financialYearDiminution'] += $line['excess']['financialYearDiminution'];
+		$total['excess']['reversal'] += $line['excess']['reversal'];
 		$total['excess']['endFinancialYearValue'] += $line['excess']['endFinancialYearValue'];
 		$total['fiscalNetValue'] += $line['fiscalNetValue'];
 
 	}
 
-	public static function getDepreciationTable(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, array $depreciations): string{
+	public static function getDepreciationTable(array $depreciations): string{
 
 		$h = '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
@@ -142,7 +142,7 @@ Class DepreciationUi {
 				'excess' => [
 					'startFinancialYearValue' => 0,
 					'currentFinancialYearDepreciation' => 0,
-					'financialYearDiminution' => 0,
+					'reversal' => 0,
 					'endFinancialYearValue' => 0,
 				],
 				'fiscalNetValue' => 0,

@@ -88,7 +88,7 @@ class OperationLib extends OperationCrud {
 			// Type banque
 			->join(\accounting\Account::model(), 'm1.account = m3.id')
 			->where('m3.class = '.\Setting::get('accounting\bankAccountClass'))
-			// De l'exercice fiscal courant
+			// De l'exercice comptable courant
 			->where('m1.date >= "'.$eFinancialYear['startDate'].'"')
 			->where('m1.date <= "'.$eFinancialYear['endDate'].'"')
 			->update($eOperation);

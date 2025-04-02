@@ -360,16 +360,6 @@ class CompanyUi {
 
 	protected static function getAssetCategories(Company $eCompany): array {
 
-		if(LIME_ENV === 'dev') {
-			$more = [
-				'state' => [
-					'url' => CompanyUi::urlAsset($eCompany).'/state',
-					'label' => s("État des immos (WIP)")
-				]
-			];
-		} else {
-			$more = [];
-		}
 		return [
 			'acquisition' => [
 				'url' => CompanyUi::urlAsset($eCompany).'/acquisition',
@@ -379,7 +369,10 @@ class CompanyUi {
 				'url' => CompanyUi::urlAsset($eCompany).'/depreciation',
 				'label' => s("Amortissements")
 			],
-			...$more,
+			'state' => [
+				'url' => CompanyUi::urlAsset($eCompany).'/state',
+				'label' => s("État des immos")
+			]
 		];
 
 	}

@@ -13,9 +13,9 @@ new Page()
 			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
 		}
 
-		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+		$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
-		$data->assetSummary = asset\AssetStatusLib::getSummary($data->eFinancialYearSelected);
+		$data->assetSummary = \asset\DepreciationLib::getSummary($data->eFinancialYear);
 
 		throw new ViewAction($data);
 

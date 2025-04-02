@@ -34,6 +34,7 @@ class AssetLib extends \asset\AssetCrud {
       ->sort(['accountLabel' => SORT_ASC, 'startDate' => SORT_ASC])
       ->getCollection();
 	}
+
 	public static function getOngoingAssets(\accounting\FinancialYear $eFinancialYear): \Collection {
 
 		return Asset::model()
@@ -46,6 +47,7 @@ class AssetLib extends \asset\AssetCrud {
 			->whereAccountLabel('LIKE', \Setting::get('accounting\assetClass').'%')
 			->sort(['accountLabel' => SORT_ASC, 'startDate' => SORT_ASC])
 			->getCollection();
+
 	}
 
 	public static function prepareAsset(\journal\Operation $eOperation, array $assetData, int $index): ?Asset {

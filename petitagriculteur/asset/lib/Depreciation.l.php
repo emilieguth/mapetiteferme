@@ -55,6 +55,62 @@ class DepreciationLib extends \asset\DepreciationCrud {
 
 	}
 
+	public static function getSummary(\accounting\FinancialYear $eFinancialYear): array {
+
+		$depreciations = self::getByFinancialYear($eFinancialYear, 'asset');
+
+		$emptyLine = [
+			'account' => '',
+			'accountLabel' => '',
+			'acquisitionValue' => 0,
+			'economic' => [
+				'startFinancialYearValue' => 0,
+				'currentFinancialYearDepreciation' => 0,
+				'currentFinancialYearDegressiveDepreciation' => 0,
+				'financialYearDiminution' => 0,
+				'endFinancialYearValue' => 0,
+			],
+			'grossValueDiminution' => 0,
+			'netFinancialValue' => 0,
+			'excess' => [
+				'startFinancialYearValue' => 0,
+				'currentFinancialYearDepreciation' => 0,
+				'reversal' => 0,
+				'endFinancialYearValue' => 0,
+			],
+			'fiscalNetValue' => 0,
+		];
+
+		$lines = [];
+		$total = $emptyLine;
+		$generalTotal = $emptyLine;
+
+		$currentAccountLabel = NULL;
+
+		foreach($depreciations as $depreciation) {
+
+			if($currentAccountLabel !== NULL and $depreciation['accountLabel'] !== $currentAccountLabel) {
+
+				DepreciationUi::addTotalLine($generalTotal, $total);
+				$lines[] = $total;
+				$total = $emptyLine;
+
+			}
+
+			$total['accountLabel'] = $depreciation['accountLabel'];
+			$total['description'] = $depreciation['accountDescription'];
+			$currentAccountLabel = $depreciation['accountLabel'];
+			DepreciationUi::addTotalLine($total, $depreciation);
+
+		}
+
+		$lines[] = $total;
+		$lines[] = $generalTotal;
+
+		return $lines;
+
+	}
+
 	public static function getByFinancialYear(\accounting\FinancialYear $eFinancialYear, string $type): array {
 
 		$cAsset = match($type) {
@@ -126,6 +182,7 @@ class DepreciationLib extends \asset\DepreciationCrud {
 					// Début exercice : NULL si acquis durant l'exercice comptable
 					'startFinancialYearValue' => $eAsset['startDate'] >= $eFinancialYear['startDate'] ? NULL : $eAsset['value'] - $alreadyDepreciated,
 					'currentFinancialYearDepreciation' => $currentDepreciation,
+					'currentFinancialYearDegressiveDepreciation' => 0,
 					'financialYearDiminution' => $financialYearDiminution,
 					'endFinancialYearValue' => $currentDepreciation - $financialYearDiminution,
 				],
@@ -140,7 +197,7 @@ class DepreciationLib extends \asset\DepreciationCrud {
 				'excess' => [
 					'startFinancialYearValue' => 0,
 					'currentFinancialYearDepreciation' => $currentExcessDepreciation,
-					'financialYearDiminution' => 0,
+					'reversal' => 0,
 					'endFinancialYearValue' => $currentExcessDepreciation,
 				],
 

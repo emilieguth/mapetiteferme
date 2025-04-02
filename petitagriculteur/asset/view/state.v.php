@@ -13,9 +13,9 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 			return \company\CompanyUi::urlAsset($data->eCompany).'/state?financialYear='.$eFinancialYear['id'];
 		},
 		$data->cFinancialYear,
-		$data->eFinancialYearSelected,
+		$data->eFinancialYear,
 	);
 
-	echo new asset\AssetUi()->getSummary($data->eCompany, $data->eFinancialYearSelected, $data->assetSummary);
+	echo new asset\AssetUi()->getSummary($data->eFinancialYear, $data->assetSummary);
 
 });

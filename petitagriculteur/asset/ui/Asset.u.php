@@ -21,7 +21,7 @@ Class AssetUi {
 		$h = '<div class="util-action">';
 
 			$h .= '<h1>';
-				$h .= s("État des immobilisations");
+				$h .= s("Synthèse générale par compte");
 			$h .= '</h1>';
 
 		$h .= '</div>';
@@ -123,17 +123,17 @@ Class AssetUi {
 		return $h;
 
 	}
-	public static function getSummary(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, array $assetSummary): string {
+	public static function getSummary(\accounting\FinancialYear $eFinancialYear, array $assetSummary): string {
 
 		$h = '';
 
 		if($eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN) {
-			$h .= '<div class="util-warning">';
-				$h .= s("L'exercice fiscal n'étant pas terminé, les données affichées sont une projection de l'actuel à la fin de l'exercice.");
-			$h .= '</div>';
-		}
 
-		$h .= '<h1>'.s("Amortissement des immobilisations").'</h1>';
+			$h .= '<div class="util-warning">';
+				$h .= s("L'exercice comptable n'étant pas terminé, les données affichées sont une projection de l'actuel à la fin de l'exercice.");
+			$h .= '</div>';
+
+		}
 
 		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
@@ -141,7 +141,7 @@ Class AssetUi {
 
 				$h .= '<thead class="thead-sticky">';
 					$h .= '<tr class="row-bold">';
-						$h .= '<th class="text-center">'.s("Caractéristiques").'</th>';
+						$h .= '<th colspan="2" class="text-center">'.s("Caractéristiques").'</th>';
 						$h .= '<th colspan="5" class="text-center">'.s("Valeurs brutes").'</th>';
 						$h .= '<th colspan="6" class="text-center">'.s("Amortissements économiques").'</th>';
 						$h .= '<th rowspan="4" class="text-center">'.s("VNC").'</th>';
@@ -149,7 +149,7 @@ Class AssetUi {
 						$h .= '<th rowspan="4" class="text-center">'.s("VNF").'</th>';
 					$h .= '</tr>';
 					$h .= '<tr>';
-						$h .= '<th rowspan="3" class="text-center">'.s("Libellé").'</th>';
+						$h .= '<th rowspan="3" colspan="2" class="text-center">'.s("Libellé").'</th>';
 						$h .= '<th rowspan="3" class="text-center">'.s("Valeur début").'</th>';
 						$h .= '<th rowspan="3" class="text-center">'.s("Acquis. ou apport").'</th>';
 						$h .= '<th rowspan="3" class="text-center">'.s("Diminution poste à p.").'</th>';
@@ -173,42 +173,42 @@ Class AssetUi {
 					$h .= '</tr>';
 				$h .= '</thead>';
 
-				$h .= '</tbody>';
+				$h .= '<tbody>';
 					foreach($assetSummary as $asset) {
 						$h .= '<tr>';
-							$h .= '<td>'.encode($asset['accountLabel']).'&nbsp;'.encode($asset['description']).'</td>';
+							$h .= '<td>'.encode($asset['accountLabel']).'</td>';
+							$h .= '<td>'.encode($asset['description'] ?? '').'</td>';
 
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['grossValue']['startValue'], '', 2) .'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['grossValue']['buyValue'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['grossValue']['decrease'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['grossValue']['out'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['grossValue']['endValue'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number(0, '', 2) .'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['acquisitionValue'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number(0, '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number(0, '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['acquisitionValue'], '', 2).'</td>';
 
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['startFinancialYear'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['globalIncrease'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['linearIncrease'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['degressiveIncrease'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['decrease'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['endFinancialYear'], '', 2).'</td>';
-
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['netBookValue'], '', 2).'</td>';
-
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['startFinancialYear'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['depreciation'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['reversal'], '', 2).'</td>';
-							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['endFinancialYear'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['startFinancialYearValue'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['currentFinancialYearDepreciation'] + $asset['economic']['currentFinancialYearDegressiveDepreciation'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['currentFinancialYearDepreciation'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['currentFinancialYearDegressiveDepreciation'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['financialYearDiminution'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['economic']['endFinancialYearValue'], '', 2).'</td>';
 
 							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['netFinancialValue'], '', 2).'</td>';
 
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['startFinancialYearValue'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['currentFinancialYearDepreciation'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['reversal'], '', 2).'</td>';
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['excess']['endFinancialYearValue'], '', 2).'</td>';
+
+							$h .= '<td class="util-unit text-end">'.new AssetUi()->number($asset['fiscalNetValue'], '', 2).'</td>';
+
 						$h .= '</tr>';
 					}
-				$h .= '<tbody>';
+				$h .= '</tbody>';
 
 			$h .= '</table>';
 
 		$h .= '</table>';
 
-//d($assetSummary);
 		return $h;
 
 	}
