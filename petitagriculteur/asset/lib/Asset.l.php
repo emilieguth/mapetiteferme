@@ -52,7 +52,11 @@ class AssetLib extends \asset\AssetCrud {
 
 		$eOperation->expects(['accountLabel']);
 
-		if((int)mb_substr($eOperation['accountLabel'], 0, 1) !== \Setting::get('accounting\assetClass')) {
+		if(
+			(int)mb_substr($eOperation['accountLabel'], 0, 1) !== \Setting::get('accounting\assetClass')
+			and
+			(int)mb_substr($eOperation['accountLabel'], 0, 2) !== \Setting::get('accounting\subventionAssetClass')
+		) {
 			return NULL;
 		}
 

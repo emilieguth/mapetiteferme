@@ -5,7 +5,6 @@ Privilege::register('accounting', [
 ]);
 
 Setting::register('accounting', [
-	'assetClasses' => [2, 13],
 	'assetClass' => 2,
 	'subventionAssetClass' => 13,
 
