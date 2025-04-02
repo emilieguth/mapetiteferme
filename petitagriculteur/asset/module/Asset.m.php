@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace asset;
 
 abstract class AssetElement extends \Element {
 
@@ -34,9 +34,9 @@ abstract class AssetElement extends \Element {
 
 class AssetModel extends \ModuleModel {
 
-	protected string $module = 'journal\Asset';
-	protected string $package = 'journal';
-	protected string $table = 'journalAsset';
+	protected string $module = 'asset\Asset';
+	protected string $package = 'asset';
+	protected string $table = 'asset';
 
 	public function __construct() {
 
@@ -48,12 +48,12 @@ class AssetModel extends \ModuleModel {
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'value' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'description' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
-			'type' => ['enum', [\journal\Asset::LINEAR, \journal\Asset::WITHOUT], 'cast' => 'enum'],
+			'type' => ['enum', [\asset\Asset::LINEAR, \asset\Asset::WITHOUT], 'cast' => 'enum'],
 			'acquisitionDate' => ['date', 'cast' => 'string'],
 			'startDate' => ['date', 'cast' => 'string'],
 			'endDate' => ['date', 'cast' => 'string'],
 			'duration' => ['int8', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
-			'status' => ['enum', [\journal\Asset::ONGOING, \journal\Asset::SOLD, \journal\Asset::ENDED], 'cast' => 'enum'],
+			'status' => ['enum', [\asset\Asset::ONGOING, \asset\Asset::SOLD, \asset\Asset::ENDED], 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
 			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
@@ -278,7 +278,7 @@ abstract class AssetCrud extends \ModuleCrud {
 
 class AssetPage extends \ModulePage {
 
-	protected string $module = 'journal\Asset';
+	protected string $module = 'asset\Asset';
 
 	public function __construct(
 	   ?\Closure $start = NULL,

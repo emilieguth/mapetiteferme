@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace asset;
 
 class Asset extends AssetElement {
 

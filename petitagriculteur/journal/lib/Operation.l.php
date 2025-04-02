@@ -171,7 +171,7 @@ class OperationLib extends OperationCrud {
 			$fw->validate();
 
 			// Class 2 => Vérification et création de l'immobilisation
-			$eAsset = AssetLib::prepareAsset($eOperation, $input['asset'][$index] ?? [], $index);
+			$eAsset = \asset\AssetLib::prepareAsset($eOperation, $input['asset'][$index] ?? [], $index);
 
 			$fw->validate();
 
@@ -256,7 +256,7 @@ class OperationLib extends OperationCrud {
 
 		// Deletes related operations (like assets... or VAT?)
 		if($e['asset']->exists() === TRUE) {
-			AssetLib::deleteByIds([$e['asset']['id']]);
+			\asset\AssetLib::deleteByIds([$e['asset']['id']]);
 		}
 
 		Operation::model()
@@ -412,7 +412,7 @@ class OperationLib extends OperationCrud {
 		// Get all the operation and check if we have to delete the assets too
 		$cAsset = OperationLib::getByCashflow($eCashflow)->getColumnCollection('asset');
 		if($cAsset->empty() === FALSE) {
-			AssetLib::deleteByIds($cAsset->getIds());
+			\asset\AssetLib::deleteByIds($cAsset->getIds());
 		}
 
 		\journal\Operation::model()

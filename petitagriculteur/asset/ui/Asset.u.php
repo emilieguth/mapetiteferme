@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace asset;
 
 Class AssetUi {
 
@@ -228,7 +228,7 @@ Class AssetUi {
 
 	public static function p(string $property): \PropertyDescriber {
 
-		$d = Operation::model()->describer($property, [
+		$d = \journal\Operation::model()->describer($property, [
 			'accountLabel' => s("Compte"),
 			'value' => s("Valeur (HT)"),
 			'type' => s("Type d'amortissement"),

@@ -1,6 +1,5 @@
 <?php
 namespace journal;
-
 class OperationUi {
 
 	public function __construct() {
@@ -205,30 +204,30 @@ class OperationUi {
 			$h .= '<div data-asset="'.$form->getId().'" data-index="'.$index.'" class="util-block bg-white hide">';
 				$h .= '<h4>'.s("Immobilisation").'</h4>';
 					$h .= $form->group(
-						AssetUi::p('type')->label.' '.\util\FormUi::asterisk(),
+						\asset\AssetUi::p('type')->label.' '.\util\FormUi::asterisk(),
 						$form->radio(
 							'asset'.$suffix.'[type]',
-							AssetElement::LINEAR,
-							AssetUi::p('type')->values[AssetElement::LINEAR],
+							\asset\AssetElement::LINEAR,
+							\asset\AssetUi::p('type')->values[\asset\AssetElement::LINEAR],
 							''
 						)
 						.$form->radio(
 							'asset'.$suffix.'[type]',
-							AssetElement::WITHOUT,
-							AssetUi::p('type')->values[AssetElement::WITHOUT],
+							\asset\AssetElement::WITHOUT,
+							\asset\AssetUi::p('type')->values[\asset\AssetElement::WITHOUT],
 							'',
 						)
 					);
 					$h .= $form->group(
-						AssetUi::p('acquisitionDate')->label.' '.\util\FormUi::asterisk(),
+						\asset\AssetUi::p('acquisitionDate')->label.' '.\util\FormUi::asterisk(),
 						$form->date('asset'.$suffix.'[acquisitionDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
 					);
 					$h .= $form->group(
-						AssetUi::p('startDate')->label.' '.\util\FormUi::asterisk(),
+						\asset\AssetUi::p('startDate')->label.' '.\util\FormUi::asterisk(),
 						$form->date('asset'.$suffix.'[startDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
 					);
 					$h .= $form->group(
-						AssetUi::p('value')->label.' '.\util\FormUi::asterisk(),
+						\asset\AssetUi::p('value')->label.' '.\util\FormUi::asterisk(),
 							$form->inputGroup(
 								$form->number(
 									'asset'.$suffix.'[value]',
@@ -241,7 +240,7 @@ class OperationUi {
 							)
 					);
 					$h .= $form->group(
-						AssetUi::p('duration')->label.' '.\util\FormUi::asterisk(),
+						\asset\AssetUi::p('duration')->label.' '.\util\FormUi::asterisk(),
 						$form->number('asset'.$suffix.'[duration]', '')
 					);
 			$h .= '</div>';
@@ -250,16 +249,16 @@ class OperationUi {
 				self::p('type')->label.' '.\util\FormUi::asterisk(),
 				$form->radio(
 					'type'.$suffix,
-					Operation::DEBIT,
-					self::p('type')->values[Operation::DEBIT],
+					OperationElement::DEBIT,
+					self::p('type')->values[OperationElement::DEBIT],
 					$defaultValues['type'] ?? '',
 					[
 						'data-index' => $index
 					]
 				).
 				$form->radio(
-					'type'.$suffix, Operation::CREDIT,
-					self::p('type')->values[Operation::CREDIT],
+					'type'.$suffix, OperationElement::CREDIT,
+					self::p('type')->values[OperationElement::CREDIT],
 					$defaultValues['type'] ?? '',
 					[
 						'data-index' => $index

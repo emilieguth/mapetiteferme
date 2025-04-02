@@ -1,24 +1,3 @@
-Asset:
-  id: serial32
-  account: accounting\Account
-  accountLabel: text8(1, null) @collate(general)
-  # Valeur d'acquisition
-  value: decimal(8, 2)
-  description: text8(1, null) @collate(general)
-  type: enum(LINEAR, WITHOUT)
-  # Date d'achat
-  acquisitionDate: date
-  # Date de mise en service (= début de l'amortissement)
-  startDate: date
-  # Date de fin d'amortissement (calculé)
-  endDate: date
-  # Durée en années
-  duration: int8(0, null)
-  status: enum(ONGOING, SOLD, ENDED) = ONGOING
-  createdAt: datetime = SPECIAL(now)
-  updatedAt: datetime = SPECIAL(now)
-  createdBy: user\User = SPECIAL(user)
-
 Operation:
   id: serial32
   # Compte concerné par l'opération
@@ -38,7 +17,7 @@ Operation:
   # Opération à laquelle celle-ci est liée (ex: opération de TVA reliée à une autre opération)
   operation: ?journal\Operation
   # Immobilisation à laquelle cette opération est liée (obligatoire pour une classe 2)
-  asset: ?journal\Asset
+  asset: ?asset\Asset
   comment: ?text8(1, null)
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)

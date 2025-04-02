@@ -11,6 +11,7 @@ Package::setList([
 	'user' => 'framework',
 	'util' => 'framework',
 	'accounting' => 'petitagriculteur',
+	'asset' => 'petitagriculteur',
 	'bank' => 'petitagriculteur',
 	'company' => 'petitagriculteur',
 	'journal' => 'petitagriculteur',

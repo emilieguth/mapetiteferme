@@ -28,6 +28,10 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/overview';
 	}
 
+	public static function urlAsset(int|Company $company): string {
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/asset';
+	}
+
 	public static function urlBank(int|Company $company): string {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/bank';
 	}
@@ -359,11 +363,11 @@ class CompanyUi {
 		if(LIME_ENV === 'dev') {
 			$more = [
 				'depreciation' => [
-					'url' => CompanyUi::urlJournal($eCompany).'/asset/depreciation',
+					'url' => CompanyUi::urlAsset($eCompany).'/depreciation',
 					'label' => s("Immobilisations (TODO)")
 				],
 				'state' => [
-					'url' => CompanyUi::urlJournal($eCompany).'/asset/state',
+					'url' => CompanyUi::urlAsset($eCompany).'/state',
 					'label' => s("État des immos (WIP)")
 				]
 			];
@@ -372,7 +376,7 @@ class CompanyUi {
 		}
 		return [
 			'acquisition' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/asset/acquisition',
+				'url' => CompanyUi::urlAsset($eCompany).'/acquisition',
 				'label' => s("Acquisitions")
 			],
 			...$more,

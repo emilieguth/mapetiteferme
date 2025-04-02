@@ -1,8 +1,7 @@
 <?php
-namespace journal;
+namespace asset;
 
 class AssetStatusLib extends AssetLib {
-
 
 	public static function getSummary(\accounting\FinancialYear $eFinancialYear): array {
 

@@ -1,7 +1,7 @@
 <?php
-namespace journal;
+namespace asset;
 
-class AssetLib extends \journal\AssetCrud {
+class AssetLib extends \asset\AssetCrud {
 
 	public static function getPropertiesCreate(): array {
 		return ['value', 'type', 'description', 'mode', 'acquisitionDate', 'startDate', 'duration'];
@@ -21,7 +21,7 @@ class AssetLib extends \journal\AssetCrud {
 
 	}
 
-	public static function prepareAsset(Operation $eOperation, array $assetData, int $index): ?Asset {
+	public static function prepareAsset(\journal\Operation $eOperation, array $assetData, int $index): ?Asset {
 
 		$eOperation->expects(['accountLabel']);
 

@@ -52,7 +52,7 @@ class OperationModel extends \ModuleModel {
 			'vatRate' => ['decimal', 'digits' => 5, 'decimal' => 2, 'cast' => 'float'],
 			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
 			'operation' => ['element32', 'journal\Operation', 'null' => TRUE, 'cast' => 'element'],
-			'asset' => ['element32', 'journal\Asset', 'null' => TRUE, 'cast' => 'element'],
+			'asset' => ['element32', 'asset\Asset', 'null' => TRUE, 'cast' => 'element'],
 			'comment' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
@@ -69,7 +69,7 @@ class OperationModel extends \ModuleModel {
 			'cashflow' => 'bank\Cashflow',
 			'vatAccount' => 'accounting\Account',
 			'operation' => 'journal\Operation',
-			'asset' => 'journal\Asset',
+			'asset' => 'asset\Asset',
 			'createdBy' => 'user\User',
 		];
 
