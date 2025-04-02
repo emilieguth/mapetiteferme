@@ -56,14 +56,16 @@ class AssetModel extends \ModuleModel {
 			'status' => ['enum', [\journal\Asset::ONGOING, \journal\Asset::SOLD, \journal\Asset::ENDED], 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
+			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'value', 'description', 'type', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status', 'createdAt', 'updatedAt'
+			'id', 'account', 'accountLabel', 'value', 'description', 'type', 'acquisitionDate', 'startDate', 'endDate', 'duration', 'status', 'createdAt', 'updatedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
 			'account' => 'accounting\Account',
+			'createdBy' => 'user\User',
 		];
 
 	}
@@ -80,6 +82,9 @@ class AssetModel extends \ModuleModel {
 
 			case 'updatedAt' :
 				return new \Sql('NOW()');
+
+			case 'createdBy' :
+				return \user\ConnectionLib::getOnline();
 
 			default :
 				return parent::getDefaultValue($property);
@@ -163,6 +168,10 @@ class AssetModel extends \ModuleModel {
 
 	public function whereUpdatedAt(...$data): AssetModel {
 		return $this->where('updatedAt', ...$data);
+	}
+
+	public function whereCreatedBy(...$data): AssetModel {
+		return $this->where('createdBy', ...$data);
 	}
 
 

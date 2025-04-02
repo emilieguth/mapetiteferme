@@ -43,14 +43,17 @@ class AccountModel extends \ModuleModel {
 			'custom' => ['bool', 'cast' => 'bool'],
 			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
 			'vatRate' => ['decimal', 'digits' => 5, 'decimal' => 2, 'null' => TRUE, 'cast' => 'float'],
+			'createdAt' => ['datetime', 'cast' => 'string'],
+			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'class', 'description', 'visible', 'custom', 'vatAccount', 'vatRate'
+			'id', 'class', 'description', 'visible', 'custom', 'vatAccount', 'vatRate', 'createdAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
 			'vatAccount' => 'accounting\Account',
+			'createdBy' => 'user\User',
 		];
 
 		$this->indexConstraints = array_merge($this->indexConstraints, [
@@ -72,6 +75,12 @@ class AccountModel extends \ModuleModel {
 
 			case 'vatRate' :
 				return 0;
+
+			case 'createdAt' :
+				return new \Sql('NOW()');
+
+			case 'createdBy' :
+				return \user\ConnectionLib::getOnline();
 
 			default :
 				return parent::getDefaultValue($property);
@@ -114,6 +123,14 @@ class AccountModel extends \ModuleModel {
 
 	public function whereVatRate(...$data): AccountModel {
 		return $this->where('vatRate', ...$data);
+	}
+
+	public function whereCreatedAt(...$data): AccountModel {
+		return $this->where('createdAt', ...$data);
+	}
+
+	public function whereCreatedBy(...$data): AccountModel {
+		return $this->where('createdBy', ...$data);
 	}
 
 

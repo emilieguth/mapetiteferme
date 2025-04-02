@@ -7,6 +7,8 @@ Account:
   custom: bool = FALSE
   vatAccount: ?accounting\Account
   vatRate: ?decimal(5, 2) = 0.00
+  createdAt: datetime = SPECIAL(now)
+  createdBy: user\User = SPECIAL(user)
   INDEX: [
       ["id"],
       ["class"]
@@ -18,3 +20,5 @@ FinancialYear:
   startDate: date
   endDate: date
   status: enum(OPEN, CLOSE) = OPEN
+  createdAt: datetime = SPECIAL(now)
+  createdBy: user\User = SPECIAL(user)

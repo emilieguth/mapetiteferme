@@ -22,6 +22,7 @@ Cashflow:
   document: ?text8(1, null) @collate(general)
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
+  createdBy: user\User = SPECIAL(user)
   UNIQUE: [
     ["fitid"]
   ]
@@ -36,3 +37,4 @@ Import:
   account: bank\Account
   createdAt: datetime = SPECIAL(now)
   processedAt: ?datetime
+  createdBy: user\User = SPECIAL(user)

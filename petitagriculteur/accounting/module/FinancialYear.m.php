@@ -43,11 +43,17 @@ class FinancialYearModel extends \ModuleModel {
 			'startDate' => ['date', 'cast' => 'string'],
 			'endDate' => ['date', 'cast' => 'string'],
 			'status' => ['enum', [\accounting\FinancialYear::OPEN, \accounting\FinancialYear::CLOSE], 'cast' => 'enum'],
+			'createdAt' => ['datetime', 'cast' => 'string'],
+			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'startDate', 'endDate', 'status'
+			'id', 'startDate', 'endDate', 'status', 'createdAt', 'createdBy'
 		]);
+
+		$this->propertiesToModule += [
+			'createdBy' => 'user\User',
+		];
 
 	}
 
@@ -57,6 +63,12 @@ class FinancialYearModel extends \ModuleModel {
 
 			case 'status' :
 				return FinancialYear::OPEN;
+
+			case 'createdAt' :
+				return new \Sql('NOW()');
+
+			case 'createdBy' :
+				return \user\ConnectionLib::getOnline();
 
 			default :
 				return parent::getDefaultValue($property);
@@ -101,6 +113,14 @@ class FinancialYearModel extends \ModuleModel {
 
 	public function whereStatus(...$data): FinancialYearModel {
 		return $this->where('status', ...$data);
+	}
+
+	public function whereCreatedAt(...$data): FinancialYearModel {
+		return $this->where('createdAt', ...$data);
+	}
+
+	public function whereCreatedBy(...$data): FinancialYearModel {
+		return $this->where('createdBy', ...$data);
 	}
 
 

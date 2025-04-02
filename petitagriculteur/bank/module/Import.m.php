@@ -51,14 +51,16 @@ class ImportModel extends \ModuleModel {
 			'account' => ['element32', 'bank\Account', 'cast' => 'element'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'processedAt' => ['datetime', 'null' => TRUE, 'cast' => 'string'],
+			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'filename', 'startDate', 'endDate', 'result', 'status', 'account', 'createdAt', 'processedAt'
+			'id', 'filename', 'startDate', 'endDate', 'result', 'status', 'account', 'createdAt', 'processedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
 			'account' => 'bank\Account',
+			'createdBy' => 'user\User',
 		];
 
 	}
@@ -72,6 +74,9 @@ class ImportModel extends \ModuleModel {
 
 			case 'createdAt' :
 				return new \Sql('NOW()');
+
+			case 'createdBy' :
+				return \user\ConnectionLib::getOnline();
 
 			default :
 				return parent::getDefaultValue($property);
@@ -153,6 +158,10 @@ class ImportModel extends \ModuleModel {
 
 	public function whereProcessedAt(...$data): ImportModel {
 		return $this->where('processedAt', ...$data);
+	}
+
+	public function whereCreatedBy(...$data): ImportModel {
+		return $this->where('createdBy', ...$data);
 	}
 
 

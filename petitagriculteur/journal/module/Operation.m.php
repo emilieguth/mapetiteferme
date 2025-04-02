@@ -56,10 +56,11 @@ class OperationModel extends \ModuleModel {
 			'comment' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
+			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'createdAt', 'updatedAt'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'createdAt', 'updatedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
@@ -69,6 +70,7 @@ class OperationModel extends \ModuleModel {
 			'vatAccount' => 'accounting\Account',
 			'operation' => 'journal\Operation',
 			'asset' => 'journal\Asset',
+			'createdBy' => 'user\User',
 		];
 
 		$this->indexConstraints = array_merge($this->indexConstraints, [
@@ -90,6 +92,9 @@ class OperationModel extends \ModuleModel {
 
 			case 'updatedAt' :
 				return new \Sql('NOW()');
+
+			case 'createdBy' :
+				return \user\ConnectionLib::getOnline();
 
 			default :
 				return parent::getDefaultValue($property);
@@ -186,6 +191,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereUpdatedAt(...$data): OperationModel {
 		return $this->where('updatedAt', ...$data);
+	}
+
+	public function whereCreatedBy(...$data): OperationModel {
+		return $this->where('createdBy', ...$data);
 	}
 
 

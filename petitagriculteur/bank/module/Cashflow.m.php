@@ -56,15 +56,17 @@ class CashflowModel extends \ModuleModel {
 			'document' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
+			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status', 'document', 'createdAt', 'updatedAt'
+			'id', 'date', 'type', 'amount', 'fitid', 'name', 'memo', 'account', 'import', 'status', 'document', 'createdAt', 'updatedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
 			'account' => 'bank\Account',
 			'import' => 'bank\Import',
+			'createdBy' => 'user\User',
 		];
 
 		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
@@ -85,6 +87,9 @@ class CashflowModel extends \ModuleModel {
 
 			case 'updatedAt' :
 				return new \Sql('NOW()');
+
+			case 'createdBy' :
+				return \user\ConnectionLib::getOnline();
 
 			default :
 				return parent::getDefaultValue($property);
@@ -168,6 +173,10 @@ class CashflowModel extends \ModuleModel {
 
 	public function whereUpdatedAt(...$data): CashflowModel {
 		return $this->where('updatedAt', ...$data);
+	}
+
+	public function whereCreatedBy(...$data): CashflowModel {
+		return $this->where('createdBy', ...$data);
 	}
 
 

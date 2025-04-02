@@ -46,15 +46,17 @@ class InviteModel extends \ModuleModel {
 			'expiresAt' => ['date', 'cast' => 'string'],
 			'key' => ['text8', 'null' => TRUE, 'cast' => 'string'],
 			'status' => ['enum', [\company\Invite::PENDING, \company\Invite::ACCEPTED], 'cast' => 'enum'],
+			'createdBy' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'company', 'email', 'employee', 'expiresAt', 'key', 'status'
+			'id', 'company', 'email', 'employee', 'expiresAt', 'key', 'status', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
 			'company' => 'company\Company',
 			'employee' => 'company\Employee',
+			'createdBy' => 'user\User',
 		];
 
 		$this->indexConstraints = array_merge($this->indexConstraints, [
@@ -76,6 +78,9 @@ class InviteModel extends \ModuleModel {
 
 			case 'status' :
 				return Invite::PENDING;
+
+			case 'createdBy' :
+				return \user\ConnectionLib::getOnline();
 
 			default :
 				return parent::getDefaultValue($property);
@@ -132,6 +137,10 @@ class InviteModel extends \ModuleModel {
 
 	public function whereStatus(...$data): InviteModel {
 		return $this->where('status', ...$data);
+	}
+
+	public function whereCreatedBy(...$data): InviteModel {
+		return $this->where('createdBy', ...$data);
 	}
 
 

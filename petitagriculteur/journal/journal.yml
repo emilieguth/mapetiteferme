@@ -17,6 +17,7 @@ Asset:
   status: enum(ONGOING, SOLD, ENDED) = ONGOING
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
+  createdBy: user\User = SPECIAL(user)
 
 Operation:
   id: serial32
@@ -41,6 +42,7 @@ Operation:
   comment: ?text8(1, null)
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
+  createdBy: user\User = SPECIAL(user)
   INDEX: [
     ["document"],
     ["cashflow"]
