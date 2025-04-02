@@ -16,7 +16,8 @@ new Page()
 
 		$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
-		$data->cAsset = asset\AssetLib::getAcquisitions($data->eFinancialYear);
+		$data->cAsset = asset\AssetLib::getAcquisitions($data->eFinancialYear, 'asset');
+		$data->cAssetSubvention = asset\AssetLib::getAcquisitions($data->eFinancialYear, 'subvention');
 
 		throw new ViewAction($data);
 

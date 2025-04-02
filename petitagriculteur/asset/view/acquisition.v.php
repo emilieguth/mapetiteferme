@@ -16,6 +16,10 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYear,
 	);
 
-	echo new asset\AssetUi()->getAcquisitionTable($data->cAsset);
+	echo '<h1>'.s("Immobilisations").'</h1>';
+	echo new asset\AssetUi()->getAcquisitionTable($data->cAsset, 'asset');
+
+	echo '<h1>'.s("Subventions").'</h1>';
+	echo new asset\AssetUi()->getAcquisitionTable($data->cAssetSubvention, 'subvention');
 
 });

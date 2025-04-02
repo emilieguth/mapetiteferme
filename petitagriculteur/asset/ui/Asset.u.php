@@ -45,7 +45,7 @@ Class AssetUi {
 
 	}
 
-	public function getAcquisitionTable(\Collection $cAsset): string {
+	public function getAcquisitionTable(\Collection $cAsset, string $type): string {
 
 		$h = '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
@@ -105,7 +105,12 @@ Class AssetUi {
 					$h .= '<tr class="row-bold">';
 						$h .= '<td></td>';
 						$h .= '<td></td>';
-						$h .= '<td>'.s("Total immobilisations").'</td>';
+						$h .= '<td>';
+							$h .= match($type) {
+								'asset' => s("Total immobilisations"),
+								'subvention' => s("Total subventions"),
+							};
+						$h .= '</td>';
 						$h .= '<td></td>';
 						$h .= '<td></td>';
 						$h .= '<td></td>';

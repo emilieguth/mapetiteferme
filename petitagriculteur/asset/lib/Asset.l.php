@@ -10,12 +10,16 @@ class AssetLib extends \asset\AssetCrud {
 		return ['value', 'type', 'description', 'mode', 'acquisitionDate', 'startDate', 'duration', 'status'];
 	}
 
-	public static function getAcquisitions(\accounting\FinancialYear $eFinancialYear): \Collection {
+	public static function getAcquisitions(\accounting\FinancialYear $eFinancialYear, string $type): \Collection {
 
 		return Asset::model()
 			->select(Asset::getSelection())
 			->whereAcquisitionDate('>=', $eFinancialYear['startDate'])
 			->whereAcquisitionDate('<=', $eFinancialYear['endDate'])
+			->whereAccountLabel('LIKE', match($type) {
+				'asset' => \Setting::get('accounting\assetClass').'%',
+				'subvention' => \Setting::get('accounting\subventionAssetClass').'%',
+			})
 			->sort(['accountLabel' => SORT_ASC, 'startDate' => SORT_ASC])
 			->getCollection();
 
