@@ -313,7 +313,8 @@ class JournalUi {
 		if($eOperation['cashflow']->exists() === FALSE) {
 
 			$attributes = [
-				'data-ajax' => \company\CompanyUi::urlJournal($eCompany).'/operation:doDelete" post-id="'.$eOperation['id'],
+				'data-ajax' => \company\CompanyUi::urlJournal($eCompany).'/operation:doDelete',
+				'post-id' => $eOperation['id'],
 				'data-confirm' => s("Confirmez-vous la suppression de cette écriture ?"),
 				'class' => 'btn btn-outline-secondary btn-outline-danger',
 			];
