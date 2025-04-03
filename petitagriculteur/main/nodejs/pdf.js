@@ -17,7 +17,7 @@ console.log(url, destination, headerFooterArgs);
 (async() => {
 
 	const browser = await puppeteer.launch({
-		executablePath: '/var/www/chrome-linux/chrome',
+		executablePath: '/usr/bin/google-chrome',
 		args: ['--no-sandbox']
 	});
 
