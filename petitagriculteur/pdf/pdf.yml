@@ -1,0 +1,14 @@
+Pdf:
+  id: serial32
+  used: int16(0, null) = 1
+  content: ?pdf\PdfContent
+  emailedAt: ?datetime
+  createdAt: datetime = SPECIAL(now)
+  INDEX: [
+    ["content"]
+  ]
+
+PdfContent:
+  id: serial32
+  hash: ?textFixed(20, 20) @charset(ascii)
+  createdAt: datetime = SPECIAL(now)

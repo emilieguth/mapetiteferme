@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace pdf;
 
 abstract class PdfElement extends \Element {
 
@@ -27,9 +27,9 @@ abstract class PdfElement extends \Element {
 
 class PdfModel extends \ModuleModel {
 
-	protected string $module = 'journal\Pdf';
-	protected string $package = 'journal';
-	protected string $table = 'journalPdf';
+	protected string $module = 'pdf\Pdf';
+	protected string $package = 'pdf';
+	protected string $table = 'pdf';
 
 	public function __construct() {
 
@@ -38,7 +38,7 @@ class PdfModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'used' => ['int16', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
-			'content' => ['element32', 'journal\PdfContent', 'null' => TRUE, 'cast' => 'element'],
+			'content' => ['element32', 'pdf\PdfContent', 'null' => TRUE, 'cast' => 'element'],
 			'emailedAt' => ['datetime', 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
@@ -48,7 +48,7 @@ class PdfModel extends \ModuleModel {
 		]);
 
 		$this->propertiesToModule += [
-			'content' => 'journal\PdfContent',
+			'content' => 'pdf\PdfContent',
 		];
 
 		$this->indexConstraints = array_merge($this->indexConstraints, [
@@ -206,7 +206,7 @@ abstract class PdfCrud extends \ModuleCrud {
 
 class PdfPage extends \ModulePage {
 
-	protected string $module = 'journal\Pdf';
+	protected string $module = 'pdf\Pdf';
 
 	public function __construct(
 	   ?\Closure $start = NULL,

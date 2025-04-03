@@ -18,6 +18,7 @@ Package::setList([
 	'mail' => 'petitagriculteur',
 	'media' => 'petitagriculteur',
 	'overview' => 'petitagriculteur',
+	'pdf' => 'petitagriculteur',
 ]);
 
 Package::setObservers([

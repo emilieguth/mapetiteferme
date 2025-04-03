@@ -1,7 +1,7 @@
 <?php
-namespace journal;
+namespace pdf;
 
-class PdfLib extends PdfCrud {
+class PdfLib extends \pdf\PdfCrud {
 
 	public static function build(string $url, ?string $header, ?string $footer): string {
 
@@ -24,8 +24,8 @@ class PdfLib extends PdfCrud {
 
 			exec('node '.LIME_DIRECTORY.'/petitagriculteur/main/nodejs/pdf.js '.$args.' 2>&1');
 
-			if(LIME_ENV === 'dev') {
-				d('node '.LIME_DIRECTORY.'/petitagriculteur/main/nodejs/pdf.js '.$args.' 2>&1');
+			if(\LIME_ENV === 'dev') {
+				\d('node '.LIME_DIRECTORY.'/petitagriculteur/main/nodejs/pdf.js '.$args.' 2>&1');
 			}
 
 			$content = file_get_contents($file);
@@ -60,21 +60,21 @@ class PdfLib extends PdfCrud {
 
 		$content = self::generateOnTheFly($eCompany, $eFinancialYear, $type);
 
-		Pdf::model()->beginTransaction();
+		\pdf\Pdf::model()->beginTransaction();
 
-		$ePdfContent = new PdfContent();
-		PdfContent::model()->insert($ePdfContent);
+		$ePdfContent = new \pdf\PdfContent();
+		\pdf\PdfContent::model()->insert($ePdfContent);
 
 		$hash = NULL;
 		new \media\PdfContentLib()->send($ePdfContent, $hash, $content, 'pdf');
 
-		$ePdf = new Pdf(['content' => $ePdfContent]);
+		$ePdf = new \pdf\Pdf(['content' => $ePdfContent]);
 
-		Pdf::model()
+		\pdf\Pdf::model()
 		   ->option('add-replace')
 		   ->insert($ePdf);
 
-		Pdf::model()->commit();
+		\pdf\Pdf::model()->commit();
 
 	}
 

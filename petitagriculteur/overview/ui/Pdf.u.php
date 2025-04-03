@@ -5,7 +5,7 @@ class PdfUi {
 
 	public function __construct() {
 
-		\Asset::css('overview', 'pdf.css');
+		\Asset::css('pdf', 'pdf.css');
 
 	}
 
@@ -59,7 +59,9 @@ class PdfUi {
 
 			$h .= '</div>';
 		$h .= '</div>';
+
 		return $h;
+
 	}
 
 	public function getFooter(): string {

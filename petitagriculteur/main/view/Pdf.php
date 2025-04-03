@@ -12,7 +12,7 @@ class PdfTemplate extends Template {
 
 		\Asset::css('util', 'font-open-sans.css');
 		\Asset::css('main', 'design.css');
-		\Asset::css('main', 'pdf.css');
+		\Asset::css('pdf', 'pdf.css');
 
 	}
 

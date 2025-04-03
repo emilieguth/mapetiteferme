@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace pdf;
 
 abstract class PdfContentElement extends \Element {
 
@@ -27,9 +27,9 @@ abstract class PdfContentElement extends \Element {
 
 class PdfContentModel extends \ModuleModel {
 
-	protected string $module = 'journal\PdfContent';
-	protected string $package = 'journal';
-	protected string $table = 'journalPdfContent';
+	protected string $module = 'pdf\PdfContent';
+	protected string $package = 'pdf';
+	protected string $table = 'pdfPdfContent';
 
 	public function __construct() {
 
@@ -185,7 +185,7 @@ abstract class PdfContentCrud extends \ModuleCrud {
 
 class PdfContentPage extends \ModulePage {
 
-	protected string $module = 'journal\PdfContent';
+	protected string $module = 'pdf\PdfContent';
 
 	public function __construct(
 	   ?\Closure $start = NULL,

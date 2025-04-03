@@ -1,5 +1,5 @@
 <?php
-namespace journal;
+namespace pdf;
 
 class PdfContent extends PdfContentElement {
 
