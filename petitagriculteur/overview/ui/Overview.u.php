@@ -26,12 +26,26 @@ class OverviewUi {
 		$h = '<div class="util-action">';
 
 			$h .= '<h1>';
-				$h .= \s("Les balances");
+				$h .= s("Les bilans");
 			$h .= '</h1>';
 
 			$h .= '<div>';
 				$h .= '<a href="'.PdfUi::urlBalance($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-transparent">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
 			$h .= '</div>';
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+	public function getAccountingTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
+
+		$h = '<div class="util-action">';
+
+			$h .= '<h1>';
+				$h .= s("Les balances");
+			$h .= '</h1>';
 
 		$h .= '</div>';
 

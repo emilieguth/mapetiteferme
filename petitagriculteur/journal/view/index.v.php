@@ -6,17 +6,17 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->subNav = new \company\CompanyUi()->getJournalSubNav($data->eCompany);
 	$t->canonical = \company\CompanyUi::urlJournal($data->eCompany);
 
-	$t->mainTitle = new \journal\JournalUi()->getJournalTitle($data->eCompany, $data->eFinancialYearSelected);
+	$t->mainTitle = new \journal\JournalUi()->getJournalTitle($data->eCompany, $data->eFinancialYear);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
 			return \company\CompanyUi::urlJournal($data->eCompany).'/?financialYear='.$eFinancialYear['id'];
 			},
 		$data->cFinancialYear,
-		$data->eFinancialYearSelected,
+		$data->eFinancialYear,
 	);
 
-	echo new \journal\JournalUi()->getSearch($data->search, $data->eFinancialYearSelected, $data->eCashflow, $data->eThirdParty);
-	echo new \journal\JournalUi()->getJournal($data->eCompany, $data->cOperation, $data->eFinancialYearSelected, $data->search);
+	echo new \journal\JournalUi()->getSearch($data->search, $data->eFinancialYear, $data->eCashflow, $data->eThirdParty);
+	echo new \journal\JournalUi()->getJournal($data->eCompany, $data->cOperation, $data->eFinancialYear, $data->search);
 
 });

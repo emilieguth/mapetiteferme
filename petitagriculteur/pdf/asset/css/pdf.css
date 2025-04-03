@@ -82,8 +82,6 @@ h2.pdf-document-title {
     text-align: right;
 }
 
-
-.pdf-document-content thead.thead-sticky {
-    position: relative;
-    top: inherit;
+tr {
+    page-break-inside: avoid;
 }

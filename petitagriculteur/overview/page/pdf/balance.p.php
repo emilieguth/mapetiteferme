@@ -15,6 +15,6 @@ new Page(function($data) {
 
 		$data->balanceSummarized = \overview\BalanceLib::getSummarizedBalance($data->eFinancialYear);
 
-		throw new \ViewAction($data);
+		throw new ViewAction($data);
 	});
 ?>

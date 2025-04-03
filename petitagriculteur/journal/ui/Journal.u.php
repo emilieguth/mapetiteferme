@@ -18,8 +18,9 @@ class JournalUi {
 			$h .= '<div>';
 				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
 				if(get_exists('cashflow') === FALSE and $eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN) {
-					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a>';
+					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a> ';
 				}
+				$h .= '<a href="'.PdfUi::urlJournal($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-transparent">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
 			$h .= '</div>';
 
 		$h .= '</div>';

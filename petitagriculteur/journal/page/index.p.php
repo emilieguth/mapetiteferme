@@ -1,20 +1,20 @@
 <?php
-new Page()
+new Page(function($data) {
+
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
+
+	$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
+	if($data->cFinancialYear->empty() === TRUE) {
+		throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
+	}
+
+	$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+
+})
 	->get('index', function($data) {
 
+		\user\ConnectionLib::checkLogged();
 		\Setting::set('main\viewJournal', 'journal');
-
-		$company = GET('company');
-
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
-
-		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
-
-		if($data->cFinancialYear->empty() === TRUE) {
-			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
-		}
-
-		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
 		$data->eThirdParty = get_exists('thirdParty')
 			? \journal\ThirdPartyLib::getById(GET('thirdParty', 'int'))
@@ -34,7 +34,7 @@ new Page()
 		$hasSort = get_exists('sort') === TRUE;
 		$data->search = clone $search;
 		// Ne pas ouvrir le bloc de recherche
-		$search->set('financialYear', $data->eFinancialYearSelected);
+		$search->set('financialYear', $data->eFinancialYear);
 
 		$data->eCashflow = \bank\CashflowLib::getById(GET('cashflow'));
 		if($data->eCashflow->exists() === TRUE) {
@@ -46,5 +46,17 @@ new Page()
 
 		throw new ViewAction($data);
 
+	})
+	->get('pdf', function($data) {
+
+		$content = pdf\PdfLib::generateOnTheFly($data->eCompany, $data->eFinancialYear, 'journal-index');
+
+		if($content === NULL) {
+			throw new NotExistsAction();
+		}
+
+		$filename = journal\PdfUi::filenameJournal($data->eCompany).'.pdf';
+
+		throw new PdfAction($content, $filename);
 	});
 ?>

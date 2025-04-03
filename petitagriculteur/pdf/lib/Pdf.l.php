@@ -44,8 +44,14 @@ class PdfLib extends \pdf\PdfCrud {
 		switch($type) {
 			case 'overview-balance-summary';
 				$url = \company\CompanyUi::urlOverview($eCompany).'/pdf/balance:summary?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
-				$header = new \overview\PdfUi()->getHeader($eFinancialYear);
-				$footer = new \overview\PdfUi()->getFooter();
+				$header = PdfUi::getHeader(\overview\PdfUi::getTitle(), $eFinancialYear);
+				$footer = PdfUi::getFooter();
+				break;
+
+			case 'journal-index':
+				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
+				$header = PdfUi::getHeader(\journal\PdfUi::getJournalTitle(), $eFinancialYear);
+				$footer = PdfUi::getFooter();
 				break;
 
 			default:

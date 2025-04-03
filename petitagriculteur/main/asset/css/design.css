@@ -772,6 +772,12 @@ table.table-bordered td:first-child {
 	border-left: 1px solid var(--border);
 }
 
+table.table-bordered th:first-child.no-border,
+table.table-bordered td:first-child.no-border {
+	/* For cells which are the firsts after a rowspan */
+	border-left: none;
+}
+
 thead.thead-sticky {
 	position: sticky;
 	top: calc(var(--mainSticky) - 1px);
