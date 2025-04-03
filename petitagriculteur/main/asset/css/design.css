@@ -716,7 +716,9 @@ tr.row-highlight {
 	background-color: var(--background-highlight) !important;
 }
 
-tr.row-upper {
+tr.row-upper,
+tr.row-upper td,
+tr.row-upper th {
 	text-transform: uppercase;
 }
 
@@ -728,7 +730,10 @@ tr.row-bold > td {
 	color: var(--muted-light);
 }
 
-tr.row-header {
+tr.row-header,
+tr.row-header td,
+tr.row-header th
+{
 	background-color: var(--background-dark) !important;
 	font-weight: bold;
 }

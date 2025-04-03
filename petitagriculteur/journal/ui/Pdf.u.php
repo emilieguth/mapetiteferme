@@ -37,20 +37,16 @@ class PdfUi {
 		$h .= '<div class="pdf-document-wrapper">';
 
 			$h .= '<div class="pdf-document-content">';
-				$h .= '<table class="table-bordered">';
+				$h .= '<table class="table-bordered ">';
 
 					$h .= '<thead>';
 						$h .= '<tr class="row-header row-upper">';
-							$h .= '<td>';
-								$h .= s("Date de l'écriture");
-							$h .= '</td>';
-							$h .= '<td>';
-								$h .= s("Pièce comptable");
-							$h .= '</td>';
-							$h .= '<td colspan="2">'.s("Compte (Classe et libellé)").'</td>';
-							$h .= '<td>'.s("Tiers").'</td>';
-							$h .= '<td class="text-end">'.s("Débit (D)").'</td>';
-							$h .= '<td class="text-end">'.s("Crédit (C)").'</td>';
+							$h .= '<th>'.s("Date de l'écriture").'</th>';
+							$h .= '<th>'.s("Pièce comptable").'</th>';
+							$h .= '<th colspan="2">'.s("Compte (Classe et libellé)").'</th>';
+							$h .= '<th>'.s("Tiers").'</th>';
+							$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
+							$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
 						$h .= '</tr>';
 					$h .= '</thead>';
 
@@ -64,10 +60,8 @@ class PdfUi {
 								$h .= \util\DateUi::numeric($eOperation['date']);
 							$h .= '</td>';
 
-							$h .= '<td rowspan="2" class="text-end">';
-								$h .= '<div class="operation-info">';
-									$h .= encode($eOperation['document']);
-								$h .= '</div>';
+							$h .= '<td rowspan="2">';
+								$h .= encode($eOperation['document']);
 							$h .= '</td>';
 
 							$h .= '<td>';
@@ -120,5 +114,54 @@ class PdfUi {
 		return $h;
 
 	}
+
+	public static function filenameBook(\company\Company $eCompany): string {
+
+		return s("{date}-{company}-grand-livre", ['date' => date('Y-m-d'), 'company' => $eCompany['siret']]);
+
+	}
+
+	public static function urlBook(\company\Company $eCompany): string {
+
+		return \company\CompanyUi::urlJournal($eCompany).'/book:pdf';
+
+	}
+
+	public static function getBookTitle(): string {
+
+		return s("Grand livre");
+
+	}
+	public function getBook(
+		\company\Company $eCompany,
+		\Collection $cOperation,
+		\accounting\FinancialYear $eFinancialYear,
+	): string {
+
+
+		$h = '<style>@page {	size: A4; margin: calc(var(--margin-bloc-height) + 2cm) 1cm 1cm; }</style>';
+
+		$h .= '<div class="pdf-document-wrapper">';
+
+			$h .= '<div class="pdf-document-content">';
+
+				$h .= '<table class="table-bordered tr-fixed-height">';
+
+					$h .= '<thead>';
+						$h .= BookUi::getBookTheadContent();
+					$h .= '</thead>';
+
+					$h .= BookUi::getBookTbody($eCompany, $cOperation, $eFinancialYear);
+
+				$h .= '</table>';
+
+			$h .= '</div>';
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
 }
 ?>

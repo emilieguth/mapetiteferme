@@ -38,11 +38,11 @@ class PdfUi {
 
 					$h .= '<thead>';
 						$h .= '<tr class="row-header row-upper">';
-						$h .= '<td class="text-center">'.s("ACTIF").'</td>';
-						$h .= '<td class="text-center">'.s("Brut").'</td>';
-						$h .= '<td class="text-center">'.s("Amort prov.").'</td>';
-						$h .= '<td class="text-center">'.s("Net").'</td>';
-						$h .= '<td class="text-center">'.s("% actif").'</td>';
+						$h .= '<th class="text-center">'.s("ACTIF").'</th>';
+						$h .= '<th class="text-center">'.s("Brut").'</th>';
+						$h .= '<th class="text-center">'.s("Amort prov.").'</th>';
+						$h .= '<th class="text-center">'.s("Net").'</th>';
+						$h .= '<th class="text-center">'.s("% actif").'</th>';
 					$h .= '</tr>';
 
 					$h .= new BalanceUi()->displaySubCategoryBody($balance['asset'], s("Total de l'actif"));
@@ -54,11 +54,11 @@ class PdfUi {
 					$h .= '<thead>';
 
 						$h .= '<tr class="row-header row-upper">';
-							$h .= '<td class="text-center">'.s("PASSIF").'</td>';
-							$h .= '<td class="text-center">'.s("Brut").'</td>';
-							$h .= '<td class="text-center">'.s("Amort prov.").'</td>';
-							$h .= '<td class="text-center">'.s("Net").'</td>';
-							$h .= '<td class="text-center">'.s("% passif").'</td>';
+							$h .= '<th class="text-center">'.s("PASSIF").'</th>';
+							$h .= '<th class="text-center">'.s("Brut").'</th>';
+							$h .= '<th class="text-center">'.s("Amort prov.").'</th>';
+							$h .= '<th class="text-center">'.s("Net").'</th>';
+							$h .= '<th class="text-center">'.s("% passif").'</th>';
 						$h .= '</tr>';
 
 					$h .= new BalanceUi()->displaySubCategoryBody($balance['liability'], s("Total du passif"));

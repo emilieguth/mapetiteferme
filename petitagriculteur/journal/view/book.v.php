@@ -13,9 +13,9 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 			return \company\CompanyUi::urlJournal($data->eCompany).'/book?financialYear='.$eFinancialYear['id'];
 		},
 		$data->cFinancialYear,
-		$data->eFinancialYearSelected,
+		$data->eFinancialYear,
 	);
 
-	echo new \journal\BookUi()->getBook($data->eCompany, $data->cOperation, $data->eFinancialYearSelected);
+	echo new \journal\BookUi()->getBook($data->eCompany, $data->cOperation, $data->eFinancialYear);
 
 });

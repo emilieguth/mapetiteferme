@@ -15,7 +15,117 @@ class BookUi {
 				$h .= s("Le Grand Livre des comptes");
 			$h .= '</h1>';
 
+			$h .= '<div>';
+				$h .= '<a href="'.PdfUi::urlBook($eCompany).'" data-ajax-navigation="never" class="btn btn-transparent">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
+			$h .= '</div>';
 		$h .= '</div>';
+
+		return $h;
+
+	}
+
+	public static function getBookTheadContent(): string {
+
+		$h = '<tr class="row-header row-upper">';
+			$h .= '<th>'.s("Date").'</th>';
+			$h .= '<th>'.s("Pièce").'</th>';
+			$h .= '<th>'.s("Description").'</th>';
+			$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
+			$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
+		$h .= '</tr>';
+
+		return $h;
+
+	}
+
+	public static function getBookTbody(
+		\company\Company $eCompany,
+		\Collection $cOperation,
+		\accounting\FinancialYear $eFinancialYear,
+	): string {
+
+		$h = '';
+
+		$debit = 0;
+		$credit = 0;
+		$currentClass = NULL;
+		$currentAccountLabel = NULL;
+
+		foreach($cOperation as $eOperation) {
+
+			if(
+				$currentAccountLabel !== NULL
+				&& $currentClass !== NULL
+				&& ($eOperation['class'] !== $currentClass
+				|| $eOperation['accountLabel'] !== $currentAccountLabel)
+			) {
+
+				$h .= self::getSubTotal($currentAccountLabel, $debit, $credit);
+
+			}
+
+			if(
+				$currentAccountLabel === NULL
+				|| $currentClass === NULL
+				|| $eOperation['class'] !== $currentClass
+				|| $eOperation['accountLabel'] !== $currentAccountLabel
+			) {
+				$debit = 0;
+				$credit = 0;
+				$currentClass = $eOperation['class'];
+				$currentAccountLabel = $eOperation['accountLabel'];
+
+				$h .= '</tbody>';
+				$h .= '<tr class="row-header">';
+					$h .= '<td colspan="5">';
+					$h .= s("{class} - {description}", [
+							'class' => $currentAccountLabel,
+							'description' => $eOperation['account']['description'],
+						]);
+					$h .= '</td>';
+				$h .= '</tr>';
+				$h .= '<tbody>';
+			}
+
+			$h .= '<tr>';
+
+				$h .= '<td>';
+					$h .= \util\DateUi::numeric($eOperation['date']);
+				$h .= '</td>';
+
+				$h .= '<td>';
+					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?document='.encode($eOperation['document']).'&financialYear='.$eFinancialYear['id'].'">'.encode($eOperation['document']).'</a>';
+				$h .= '</td>';
+
+				$h .= '<td>';
+					$h .= \encode($eOperation['description']);
+				$h .= '</td>';
+
+				$h .= '<td class="text-end">';
+					$h .= match($eOperation['type']) {
+						Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
+						default => '',
+					};
+				$h .= '</td>';
+
+				$h .= '<td class="text-end">';
+					$h .= match($eOperation['type']) {
+						Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
+						default => '',
+					};
+				$h .= '</td>';
+
+			$h .= '</tr>';
+
+			$debit += $eOperation['type'] === OperationElement::DEBIT ? $eOperation['amount'] : 0;
+			$credit += $eOperation['type'] === OperationElement::CREDIT ? $eOperation['amount'] : 0;
+
+		}
+
+		// Dernier groupe
+		$h .= self::getSubTotal($currentAccountLabel, $debit, $credit);
+
+		$h .= '</tbody>';
 
 		return $h;
 
@@ -36,103 +146,12 @@ class BookUi {
 			$h .= '<table class="tr-even td-vertical-top tr-hover">';
 
 				$h .= '<thead class="thead-sticky">';
-					$h .= '<tr>';
-						$h .= '<th>';
-							$h .= s("Date");
-						$h .= '</th>';
-						$h .= '<th>';
-							$h .= s("Pièce");
-						$h .= '</th>';
-						$h .= '<th>';
-							$h .= s("Description");
-						$h .= '</th>';
-						$h .= '<th class="text-end">'.s("Débit (D)").'</th>';
-						$h .= '<th class="text-end">'.s("Crédit (C)").'</th>';
-					$h .= '</tr>';
+					$h .= self::getBookTheadContent();
 				$h .= '</thead>';
 
+				$h .= self::getBookTbody($eCompany, $cOperation, $eFinancialYear);
 
 
-					$debit = 0;
-					$credit = 0;
-					$currentClass = NULL;
-					$currentAccountLabel = NULL;
-
-					foreach($cOperation as $eOperation) {
-
-						if(
-							$currentAccountLabel !== NULL
-							&& $currentClass !== NULL
-							&& ($eOperation['class'] !== $currentClass
-							|| $eOperation['accountLabel'] !== $currentAccountLabel)
-						) {
-
-							$h .= self::getSubTotal($currentAccountLabel, $debit, $credit);
-
-						}
-
-						if(
-							$currentAccountLabel === NULL
-							|| $currentClass === NULL
-							|| $eOperation['class'] !== $currentClass
-							|| $eOperation['accountLabel'] !== $currentAccountLabel
-						) {
-							$debit = 0;
-							$credit = 0;
-							$currentClass = $eOperation['class'];
-							$currentAccountLabel = $eOperation['accountLabel'];
-
-							$h .= '</tbody>';
-							$h .= '<tr class="row-header">';
-								$h .= '<td colspan="5">';
-								$h .= s("{class} - {description}", [
-										'class' => $currentAccountLabel,
-										'description' => $eOperation['account']['description'],
-									]);
-								$h .= '</td>';
-							$h .= '</tr>';
-							$h .= '<tbody>';
-						}
-
-						$h .= '<tr>';
-
-							$h .= '<td>';
-								$h .= \util\DateUi::numeric($eOperation['date']);
-							$h .= '</td>';
-
-							$h .= '<td>';
-								$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?document='.encode($eOperation['document']).'&financialYear='.$eFinancialYear['id'].'">'.encode($eOperation['document']).'</a>';
-							$h .= '</td>';
-
-							$h .= '<td>';
-								$h .= \encode($eOperation['description']);
-							$h .= '</td>';
-
-							$h .= '<td class="text-end">';
-								$h .= match($eOperation['type']) {
-									Operation::DEBIT => \util\TextUi::money($eOperation['amount']),
-									default => '',
-								};
-							$h .= '</td>';
-
-							$h .= '<td class="text-end">';
-								$h .= match($eOperation['type']) {
-									Operation::CREDIT => \util\TextUi::money($eOperation['amount']),
-									default => '',
-								};
-							$h .= '</td>';
-
-						$h .= '</tr>';
-
-						$debit += $eOperation['type'] === OperationElement::DEBIT ? $eOperation['amount'] : 0;
-						$credit += $eOperation['type'] === OperationElement::CREDIT ? $eOperation['amount'] : 0;
-
-					}
-
-					// Dernier groupe
-					$h .= self::getSubTotal($currentAccountLabel, $debit, $credit);
-
-				$h .= '</tbody>';
 			$h .= '</table>';
 		$h .= '</div>';
 

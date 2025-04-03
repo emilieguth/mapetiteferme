@@ -85,3 +85,7 @@ h2.pdf-document-title {
 tr {
     page-break-inside: avoid;
 }
+
+.tr-fixed-height tr td {
+    line-height: 0.5;
+}
