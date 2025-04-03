@@ -9,9 +9,21 @@ class PdfUi {
 
 	}
 
+	public static function filenameBalance(\company\Company $eCompany): string {
+
+		return s("{date}-{company}-bilan-comptable", ['date' => date('Y-m-d'), 'company' => $eCompany['siret']]);
+
+	}
+	public static function urlBalance(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
+
+		return \company\CompanyUi::urlOverview($eCompany).'/balance:pdf';
+
+	}
+
 	public function getHeader(\accounting\FinancialYear $eFinancialYear): string {
 
-		$h = '<div style="display: grid; grid-column-gap: 1rem; grid-template-columns: 1fr 3fr 1fr; overflow: hidden; margin: 1cm; border-radius: 0.5cm; border: 1px solid black; padding: 0.5rem;  background-color: #F5F7F5FF; position: fixed; width: 19cm; height: 120px; font-size: 12px; align-content: center;">';
+		// height fixe de valeur --margin-bloc-height
+		$h = '<div style="display: grid; grid-column-gap: 1rem; grid-template-columns: 1fr 3fr 1fr; overflow: hidden; margin: 1cm; border-radius: 0.5cm; border: 1px solid black; padding: 0.5rem;  background-color: #F5F7F5FF; position: fixed; width: 19cm; height: 3cm; font-size: 12px; align-content: center;">';
 
 			$h .= '<div class="pdf-document-header-logo">';
 			$h .= '</div>';
@@ -52,8 +64,10 @@ class PdfUi {
 
 	public function getFooter(): string {
 
+		$date = \util\DateUi::numeric(date('Y-m-d H:i:s'));
+
 		$h = '<div style="width: 19cm; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; margin: 0 1cm;">';
-			$h .= '<span class="date" style="align-content: flex-start"></span>';
+			$h .= '<span style="align-content: flex-start">'.$date.'</span>';
 			$h .= '<span class="pageNumber" style="align-content: flex-end"></span>';
 		$h .= '</div>';
 
@@ -62,7 +76,7 @@ class PdfUi {
 
 	public function getSummarizedBalance(array $balance): string {
 
-		$h = '<style>@page {	size: A4; margin: calc(var(--margin-bloc-height) + 1cm) 1cm 1cm; }</style>';
+		$h = '<style>@page {	size: A4; margin: calc(var(--margin-bloc-height) + 2cm) 1cm 1cm; }</style>';
 
 		$h .= '<div class="pdf-document-wrapper">';
 

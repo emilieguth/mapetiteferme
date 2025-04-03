@@ -39,20 +39,26 @@ class PdfLib extends PdfCrud {
 
 	}
 
-	public static function generate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): void {
+	public static function generateOnTheFly(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): string {
 
 		switch($type) {
 			case 'overview-balance-summary';
 				$url = \company\CompanyUi::urlOverview($eCompany).'/pdf/balance:summary?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
 				$header = new \overview\PdfUi()->getHeader($eFinancialYear);
 				$footer = new \overview\PdfUi()->getFooter();
-			break;
+				break;
 
 			default:
 				throw new \NotExpectedAction('Unknown pdf type');
 		}
 
-		$content = self::build($url, $header, $footer);
+		return self::build($url, $header, $footer);
+
+	}
+
+	public static function generate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): void {
+
+		$content = self::generateOnTheFly($eCompany, $eFinancialYear, $type);
 
 		Pdf::model()->beginTransaction();
 
@@ -71,5 +77,6 @@ class PdfLib extends PdfCrud {
 		Pdf::model()->commit();
 
 	}
+
 }
 ?>

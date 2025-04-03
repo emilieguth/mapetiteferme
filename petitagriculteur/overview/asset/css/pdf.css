@@ -1,5 +1,5 @@
 :root {
-    --margin-bloc-height: 150px;
+    --margin-bloc-height: 3cm;
 }
 
 .pdf-document-wrapper {
@@ -74,13 +74,8 @@ h2.pdf-document-title {
     text-align: right;
 }
 
-.pdf-document-content table.table-bordered thead td,
-.pdf-document-content table.table-bordered thead th {
-    position: sticky;
-}
 
-.pdf-document-wrapper table.table-bordered thead td,
-.pdf-document-wrapper table.table-bordered thead th {
-    top: 0;
+.pdf-document-content thead.thead-sticky {
+    position: relative;
+    top: inherit;
 }
-
