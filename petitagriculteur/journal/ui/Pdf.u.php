@@ -141,6 +141,10 @@ class PdfUi {
 
 		$h = '<style>@page {	size: A4; margin: calc(var(--margin-bloc-height) + 2cm) 1cm 1cm; }</style>';
 
+		if(get_exists('test') === TRUE) {
+			$h .= \pdf\PdfUi::getHeader(s("Grand livre"), $eFinancialYear);
+		}
+
 		$h .= '<div class="pdf-document-wrapper">';
 
 			$h .= '<div class="pdf-document-content">';
@@ -159,6 +163,9 @@ class PdfUi {
 
 		$h .= '</div>';
 
+		if(get_exists('test') === TRUE) {
+			$h .= \pdf\PdfUi::getFooter();
+		}
 		return $h;
 
 	}

@@ -16,7 +16,7 @@ class BookUi {
 			$h .= '</h1>';
 
 			$h .= '<div>';
-				$h .= '<a href="'.PdfUi::urlBook($eCompany).'" data-ajax-navigation="never" class="btn btn-transparent">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
+				$h .= '<a href="'.PdfUi::urlBook($eCompany).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
 			$h .= '</div>';
 		$h .= '</div>';
 

@@ -17,32 +17,9 @@ html {
     width: 18cm;
 }
 
-.pdf-document-header {
-    display: grid;
-    grid-column-gap: 1rem;
-    grid-template-columns: 1fr 3fr 1fr;
-    overflow: hidden;
-    margin: 0.75rem 0;
-    border-radius: 1rem;
-    border: 1px solid black;
-    padding: 0.5rem;
-    background-color: var(--background-light);
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
-
 .pdf-document-footer {
     position: fixed;
     bottom: 0;
-}
-
-.pdf-document-header-title {
-    align-content: center;
-}
-
-.pdf-document-header-details > table {
-    margin: 0;
 }
 
 .pdf-document-details-table-content {
@@ -62,13 +39,6 @@ html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-h2.pdf-document-title {
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 0.2cm;
-    font-size: 0.8cm;
 }
 
 .pdf-document-details {

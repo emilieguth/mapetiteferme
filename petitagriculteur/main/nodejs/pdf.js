@@ -13,7 +13,7 @@ const headerFooterArgs = {
 	...footerTemplate ? {footerTemplate: decodeURIComponent((footerTemplate + '').replace(/\+/g, '%20'))} : {},
 	...(headerTemplate || footerTemplate) ? {displayHeaderFooter : true, margin: {top: '150px'}} : {},
 };
-console.log(url, destination, headerFooterArgs);
+
 (async() => {
 
 	const browser = await puppeteer.launch({

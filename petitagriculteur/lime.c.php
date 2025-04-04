@@ -6,6 +6,7 @@ Lime::setUrls([
   'prod' => 'https://www.'.$hostname.'.fr',
 ]);
 
+Lime::setName( match(LIME_GENDER) { 'f' => 'PetiteAgricultrice', default => 'PetitAgriculteur'});
 Lime::setApps(['framework', 'petitagriculteur']);
 
 L::setLang('fr_FR');
