@@ -146,8 +146,8 @@ Setting::register('media', [
 	] + getMediaVignette(),
 
 	'pdf-content' => [
-		'class' => 'PdfContent',
-		'element' => 'journal\PdfContent',
+		'class' => 'Content',
+		'element' => 'pdf\Content',
 		'field' => 'hash'
 	],
 

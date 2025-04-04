@@ -7,6 +7,10 @@ abstract class PdfElement extends \Element {
 
 	private static ?PdfModel $model = NULL;
 
+	const OVERVIEW_BALANCE_SUMMARY = 'overview-balance-summary';
+	const JOURNAL_INDEX = 'journal-index';
+	const JOURNAL_BOOK = 'journal-book';
+
 	public static function getSelection(): array {
 		return Pdf::model()->getProperties();
 	}
@@ -38,17 +42,20 @@ class PdfModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'used' => ['int16', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
-			'content' => ['element32', 'pdf\PdfContent', 'null' => TRUE, 'cast' => 'element'],
+			'content' => ['element32', 'pdf\Content', 'null' => TRUE, 'cast' => 'element'],
+			'type' => ['enum', [\pdf\Pdf::OVERVIEW_BALANCE_SUMMARY, \pdf\Pdf::JOURNAL_INDEX, \pdf\Pdf::JOURNAL_BOOK], 'cast' => 'enum'],
+			'financialYear' => ['element32', 'accounting\FinancialYear', 'cast' => 'element'],
 			'emailedAt' => ['datetime', 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'used', 'content', 'emailedAt', 'createdAt'
+			'id', 'used', 'content', 'type', 'financialYear', 'emailedAt', 'createdAt'
 		]);
 
 		$this->propertiesToModule += [
-			'content' => 'pdf\PdfContent',
+			'content' => 'pdf\Content',
+			'financialYear' => 'accounting\FinancialYear',
 		];
 
 		$this->indexConstraints = array_merge($this->indexConstraints, [
@@ -74,6 +81,20 @@ class PdfModel extends \ModuleModel {
 
 	}
 
+	public function encode(string $property, $value) {
+
+		switch($property) {
+
+			case 'type' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			default :
+				return parent::encode($property, $value);
+
+		}
+
+	}
+
 	public function select(...$fields): PdfModel {
 		return parent::select(...$fields);
 	}
@@ -92,6 +113,14 @@ class PdfModel extends \ModuleModel {
 
 	public function whereContent(...$data): PdfModel {
 		return $this->where('content', ...$data);
+	}
+
+	public function whereType(...$data): PdfModel {
+		return $this->where('type', ...$data);
+	}
+
+	public function whereFinancialYear(...$data): PdfModel {
+		return $this->where('financialYear', ...$data);
 	}
 
 	public function whereEmailedAt(...$data): PdfModel {

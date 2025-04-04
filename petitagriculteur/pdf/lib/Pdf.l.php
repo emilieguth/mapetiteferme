@@ -39,20 +39,20 @@ class PdfLib extends \pdf\PdfCrud {
 
 	}
 
-	public static function generateOnTheFly(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): string {
+	private static function generateContent(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): string {
 
 		switch($type) {
-			case 'overview-balance-summary';
+			case PdfElement::OVERVIEW_BALANCE_SUMMARY;
 				$url = \company\CompanyUi::urlOverview($eCompany).'/pdf/balance:summary?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
 				$header = PdfUi::getHeader(\overview\PdfUi::getTitle(), $eFinancialYear);
 				break;
 
-			case 'journal-index':
+			case PdfElement::JOURNAL_INDEX:
 				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
 				$header = PdfUi::getHeader(\journal\PdfUi::getJournalTitle(), $eFinancialYear);
 				break;
 
-			case 'journal-book':
+			case PdfElement::JOURNAL_BOOK:
 				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/book?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
 				$header = PdfUi::getHeader(\journal\PdfUi::getBookTitle(), $eFinancialYear);
 				break;
@@ -66,25 +66,68 @@ class PdfLib extends \pdf\PdfCrud {
 
 	}
 
-	public static function generate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): void {
+	public static function generate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): ?string {
 
-		$content = self::generateOnTheFly($eCompany, $eFinancialYear, $type);
+		if($eFinancialYear['status'] === \accounting\FinancialYearElement::CLOSE) {
 
-		\pdf\Pdf::model()->beginTransaction();
+			$ePdf = Pdf::model()
+				->select(Pdf::getSelection() + ['content' => Content::getSelection()])
+				->whereFinancialYear($eFinancialYear)
+				->whereType($type)
+				->get();
 
-		$ePdfContent = new \pdf\PdfContent();
-		\pdf\PdfContent::model()->insert($ePdfContent);
+			if(
+				$ePdf->notEmpty() and
+				$ePdf['content']->notEmpty() and
+				$ePdf['content']['hash']
+			) {
 
-		$hash = NULL;
-		new \media\PdfContentLib()->send($ePdfContent, $hash, $content, 'pdf');
+				$ePdf['used'] = new \Sql('used + 1');
 
-		$ePdf = new \pdf\Pdf(['content' => $ePdfContent]);
+				Pdf::model()
+					->select(['used'])
+					->update($ePdf);
 
-		\pdf\Pdf::model()
-		   ->option('add-replace')
-		   ->insert($ePdf);
+				return self::getContentByPdf($ePdf['content']);
+			}
+		}
+		try {
 
-		\pdf\Pdf::model()->commit();
+			$content = self::generateContent($eCompany, $eFinancialYear, $type);
+
+		} catch(\Exception) {
+
+			return NULL;
+
+		}
+
+		if($eFinancialYear['status'] === \accounting\FinancialYearElement::CLOSE) {
+
+			\pdf\Pdf::model()->beginTransaction();
+
+			$eContent = new \pdf\Content();
+			\pdf\Content::model()->insert($eContent);
+
+			$hash = NULL;
+			new \media\PdfContentLib()->send($eContent, $hash, $content, 'pdf');
+
+			$ePdf = new \pdf\Pdf(['content' => $eContent, 'type' => $type, 'financialYear' => $eFinancialYear]);
+
+			\pdf\Pdf::model()
+			   ->option('add-replace')
+			   ->insert($ePdf);
+
+			\pdf\Pdf::model()->commit();
+
+		}
+
+		return $content;
+	}
+
+	public static function getContentByPdf(Content $eContent): ?string {
+
+		$path = \storage\DriverLib::directory().'/'.new \media\PdfContentUi()->getBasenameByHash($eContent['hash']);
+		return file_get_contents($path);
 
 	}
 

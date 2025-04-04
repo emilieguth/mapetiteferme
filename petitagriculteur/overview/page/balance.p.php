@@ -22,7 +22,7 @@ new Page(function($data) {
 })
 ->get('pdf', function($data) {
 
-	$content = \pdf\PdfLib::generateOnTheFly($data->eCompany, $data->eFinancialYear, 'overview-balance-summary');
+	$content = \pdf\PdfLib::generate($data->eCompany, $data->eFinancialYear, \pdf\PdfElement::OVERVIEW_BALANCE_SUMMARY);
 
 	if($content === NULL) {
 		throw new NotExistsAction();

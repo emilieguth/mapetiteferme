@@ -49,7 +49,7 @@ new Page(function($data) {
 	})
 	->get('pdf', function($data) {
 
-		$content = pdf\PdfLib::generateOnTheFly($data->eCompany, $data->eFinancialYear, 'journal-index');
+		$content = pdf\PdfLib::generate($data->eCompany, $data->eFinancialYear, \pdf\PdfElement::JOURNAL_INDEX);
 
 		if($content === NULL) {
 			throw new NotExistsAction();

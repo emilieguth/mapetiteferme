@@ -25,7 +25,7 @@ new Page(function($data) {
 	})
 	->get('pdf', function($data) {
 
-		$content = pdf\PdfLib::generateOnTheFly($data->eCompany, $data->eFinancialYear, 'journal-book');
+		$content = pdf\PdfLib::generate($data->eCompany, $data->eFinancialYear, \pdf\PdfElement::JOURNAL_BOOK);
 
 		if($content === NULL) {
 			throw new NotExistsAction();

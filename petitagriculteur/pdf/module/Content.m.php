@@ -1,35 +1,35 @@
 <?php
 namespace pdf;
 
-abstract class PdfContentElement extends \Element {
+abstract class ContentElement extends \Element {
 
 	use \FilterElement;
 
-	private static ?PdfContentModel $model = NULL;
+	private static ?ContentModel $model = NULL;
 
 	public static function getSelection(): array {
-		return PdfContent::model()->getProperties();
+		return Content::model()->getProperties();
 	}
 
-	public static function model(): PdfContentModel {
+	public static function model(): ContentModel {
 		if(self::$model === NULL) {
-			self::$model = new PdfContentModel();
+			self::$model = new ContentModel();
 		}
 		return self::$model;
 	}
 
 	public static function fail(string|\FailException $failName, array $arguments = [], ?string $wrapper = NULL): bool {
-		return \Fail::log('PdfContent::'.$failName, $arguments, $wrapper);
+		return \Fail::log('Content::'.$failName, $arguments, $wrapper);
 	}
 
 }
 
 
-class PdfContentModel extends \ModuleModel {
+class ContentModel extends \ModuleModel {
 
-	protected string $module = 'pdf\PdfContent';
+	protected string $module = 'pdf\Content';
 	protected string $package = 'pdf';
-	protected string $table = 'pdfPdfContent';
+	protected string $table = 'pdfContent';
 
 	public function __construct() {
 
@@ -61,23 +61,23 @@ class PdfContentModel extends \ModuleModel {
 
 	}
 
-	public function select(...$fields): PdfContentModel {
+	public function select(...$fields): ContentModel {
 		return parent::select(...$fields);
 	}
 
-	public function where(...$data): PdfContentModel {
+	public function where(...$data): ContentModel {
 		return parent::where(...$data);
 	}
 
-	public function whereId(...$data): PdfContentModel {
+	public function whereId(...$data): ContentModel {
 		return $this->where('id', ...$data);
 	}
 
-	public function whereHash(...$data): PdfContentModel {
+	public function whereHash(...$data): ContentModel {
 		return $this->where('hash', ...$data);
 	}
 
-	public function whereCreatedAt(...$data): PdfContentModel {
+	public function whereCreatedAt(...$data): ContentModel {
 		return $this->where('createdAt', ...$data);
 	}
 
@@ -85,24 +85,24 @@ class PdfContentModel extends \ModuleModel {
 }
 
 
-abstract class PdfContentCrud extends \ModuleCrud {
+abstract class ContentCrud extends \ModuleCrud {
 
  private static array $cache = [];
 
-	public static function getById(mixed $id, array $properties = []): PdfContent {
+	public static function getById(mixed $id, array $properties = []): Content {
 
-		$e = new PdfContent();
+		$e = new Content();
 
 		if(empty($id)) {
-			PdfContent::model()->reset();
+			Content::model()->reset();
 			return $e;
 		}
 
 		if($properties === []) {
-			$properties = PdfContent::getSelection();
+			$properties = Content::getSelection();
 		}
 
-		if(PdfContent::model()
+		if(Content::model()
 			->select($properties)
 			->whereId($id)
 			->get($e) === FALSE) {
@@ -120,14 +120,14 @@ abstract class PdfContentCrud extends \ModuleCrud {
 		}
 
 		if($properties === []) {
-			$properties = PdfContent::getSelection();
+			$properties = Content::getSelection();
 		}
 
 		if($sort !== NULL) {
-			PdfContent::model()->sort($sort);
+			Content::model()->sort($sort);
 		}
 
-		return PdfContent::model()
+		return Content::model()
 			->select($properties)
 			->whereId('IN', $ids)
 			->getCollection(NULL, NULL, $index);
@@ -141,51 +141,51 @@ abstract class PdfContentCrud extends \ModuleCrud {
 
 	}
 
-	public static function getCreateElement(): PdfContent {
+	public static function getCreateElement(): Content {
 
-		return new PdfContent(['id' => NULL]);
-
-	}
-
-	public static function create(PdfContent $e): void {
-
-		PdfContent::model()->insert($e);
+		return new Content(['id' => NULL]);
 
 	}
 
-	public static function update(PdfContent $e, array $properties): void {
+	public static function create(Content $e): void {
+
+		Content::model()->insert($e);
+
+	}
+
+	public static function update(Content $e, array $properties): void {
 
 		$e->expects(['id']);
 
-		PdfContent::model()
+		Content::model()
 			->select($properties)
 			->update($e);
 
 	}
 
-	public static function updateCollection(\Collection $c, PdfContent $e, array $properties): void {
+	public static function updateCollection(\Collection $c, Content $e, array $properties): void {
 
-		PdfContent::model()
+		Content::model()
 			->select($properties)
 			->whereId('IN', $c)
 			->update($e->extracts($properties));
 
 	}
 
-	public static function delete(PdfContent $e): void {
+	public static function delete(Content $e): void {
 
 		$e->expects(['id']);
 
-		PdfContent::model()->delete($e);
+		Content::model()->delete($e);
 
 	}
 
 }
 
 
-class PdfContentPage extends \ModulePage {
+class ContentPage extends \ModulePage {
 
-	protected string $module = 'pdf\PdfContent';
+	protected string $module = 'pdf\Content';
 
 	public function __construct(
 	   ?\Closure $start = NULL,
@@ -194,8 +194,8 @@ class PdfContentPage extends \ModulePage {
 	) {
 		parent::__construct(
 		   $start,
-		   $propertiesCreate ?? PdfContentLib::getPropertiesCreate(),
-		   $propertiesUpdate ?? PdfContentLib::getPropertiesUpdate()
+		   $propertiesCreate ?? ContentLib::getPropertiesCreate(),
+		   $propertiesUpdate ?? ContentLib::getPropertiesUpdate()
 		);
 	}
 
