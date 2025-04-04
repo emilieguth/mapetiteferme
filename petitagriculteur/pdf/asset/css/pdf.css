@@ -14,7 +14,7 @@ html {
     display: grid;
     grid-template-rows: auto 1fr auto;
     margin: 0.25rem auto;
-    width: 18cm;
+    width: 18.9cm;
 }
 
 .pdf-document-footer {

@@ -12,7 +12,6 @@ class PdfUi {
 	public static function getHeader(string $title, \accounting\FinancialYear $eFinancialYear): string {
 
 		$borderColor = '#D5D5D5';
-		// height fixe de valeur --margin-bloc-height
 		$h = '<style>
         html {
           -webkit-print-color-adjust: exact;
