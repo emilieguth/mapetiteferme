@@ -4,12 +4,10 @@ new Page()
 
 		$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canRemote');
 
-		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
-		if($data->cFinancialYear->empty() === TRUE) {
-			throw new NotExpectedAction('Cannot generate PDF of journal with no financial year');
-		}
-
 		$data->eFinancialYear = \accounting\FinancialYearLib::getById(GET('financialYear'));
+		if($data->eFinancialYear->exists() === FALSE) {
+			throw new NotExpectedAction('Cannot generate PDF of book with no financial year');
+		}
 
 		$search = new Search(['financialYear' => $data->eFinancialYear]);
 
