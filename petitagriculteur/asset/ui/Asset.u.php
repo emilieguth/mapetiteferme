@@ -154,7 +154,7 @@ Class AssetUi {
 						$h .= '<th rowspan="4" class="text-center">'.s("VNF").'</th>';
 					$h .= '</tr>';
 					$h .= '<tr>';
-						$h .= '<th rowspan="3" colspan="2" class="text-center">'.s("Libellé").'</th>';
+						$h .= '<th rowspan="3" colspan="2" class="text-center border-bottom">'.s("Libellé").'</th>';
 						$h .= '<th rowspan="3" class="text-center">'.s("Valeur début").'</th>';
 						$h .= '<th rowspan="3" class="text-center">'.s("Acquis. ou apport").'</th>';
 						$h .= '<th rowspan="3" class="text-center">'.s("Diminution poste à p.").'</th>';
@@ -170,10 +170,10 @@ Class AssetUi {
 						$h .= '<th rowspan="3" class="text-center">'.s("Fin exercice").'</th>';
 					$h .= '</tr>';
 					$h .= '<tr>';
-						$h .= '<th rowspan="2" class="text-center">'.s("Global").'</th>';
+						$h .= '<th rowspan="2" class="text-center no-border-left">'.s("Global").'</th>';
 						$h .= '<th colspan="2" class="text-center">'.s("dont :").'</th>';
 					$h .= '</tr>';
-						$h .= '<th class="text-center">'.s("Linéaire").'</th>';
+						$h .= '<th class="text-center no-border-left">'.s("Linéaire").'</th>';
 						$h .= '<th class="text-center">'.s("Dégressif").'</th>';
 					$h .= '</tr>';
 				$h .= '</thead>';

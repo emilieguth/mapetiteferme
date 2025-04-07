@@ -59,7 +59,7 @@ class AccountingUi {
 		$h = '<thead class="thead-sticky">';
 			$h .= '<tr>';
 				$h .= '<th class="text-end">'.s("Compte").'</th>';
-				$h .= '<th class="text-end">'.s("Libellé").'</th>';
+				$h .= '<th>'.s("Libellé").'</th>';
 				$h .= '<th class="text-end">'.s("Début débit").'</th>';
 				$h .= '<th class="text-end">'.s("Début crédit").'</th>';
 				$h .= '<th class="text-end">'.s("Mouvement débit").'</th>';
