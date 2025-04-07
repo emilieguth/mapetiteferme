@@ -178,6 +178,19 @@ class JournalUi {
 							$h .= '</td>';
 
 							$h .= '<td>';
+								if($eOperation['asset']->exists() === TRUE) {
+									$attributes = [
+										'href' => \company\CompanyUi::urlAsset($eCompany).'/depreciation?id='.$eOperation['asset']['id'],
+										'data-dropdown' => 'bottom-end',
+										'data-dropdown-hover' => TRUE,
+										'data-dropdown-offset-x' => 0,
+									];
+									$h .= '<a '.attrs($attributes).'>'.\Asset::icon('house-door').'</a>';
+									$h .= '&nbsp;';
+									$h .= '<div class="operation-asset-dropdown dropdown-list dropdown-list-unstyled">';
+										$h .= s("Voir l'immobilisation liée");
+									$h .= '</div>';
+								}
 								$h .= encode($eOperation['account']['description']);
 							$h .= '</td>';
 
@@ -313,40 +326,77 @@ class JournalUi {
 
 		if($eOperation['cashflow']->exists() === FALSE) {
 
-			$attributes = [
-				'data-ajax' => \company\CompanyUi::urlJournal($eCompany).'/operation:doDelete',
-				'post-id' => $eOperation['id'],
-				'data-confirm' => s("Confirmez-vous la suppression de cette écriture ?"),
-				'class' => 'btn btn-outline-secondary btn-outline-danger',
-			];
-			if($eOperation['vatAccount']->exists() === TRUE || $eOperation['operation']->exists() === TRUE) {
-				$attributes += [
+			// Cette opération est liée à une autre : on ne peut pas la supprimer.
+			if($eOperation['operation']->exists() === TRUE) {
+
+				$attributes = [
+					'class' => 'btn btn-outline-secondary inactive',
 					'data-dropdown' => 'bottom-end',
-					'data-dropdown-hover' => 'TRUE',
-					'data-dropdown-offset-x' => '0',
-					'data-highlight' => $eOperation['vatAccount']->exists()
-						? 'operation-linked-'.$eOperation['id']
-						: 'operation-'.$eOperation['operation']['id'],
+					'data-dropdown-hover' => TRUE,
+					'data-dropdown-offset-x' => 0,
+					'onclick' => 'void(0);',
 				];
-			}
-			$buttonDelete = '<a '.attrs($attributes).'>'.\Asset::icon('trash').'</a>';
-
-			if($eOperation['vatAccount']->exists() === TRUE) {
-
+				$buttonDelete = '<a '.attrs($attributes).'>'.\Asset::icon('trash').'</a>';
 				$buttonDelete .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
-					$buttonDelete .= s("En supprimant cette écriture, l'écriture de TVA associée sera également supprimée.");
+					$buttonDelete .= s("Cette opération est liée à une autre opération. Supprimez plutôt l'opération initiale.");
 				$buttonDelete .= '</div>';
 
-			} else if($eOperation['operation']->exists() === TRUE) {
 
-				$buttonDelete .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
-					$buttonDelete .= s("Attention, cette écriture est liée à une autre écriture.");
-				$buttonDelete .= '</div>';
+			} else {
 
+				$attributes = [
+					'data-ajax' => \company\CompanyUi::urlJournal($eCompany).'/operation:doDelete',
+					'post-id' => $eOperation['id'],
+					'data-confirm' => s("Confirmez-vous la suppression de cette écriture ?"),
+					'class' => 'btn btn-outline-secondary btn-outline-danger',
+				];
+
+				if($eOperation['vatAccount']->exists() === TRUE) {
+					$attributes += [
+						'data-dropdown' => 'bottom-end',
+						'data-dropdown-hover' => 'TRUE',
+						'data-dropdown-offset-x' => '0',
+						'data-highlight' => $eOperation['vatAccount']->exists()
+							? 'operation-linked-'.$eOperation['id']
+							: 'operation-'.$eOperation['operation']['id'],
+						'data-confirm' => s("Confirmez-vous la suppression de cette écriture ?"),
+					];
+				}
+
+				$buttonDeleteDropdown = '';
+
+				if($eOperation['asset']->exists() === TRUE) {
+
+					if($eOperation['vatAccount']->exists() === TRUE) {
+
+						$attributes['data-confirm'] = s("Confirmez-vous la suppression de cette écriture, de l'entrée de TVA liée, ainsi que de l'entrée dans les immobilisations ?");
+
+						$buttonDeleteDropdown .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+							$buttonDeleteDropdown .= s("En supprimant cette écriture, l'écriture de TVA associée et l'entrée dans les immobilisations seront également supprimées.");
+						$buttonDeleteDropdown .= '</div>';
+
+					} else {
+
+						$attributes['data-confirm'] = s("Confirmez-vous la suppression de cette écriture ainsi que de l'entrée dans les immobilisations ?");
+						$buttonDeleteDropdown .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+							$buttonDeleteDropdown .= s("En supprimant cette écriture, l'entrée dans les immobilisations sera également supprimée.");
+						$buttonDeleteDropdown .= '</div>';
+
+					}
+
+				} else if($eOperation['vatAccount']->exists() === TRUE) {
+
+					$attributes['data-confirm'] = s("Confirmez-vous la suppression de cette écriture ainsi que de l'écriture de TVA associée ?");
+					$buttonDeleteDropdown .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
+						$buttonDeleteDropdown .= s("En supprimant cette écriture, l'écriture de TVA associée sera également supprimée.");
+					$buttonDeleteDropdown .= '</div>';
+
+				}
+
+				$buttonDelete = '<a '.attrs($attributes).'>'.\Asset::icon('trash').'</a>'.$buttonDeleteDropdown;
 			}
 
 			$h .= $buttonDelete;
-
 		} else {
 
 			$h .= '<a href="'.$cashflowLink.'" class="btn btn-outline-secondary" data-dropdown-id="operation-trash-'.$eOperation['id'].'" data-dropdown-hover="true" data-dropdown="bottom-start" data-dropdown-offset-x="-25">'.\Asset::icon('trash').'</a>';

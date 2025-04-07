@@ -3,6 +3,10 @@ namespace asset;
 
 Class DepreciationUi {
 
+	public function __construct() {
+		\Asset::js('asset', 'asset.js');
+	}
+
 	public static function getTitle(): string {
 
 		$h = '<div class="util-action">';
@@ -36,7 +40,11 @@ Class DepreciationUi {
 
 		}
 
-		$h = '<tr class="'.$class.'">';
+		if(GET('id', 'int') === $depreciation['id']) {
+			$class .= 'row-highlight';
+		}
+
+		$h = '<tr name="asset-'.$depreciation['id'].'" class="'.$class.'">';
 			$h .= '<td>'.encode($depreciation['description']).'</td>';
 			$h .= '<td>'.encode($depreciation['id']).'</td>';
 			$h .= '<td>';
@@ -44,7 +52,7 @@ Class DepreciationUi {
 					$h .= \util\DateUi::numeric($depreciation['acquisitionDate'], \util\DateUi::DATE);
 				}
 			$h .= '</td>';
-			$h .= '<td>';
+			$h .= '<td class="td-min-content">';
 				$h .= match($depreciation['type']) {
 					AssetElement::LINEAR => 'L/L',
 					AssetElement::WITHOUT => 'S/S',
@@ -92,11 +100,13 @@ Class DepreciationUi {
 
 	}
 
-	public static function getDepreciationTable(array $depreciations): string{
+	public static function getDepreciationTable(array $depreciations): string {
+
+		$highlightedAssetId = GET('id', 'int');
 
 		$h = '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
 
-			$h .= '<table class="tr-even td-vertical-top tr-hover table-bordered">';
+			$h .= '<table id="asset-list" class="tr-even td-vertical-top tr-hover table-bordered" '.($highlightedAssetId !== NULL ? ' onrender="DepreciationList.scrollTo('.$highlightedAssetId.');"' : '').'>';
 
 			$h .= '<thead class="thead-sticky">';
 				$h .= '<tr class="row-bold">';

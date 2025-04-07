@@ -101,7 +101,7 @@ new \journal\OperationPage(
 
 			$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 			\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
-			$data->eOperation = \journal\OperationLib::getById(REQUEST('id', 'int'))->validate('canUpdate');
+			$data->eOperation = \journal\OperationLib::getById(REQUEST('id', 'int'))->validate('canDelete');
 		}
 	)
 	->post('doDelete', function($data) {

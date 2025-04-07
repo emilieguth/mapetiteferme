@@ -9,6 +9,12 @@ class Operation extends OperationElement {
 
 	}
 
+	public function canDelete(): bool {
+
+		return ($this->exists() === TRUE and $this['operation']->exists() === FALSE);
+
+	}
+
 	public function isClassAccount(int $class): bool {
 
 		$stringClass = (string)$class;

@@ -254,7 +254,7 @@ class OperationLib extends OperationCrud {
 
 		$e->expects(['id', 'asset']);
 
-		// Deletes related operations (like assets... or VAT?)
+		// Deletes related operations (like assets... or VAT)
 		if($e['asset']->exists() === TRUE) {
 			\asset\AssetLib::deleteByIds([$e['asset']['id']]);
 		}

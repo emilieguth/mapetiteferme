@@ -708,6 +708,17 @@ address {
 	padding-left: 1rem;
 }
 
+
+.btn.inactive:hover {
+	color: inherit;
+	background-color: inherit;
+	border-color: inherit;
+}
+.btn.inactive {
+	cursor: initial;
+	opacity: 0.33;
+}
+
 tr.row-emphasis {
 	background-color: var(--account-group) !important;
 }
@@ -738,9 +749,10 @@ tr.row-header th
 	font-weight: bold;
 }
 
+div.operation-asset-dropdown,
 div.operation-comment-dropdown {
 	border-radius: calc(var(--radius) / 2);
-	background-color: var(--primary);
+	background-color: var(--secondary);
 	color: white;
 	padding: 0.5rem;
 	line-height: 1.4;
