@@ -265,7 +265,7 @@ class AnalyzeUi {
 
 		$h = '<h2>'.s("Compte de résultat").'</h2>';
 
-		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h .= '<div class="stick-sm util-overflow-sm">';
 
 			$h .= '<table class="tr-even td-vertical-top tr-hover">';
 

@@ -103,7 +103,7 @@ class JournalUi {
 
 		$h = '';
 
-		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h .= '<div class="stick-sm util-overflow-sm">';
 
 			$h .= '<table class="tr-even td-vertical-top tr-hover">';
 

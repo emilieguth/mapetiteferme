@@ -47,7 +47,7 @@ Class AssetUi {
 
 	public function getAcquisitionTable(\Collection $cAsset, string $type): string {
 
-		$h = '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h = '<div class="stick-sm util-overflow-sm">';
 
 			$h .= '<table class="tr-even td-vertical-top tr-hover table-bordered">';
 
@@ -140,7 +140,7 @@ Class AssetUi {
 
 		}
 
-		$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+		$h .= '<div class="stick-sm util-overflow-sm">';
 
 			$h .= '<table class="tr-even td-vertical-top tr-hover table-bordered">';
 

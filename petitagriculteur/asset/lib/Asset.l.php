@@ -126,5 +126,21 @@ class AssetLib extends \asset\AssetCrud {
 		return $base * $rate * $days / 360;
 
 	}
+
+	public static function getWithDepreciationsById(int $id): Asset {
+
+		$eAsset = AssetLib::getById($id);
+
+		$cDepreciation = Depreciation::model()
+			->select(['amount', 'date', 'type', 'financialYear' => \accounting\FinancialYear::getSelection()])
+			->whereAsset($eAsset)
+			->sort(['date' => SORT_ASC])
+			->getCollection();
+
+		$eAsset['depreciations'] = $cDepreciation;
+
+		return $eAsset;
+
+	}
 }
 ?>

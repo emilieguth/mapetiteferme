@@ -77,7 +77,7 @@ class CashflowUi {
 			$h .= '</div>';
 		}
 
-		$h .= '<div id="cashflow-list" class="dates-item-wrapper stick-sm util-overflow-sm" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').' data-render-timeout="1">';
+		$h .= '<div id="cashflow-list" class="stick-sm util-overflow-sm" '.($highlightedCashflowId !== NULL ? ' onrender="CashflowList.scrollTo('.$highlightedCashflowId.');"' : '').' data-render-timeout="1">';
 
 			$h .= '<table class="tr-even tr-hover">';
 
@@ -370,7 +370,7 @@ class CashflowUi {
 				$h .= $form->hidden('id', $eCashflow['id']);
 				$h .= '<span class="hide" name="cashflowAmount">'.$eCashflow['amount'].'</span>';
 
-				$h .= '<div class="dates-item-wrapper stick-sm util-overflow-sm">';
+				$h .= '<div class="stick-sm util-overflow-sm">';
 					$h .= '<table class="tr-even tr-hover">';
 
 						$h .= '<thead>';

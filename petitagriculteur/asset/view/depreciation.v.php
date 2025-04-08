@@ -26,9 +26,16 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	}
 
 	echo '<h1>'.s("Amortissement des immobilisations").'</h1>';
-	echo \asset\DepreciationUi::getDepreciationTable($data->assetDepreciations);
+	echo \asset\DepreciationUi::getDepreciationTable($data->eCompany, $data->assetDepreciations);
 
 	echo '<h1>'.s("Amortissement des subventions").'</h1>';
-	echo \asset\DepreciationUi::getDepreciationTable($data->subventionDepreciations);
+	echo \asset\DepreciationUi::getDepreciationTable($data->eCompany, $data->subventionDepreciations);
+
+});
+
+
+new AdaptativeView('view', function($data, PanelTemplate $t) {
+
+	return new \asset\DepreciationUi()::viewAsset($data->eCompany, $data->eAsset);
 
 });
