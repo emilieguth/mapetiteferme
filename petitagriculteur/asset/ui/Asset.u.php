@@ -276,7 +276,7 @@ Class AssetUi {
 				);
 
 
-				$h .= '<div id="dispose-sold-warning" class="hide">';
+				$h .= '<div class="hide" type="sold">';
 					$h .= $form->group(
 						s("Créer une créance").' '.\util\FormUi::asterisk(),
 						$form->checkbox('createReceivable').
@@ -286,7 +286,8 @@ Class AssetUi {
 
 				$h .= $form->group(
 					s("Valeur de sortie").' '.\util\FormUi::asterisk(),
-					$form->inputGroup($form->number('amount').$form->addon('€ ')),
+					$form->inputGroup($form->number('amount').$form->addon('€ ')).
+					'<div class="util-info mt-1 hide" type="sold">'.s(" Attention la vente d’une immobilisation peut être assujettie à TVA. Renseignez-vous auprès de votre expert-comptable ou organisme agréé sur ce point.").'</div>',
 				);
 
 				$h .= '<div class="util-info hide" id="dispose-scrap-warning">';

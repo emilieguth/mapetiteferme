@@ -374,8 +374,6 @@ class AssetLib extends \asset\AssetCrud {
 			];
 			\journal\OperationLib::createFromValues($values);
 
-			// TODO : voir s'il faut aussi collecter de la TVA ?
-
 		// 2/ Case d'une mise au rebut : création d'un amortissement exceptionnel
 		} else {
 

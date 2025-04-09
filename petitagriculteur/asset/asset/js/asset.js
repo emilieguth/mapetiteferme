@@ -11,11 +11,11 @@ class Asset {
             amountElement.setAttribute('value', 0);
             amountElement.setAttribute('disabled', 'disabled');
             qs('#dispose-scrap-warning').removeHide();
-            qs('#dispose-sold-warning').hide();
+            qsa('[type="sold"]', soldElementWarning => soldElementWarning.hide());
         } else if(value === 'sold') {
             amountElement.removeAttribute('disabled');
             qs('#dispose-scrap-warning').hide();
-            qs('#dispose-sold-warning').removeHide();
+            qsa('[type="sold"]', soldElementWarning => soldElementWarning.removeHide());
         }
 
     }
