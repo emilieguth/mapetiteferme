@@ -20,6 +20,18 @@ Setting::register('accounting', [
 
 	'shippingChargeAccountClass' => '624',
 
+	'disposalAssetValueClass' => '675', // Valeur comptable des éléments d'actifs cédés
+	'productAssetValueClass' => '775', // Produits des cessions d'éléments d'actif
+
+	'intangibleAssetsClass' => '20', // Immobilisations incorporelles
+	'tangibleAssetsClasses' => ['21', '24'], // Immobilisations corporelles
+
+	'intangibleAssetsDepreciationChargeClass' => '68111', // Dotation aux amortissements sur immos incorporelles
+	'tangibleAssetsDepreciationChargeClass' => '68112', // Dotation aux amortissements sur immos corporelles
+	'exceptionalDepreciationChargeClass' => '6871', // Dotation aux amortissements exceptionnels
+
+	'receivablesOnAssetDisposalClass' => '462', // Créances sur cessions d'immobilisations
+
 	'summaryAccountingBalanceCategories' => accounting\AccountUi::getSummaryBalanceCategories(),
 	'balanceAssetCategories' => accounting\AccountUi::getAssetBalanceCategories(),
 	'balanceLiabilityCategories' => accounting\AccountUi::getLiabilityBalanceCategories(),

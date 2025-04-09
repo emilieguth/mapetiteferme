@@ -44,10 +44,22 @@ Class DepreciationUi {
 			$class .= 'row-highlight';
 		}
 
-		$link = \company\CompanyUi::urlAsset($eCompany).'/depreciation:view?id='.$depreciation['id'];
+		if($depreciation['id'] !== NULL and $depreciation['id'] !== '') {
+
+			$link = \company\CompanyUi::urlAsset($eCompany).'/:view?id='.$depreciation['id'];
+			$description = '<a href="'.$link.'">'.encode($depreciation['description']).'</a>';
+			$id = '<a href="'.$link.'">'.encode($depreciation['id']).'</a>';
+
+		} else {
+
+			$description = encode($depreciation['description']);
+			$id = encode($depreciation['id']);
+
+		}
+
 		$h = '<tr name="asset-'.$depreciation['id'].'" class="'.$class.'">';
-			$h .= '<td><a href="'.$link.'">'.encode($depreciation['description']).'</a></td>';
-			$h .= '<td><a href="'.$link.'">'.encode($depreciation['id']).'</a></td>';
+			$h .= '<td>'.$description.'</td>';
+			$h .= '<td>'.$id.'</td>';
 			$h .= '<td>';
 				if($depreciation['acquisitionDate'] !== NULL) {
 					$h .= \util\DateUi::numeric($depreciation['acquisitionDate'], \util\DateUi::DATE);
@@ -197,83 +209,6 @@ Class DepreciationUi {
 
 	}
 
-	public static function viewAsset(\company\Company $eCompany, Asset $eAsset): \Panel {
-
-		$h = '<div class="util-block stick-xs bg-background-light">';
-			$h .= '<dl class="util-presentation util-presentation-2">';
-				$h .= '<dt>'.s("Numéro").'</dt>';
-				$h .= '<dd>'.$eAsset['id'].'</dd>';
-				$h .= '<dt>'.s("Date d'acquisition").'</dt>';
-				$h .= '<dd>'.\util\DateUi::numeric($eAsset['acquisitionDate'], \util\DateUi::DATE).'</dd>';
-				$h .= '<dt>'.s("N° compte").'</dt>';
-				$h .= '<dd>'.encode($eAsset['accountLabel']).'</dd>';
-				$h .= '<dt>'.s("Libellé").'</dt>';
-				$h .= '<dd>'.encode($eAsset['description']).'</dd>';
-				$h .= '<dt>'.s("Type").'</dt>';
-				$h .= '<dd>'.AssetUi::p('type')->values[$eAsset['type']].'</dd>';
-				$h .= '<dt>'.s("Valeur d'achat").'</dt>';
-				$h .= '<dd>'.\util\TextUi::money($eAsset['value']).'</dd>';
-			$h .= '</dl>';
-		$h .= '</div>';
-
-		$h .= '<div>';
-			//$h .= '<a href="'.\company\CompanyUi::urlAsset($eCompany).'/depreciation:out" class="btn btn-primary">'.\Asset::icon('box-arrow-right').' '.s("Céder l'immobiliation").'</a>';
-		$h .= '</div>';
-
-		$h .= '<div id="depreciation-out-form">';
-		$h .= '</div>';
-
-		$h .= '<h2>'.s("Amortissements").'</h2>';
-
-		if($eAsset['depreciations']->empty()) {
-
-			$h .= '<div class="util-info">';
-				$h .= s("Il n'y a pas encore eu d'amortissement enregistré pour cette immobilisation.");
-			$h .= '</div>';
-
-		} else {
-
-			$h .= '<div class="stick-sm util-overflow-sm">';
-
-				$h .= '<table class="tr-even td-vertical-top tr-hover table-bordered">';
-
-					$h .= '<thead class="thead-sticky">';
-						$h .= '<tr>';
-							$h .= '<th>'.s("Date").'</th>';
-							$h .= '<th>'.s("Type").'</th>';
-							$h .= '<th>'.s("Montant").'</th>';
-							$h .= '<th>'.s("Exercice comptable").'</th>';
-						$h .= '</tr>';
-					$h .= '</thead>';
-
-					$h .= '<tbody>';
-
-						foreach($eAsset['depreciations'] as $eDepreciation) {
-
-							$h .= '<tr>';
-								$h .= '<td>'.\util\DateUi::numeric($eDepreciation['date'], \util\DateUi::DATE).'</td>';
-								$h .= '<td>'.DepreciationUi::p('type')->values[$eDepreciation['type']].'</td>';
-								$h .= '<td>'.\util\TextUi::money($eDepreciation['amount']).'</td>';
-								$h .= '<td>'.\accounting\FinancialYearUi::getYear($eDepreciation['financialYear']).'</td>';
-							$h .= '</tr>';
-
-						}
-
-					$h .= '</tbody>';
-
-				$h .= '</table>';
-
-			$h .= '</div>';
-
-		}
-
-		return new \Panel(
-			id: 'panel-asset-view',
-			title: s("Immobilisation #{id}", ['id' => $eAsset['id']]),
-			body: $h
-		);
-
-	}
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = \journal\Operation::model()->describer($property, [

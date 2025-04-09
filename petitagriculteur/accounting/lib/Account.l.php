@@ -3,6 +3,12 @@ namespace accounting;
 
 class AccountLib extends AccountCrud {
 
+	public static function padClass(string $account): string {
+		
+		return str_pad($account, 8, '0');
+		
+	}
+	
 	public static function getByClassWithVatAccount(string $class): Account {
 
 		$eAccount = new Account();
@@ -13,6 +19,19 @@ class AccountLib extends AccountCrud {
 	       + Account::getSelection()
 	       + ['vatAccount' => ['class', 'vatRate', 'description']
        ])
+			->whereClass($class)
+			->get($eAccount);
+
+		return $eAccount;
+
+	}
+	
+	public static function getByClass(string $class): Account {
+
+		$eAccount = new Account();
+
+		Account::model()
+			->select(Account::getSelection())
 			->whereClass($class)
 			->get($eAccount);
 

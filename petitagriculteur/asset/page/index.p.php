@@ -1,24 +1,47 @@
 <?php
-new Page()
-	->get('index', function($data) {
+new \asset\AssetPage(function($data) {
 
-		\Setting::set('main\viewAsset', 'index');
+	\user\ConnectionLib::checkLogged();
 
-		$company = GET('company');
+	if(get_exists('id') === FALSE and post_exists('id') === FALSE) {
+		throw new NotExpectedAction('Asset Id is required.');
+	}
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
 
-		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
+	$data->eAsset = \asset\AssetLib::getWithDepreciationsById(REQUEST('id'));
 
-		if($data->cFinancialYear->empty() === TRUE) {
-			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear:create?message=FinancialYear::toCreate');
-		}
-
-		$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
-
-		$data->cAsset = asset\AssetLib::getAcquisitions($data->eFinancialYear);
+})
+	->get('view', function($data) {
 
 		throw new ViewAction($data);
 
 	});
-?>
+
+new \asset\AssetPage(function($data) {
+
+	\user\ConnectionLib::checkLogged();
+
+	if(get_exists('id') === FALSE and post_exists('id') === FALSE) {
+		throw new NotExpectedAction('Asset Id is required.');
+	}
+
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
+
+	$data->eAsset = \asset\AssetLib::getWithDepreciationsById(REQUEST('id'))->validate('canManage');
+
+})
+	->get('dispose', function($data) {
+
+		$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+
+		throw new ViewAction($data);
+
+	})
+	->post('doDispose', function($data) {
+
+		\asset\AssetLib::dispose($data->eAsset, $_POST);
+
+		throw new ReloadAction('asset', 'Asset::disposed');
+
+	});

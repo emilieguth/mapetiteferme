@@ -12,6 +12,7 @@ abstract class AssetElement extends \Element {
 
 	const ONGOING = 'ongoing';
 	const SOLD = 'sold';
+	const SCRAPPED = 'scrapped';
 	const ENDED = 'ended';
 
 	public static function getSelection(): array {
@@ -53,7 +54,7 @@ class AssetModel extends \ModuleModel {
 			'startDate' => ['date', 'cast' => 'string'],
 			'endDate' => ['date', 'cast' => 'string'],
 			'duration' => ['int8', 'min' => 0, 'max' => NULL, 'cast' => 'int'],
-			'status' => ['enum', [\asset\Asset::ONGOING, \asset\Asset::SOLD, \asset\Asset::ENDED], 'cast' => 'enum'],
+			'status' => ['enum', [\asset\Asset::ONGOING, \asset\Asset::SOLD, \asset\Asset::SCRAPPED, \asset\Asset::ENDED], 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
 			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],

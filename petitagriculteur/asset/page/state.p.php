@@ -20,4 +20,28 @@ new Page()
 		throw new ViewAction($data);
 
 	});
+
+
+new \asset\AssetPage(function($data) {
+
+	\user\ConnectionLib::checkLogged();
+
+	if(get_exists('id') === FALSE) {
+		throw new NotExpectedAction('Asset Id is required.');
+	}
+
+	$data->eAsset = \asset\AssetLib::getWithDepreciationsById(GET('id'));
+
+})
+	->get('view', function($data) {
+
+		throw new ViewAction($data);
+
+	})
+	->get('dispose', function($data) {
+
+		throw new ViewAction($data);
+
+	});
+
 ?>

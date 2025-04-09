@@ -1,21 +1,12 @@
 <?php
-new AdaptativeView('index', function($data, CompanyTemplate $t) {
+new AdaptativeView('view', function($data, PanelTemplate $t) {
 
-	$t->title = s("Toutes les immobilisations de {company}", ['company' => $data->eCompany['name']]);
-	$t->tab = 'asset';
-	$t->subNav = new \company\CompanyUi()->getAssetSubNav($data->eCompany);
-	$t->canonical = \company\CompanyUi::urlAsset($data->eCompany).'/acquisition';
+	return new \asset\AssetUi()::view($data->eCompany, $data->eAsset);
 
-	$t->mainTitle = new asset\AssetUi()->getAcquisitionTitle();
+});
 
-	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
-		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
-			return \company\CompanyUi::urlAsset($data->eCompany).'/?financialYear='.$eFinancialYear['id'];
-			},
-		$data->cFinancialYear,
-		$data->eFinancialYear,
-	);
+new AdaptativeView('dispose', function($data, PanelTemplate $t) {
 
-	echo new asset\AssetUi()->getAcquisitionTable($data->cAsset);
+	return new \asset\AssetUi()::dispose($data->eCompany, $data->eFinancialYear, $data->eAsset);
 
 });

@@ -4,7 +4,7 @@ namespace journal;
 class OperationLib extends OperationCrud {
 
 	public static function getPropertiesCreate(): array {
-		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'vatRate', 'thirdParty'];
+		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'vatRate', 'thirdParty', 'asset'];
 	}
 	public static function getPropertiesUpdate(): array {
 		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'thirdParty'];
@@ -224,7 +224,7 @@ class OperationLib extends OperationCrud {
 		$values = [
 			...$defaultValues,
 			'account' => $eAccount['vatAccount']['id'] ?? NULL,
-			'accountLabel' => str_pad($eAccount['vatAccount']['class'], 8, '0'),
+			'accountLabel' => \accounting\AccountLib::padClass($eAccount['vatAccount']['class']),
 			'document' => $eOperationLinked['document'],
 			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
 			'type' => $eOperationLinked['type'],
@@ -360,7 +360,7 @@ class OperationLib extends OperationCrud {
 		if($eCashflow['import']['account']['label'] !== NULL) {
 			$label = $eCashflow['import']['account']['label'];
 		} else {
-			$label = str_pad(\Setting::get('accounting\defaultBankAccountLabel'), 8, '0');
+			$label = \accounting\AccountLib::padClass(\Setting::get('accounting\defaultBankAccountLabel'));
 		}
 
 		$values = [
@@ -391,6 +391,31 @@ class OperationLib extends OperationCrud {
 
 		return $eOperationBank;
 
+	}
+
+	public static function createFromValues(array $values): void {
+
+		$eOperation = new Operation();
+
+		$fw = new \FailWatch();
+
+		$eOperation->build(
+			['cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation', 'vatRate', 'vatAccount', 'asset'],
+			$values,
+			new \Properties('create')
+		);
+
+		if(($values['asset'] ?? NULL) !== NULL) {
+			$eOperation['asset'] = $values['asset'];
+		}
+
+		if(($values['cashflow'] ?? NULL) !== NULL) {
+			$eOperation['cashflow'] = $values['cashflow'];
+		}
+
+		$fw->validate();
+
+		Operation::model()->insert($eOperation);
 	}
 
 	public static function getByCashflow(\bank\Cashflow $eCashflow): \Collection {

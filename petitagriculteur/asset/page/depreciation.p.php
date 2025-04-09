@@ -20,12 +20,4 @@ new Page()
 
 		throw new ViewAction($data);
 
-	})
-	->get('view', function($data) {
-
-		$data->eAsset = \asset\AssetLib::getWithDepreciationsById(GET('id'));
-
-		throw new ViewAction($data);
-
 	});
-?>

@@ -20,7 +20,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	if($data->eFinancialYear['status'] !== \accounting\FinancialYearElement::CLOSE) {
 
 		echo '<div class="util-warning">';
-			echo s("Vous visualisez actuellement les immobilisations d'un exercice comptable encore ouvert : il s'agit donc d'une projection à la fin de l'exercice dans le cas où les immobilisations ne changent pas.");
+			echo s("Vous visualisez actuellement les immobilisations d'un exercice comptable encore ouvert : il s'agit donc d'une projection à la fin de l'exercice dans le cas où les immobilisations ne changent pas dans le courant de l'exercice.");
 		echo '</div>';
 
 	}
@@ -30,12 +30,5 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	echo '<h1>'.s("Amortissement des subventions").'</h1>';
 	echo \asset\DepreciationUi::getDepreciationTable($data->eCompany, $data->subventionDepreciations);
-
-});
-
-
-new AdaptativeView('view', function($data, PanelTemplate $t) {
-
-	return new \asset\DepreciationUi()::viewAsset($data->eCompany, $data->eAsset);
 
 });

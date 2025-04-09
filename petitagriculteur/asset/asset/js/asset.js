@@ -1,3 +1,26 @@
+class Asset {
+
+    static onchangeStatus(element) {
+
+        const form = element.firstParent('form');
+        const amountElement = form.qs('[name="amount"]');
+
+        const value = element.value;
+
+        if(value === 'scrapped') {
+            amountElement.setAttribute('value', 0);
+            amountElement.setAttribute('disabled', 'disabled');
+            qs('#dispose-scrap-warning').removeHide();
+            qs('#dispose-sold-warning').hide();
+        } else if(value === 'sold') {
+            amountElement.removeAttribute('disabled');
+            qs('#dispose-scrap-warning').hide();
+            qs('#dispose-sold-warning').removeHide();
+        }
+
+    }
+}
+
 class DepreciationList {
 
     static scrollTo(assetId) {

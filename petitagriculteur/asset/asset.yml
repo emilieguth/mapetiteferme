@@ -14,7 +14,7 @@ Asset:
   endDate: date
   # Durée en années
   duration: int8(0, null)
-  status: enum(ONGOING, SOLD, ENDED) = ONGOING
+  status: enum(ONGOING, SOLD, SCRAPPED, ENDED) = ONGOING
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
   createdBy: user\User = SPECIAL(user)

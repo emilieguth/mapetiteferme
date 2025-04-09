@@ -97,6 +97,22 @@ class FinancialYearLib extends FinancialYearCrud {
 			->get($eFinancialYear);
 
 		return $eFinancialYear;
+
+	}
+
+	public static function getOpenFinancialYearByDate(string $date): FinancialYear {
+
+		$eFinancialYear = new FinancialYear();
+
+		FinancialYear::model()
+			->select(FinancialYear::getSelection())
+			->whereStatus(FinancialYearElement::OPEN)
+			->whereStartDate('<=', $date)
+			->whereEndDate('>=', $date)
+			->get($eFinancialYear);
+
+		return $eFinancialYear;
+
 	}
 
 	public static function getOpenFinancialYears(): \Collection {

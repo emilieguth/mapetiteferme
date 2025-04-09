@@ -218,6 +218,165 @@ Class AssetUi {
 
 	}
 
+	private static function getHeader(Asset $eAsset): string {
+
+		$h = '<div class="util-block stick-xs bg-background-light">';
+			$h .= '<dl class="util-presentation util-presentation-2">';
+				$h .= '<dt>'.s("N° compte").'</dt>';
+				$h .= '<dd>'.encode($eAsset['accountLabel']).'</dd>';
+				$h .= '<dt>'.s("Date d'acquisition").'</dt>';
+				$h .= '<dd>'.\util\DateUi::numeric($eAsset['acquisitionDate'], \util\DateUi::DATE).'</dd>';
+				$h .= '<dt>'.s("Libellé").'</dt>';
+				$h .= '<dd>'.encode($eAsset['description']).'</dd>';
+				$h .= '<dt>'.s("Type").'</dt>';
+				$h .= '<dd>'.AssetUi::p('type')->values[$eAsset['type']].'</dd>';
+				$h .= '<dt>'.s("Valeur d'achat").'</dt>';
+				$h .= '<dd>'.\util\TextUi::money($eAsset['value']).'</dd>';
+				$h .= '<dt>'.s("Statut").'</dt>';
+				$h .= '<dd>'.self::p('status')->values[$eAsset['status']].'</dd>';
+			$h .= '</dl>';
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+	public static function dispose(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Asset $eAsset): \Panel {
+
+		\Asset::js('asset', 'asset.js');
+
+		$h = self::getHeader($eAsset);
+
+		$form = new \util\FormUi();
+		$statuses = [
+			AssetElement::SCRAPPED => s("Mettre au rebut"),
+			AssetElement::SOLD => s("Vendre"),
+		];
+
+		$h .= '<div class="util-block">';
+
+			$h .= $form->openAjax(
+				\company\CompanyUi::urlAsset($eCompany).'/:doDispose',
+				['id' => 'panel-asset-dispose']
+			);
+
+				$h .= $form->hidden('company', $eCompany['id']);
+				$h .= $form->hidden('id', $eAsset['id']);
+
+				$h .= $form->asteriskInfo();
+
+				$h .= $form->group(
+					s("Date de cession").' '.\util\FormUi::asterisk(),
+					$form->date('date', date('Y-m-d'), ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+				);
+
+				$h .= $form->group(
+					s("Motif de cession").' '.\util\FormUi::asterisk(),
+					$form->select('status', $statuses, attributes: ['onchange' => 'Asset.onchangeStatus(this);']),
+				);
+
+
+				$h .= '<div id="dispose-sold-warning" class="hide">';
+					$h .= $form->group(
+						s("Créer une créance").' '.\util\FormUi::asterisk(),
+						$form->checkbox('createReceivable').
+							'<div class="util-info mt-1">'.s("Une opération bancaire ou une créance devra être créée pour matérialiser la vente. Cochez pour créer une créance.").'</div>',
+					);
+				$h .= '</div>';
+
+				$h .= $form->group(
+					s("Valeur de sortie").' '.\util\FormUi::asterisk(),
+					$form->inputGroup($form->number('amount').$form->addon('€ ')),
+				);
+
+				$h .= '<div class="util-info hide" id="dispose-scrap-warning">';
+					$h .= s(
+					"Attention, si vous percevez une indemnisation suite à un sinistre, cette indemnisation doit être comptabilisée comme le produit d'une vente de votre immobilisation !",
+				);
+				$h .= '</div>';
+
+				$buttons = $form->submit(
+					s("Céder"),
+					['id' => 'submit-dispose-asset'],
+				);
+
+				$h .= $form->group(content: $buttons);
+
+			$h .= $form->close();
+
+		$h .= '</div>';
+
+		return new \Panel(
+			id: 'panel-asset-dispose',
+			title: s("Cession de l'immobilisation #{id}", ['id' => $eAsset['id']]),
+			body: $h
+		);
+	}
+
+	public static function view(\company\Company $eCompany, Asset $eAsset): \Panel {
+
+		$h = self::getHeader($eAsset);
+
+		if($eAsset['status'] === AssetElement::ONGOING) {
+
+			$h .= '<div>';
+				$h .= '<a href="'.\company\CompanyUi::urlAsset($eCompany).'/:dispose?id='.$eAsset['id'].'" class="btn btn-primary">'.\Asset::icon('box-arrow-right').' '.s("Céder l'immobilisation").'</a>';
+			$h .= '</div>';
+
+		}
+
+		$h .= '<h2>'.s("Amortissements").'</h2>';
+
+		if($eAsset['cDepreciation']->empty()) {
+
+			$h .= '<div class="util-info">';
+				$h .= s("Il n'y a pas encore eu d'amortissement enregistré pour cette immobilisation.");
+			$h .= '</div>';
+
+		} else {
+
+			$h .= '<div class="stick-sm util-overflow-sm">';
+
+				$h .= '<table class="tr-even td-vertical-top tr-hover table-bordered">';
+
+					$h .= '<thead class="thead-sticky">';
+						$h .= '<tr>';
+							$h .= '<th>'.s("Date").'</th>';
+							$h .= '<th>'.s("Type").'</th>';
+							$h .= '<th>'.s("Montant").'</th>';
+							$h .= '<th>'.s("Exercice comptable").'</th>';
+						$h .= '</tr>';
+					$h .= '</thead>';
+
+					$h .= '<tbody>';
+
+						foreach($eAsset['cDepreciation'] as $eDepreciation) {
+
+							$h .= '<tr>';
+								$h .= '<td>'.\util\DateUi::numeric($eDepreciation['date'], \util\DateUi::DATE).'</td>';
+								$h .= '<td>'.DepreciationUi::p('type')->values[$eDepreciation['type']].'</td>';
+								$h .= '<td>'.\util\TextUi::money($eDepreciation['amount']).'</td>';
+								$h .= '<td>'.\accounting\FinancialYearUi::getYear($eDepreciation['financialYear']).'</td>';
+							$h .= '</tr>';
+
+						}
+
+					$h .= '</tbody>';
+
+				$h .= '</table>';
+
+			$h .= '</div>';
+
+		}
+
+		return new \Panel(
+			id: 'panel-asset-view',
+			title: s("Immobilisation #{id}", ['id' => $eAsset['id']]),
+			body: $h
+		);
+
+	}
+
 	public static function p(string $property): \PropertyDescriber {
 
 		$d = \journal\Operation::model()->describer($property, [
@@ -250,6 +409,7 @@ Class AssetUi {
 			case 'status':
 				$d->values = [
 					AssetElement::ONGOING => s("En cours"),
+					AssetElement::SCRAPPED => s("Mis au rebut"),
 					AssetElement::SOLD => s("Vendu"),
 					AssetElement::ENDED => s("Terminé"),
 				];

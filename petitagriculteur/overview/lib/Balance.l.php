@@ -6,21 +6,15 @@ namespace overview;
  */
 Class BalanceLib {
 
-	private static function isAmortAccount(string $accountLabel): bool {
+	public static function getAccountLabelsWithDepreciation(array $accountLabels): array {
 
-		return (mb_substr($accountLabel, 1, 1) === '8');
-
-	}
-
-	public static function getAccountLabelsWithAmort(array $accountLabels): array {
-
-		$accountLabelsWithAmort = [];
+		$accountLabelsWithDepreciation = [];
 		foreach($accountLabels as $accountLabel) {
-			$accountLabelsWithAmort[] = $accountLabel;
-			$accountLabelsWithAmort[] = (int)(mb_substr($accountLabel, 0, 1).'8'.mb_substr($accountLabel, 1));
+			$accountLabelsWithDepreciation[] = $accountLabel;
+			$accountLabelsWithDepreciation[] = (int)\asset\AssetLib::depreciationClassByAssetClass($accountLabel);
 		}
 
-		return $accountLabelsWithAmort;
+		return $accountLabelsWithDepreciation;
 
 	}
 
@@ -40,7 +34,7 @@ Class BalanceLib {
 				continue;
 			}
 
-			if(self::isAmortAccount($balanceLine['accountPrefix']) === TRUE) {
+			if(\asset\AssetLib::isDepreciationClass($balanceLine['accountPrefix']) === TRUE) {
 				$totalAmort += $balanceLine['amount'];
 			} else {
 				$totalValue += $balanceLine['amount'];
@@ -132,14 +126,14 @@ Class BalanceLib {
 		$balanceLiabilityCategories = \Setting::get('accounting\balanceLiabilityCategories');
 
 		$accountLabels = new BalanceUi()->extractLabelsFromCategories($balanceAssetCategories + $balanceLiabilityCategories);
-		$accountLabelsWithAmort = self::getAccountLabelsWithAmort($accountLabels);
+		$accountLabelsWithDepreciation = self::getAccountLabelsWithDepreciation($accountLabels);
 
 		[$resultTable, ] = \journal\AnalyzeLib::getResult($eFinancialYear);
 		$result = array_sum(array_column($resultTable, 'credit')) - array_sum(array_column($resultTable, 'debit'));
 
-		$where = implode('%" OR accountLabel LIKE "', $accountLabelsWithAmort);
+		$where = implode('%" OR accountLabel LIKE "', $accountLabelsWithDepreciation);
 		$case = '';
-		foreach($accountLabelsWithAmort as $accountLabel) {
+		foreach($accountLabelsWithDepreciation as $accountLabel) {
 			$case .= ' WHEN accountLabel LIKE "'.$accountLabel.'%" THEN '.$accountLabel;
 			$case .= ' WHEN accountLabel LIKE "'.$accountLabel.'%" THEN '.$accountLabel;
 		}
@@ -188,7 +182,7 @@ Class BalanceLib {
 		foreach($balanceData as $balanceLine) {
 			foreach($allLabels as $label) {
 				if(
-					self::isAmortAccount($balanceLine['accountLabel']) === TRUE
+					\asset\AssetLib::isDepreciationClass($balanceLine['accountLabel']) === TRUE
 					and str_starts_with(substr($balanceLine['accountLabel'], 0, 1).substr($balanceLine['accountLabel'], 2), $label) === TRUE
 				) {
 					$totalAmort += $balanceLine['amount'];
@@ -325,12 +319,12 @@ Class BalanceLib {
 		$balanceLiabilityCategories = \Setting::get('accounting\balanceLiabilityCategories');
 
 		$accountLabels = new BalanceUi()->extractLabelsFromCategories($balanceAssetCategories + $balanceLiabilityCategories);
-		$accountLabelsWithAmort = self::getAccountLabelsWithAmort($accountLabels);
+		$accountLabelsWithDepreciation = self::getAccountLabelsWithDepreciation($accountLabels);
 
 		[$resultTable, ] = \journal\AnalyzeLib::getResult($eFinancialYear);
 		$result = array_sum(array_column($resultTable, 'credit')) - array_sum(array_column($resultTable, 'debit'));
 
-		$where = implode('%" OR accountLabel LIKE "', $accountLabelsWithAmort);
+		$where = implode('%" OR accountLabel LIKE "', $accountLabelsWithDepreciation);
 
 		$cOperation = \journal\Operation::model()
 			->select([
