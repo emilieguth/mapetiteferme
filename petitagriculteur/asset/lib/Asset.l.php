@@ -225,6 +225,12 @@ class AssetLib extends \asset\AssetCrud {
 
 	}
 
+	public static function isDepreciable(Asset $eAsset): bool {
+
+		return substr($eAsset['accountLabel'], 0, mb_strlen(\Setting::get('accounting\nonDepreciableAssetClass'))) !== \Setting::get('accounting\nonDepreciableAssetClass');
+
+	}
+
 	public static function dispose(Asset $eAsset, array $input): void {
 
 		$fw = new \FailWatch();
@@ -267,19 +273,23 @@ class AssetLib extends \asset\AssetCrud {
 			->update($eAsset);
 
 		// Constater l'amortissement du début de l'exercice comptable jusqu'à la date de cession
-		AssetLib::depreciate($eFinancialYear, $eAsset, $date);
+		if(AssetLib::isDepreciable($eAsset)) {
 
-		// Re-récupérer l'actif pour sommer les amortissements cumulés
-		Asset::model()
-			->select(Asset::getSelection() + [
-					'cDepreciation' => Depreciation::model()
-						->select(['amount', 'date', 'type', 'financialYear' => \accounting\FinancialYear::getSelection()])
-						->sort(['date' => SORT_ASC])
-						->delegateCollection('asset'),
-					'account' => \accounting\Account::getSelection(),
-				])
-			->whereId($eAsset['id'])
-			->get($eAsset);
+			AssetLib::depreciate($eFinancialYear, $eAsset, $date);
+
+			// Re-récupérer l'actif pour sommer les amortissements cumulés
+			Asset::model()
+				->select(Asset::getSelection() + [
+						'cDepreciation' => Depreciation::model()
+							->select(['amount', 'date', 'type', 'financialYear' => \accounting\FinancialYear::getSelection()])
+							->sort(['date' => SORT_ASC])
+							->delegateCollection('asset'),
+						'account' => \accounting\Account::getSelection(),
+					])
+				->whereId($eAsset['id'])
+				->get($eAsset);
+
+		}
 
 		// Calcul de la VNC. Attention, pour certaines immos on retient la valeur vénale et non la valeur net pour le calcul des plus values. TODO
 		// Valeur d'entrée
@@ -302,9 +312,13 @@ class AssetLib extends \asset\AssetCrud {
 		\journal\OperationLib::createFromValues($values);
 
 		// Sortir l'actif (amort. : 28x)
-		$values = self::getDepreciationOperationValues($eAsset, $date, $accumulatedDepreciationsValue);
-		$values['type'] = \journal\OperationElement::DEBIT;
-		\journal\OperationLib::createFromValues($values);
+		if(AssetLib::isDepreciable($eAsset) === TRUE) {
+
+			$values = self::getDepreciationOperationValues($eAsset, $date, $accumulatedDepreciationsValue);
+			$values['type'] = \journal\OperationElement::DEBIT;
+			\journal\OperationLib::createFromValues($values);
+
+		}
 
 		// 1/ Cas d'une vente :
 		if($eAsset['status'] === AssetElement::SOLD) {
@@ -365,32 +379,36 @@ class AssetLib extends \asset\AssetCrud {
 		// 2/ Case d'une mise au rebut : création d'un amortissement exceptionnel
 		} else {
 
-			// débiter le compte 6871 (Dotations aux amortissements exceptionnels des immobilisations)
-			$eAccountDepreciationCharge = \accounting\AccountLib::getByClass(\Setting::get('accounting\exceptionalDepreciationChargeClass'));
-			$values = [
-				'account' => $eAccountDepreciationCharge['id'],
-				'accountLabel' => \accounting\AccountLib::padClass($eAccountDepreciationCharge['class']),
-				'date' => $date,
-				'description' => $eAccountDepreciationCharge['description'],
-				'amount' => $netAccountingValue,
-				'type' => \journal\OperationElement::DEBIT,
-				'asset' => $eAsset,
-			];
-			\journal\OperationLib::createFromValues($values);
+			if(AssetLib::isDepreciable($eAsset) === TRUE) {
 
-			// Créditer le compte 28xx (amortissement)
-			$depreciationClass = AssetLib::depreciationClassByAssetClass($eAsset['account']['class']);
-			$eAccountDepreciation = \accounting\AccountLib::getByClass($depreciationClass);
-			$values = [
-				'account' => $eAccountDepreciation['id'],
-				'accountLabel' => AssetLib::depreciationClassByAssetClass($eAsset['accountLabel']),
-				'date' => $date,
-				'description' => $eAccountDepreciation['description'],
-				'amount' => $netAccountingValue,
-				'type' => \journal\OperationElement::CREDIT,
-				'asset' => $eAsset,
-			];
-			\journal\OperationLib::createFromValues($values);
+				// débiter le compte 6871 (Dotations aux amortissements exceptionnels des immobilisations)
+				$eAccountDepreciationCharge = \accounting\AccountLib::getByClass(\Setting::get('accounting\exceptionalDepreciationChargeClass'));
+				$values = [
+					'account' => $eAccountDepreciationCharge['id'],
+					'accountLabel' => \accounting\AccountLib::padClass($eAccountDepreciationCharge['class']),
+					'date' => $date,
+					'description' => $eAccountDepreciationCharge['description'],
+					'amount' => $netAccountingValue,
+					'type' => \journal\OperationElement::DEBIT,
+					'asset' => $eAsset,
+				];
+				\journal\OperationLib::createFromValues($values);
+
+				// Créditer le compte 28xx (amortissement)
+				$depreciationClass = AssetLib::depreciationClassByAssetClass($eAsset['account']['class']);
+				$eAccountDepreciation = \accounting\AccountLib::getByClass($depreciationClass);
+				$values = [
+					'account' => $eAccountDepreciation['id'],
+					'accountLabel' => AssetLib::depreciationClassByAssetClass($eAsset['accountLabel']),
+					'date' => $date,
+					'description' => $eAccountDepreciation['description'],
+					'amount' => $netAccountingValue,
+					'type' => \journal\OperationElement::CREDIT,
+					'asset' => $eAsset,
+				];
+				\journal\OperationLib::createFromValues($values);
+
+			}
 
 		}
 

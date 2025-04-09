@@ -18,6 +18,8 @@ Setting::register('accounting', [
 	'cashAccountClass' => '5310', // caisse
 	'defaultBankAccountLabel' => '5121',
 
+	'nonDepreciableAssetClass' => '2125',
+
 	'shippingChargeAccountClass' => '624',
 
 	'disposalAssetValueClass' => '675', // Valeur comptable des éléments d'actifs cédés
