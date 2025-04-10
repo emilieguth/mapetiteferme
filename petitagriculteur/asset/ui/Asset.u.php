@@ -318,9 +318,14 @@ Class AssetUi {
 
 		$h = self::getHeader($eAsset);
 
+		$h .= '<div>';
+			$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?asset='.$eAsset['id'].'">'.s("Voir toutes les écritures comptables pour cet exercice comptable").'&nbsp;'.\Asset::icon('box-arrow-up-right').'</a>';
+		$h .= '</div>';
+
 		if($eAsset['status'] === AssetElement::ONGOING) {
 
-			$h .= '<div>';
+
+			$h .= '<div class="mt-1 mb-1">';
 				$h .= '<a href="'.\company\CompanyUi::urlAsset($eCompany).'/:dispose?id='.$eAsset['id'].'" class="btn btn-primary">'.\Asset::icon('box-arrow-right').' '.s("Céder l'immobilisation").'</a>';
 			$h .= '</div>';
 

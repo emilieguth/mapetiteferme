@@ -3,6 +3,34 @@ namespace asset;
 
 class DepreciationLib extends \asset\DepreciationCrud {
 
+	public static function getDegressiveCoefficient(int $duration): int {
+
+		if($duration <= 4) {
+			return 1.25;
+		}
+
+		if($duration <= 6) {
+			return 1.75;
+		}
+
+		return 2.25;
+
+	}
+
+	public static function computeDepreciationRate(Asset $eAsset) {
+
+		if($eAsset['type'] === Asset::LINEAR) {
+			return 1 / $eAsset['duration'];
+		}
+
+		if($eAsset['type'] === Asset::DEGRESSIVE) {
+			return DepreciationLib::getDegressiveCoefficient($eAsset['duration']) / $eAsset['duration'];
+		}
+
+		throw new \NotExpectedAction('Unknown depreciation type.');
+
+	}
+
 	private static function computeCurrentFinancialYearExcessDepreciation(Asset $eAsset, float $alreadyDepreciated, \accounting\FinancialYear $eFinancialYear): float {
 
 		return 0.0;
@@ -40,7 +68,7 @@ class DepreciationLib extends \asset\DepreciationCrud {
 	public static function calculateDepreciationByEndDate(string $startDate, string $endDate, Asset $eAsset): float {
 
 		$base = $eAsset['value'];
-		$rate = 1 / $eAsset['duration']; // Durée en années
+		$rate = DepreciationLib::computeDepreciationRate($eAsset);
 
 		// Calcul du nombre de mois complets
 		$startDatetime = new \DateTime(max($startDate, $eAsset['startDate']));
@@ -61,8 +89,38 @@ class DepreciationLib extends \asset\DepreciationCrud {
 			$days += min(date('d', strtotime($eAsset['endDate'])), 30);
 		}
 
-		return $base * $rate * $days / 360;
+		$prorata = min(1, $days / 360);
 
+		if ($eAsset['type'] === AssetElement::LINEAR) {
+
+			// Annuité = $base * $rate
+			return round($base * $rate * $prorata, 2);
+
+		}
+
+		// Si l'amortissement est dégressif, il faut calculer le plus avantageux.
+		$remainingValue = $eAsset['value'];
+
+		for ($currentYear = 1; $currentYear <= $eAsset['duration']; $currentYear++) {
+			$annuity = $remainingValue * $rate;
+
+			// Calcul de l’amortissement linéaire résiduel
+			$linearBase = $eAsset['value'] - (($currentYear - 1) * ($eAsset['value'] / $eAsset['duration']));
+			$linearAnnuity = $linearBase / ($eAsset['duration'] - ($currentYear - 1));
+
+			if ($linearAnnuity > $annuity) {
+				$annuity = $linearAnnuity;
+			}
+
+			if ($currentYear === $eAsset['duration']) {
+				return round($annuity * ($eAsset['duration'] === 1 ? $prorata : 1), 2);
+			}
+
+			$remainingValue -= $annuity;
+
+		}
+
+		throw new \NotExpectedAction('Unable to calculate depreciation for asset '.$eAsset['id']);
 	}
 
 	private static function computeCurrentFinancialYearDepreciation(Asset $eAsset, float $alreadyDepreciated, \accounting\FinancialYear $eFinancialYear): float {

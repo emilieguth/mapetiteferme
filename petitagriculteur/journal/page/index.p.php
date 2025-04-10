@@ -27,6 +27,7 @@ new Page(function($data) {
 			'type' => GET('type'),
 			'document' => GET('document'),
 			'thirdParty' => GET('thirdParty'),
+			'asset' => GET('asset'),
 		], GET('sort'));
 
 		$search->set('cashflowFilter', GET('cashflowFilter', 'bool'));

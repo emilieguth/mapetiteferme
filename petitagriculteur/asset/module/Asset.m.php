@@ -9,6 +9,7 @@ abstract class AssetElement extends \Element {
 
 	const LINEAR = 'linear';
 	const WITHOUT = 'without';
+	const DEGRESSIVE = 'degressive';
 
 	const ONGOING = 'ongoing';
 	const SOLD = 'sold';
@@ -49,7 +50,7 @@ class AssetModel extends \ModuleModel {
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'value' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'description' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
-			'type' => ['enum', [\asset\Asset::LINEAR, \asset\Asset::WITHOUT], 'cast' => 'enum'],
+			'type' => ['enum', [\asset\Asset::LINEAR, \asset\Asset::WITHOUT, \asset\Asset::DEGRESSIVE], 'cast' => 'enum'],
 			'acquisitionDate' => ['date', 'cast' => 'string'],
 			'startDate' => ['date', 'cast' => 'string'],
 			'endDate' => ['date', 'cast' => 'string'],
