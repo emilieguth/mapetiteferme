@@ -9,7 +9,18 @@ class FinancialYearLib extends FinancialYearCrud {
 		return ['startDate', 'endDate'];
 	}
 
-	public static function closeFinancialYear(FinancialYear $eFinancialYear): void {
+	public static function getNextFinancialYearDates(): array {
+
+		$eFinancialYear = FinancialYearLib::getLastFinancialYear();
+
+		return [
+			'startDate' => date('Y-m-d', strtotime($eFinancialYear['endDate'].' +1 day')),
+			'endDate' => date('Y-m-d', strtotime($eFinancialYear['endDate'].' +1 year'))
+		];
+
+	}
+
+	public static function closeFinancialYear(FinancialYear $eFinancialYear, bool $createNew): void {
 
 		if($eFinancialYear['status'] == FinancialYearElement::CLOSE) {
 			throw new \NotExpectedAction('Financial year already closed');
@@ -18,18 +29,16 @@ class FinancialYearLib extends FinancialYearCrud {
 		$eFinancialYear['status'] = FinancialYearElement::CLOSE;
 		self::update($eFinancialYear, ['status']);
 
-		$eFinancialYearLast = FinancialYear::model()
-			->select(FinancialYear::getSelection())
-			->sort(['endDate' => SORT_DESC])
-			->get();
+		if($createNew === TRUE) {
 
-		$eFinancialYearNew = new FinancialYear([
-			'status' => FinancialYearElement::OPEN,
-			'startDate' => date('Y-m-d', strtotime($eFinancialYearLast['endDate'].' +1 day')),
-			'endDate' => date('Y-m-d', strtotime($eFinancialYearLast['endDate'].' +1 year'))
-		]);
+			$eFinancialYearNew = new FinancialYear([
+				'status' => FinancialYearElement::OPEN,
+				...FinancialYearLib::getNextFinancialYearDates(),
+			]);
 
-		self::create($eFinancialYearNew);
+			self::create($eFinancialYearNew);
+
+		}
 
 	}
 
@@ -83,6 +92,20 @@ class FinancialYearLib extends FinancialYearCrud {
 		}
 
 		return FALSE;
+
+	}
+
+	public static function getLastFinancialYear(): FinancialYear {
+
+		$eFinancialYear = new FinancialYear();
+
+		FinancialYear::model()
+			->select(FinancialYear::getSelection())
+			->whereStatus(FinancialYearElement::OPEN)
+			->sort(['endDate' => SORT_DESC])
+			->get($eFinancialYear);
+
+		return $eFinancialYear;
 
 	}
 

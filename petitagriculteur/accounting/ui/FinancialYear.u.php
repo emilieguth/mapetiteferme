@@ -6,7 +6,7 @@ class FinancialYearUi {
 	public function __construct() {
 	}
 
-	public function getManageTitle(\company\Company $eCompany): string {
+	public function getManageTitle(\company\Company $eCompany, \Collection $cFinancialYearOpen): string {
 
 		$h = '<div class="util-action">';
 
@@ -14,6 +14,12 @@ class FinancialYearUi {
 				$h .= '<a href="'.\company\CompanyUi::urlSettings($eCompany).'"  class="h-back">'.\Asset::icon('arrow-left').'</a>';
 				$h .= s("Les exercices comptables");
 			$h .= '</h1>';
+
+			$h .= '<div>';
+			if($cFinancialYearOpen->count() < 2) {
+				$h .= '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Créer un exercice comptable").'</a> ';
+			}
+			$h .= '</div>';
 
 		$h .= '</div>';
 
@@ -29,6 +35,7 @@ class FinancialYearUi {
 			$h .= '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:update?id='.$eFinancialYear['id'].'" class="dropdown-item">';
 				$h .= s("Modifier les dates");
 			$h .= '</a>';
+			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:close" post-id="'.$eFinancialYear['id'].'" class="dropdown-item" data-confirm="'.s("Action irréversible ! Souhaitez-vous confirmer la clôture de cet exercice comptable ?").'">'.s("Clôturer").'</a>';;
 			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear:close" post-id="'.$eFinancialYear['id'].'" class="dropdown-item" data-confirm="'.s("Action irréversible ! Souhaitez-vous confirmer la clôture de cet exercice comptable ? Le suivant sera créé automatiquement.").'">'.s("Clôturer et créer l'exercice suivant").'</a>';;
 		$h .= '</div>';
 
@@ -134,7 +141,7 @@ class FinancialYearUi {
 
 		return new \Panel(
 			id: 'panel-accounting-financialYear-create',
-			title: s("Ajouter un exercice comptable"),
+			title: s("Créer un exercice comptable"),
 			body: $h
 		);
 

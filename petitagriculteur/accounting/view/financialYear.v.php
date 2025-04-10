@@ -3,9 +3,9 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	$t->title = s("Tous les exercices comptables de {value}", $data->eCompany['name']);
 	$t->tab = 'settings';
-	$t->subNav = (new \company\CompanyUi())->getSettingsSubNav($data->eCompany);
+	$t->subNav = new \company\CompanyUi()->getSettingsSubNav($data->eCompany);
 
-	$t->mainTitle = (new \accounting\FinancialYearUi())->getManageTitle($data->eCompany);
+	$t->mainTitle = new \accounting\FinancialYearUi()->getManageTitle($data->eCompany, $data->cFinancialYearOpen);
 
 	echo new \accounting\FinancialYearUi()->getManage($data->eCompany, $data->cFinancialYear);
 
