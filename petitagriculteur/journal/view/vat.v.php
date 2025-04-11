@@ -14,7 +14,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
-			return \company\CompanyUi::urlJournal($data->eCompany).'/vat?financialYear='.$eFinancialYear['id'].'&'.http_build_query($data->search->getFiltered(['financialYear']));
+			return \company\CompanyUi::urlJournal($data->eCompany).'/vat:'.$data->type.'?financialYear='.$eFinancialYear['id'].'&'.http_build_query($data->search->getFiltered(['financialYear']));
 		},
 		$data->cFinancialYear,
 		$data->eFinancialYear,
