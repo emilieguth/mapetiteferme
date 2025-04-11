@@ -38,5 +38,10 @@ Setting::register('accounting', [
 	'balanceAssetCategories' => accounting\AccountUi::getAssetBalanceCategories(),
 	'balanceLiabilityCategories' => accounting\AccountUi::getLiabilityBalanceCategories(),
 
+	'vatBuyVatClasses' => ['44562', '44566'],
+	'vatBuyClassPrefix' => '4456',
+	'vatSellVatClasses' => ['44571'],
+	'vatSellClassPrefix' => '4457',
+
 ]);
 ?>

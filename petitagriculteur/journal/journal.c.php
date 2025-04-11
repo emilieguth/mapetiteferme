@@ -6,12 +6,12 @@ Privilege::register('journal', [
 
 Setting::register('journal', [
 	'codes' => [
-		\journal\OperationElement::BANK => 'JBa',
-		\journal\OperationElement::CASH => 'JCa',
-		\journal\OperationElement::OPENING => 'JOp',
-		\journal\OperationElement::STOCK_START => 'JSs',
-		\journal\OperationElement::STOCK_END => 'JSe',
-		\journal\OperationElement::MISC => 'JDi',
+		\journal\OperationElement::BANK => '21',
+		\journal\OperationElement::CASH => '11',
+		\journal\OperationElement::OPENING => '2',
+		\journal\OperationElement::STOCK_START => '30',
+		\journal\OperationElement::STOCK_END => '31',
+		\journal\OperationElement::MISC => '90',
 	],
 ]);
 ?>

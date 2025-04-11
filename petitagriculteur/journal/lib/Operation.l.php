@@ -77,6 +77,39 @@ class OperationLib extends OperationCrud {
 
 	}
 
+	public static function getAllForVatJournal(string $type, \Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
+
+		$whereAccountLabels = [];
+		if($type === 'buy') {
+			foreach(\Setting::get('accounting\vatBuyVatClasses') as $class) {
+				$whereAccountLabels[] = 'accountLabel LIKE "'.$class.'%"';
+			}
+		} elseif($type === 'sell') {
+			foreach(\Setting::get('accounting\vatSellVatClasses') as $class) {
+				$whereAccountLabels[] = 'accountLabel LIKE "'.$class.'%"';
+			}
+		}
+		$whereAccountLabelSql = new \Sql(join(' OR ', $whereAccountLabels));
+
+		return self::applySearch($search)
+			->select(
+				Operation::getSelection()
+				+ ['operation' => [
+					'id', 'account', 'accountLabel', 'document', 'type',
+					'thirdParty' => ['id', 'name'],
+					'description', 'amount', 'journalType', 'vatRate', 'cashflow', 'date'
+				]]
+				+ ['account' => ['class', 'description']]
+				+ ['thirdParty' => ['id', 'name']]
+				+ ['month' => new \Sql('SUBSTRING(date, 1, 7)')]
+			)
+			->sort($hasSort === TRUE ? $search->buildSort() : ['accountLabel' => SORT_ASC, 'date' => SORT_ASC, 'id' => SORT_ASC])
+			->where($whereAccountLabelSql)
+			->where(new \Sql('operation IS NOT NULL'))
+			->getCollection(NULL, NULL, ['accountLabel', 'month', 'id']);
+
+	}
+
 	public static function updateAccountLabels(\bank\Account $eAccount): bool {
 
 		$eOperation = ['accountLabel' => $eAccount['label'], 'updatedAt' => new \Sql('NOW()')];

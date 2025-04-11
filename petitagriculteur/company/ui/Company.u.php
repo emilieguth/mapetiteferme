@@ -354,10 +354,10 @@ class CompanyUi {
 				'url' => CompanyUi::urlJournal($eCompany).'/book',
 				'label' => s("Grand livre")
 			],
-			/*'asset' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/asset',
-				'label' => s("Immobilisations")
-			],*/
+			'vat' => [
+				'url' => CompanyUi::urlJournal($eCompany).'/vat:buy',
+				'label' => s("Journaux de TVA")
+			],
 		];
 
 	}
@@ -414,10 +414,6 @@ class CompanyUi {
 			'result' => [
 				'url' => CompanyUi::urlAnalyze($eCompany).'/result',
 				'label' => s("Résultat")
-			],
-			'vat' => [
-				'url' => CompanyUi::urlAnalyze($eCompany).'/vat',
-				'label' => s("TVA")
 			],
 		];
 
