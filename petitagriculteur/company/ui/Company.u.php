@@ -289,7 +289,7 @@ class CompanyUi {
 					$h .= \Asset::icon('gear-fill');
 				$h .= '</a>';
 
-				$h .= '<a href="'.CompanyUi::urlAccounting($eCompany).'/financialYear" class="bg-secondary util-button">';
+				$h .= '<a href="'.CompanyUi::urlAccounting($eCompany).'/financialYear/" class="bg-secondary util-button">';
 					$h .= '<h4>'.s("Les exercices comptables").'</h4>';
 					$h .= \Asset::icon('calendar3');
 				$h .= '</a>';

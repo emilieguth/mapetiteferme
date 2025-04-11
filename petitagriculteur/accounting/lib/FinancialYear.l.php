@@ -20,11 +20,27 @@ class FinancialYearLib extends FinancialYearCrud {
 
 	}
 
+	/**
+	 * Bilan de clôture
+	 */
+	public static function closeBalanceSheet(FinancialYear $eFinancialYear): void {
+
+	}
+
+	/**
+	 * Bilan d'ouverture
+	 */
+	public static function openBalanceSheet(FinancialYear $eFinancialYear): void {
+
+	}
+
 	public static function closeFinancialYear(FinancialYear $eFinancialYear, bool $createNew): void {
 
 		if($eFinancialYear['status'] == FinancialYearElement::CLOSE) {
 			throw new \NotExpectedAction('Financial year already closed');
 		}
+
+		// Effectuer toutes les opérations de clôture
 
 		$eFinancialYear['status'] = FinancialYearElement::CLOSE;
 		self::update($eFinancialYear, ['status']);

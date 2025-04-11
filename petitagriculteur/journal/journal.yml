@@ -11,6 +11,7 @@ Operation:
   # Une opération est toujours HT
   amount: decimal(8, 2)
   type: enum(DEBIT, CREDIT)
+  journalType: enum(BANK, CASH, OPENING, STOCK_START, STOCK_END, MISC) = BANK
   cashflow: ?bank\Cashflow
   vatRate: decimal(5, 2) = 0.00
   vatAccount: ?accounting\Account

@@ -4,7 +4,11 @@ namespace accounting;
 class FinancialYear extends FinancialYearElement {
 
 	public function canUpdate(): bool {
-		return ($this['status'] === FinancialYear::OPEN);
+		return ($this['status'] === FinancialYearElement::OPEN);
+	}
+
+	public function canReadDocument(): bool {
+		return $this['status'] === FinancialYearElement::CLOSE;
 	}
 
 	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {

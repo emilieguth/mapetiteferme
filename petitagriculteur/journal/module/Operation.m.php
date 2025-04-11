@@ -10,6 +10,13 @@ abstract class OperationElement extends \Element {
 	const DEBIT = 'debit';
 	const CREDIT = 'credit';
 
+	const BANK = 'bank';
+	const CASH = 'cash';
+	const OPENING = 'opening';
+	const STOCK_START = 'stock-start';
+	const STOCK_END = 'stock-end';
+	const MISC = 'misc';
+
 	public static function getSelection(): array {
 		return Operation::model()->getProperties();
 	}
@@ -48,6 +55,7 @@ class OperationModel extends \ModuleModel {
 			'document' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'type' => ['enum', [\journal\Operation::DEBIT, \journal\Operation::CREDIT], 'cast' => 'enum'],
+			'journalType' => ['enum', [\journal\Operation::BANK, \journal\Operation::CASH, \journal\Operation::OPENING, \journal\Operation::STOCK_START, \journal\Operation::STOCK_END, \journal\Operation::MISC], 'cast' => 'enum'],
 			'cashflow' => ['element32', 'bank\Cashflow', 'null' => TRUE, 'cast' => 'element'],
 			'vatRate' => ['decimal', 'digits' => 5, 'decimal' => 2, 'cast' => 'float'],
 			'vatAccount' => ['element32', 'accounting\Account', 'null' => TRUE, 'cast' => 'element'],
@@ -60,7 +68,7 @@ class OperationModel extends \ModuleModel {
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'createdAt', 'updatedAt', 'createdBy'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'journalType', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'createdAt', 'updatedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
@@ -83,6 +91,9 @@ class OperationModel extends \ModuleModel {
 	public function getDefaultValue(string $property) {
 
 		switch($property) {
+
+			case 'journalType' :
+				return Operation::BANK;
 
 			case 'vatRate' :
 				return 0;
@@ -108,6 +119,9 @@ class OperationModel extends \ModuleModel {
 		switch($property) {
 
 			case 'type' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			case 'journalType' :
 				return ($value === NULL) ? NULL : (string)$value;
 
 			default :
@@ -159,6 +173,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereType(...$data): OperationModel {
 		return $this->where('type', ...$data);
+	}
+
+	public function whereJournalType(...$data): OperationModel {
+		return $this->where('journalType', ...$data);
 	}
 
 	public function whereCashflow(...$data): OperationModel {

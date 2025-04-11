@@ -43,12 +43,14 @@ class FinancialYearModel extends \ModuleModel {
 			'startDate' => ['date', 'cast' => 'string'],
 			'endDate' => ['date', 'cast' => 'string'],
 			'status' => ['enum', [\accounting\FinancialYear::OPEN, \accounting\FinancialYear::CLOSE], 'cast' => 'enum'],
+			'balanceSheetOpen' => ['bool', 'cast' => 'bool'],
+			'balanceSheetClose' => ['bool', 'cast' => 'bool'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'startDate', 'endDate', 'status', 'createdAt', 'createdBy'
+			'id', 'startDate', 'endDate', 'status', 'balanceSheetOpen', 'balanceSheetClose', 'createdAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
@@ -63,6 +65,12 @@ class FinancialYearModel extends \ModuleModel {
 
 			case 'status' :
 				return FinancialYear::OPEN;
+
+			case 'balanceSheetOpen' :
+				return FALSE;
+
+			case 'balanceSheetClose' :
+				return FALSE;
 
 			case 'createdAt' :
 				return new \Sql('NOW()');
@@ -113,6 +121,14 @@ class FinancialYearModel extends \ModuleModel {
 
 	public function whereStatus(...$data): FinancialYearModel {
 		return $this->where('status', ...$data);
+	}
+
+	public function whereBalanceSheetOpen(...$data): FinancialYearModel {
+		return $this->where('balanceSheetOpen', ...$data);
+	}
+
+	public function whereBalanceSheetClose(...$data): FinancialYearModel {
+		return $this->where('balanceSheetClose', ...$data);
 	}
 
 	public function whereCreatedAt(...$data): FinancialYearModel {
