@@ -13,8 +13,8 @@ Class VatUi {
 
 			$h .= '<h1>';
 				$h .= match($type) {
-					'buy' => s("Les journaux d'achat de TVA"),
-					'sell' => s("Les journaux de vente de TVA"),
+					'buy' => s("Les journaux de TVA sur achats"),
+					'sell' => s("Les journaux de TVA sur ventes"),
 				};
 			$h .= '</h1>';
 
