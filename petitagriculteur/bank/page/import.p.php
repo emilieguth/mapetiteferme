@@ -11,16 +11,10 @@ new Page(
 )
 	->get('index', function($data) {
 
-		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
+		[$data->cFinancialYear, $data->eFinancialYear] = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
-		if($data->cFinancialYear->empty() === TRUE) {
-			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear/:create?message=FinancialYear::toCreate');
-		}
-
-		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
-
-		$data->imports = \bank\ImportLib::formatCurrentFinancialYearImports($data->eFinancialYearSelected);
-		$data->cImport = \bank\ImportLib::getAll($data->eFinancialYearSelected);
+		$data->imports = \bank\ImportLib::formatCurrentFinancialYearImports($data->eFinancialYear);
+		$data->cImport = \bank\ImportLib::getAll($data->eFinancialYear);
 
 		throw new ViewAction($data);
 

@@ -33,7 +33,7 @@ new \asset\AssetPage(function($data) {
 })
 	->get('dispose', function($data) {
 
-		$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+		[$data->cFinancialYear, $data->eFinancialYear] = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
 		throw new ViewAction($data);
 

@@ -13,23 +13,23 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 			return \company\CompanyUi::urlBank($data->eCompany).'/cashflow?financialYear='.$eFinancialYear['id'];
 		},
 		$data->cFinancialYear,
-		$data->eFinancialYearSelected,
+		$data->eFinancialYear,
 	);
 
-	echo new \bank\CashflowUi()->getSearch($data->search, $data->eFinancialYearSelected);
-	echo new \bank\CashflowUi()->getCashflow($data->eCompany, $data->cCashflow, $data->eFinancialYearSelected, $data->eImport, $data->search);
+	echo new \bank\CashflowUi()->getSearch($data->search, $data->eFinancialYear);
+	echo new \bank\CashflowUi()->getCashflow($data->eCompany, $data->cCashflow, $data->eFinancialYear, $data->eImport, $data->search);
 
 });
 
 new AdaptativeView('allocate', function($data, PanelTemplate $t) {
 
-	return new \bank\CashflowUi()->getAllocate($data->eCompany, $data->eFinancialYearSelected, $data->eCashflow);
+	return new \bank\CashflowUi()->getAllocate($data->eCompany, $data->eFinancialYear, $data->eCashflow);
 
 });
 
 new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 
-	$t->qs('#create-operation-list')->insertAdjacentHtml('beforeend', new \bank\CashflowUi()->addAllocate($data->eOperation, $data->eFinancialYearSelected, $data->eCashflow, $data->index));
+	$t->qs('#create-operation-list')->insertAdjacentHtml('beforeend', new \bank\CashflowUi()->addAllocate($data->eOperation, $data->eFinancialYear, $data->eCashflow, $data->index));
 	$t->qs('#add-operation')->setAttribute('post-index', $data->index + 1);
 	$t->js()->eval('Cashflow.updateNewOperationLine('.$data->index.')');
 	$t->js()->eval('Cashflow.fillShowHideAmountWarning('.$data->eCashflow['amount'].')');
@@ -39,7 +39,7 @@ new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 
 new AdaptativeView('attach', function($data, PanelTemplate $t) {
 
-		return new \bank\CashflowUi()->getAttach($data->eCompany, $data->eFinancialYearSelected, $data->eCashflow, $data->cOperation);
+		return new \bank\CashflowUi()->getAttach($data->eCompany, $data->eFinancialYear, $data->eCashflow, $data->cOperation);
 
 });
 ?>

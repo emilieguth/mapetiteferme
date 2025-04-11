@@ -180,8 +180,9 @@ class EmployeeLib extends EmployeeCrud {
 	/**
 	 * Get financialYear from $financialYear or from Employee::$viewFinancialYear
 	 */
-	public static function getDynamicFinancialYear(Company $eCompany, int $financialYear): \accounting\FinancialYear {
+	public static function getDynamicFinancialYear(Company $eCompany, int $financialYear): array {
 
+		$cFinancialYear = \accounting\FinancialYearLib::getAll();
 
 		if($financialYear) {
 
@@ -194,11 +195,11 @@ class EmployeeLib extends EmployeeCrud {
 
 			self::setView('viewFinancialYear', $eCompany, $financialYear);
 
-			return $eFinancialYear;
+			return [$cFinancialYear, $eFinancialYear];
 
 		} else {
 
-			return \accounting\FinancialYearLib::getById($eCompany->getView('viewFinancialYear'));
+			return [$cFinancialYear, \accounting\FinancialYearLib::getById($eCompany->getView('viewFinancialYear'))];
 
 		}
 

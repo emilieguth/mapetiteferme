@@ -13,9 +13,9 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 			return \company\CompanyUi::urlAnalyze($data->eCompany).'/charges?financialYear='.$eFinancialYear['id'];
 		},
 		$data->cFinancialYear,
-		$data->eFinancialYearSelected,
+		$data->eFinancialYear,
 	);
 
-	echo new \analyze\ChargesUi()->get($data->eCompany, $data->eFinancialYearSelected, $data->cOperation, $data->cAccount);
+	echo new \analyze\ChargesUi()->get($data->eCompany, $data->eFinancialYear, $data->cOperation, $data->cAccount);
 
 });

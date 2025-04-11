@@ -1,23 +1,20 @@
 <?php
-new \bank\CashflowPage(
-	function($data) {
-		\user\ConnectionLib::checkLogged();
-		$company = GET('company');
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
-		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
+new Page(
+	function ($data) {
 
-		if($data->cFinancialYear->empty() === TRUE) {
-			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear/:create?message=FinancialYear::toCreate');
-		}
-		$data->eFinancialYearSelected = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+		$data->eCompany = \company\CompanyLib::getById(REQUEST('company'))->validate('canManage');
+
+		[$data->cFinancialYear, $data->eFinancialYear] = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+		\accounting\FinancialYearLib::checkHasAtLeastOne($data->cFinancialYear, $data->eCompany);
+
 	}
 )
 	->get('index', function($data) {
 
 		Setting::set('main\viewAnalyze', 'bank');
 
-		$data->cOperationBank = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYearSelected, 'bank');
-		$data->cOperationCash = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYearSelected, 'cash');
+		$data->cOperationBank = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYear, 'bank');
+		$data->cOperationCash = \journal\AnalyzeLib::getBankOperationsByMonth($data->eFinancialYear, 'cash');
 
 		throw new ViewAction($data);
 

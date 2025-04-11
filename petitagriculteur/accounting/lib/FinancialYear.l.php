@@ -20,6 +20,13 @@ class FinancialYearLib extends FinancialYearCrud {
 
 	}
 
+	public static function checkHasAtLeastOne(\Collection $cFinancialYear, \company\Company $eCompany): void {
+
+		if($cFinancialYear->empty() === TRUE) {
+			throw new \RedirectAction(\company\CompanyUi::urlAccounting($eCompany).'/financialYear/:create?message=FinancialYear::toCreate');
+		}
+
+	}
 	/**
 	 * Bilan de clôture
 	 */

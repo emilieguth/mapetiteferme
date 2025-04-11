@@ -1,5 +1,4 @@
 <?php
-
 new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	$t->title = s("Le résultat de {company}", ['company' => $data->eCompany['name']]);
@@ -14,10 +13,10 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 			return \company\CompanyUi::urlAnalyze($data->eCompany).'/result?financialYear='.$eFinancialYear['id'];
 		},
 		$data->cFinancialYear,
-		$data->eFinancialYearSelected,
+		$data->eFinancialYear,
 	);
 
-	echo new \analyze\ResultUi()->getByMonth($data->eCompany, $data->eFinancialYearSelected, $data->cOperation);
+	echo new \analyze\ResultUi()->getByMonth($data->eCompany, $data->eFinancialYear, $data->cOperation);
 	echo new \analyze\ResultUi()->get($data->result, $data->cAccount);
 
 });

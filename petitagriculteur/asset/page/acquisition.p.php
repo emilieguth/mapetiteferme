@@ -8,13 +8,7 @@ new Page()
 
 		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
 
-		$data->cFinancialYear = \accounting\FinancialYearLib::getAll();
-
-		if($data->cFinancialYear->empty() === TRUE) {
-			throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear/:create?message=FinancialYear::toCreate');
-		}
-
-		$data->eFinancialYear = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
+		[$data->cFinancialYear, $data->eFinancialYear] = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 
 		$data->cAsset = asset\AssetLib::getAcquisitions($data->eFinancialYear, 'asset');
 		$data->cAssetSubvention = asset\AssetLib::getAcquisitions($data->eFinancialYear, 'subvention');

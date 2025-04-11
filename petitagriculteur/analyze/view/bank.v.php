@@ -13,7 +13,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 			return \company\CompanyUi::urlAnalyze($data->eCompany).'/bank?financialYear='.$eFinancialYear['id'];
 		},
 		$data->cFinancialYear,
-		$data->eFinancialYearSelected,
+		$data->eFinancialYear,
 	);
 
 	echo new \analyze\BankUi()->get([$data->cOperationBank, $data->cOperationCash]);
