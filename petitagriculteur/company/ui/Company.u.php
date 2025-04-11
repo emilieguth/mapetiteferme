@@ -24,6 +24,10 @@ class CompanyUi {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
+	public static function urlAnalyze(int|Company $company): string {
+		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/analyze';
+	}
+
 	public static function urlOverview(int|Company $company): string {
 		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/overview';
 	}
@@ -400,16 +404,20 @@ class CompanyUi {
 
 		return [
 			'bank' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/analyze/bank',
+				'url' => CompanyUi::urlAnalyze($eCompany).'/bank',
 				'label' => s("Trésorerie")
 			],
 			'charges' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/analyze/charges',
+				'url' => CompanyUi::urlAnalyze($eCompany).'/charges',
 				'label' => s("Charges")
 			],
 			'result' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/analyze/result',
+				'url' => CompanyUi::urlAnalyze($eCompany).'/result',
 				'label' => s("Résultat")
+			],
+			'vat' => [
+				'url' => CompanyUi::urlAnalyze($eCompany).'/vat',
+				'label' => s("TVA")
 			],
 		];
 
