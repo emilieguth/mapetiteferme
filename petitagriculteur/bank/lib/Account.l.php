@@ -38,7 +38,7 @@ class AccountLib extends AccountCrud {
 			return $eAccount;
 		}
 
-		// Get the first found account
+		// Get the first found account if no default account found
 		Account::model()
 			->select(Account::getSelection())
 			->get($eAccount);
