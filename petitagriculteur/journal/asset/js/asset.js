@@ -1,17 +1,25 @@
-document.delegateEventListener('autocompleteSelect', '[data-account-label="journal-operation-create"], [data-account-label="bank-cashflow-allocate"]', function(e) {
+document.delegateEventListener('autocompleteSelect', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
     Asset.openForm(e);
 });
 
 class Asset {
 
-
     static openForm(e) {
 
         const index = e.delegateTarget.dataset.index;
-        const accountLabel = e.detail.value;
-        if(accountLabel.substring(0, 1) !== '2') {
+        const accountClass = e.detail.class;
+
+        // assetClass & subventionAssetClass
+        if(!accountClass || (!accountClass.startsWith('2') && !accountClass.startsWith('13'))) {
+
+            const formId = e.delegateTarget.form.getAttribute('id');
+
+            qs('[data-asset="' + formId + '"][data-index="' + index + '"]').hide();
+            qs('[data-asset="' + formId + '"][data-index="' + index + '"]').hide();
+
             return;
         }
+
 
         const formId = e.delegateTarget.form.getAttribute('id');
 
