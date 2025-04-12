@@ -355,7 +355,7 @@ class CompanyUi {
 				'label' => s("Grand livre")
 			],
 			'vat' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/vat:buy',
+				'url' => CompanyUi::urlJournal($eCompany).'/vat',
 				'label' => s("Journaux de TVA")
 			],
 		];

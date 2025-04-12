@@ -7,15 +7,12 @@ Class VatUi {
 		\Asset::css('journal', 'vat.css');
 	}
 
-	public function getTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): string {
+	public function getTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
 
 		$h = '<div class="util-action">';
 
 			$h .= '<h1>';
-				$h .= match($type) {
-					'buy' => s("Les journaux de TVA sur achats"),
-					'sell' => s("Les journaux de TVA sur ventes"),
-				};
+				$h .= s("Les journaux de TVA");
 			$h .= '</h1>';
 
 			$h .= '<div>';
@@ -23,12 +20,6 @@ Class VatUi {
 				//$h .= '<a href="'.PdfUi::urlJournal($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
 			$h .= '</div>';
 
-		$h .= '</div>';
-		$h .= '<div>';
-			$h .= match($type) {
-				'buy' => '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/vat:sell">'.s("Voir les journaux de TVA sur ventes").'</a>',
-				'sell' => '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/vat:buy">'.s("Voir les journaux de TVA sur achats").'</a>',
-			};
 		$h .= '</div>';
 
 		return $h;
@@ -122,12 +113,12 @@ Class VatUi {
 
 	public function getJournal(
 		\company\Company $eCompany,
-		\Collection $cccOperation,
+		array $operations,
 		\accounting\FinancialYear $eFinancialYearSelected,
-		\Search $search = new \Search()
+		\Search $search = new \Search(),
 	): string {
 
-		if($cccOperation->empty() === TRUE) {
+		if($operations['buy']->empty() === TRUE and $operations['sell']->empty() === TRUE) {
 
 			if($search->empty(['ids']) === TRUE) {
 				return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
@@ -136,9 +127,34 @@ Class VatUi {
 
 		}
 
-		$h = '';
+		$h = '<div class="tabs-h" id="journal-vat" onrender="'.encode('Lime.Tab.restore(this, "vat-buy")').'">';
 
-		$h .= '<div class="stick-sm util-overflow-sm">';
+			$h .= '<div class="tabs-item">';
+				$h .= '<a class="tab-item selected" data-tab="vat-buy" onclick="Lime.Tab.select(this)">'.s("Achats").'</a>';
+				$h .= '<a class="tab-item" data-tab="vat-sell" onclick="Lime.Tab.select(this)">'.s("Ventes").'</a>';
+			$h .= '</div>';
+
+			$h .= '<div class="tab-panel" data-tab="vat-buy">';
+				$h .= $this->getTable($eCompany, $operations['buy'], $search);
+			$h .= '</div>';
+
+			$h .= '<div class="tab-panel" data-tab="vat-sell">';
+				$h .= $this->getTable($eCompany, $operations['sell'], $search);
+			$h .= '</div>';
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+	private function getTable(
+		\company\Company $eCompany,
+		\Collection $cccOperation,
+		\Search $search = new \Search(),
+	): string {
+
+		$h = '<div class="stick-sm util-overflow-sm">';
 
 			$lastAccountLabel = NULL;
 			foreach($cccOperation as $currentAccountLabel => $ccOperation) {
@@ -300,6 +316,5 @@ Class VatUi {
 		$h .= '</div>';
 
 		return $h;
-
 	}
 }

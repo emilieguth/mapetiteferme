@@ -26,31 +26,17 @@ new Page(function($data) {
 	$data->search = clone $search;
 
 })
-	->get('buy', function($data) {
-
-		$data->type = 'buy';
+	->get('index', function($data) {
 
 		$hasSort = get_exists('sort') === TRUE;
 		// Ne pas ouvrir le bloc de recherche
 		$search = clone $data->search;
 		$search->set('financialYear', $data->eFinancialYear);
+		$data->operations = [
+			'buy' => \journal\OperationLib::getAllForVatJournal('buy', $search, $hasSort),
+			'sell' => \journal\OperationLib::getAllForVatJournal('sell', $search, $hasSort),
+		];
 
-		$data->cccOperation = \journal\OperationLib::getAllForVatJournal($data->type, $search, $hasSort);
-
-		throw new ViewAction($data, ':index');
-
-	})
-	->get('sell', function($data) {
-
-		$data->type = 'sell';
-
-		$hasSort = get_exists('sort') === TRUE;
-		// Ne pas ouvrir le bloc de recherche
-		$search = clone $data->search;
-		$search->set('financialYear', $data->eFinancialYear);
-
-		$data->cccOperation = \journal\OperationLib::getAllForVatJournal($data->type, $search, $hasSort);
-
-		throw new ViewAction($data, ':index');
+		throw new ViewAction($data);
 
 	});
