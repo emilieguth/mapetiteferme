@@ -154,6 +154,15 @@ Class VatUi {
 		\Search $search = new \Search(),
 	): string {
 
+		if($cccOperation->empty() === TRUE) {
+
+			if($search->empty(['ids']) === TRUE) {
+				return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
+			}
+			return '<div class="util-info">'.s("Aucune écriture ne correspond à vos critères de recherche").'</div>';
+
+		}
+
 		$h = '<div class="stick-sm util-overflow-sm">';
 
 			$lastAccountLabel = NULL;

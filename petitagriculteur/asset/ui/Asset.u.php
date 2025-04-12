@@ -47,6 +47,12 @@ Class AssetUi {
 
 	public function getAcquisitionTable(\Collection $cAsset, string $type): string {
 
+		if($cAsset->empty() === TRUE) {
+
+				return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
+
+		}
+
 		$h = '<div class="stick-sm util-overflow-sm">';
 
 			$h .= '<table class="tr-even td-vertical-top tr-hover table-bordered">';
