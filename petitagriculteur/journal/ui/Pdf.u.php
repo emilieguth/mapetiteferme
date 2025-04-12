@@ -15,7 +15,14 @@ class PdfUi {
 
 	}
 
-	public static function urlJournal(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
+	public static function filenameVat(\company\Company $eCompany, string $type): string {
+
+		$typeText = $type === 'sell' ? s("ventes") : s("achats");
+		return s("{date}-{company}-tva-{type}", ['date' => date('Y-m-d'), 'company' => $eCompany['siret'], 'type' => $typeText]);
+
+	}
+
+	public static function urlJournal(\company\Company $eCompany): string {
 
 		return \company\CompanyUi::urlJournal($eCompany).'/:pdf';
 
@@ -132,6 +139,17 @@ class PdfUi {
 		return s("Grand livre");
 
 	}
+
+	public static function getVatTitle(string $type): string {
+
+		if($type === \pdf\PdfElement::JOURNAL_TVA_BUY) {
+			return s("Journal de TVA - Achats");
+		}
+
+		return s("Journal de TVA - Ventes");
+
+	}
+
 	public function getBook(
 		\company\Company $eCompany,
 		\Collection $cOperation,
@@ -158,6 +176,36 @@ class PdfUi {
 					$h .= BookUi::getBookTbody($eCompany, $cOperation, $eFinancialYear);
 
 				$h .= '</table>';
+
+			$h .= '</div>';
+
+		$h .= '</div>';
+
+		if(get_exists('test') === TRUE) {
+			$h .= \pdf\PdfUi::getFooter();
+		}
+		return $h;
+
+	}
+
+	public function getVat(
+		\company\Company $eCompany,
+		\Collection $cccOperation,
+		\accounting\FinancialYear $eFinancialYear,
+	): string {
+
+
+		$h = '<style>@page {	size: A4; margin: calc(var(--margin-bloc-height) + 2cm) 1cm 1cm; }</style>';
+
+		if(get_exists('test') === TRUE) {
+			$h .= \pdf\PdfUi::getHeader(\journal\PdfUi::getVatTitle(\pdf\PdfElement::JOURNAL_TVA_SELL), $eFinancialYear);
+		}
+
+		$h .= '<div class="pdf-document-wrapper">';
+
+			$h .= '<div class="pdf-document-content">';
+
+				$h .= new VatUi()->getTables($eCompany, $cccOperation, new \Search(), 'pdf');
 
 			$h .= '</div>';
 

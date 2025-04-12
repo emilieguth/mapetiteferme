@@ -17,6 +17,6 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	);
 
 	echo new \journal\VatUi()->getSearch($data->search, $data->eFinancialYear, $data->eThirdParty);
-	echo new \journal\VatUi()->getJournal($data->eCompany, $data->operations, $data->eFinancialYear, $data->search);
+	echo new \journal\VatUi()->getJournal($data->eCompany, $data->eFinancialYear, $data->operations, $data->eFinancialYear, $data->search);
 
 });

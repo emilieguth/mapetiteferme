@@ -26,7 +26,7 @@ class PdfUi {
 				.pdf-document-header {
 					display: grid;
 					grid-column-gap: 1rem;
-					grid-template-columns: 1fr 1fr;
+					grid-template-columns: 2fr 1fr;
 					overflow: hidden;
 					margin: 1cm auto;
 					border-radius: 0.15cm;

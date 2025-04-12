@@ -39,4 +39,28 @@ new Page(function($data) {
 
 		throw new ViewAction($data);
 
+	})
+	->get('pdf', function($data) {
+
+		$data->type = GET('type',  'string', 'buy');
+		if(in_array($data->type, ['buy', 'sell']) === FALSE) {
+			throw new NotExpectedAction('Cannot generate PDF of vat journal with no type');
+		}
+
+		$content = pdf\PdfLib::generate(
+			$data->eCompany,
+			$data->eFinancialYear,
+			match($data->type) {
+				'buy' => \pdf\PdfElement::JOURNAL_TVA_BUY,
+				'sell' => \pdf\PdfElement::JOURNAL_TVA_SELL,
+			},
+		);
+
+		if($content === NULL) {
+			throw new NotExistsAction();
+		}
+
+		$filename = journal\PdfUi::filenameVat($data->eCompany, $data->type).'.pdf';
+
+		throw new PdfAction($content, $filename);
 	});

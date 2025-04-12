@@ -57,6 +57,16 @@ class PdfLib extends \pdf\PdfCrud {
 				$header = PdfUi::getHeader(\journal\PdfUi::getBookTitle(), $eFinancialYear);
 				break;
 
+			case PdfElement::JOURNAL_TVA_BUY:
+				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/vat?financialYear='.$eFinancialYear['id'].'&type=buy&key='.\Setting::get('main\remoteKey');
+				$header = PdfUi::getHeader(\journal\PdfUi::getVatTitle(PdfElement::JOURNAL_TVA_BUY), $eFinancialYear);
+				break;
+
+			case PdfElement::JOURNAL_TVA_SELL:
+				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/vat?financialYear='.$eFinancialYear['id'].'&type=sell&key='.\Setting::get('main\remoteKey');
+				$header = PdfUi::getHeader(\journal\PdfUi::getVatTitle(PdfElement::JOURNAL_TVA_SELL), $eFinancialYear);
+				break;
+
 			default:
 				throw new \NotExpectedAction('Unknown pdf type');
 		}
