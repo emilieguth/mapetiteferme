@@ -25,10 +25,21 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 	}
 
-	echo '<h1>'.s("Amortissement des immobilisations").'</h1>';
-	echo \asset\DepreciationUi::getDepreciationTable($data->eCompany, $data->assetDepreciations);
+	echo '<div class="tabs-h" id="asset-depreciation" onrender="'.encode('Lime.Tab.restore(this, "depreciation-asset")').'">';
 
-	echo '<h1>'.s("Amortissement des subventions").'</h1>';
-	echo \asset\DepreciationUi::getDepreciationTable($data->eCompany, $data->subventionDepreciations);
+		echo '<div class="tabs-item">';
+		echo '<a class="tab-item selected" data-tab="depreciation-asset" onclick="Lime.Tab.select(this)">'.s("Immobilisations").'</a>';
+		echo '<a class="tab-item" data-tab="depreciation-subvention" onclick="Lime.Tab.select(this)">'.s("Subventions").'</a>';
+		echo '</div>';
+
+		echo '<div class="tab-panel" data-tab="depreciation-asset">';
+			echo \asset\DepreciationUi::getDepreciationTable($data->eCompany, $data->assetDepreciations);
+		echo '</div>';
+
+		echo '<div class="tab-panel" data-tab="depreciation-subvention">';
+			echo \asset\DepreciationUi::getDepreciationTable($data->eCompany, $data->subventionDepreciations);
+		echo '</div>';
+
+	echo '</div>';
 
 });

@@ -84,9 +84,7 @@ class AccountingUi {
 			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
 		}
 
-		$h = '<h2>'.s("Balance synthétique").'</h2>';
-
-		$h .= '<div class="util-overflow-sm">';
+		$h = '<div class="util-overflow-sm">';
 
 			$h .= '<table id="account-list" class=" tr-even tr-hover table-bordered">';
 
@@ -173,8 +171,7 @@ class AccountingUi {
 			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
 		}
 
-		$h = '<h2>'.s("Balance comptable").'</h2>';
-		$h .= '<div class="util-overflow-sm table-sticky-container">';
+		$h = '<div class="util-overflow-sm table-sticky-container">';
 
 		$h .= '<table id="account-list" class="table-sticky tr-even tr-hover">';
 

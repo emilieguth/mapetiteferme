@@ -71,12 +71,10 @@ class BalanceUi {
 	public function displaySummarizedBalance(array $balance): string {
 
 		if(empty($balance) === TRUE) {
-			return '<div class="util-info">'.\s("Il n'y a rien à afficher pour le moment.").'</div>';
+			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
 		}
 
-
-		$h = '<h2>'.\s("Bilan comptable").'</h2>';
-		$h .= '<div class="util-overflow-sm">';
+		$h = '<div class="util-overflow-sm">';
 
 			$h .= '<table id="balance-assets" class="tr-even tr-hover table-bordered">';
 
@@ -160,11 +158,10 @@ class BalanceUi {
 	public function displayDetailedBalance(array $balance): string {
 
 		if(empty($balance) === TRUE) {
-			return '<div class="util-info">'.\s("Il n'y a rien à afficher pour le moment.").'</div>';
+			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
 		}
 
-		$h = '<h2>'.\s("Bilan comptable détaillé").'</h2>';
-		$h .= '<div class="util-overflow-sm">';
+		$h = '<div class="util-overflow-sm">';
 
 			$h .= '<table id="balance-assets" class="tr-even tr-hover table-bordered">';
 

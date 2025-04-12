@@ -35,26 +35,36 @@ class BankUi {
 			return $h;
 		}
 
-		$h = '<h2>'.s("Compte bancaire").'</h2>';
+		$h = '<div class="tabs-h" id="analyze-bank" onrender="'.encode('Lime.Tab.restore(this, "bank")').'">';
 
-		$h .= '<div class="analyze-chart-table">';
+			$h .= '<div class="tabs-item">';
+				$h .= '<a class="tab-item selected" data-tab="bank" onclick="Lime.Tab.select(this)">'.s("Compte bancaire").'</a>';
+				$h .= '<a class="tab-item" data-tab="cash" onclick="Lime.Tab.select(this)">'.s("Caisse").'</a>';
+			$h .= '</div>';
 
-			$h .= $this->getChart($cOperationBank);
-			$h .= $this->getTable($cOperationBank);
+			$h .= '<div class="tab-panel" data-tab="bank">';
+
+				$h .= '<div class="analyze-chart-table">';
+
+					$h .= $this->getChart($cOperationBank);
+					$h .= $this->getTable($cOperationBank);
+
+				$h .= '</div>';
+			$h .= '</div>';
+
+			$h .= '<div class="tab-panel" data-tab="cash">';
+
+				$h .= '<h2>'.s("Caisse").'</h2>';
+
+				$h .= '<div class="analyze-chart-table">';
+
+					$h .= $this->getChart($cOperationCash);
+					$h .= $this->getTable($cOperationCash);
+
+				$h .= '</div>';
+			$h .= '</div>';
 
 		$h .= '</div>';
-
-		if($cOperationCash->empty() === FALSE) {
-
-			$h .= '<h2>'.s("Caisse").'</h2>';
-
-			$h .= '<div class="analyze-chart-table">';
-
-				$h .= $this->getChart($cOperationCash);
-				$h .= $this->getTable($cOperationCash);
-
-			$h .= '</div>';
-		}
 
 		return $h;
 	}

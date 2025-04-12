@@ -16,10 +16,21 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYear,
 	);
 
-	echo '<h1>'.s("Immobilisations").'</h1>';
-	echo new asset\AssetUi()->getAcquisitionTable($data->cAsset, 'asset');
+	echo '<div class="tabs-h" id="asset-acquisition" onrender="'.encode('Lime.Tab.restore(this, "acquisition-asset")').'">';
 
-	echo '<h1>'.s("Subventions").'</h1>';
-	echo new asset\AssetUi()->getAcquisitionTable($data->cAssetSubvention, 'subvention');
+		echo '<div class="tabs-item">';
+			echo '<a class="tab-item selected" data-tab="acquisition-asset" onclick="Lime.Tab.select(this)">'.s("Immobilisations").'</a>';
+			echo '<a class="tab-item" data-tab="acquisition-subvention" onclick="Lime.Tab.select(this)">'.s("Subventions").'</a>';
+		echo '</div>';
+
+		echo '<div class="tab-panel" data-tab="acquisition-asset">';
+			echo new asset\AssetUi()->getAcquisitionTable($data->cAsset, 'asset');
+		echo '</div>';
+
+		echo '<div class="tab-panel" data-tab="acquisition-subvention">';
+			echo new asset\AssetUi()->getAcquisitionTable($data->cAssetSubvention, 'subvention');
+		echo '</div>';
+
+	echo '</div>';
 
 });

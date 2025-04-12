@@ -16,8 +16,22 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYear,
 	);
 
-	echo new overview\AccountingUi()->displayAccountingBalanceSheet($data->accountingBalanceSheet);
-	echo new overview\AccountingUi()->displaySummaryAccountingBalance($data->summaryAccountingBalance);
+	echo '<div class="tabs-h" id="overview-accounting" onrender="'.encode('Lime.Tab.restore(this, "accounting-balance")').'">';
+
+		echo '<div class="tabs-item">';
+			echo '<a class="tab-item selected" data-tab="accounting-balance" onclick="Lime.Tab.select(this)">'.s("Balance comptable").'</a>';
+			echo '<a class="tab-item" data-tab="accounting-summary" onclick="Lime.Tab.select(this)">'.s("Balance synthétique").'</a>';
+		echo '</div>';
+
+		echo '<div class="tab-panel" data-tab="accounting-balance">';
+			echo new overview\AccountingUi()->displayAccountingBalanceSheet($data->accountingBalanceSheet);
+		echo '</div>';
+
+		echo '<div class="tab-panel" data-tab="accounting-summary">';
+			echo new overview\AccountingUi()->displaySummaryAccountingBalance($data->summaryAccountingBalance);
+		echo '</div>';
+
+	echo '</div>';
 
 });
 

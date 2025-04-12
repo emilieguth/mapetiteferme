@@ -34,9 +34,7 @@ Class ResultUi {
 			return $h;
 		}
 
-		$h = '<h2>'.s("Compte de résultat").'</h2>';
-
-		$h .= '<div class="stick-sm util-overflow-sm">';
+		$h = '<div class="stick-sm util-overflow-sm">';
 
 			$h .= '<table class="tr-even td-vertical-top tr-hover">';
 	
@@ -134,8 +132,7 @@ Class ResultUi {
 			return $h;
 		}
 
-		$h = '<h2>'.s("Le résultat mois par mois").'</h2>';
-		$h .= '<div class="analyze-chart-table">';
+		$h = '<div class="analyze-chart-table">';
 		$h .= $this->getChart($eFinancialYear, $cOperation);
 		$h .= $this->getTable($eFinancialYear, $cOperation);
 		$h .= '</div>';
