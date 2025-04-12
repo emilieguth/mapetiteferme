@@ -284,7 +284,7 @@ class CompanyUi {
 
 		$h .= '<div class="util-block-optional">';
 
-		$h .= '<h2>'.s("Les paramètres de comptabilité").'</h2>';
+		$h .= '<h2>'.s("La comptabilité").'</h2>';
 
 			$h .= '<div class="util-buttons">';
 

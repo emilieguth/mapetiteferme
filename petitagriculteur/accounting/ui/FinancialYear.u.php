@@ -32,7 +32,7 @@ class FinancialYearUi {
 		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
 		$h .= '<div class="dropdown-list">';
 			$h .= '<div class="dropdown-title">'.s("Exercice {year}", ['year' => self::getYear($eFinancialYear)]).'</div>';
-			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:opening" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan d'Ouverture").'</a>';
+			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:opening" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan d'Ouverture (Bientôt disponible !)").'</a>';
 			$h .= '<div class="dropdown-divider"></div>';
 			$h .= '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/:update?id='.$eFinancialYear['id'].'" class="dropdown-item">';
 				$h .= s("Modifier les dates");
@@ -51,10 +51,10 @@ class FinancialYearUi {
 		$h .= '<div class="dropdown-list">';
 			$h .= '<div class="dropdown-title">'.s("Exercice {year}", ['year' => self::getYear($eFinancialYear)]).'</div>';
 			$h .= '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:fec?id='.$eFinancialYear['id'].'" class="dropdown-item">';
-				$h .= s("Télécharger le FEC");
+				$h .= s("Télécharger le FEC (Bientôt disponible !)");
 			$h .= '</a>';
-			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:opening" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan d'Ouverture").'</a>';;
-			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:closing" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan de Clôture").'</a>';;
+			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:opening" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan d'Ouverture (Bientôt disponible !)").'</a>';;
+			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:closing" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan de Clôture (Bientôt disponible !)").'</a>';;
 		$h .= '</div>';
 
 		return $h;

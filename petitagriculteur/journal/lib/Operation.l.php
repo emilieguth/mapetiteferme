@@ -238,8 +238,8 @@ class OperationLib extends OperationCrud {
 				$cOperation->append($eOperationVat);
 			}
 
-			// Journal de caisse : créer une entrée contrepartie en caisse (TTC)
-			if($isFromCashflow === FALSE) {
+			// Journal de caisse : créer une entrée contrepartie en caisse (TTC) si elle a été demandée
+			if($isFromCashflow === FALSE and cast($input[$index] ?? FALSE, 'bool') === TRUE) {
 
 				if($eOperation['journalType'] === OperationElement::CASH) {
 

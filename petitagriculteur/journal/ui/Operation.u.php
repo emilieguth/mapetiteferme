@@ -142,8 +142,17 @@ class OperationUi {
 						'journalType'.$suffix,
 						self::p('journalType')->values,
 							$defaultValues['journalType'] ?? '',
+						['data-journal-type' => $form->getId(), 'data-index' => $index]
 					)
-					.\util\FormUi::info(self::p('journalType')->after),
+				);
+
+				$h .= $form->group(
+					s("Créer la contrepartie banque ou caisse"),
+					$form->checkbox('counterpart'.$suffix).\util\FormUi::info(s("Une écriture dans le journal de Banque ou le journal de Caisse doit toujours avoir une contrepartie en compte {bankAccount} ou {cashAccount}. Si vous utilisez l'import de relevé bancaire et créez vos écritures à partir d'une transaction bancaire, la contrepartie en compte {bankAccount} sera automatique. Ne cochez pas cette case dans ce cas.", [
+						'bankAccount' => \Setting::get('accounting\bankAccountClass'),
+						'cashAccount' => \Setting::get('accounting\cashAccountClass'),
+					])),
+					['class' => 'hide'],
 				);
 
 			}
@@ -393,7 +402,6 @@ class OperationUi {
 					OperationElement::STOCK_END => s("Journal Stocks Fin ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::STOCK_END]]),
 					OperationElement::MISC => s("Journal des Opérations Divers ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::MISC]]),
 				];
-				$d->after = s("Une écriture dans le journal de Banque ou le journal de Caisse créera une contrepartie automatique respectivement sur le compte ".\Setting::get('accounting\bankAccountClass')." ou le compte ".\Setting::get('accounting\cashAccountClass').".");
 				break;
 
 		}

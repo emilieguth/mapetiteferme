@@ -70,6 +70,19 @@ document.delegateEventListener('change', '[data-vat-value="journal-operation-cre
     Operation.checkVatConsistency(index);
 });
 
+document.delegateEventListener('change', '[data-journal-type="journal-operation-create"]', function (e) {
+
+    const index = this.dataset.index;
+
+    //bankAccountClass and cashAccountClass
+    if(['bank', 'cash'].indexOf(e.delegateTarget.value) > -1) {
+        qs('[data-wrapper="counterpart[' + index + ']"]').removeHide();
+    } else {
+        qs('[data-wrapper="counterpart[' + index + ']"]').hide();
+    }
+
+});
+
 class Operation {
 
     static highlight(selector) {
