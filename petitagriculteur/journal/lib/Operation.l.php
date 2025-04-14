@@ -580,7 +580,7 @@ class OperationLib extends OperationCrud {
 
 		$cOperation = self::applySearch($search)
 			->select('id')
-			->sort(['date' => SORT_ASC])
+			->sort(['date' => SORT_ASC, 'id' => SORT_ASC])
 			->getCollection();
 
 		$number = 0;

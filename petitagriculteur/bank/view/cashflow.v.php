@@ -33,7 +33,7 @@ new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 	$t->qs('#add-operation')->setAttribute('post-index', $data->index + 1);
 	$t->js()->eval('Cashflow.updateNewOperationLine('.$data->index.')');
 	$t->js()->eval('Cashflow.fillShowHideAmountWarning('.$data->eCashflow['amount'].')');
-	$t->js()->eval('Cashflow.showOrHideDeleteOperation()');
+	$t->js()->eval('Operation.showOrHideDeleteOperation()');
 
 });
 
