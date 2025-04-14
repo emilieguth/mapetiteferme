@@ -1,5 +1,6 @@
 Operation:
   id: serial32
+  number: ?int32(0, NULL)
   # Compte concerné par l'opération
   account: accounting\Account
   accountLabel: text8(1, null) @collate(general)

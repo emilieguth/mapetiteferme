@@ -627,5 +627,24 @@ class OperationLib extends OperationCrud {
 			->count();
 
 	}
+
+	public static function setNumbers(\accounting\FinancialYear $eFinancialYear): void {
+
+		$search = new \Search(['financialYear' => $eFinancialYear]);
+
+		$cOperation = self::applySearch($search)
+			->select('id')
+			->sort(['date' => SORT_ASC])
+			->getCollection();
+
+		$number = 0;
+		foreach($cOperation as $eOperation) {
+
+			$eOperation['number'] = ++$number;
+			Operation::model()->select('number')->update($eOperation);
+
+		}
+
+	}
 }
 ?>

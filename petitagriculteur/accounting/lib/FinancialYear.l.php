@@ -47,10 +47,14 @@ class FinancialYearLib extends FinancialYearCrud {
 			throw new \NotExpectedAction('Financial year already closed');
 		}
 
+		FinancialYear::model()->beginTransaction();
+
 		// Effectuer toutes les opérations de clôture
 
 		$eFinancialYear['status'] = FinancialYearElement::CLOSE;
-		self::update($eFinancialYear, ['status']);
+		$eFinancialYear['closeDate'] = new \Sql('NOW()');
+
+		self::update($eFinancialYear, ['status', 'closeDate']);
 
 		if($createNew === TRUE) {
 
@@ -62,6 +66,11 @@ class FinancialYearLib extends FinancialYearCrud {
 			self::create($eFinancialYearNew);
 
 		}
+
+		// Mettre les numéros d'écritures
+		\journal\OperationLib::setNumbers($eFinancialYear);
+
+		FinancialYear::model()->commit();
 
 	}
 

@@ -52,6 +52,7 @@ class OperationModel extends \ModuleModel {
 
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
+			'number' => ['int32', 'min' => 0, 'max' => NULL, 'null' => TRUE, 'cast' => 'int'],
 			'account' => ['element32', 'accounting\Account', 'cast' => 'element'],
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'thirdParty' => ['element32', 'journal\ThirdParty', 'null' => TRUE, 'cast' => 'element'],
@@ -76,7 +77,7 @@ class OperationModel extends \ModuleModel {
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'documentDate', 'amount', 'type', 'journalType', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'paymentDate', 'paymentMode', 'createdAt', 'updatedAt', 'createdBy'
+			'id', 'number', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'documentDate', 'amount', 'type', 'journalType', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'paymentDate', 'paymentMode', 'createdAt', 'updatedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
@@ -155,6 +156,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereId(...$data): OperationModel {
 		return $this->where('id', ...$data);
+	}
+
+	public function whereNumber(...$data): OperationModel {
+		return $this->where('number', ...$data);
 	}
 
 	public function whereAccount(...$data): OperationModel {

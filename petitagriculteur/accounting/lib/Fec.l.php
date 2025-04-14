@@ -49,7 +49,7 @@ class FecLib  {
 			$operationData = [
 				'',
 				'',
-				$eOperation['id'], // TODO : créer un champ numéro qui est setté au moment de la clôture de l'exercice
+				str_pad($eOperation['number'], 6, '0', STR_PAD_LEFT),
 				date('Ymd', strtotime($eOperation['date'])),
 				$eOperation['accountLabel'],
 				$eOperation['account']['description'],
@@ -62,10 +62,10 @@ class FecLib  {
 				$eOperation['type'] === \journal\OperationElement::CREDIT ? $eOperation['amount'] : 0,
 				'',
 				'',
-				date('Ymd', strtotime($eOperation['date'])), // TODO : créer une date de clôture d'exercice fiscal et l'utiliser ici
+				date('Ymd', strtotime($eFinancialYear['closeDate'])),
 				'',
 				'',
-				date('Ymd', strtotime($eOperation['paymentDate'])),
+				$eOperation['paymentDate'] !== NULL ? date('Ymd', strtotime($eOperation['paymentDate'])) : NULL,
 				$eOperation['paymentMode'],
 				'',
 			];

@@ -45,12 +45,13 @@ class FinancialYearModel extends \ModuleModel {
 			'status' => ['enum', [\accounting\FinancialYear::OPEN, \accounting\FinancialYear::CLOSE], 'cast' => 'enum'],
 			'balanceSheetOpen' => ['bool', 'cast' => 'bool'],
 			'balanceSheetClose' => ['bool', 'cast' => 'bool'],
+			'closeDate' => ['date', 'null' => TRUE, 'cast' => 'string'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'startDate', 'endDate', 'status', 'balanceSheetOpen', 'balanceSheetClose', 'createdAt', 'createdBy'
+			'id', 'startDate', 'endDate', 'status', 'balanceSheetOpen', 'balanceSheetClose', 'closeDate', 'createdAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
@@ -129,6 +130,10 @@ class FinancialYearModel extends \ModuleModel {
 
 	public function whereBalanceSheetClose(...$data): FinancialYearModel {
 		return $this->where('balanceSheetClose', ...$data);
+	}
+
+	public function whereCloseDate(...$data): FinancialYearModel {
+		return $this->where('closeDate', ...$data);
 	}
 
 	public function whereCreatedAt(...$data): FinancialYearModel {
