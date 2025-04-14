@@ -210,10 +210,6 @@ Class VatUi {
 				$h .= '<thead '.($for === 'web' ? 'class="thead-sticky"' : '').'>';
 					$h .= '<tr '.($for === 'pdf' ? 'class="row-header row-upper"' : '').'>';
 						$h .= '<th>';
-							$label = s("Journal");
-							$h .= (($search and $for !== 'pdf') ? $search->linkSort('journalType', $label) : $label);
-						$h .= '</th>';
-						$h .= '<th>';
 							$label = s("Date");
 							$h .= (($search and $for !== 'pdf') ? $search->linkSort('date', $label) : $label);
 						$h .= '</th>';
@@ -278,10 +274,6 @@ Class VatUi {
 							}
 
 							$h .= '<tr>';
-
-								$h .= '<td>';
-									$h .= \Setting::get('journal\codes')[$eOperationInitial['journalType']];
-								$h .= '</td>';
 
 								$h .= '<td '.($for === 'pdf' ? 'class="text-small"' : '').'>';
 									$h .= \util\DateUi::numeric($eOperationInitial['date']);

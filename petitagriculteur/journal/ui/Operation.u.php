@@ -134,29 +134,6 @@ class OperationUi {
 				$form->date('date'.$suffix, $defaultValues['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
 			);
 
-			if(($defaultValues['journalType'] ?? '') === '') {
-
-				$h .= $form->group(
-					self::p('journalType')->label.' '.\util\FormUi::asterisk(),
-					$form->select(
-						'journalType'.$suffix,
-						self::p('journalType')->values,
-							$defaultValues['journalType'] ?? '',
-						['data-journal-type' => $form->getId(), 'data-index' => $index]
-					)
-				);
-
-				$h .= $form->group(
-					s("Créer la contrepartie banque ou caisse"),
-					$form->checkbox('counterpart'.$suffix).\util\FormUi::info(s("Une écriture dans le journal de Banque ou le journal de Caisse doit toujours avoir une contrepartie en compte {bankAccount} ou {cashAccount}. Si vous utilisez l'import de relevé bancaire et créez vos écritures à partir d'une transaction bancaire, la contrepartie en compte {bankAccount} sera automatique. Ne cochez pas cette case dans ce cas.", [
-						'bankAccount' => \Setting::get('accounting\bankAccountClass'),
-						'cashAccount' => \Setting::get('accounting\cashAccountClass'),
-					])),
-					['class' => 'hide'],
-				);
-
-			}
-
 			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
 
 			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
@@ -359,7 +336,6 @@ class OperationUi {
 			'type' => s("Type (débit / crédit)"),
 			'thirdParty' => s("Tiers"),
 			'comment' => s("Commentaire"),
-			'journalType' => s("Type de journal"),
 			'paymentMode' => s("Mode de paiement"),
 			'paymentDate' => s("Date de paiement"),
 		]);
@@ -418,17 +394,6 @@ class OperationUi {
 
 			case 'comment' :
 				$d->after = s("(maximum 250 caractères)");
-				break;
-
-			case 'journalType' :
-				$d->values = [
-					OperationElement::BANK => s("Journal de Banque ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::BANK]]),
-					OperationElement::CASH => s("Journal de Caisse ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::CASH]]),
-					OperationElement::OPENING => s("Journal d'Ouverture ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::OPENING]]),
-					OperationElement::STOCK_START => s("Journal Stocks Début ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::STOCK_START]]),
-					OperationElement::STOCK_END => s("Journal Stocks Fin ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::STOCK_END]]),
-					OperationElement::MISC => s("Journal des Opérations Divers ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::MISC]]),
-				];
 				break;
 
 			case 'paymentMode' :

@@ -4,7 +4,7 @@ namespace journal;
 class OperationLib extends OperationCrud {
 
 	public static function getPropertiesCreate(): array {
-		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'vatRate', 'thirdParty', 'asset', 'journalType'];
+		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'vatRate', 'thirdParty', 'asset'];
 	}
 	public static function getPropertiesUpdate(): array {
 		return ['account', 'accountLabel', 'date', 'description', 'document', 'amount', 'type', 'thirdParty'];
@@ -22,7 +22,6 @@ class OperationLib extends OperationCrud {
 	public static function applySearch(\Search $search = new \Search()): OperationModel {
 
 		return Operation::model()
-			->whereJournalType('=', $search->get('journalType'), if: $search->get('journalType'))
 			->whereDate('LIKE', '%'.$search->get('date').'%', if: $search->get('date'))
 			->whereDate('>=', $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
 			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))
@@ -97,7 +96,7 @@ class OperationLib extends OperationCrud {
 				+ ['operation' => [
 					'id', 'account', 'accountLabel', 'document', 'type',
 					'thirdParty' => ['id', 'name'],
-					'description', 'amount', 'journalType', 'vatRate', 'cashflow', 'date'
+					'description', 'amount', 'vatRate', 'cashflow', 'date'
 				]]
 				+ ['account' => ['class', 'description']]
 				+ ['thirdParty' => ['id', 'name']]
@@ -175,7 +174,6 @@ class OperationLib extends OperationCrud {
 		];
 		if($isFromCashflow === FALSE) {
 			$properties[] = 'date';
-			$properties[] = 'journalType';
 			$properties[] = 'cashflow';
 		}
 
@@ -249,36 +247,11 @@ class OperationLib extends OperationCrud {
 							'date' => $eOperationDefault['cashflow']['date'],
 							'description' => $eOperation['description'] ?? $eOperationDefault['cashflow']['memo'],
 							'cashflow' => $eOperationDefault['cashflow'],
-							'journalType' => $eOperation['journalType'],
 						]
 						: $eOperation->getArrayCopy(),
 				);
 
 				$cOperation->append($eOperationVat);
-			}
-
-			// Journal de caisse : créer une entrée contrepartie en caisse (TTC) si elle a été demandée
-			if($isFromCashflow === FALSE and cast($input['counterpart'][$index] ?? FALSE, 'bool') === TRUE) {
-
-				if($eOperation['journalType'] === OperationElement::CASH) {
-
-					$eOperationCounterpart = self::createCounterPartOperation(
-						$eOperation,
-						$eOperation['amount'] + ($eOperationVat['amount'] ?? 0),
-						\Setting::get('accounting\cashAccountClass'),
-					);
-					$cOperation->append($eOperationCounterpart);
-
-				} else if($eOperation['journalType'] === OperationElement::BANK) {
-
-					$eOperationCounterpart = self::createCounterPartOperation(
-						$eOperation,
-						$eOperation['amount'] + ($eOperationVat['amount'] ?? 0),
-						\Setting::get('accounting\bankAccountClass'),
-					);
-					$cOperation->append($eOperationCounterpart);
-
-				}
 			}
 		}
 
@@ -299,31 +272,6 @@ class OperationLib extends OperationCrud {
 		}
 
 		return $cOperation;
-	}
-
-	private static function createCounterPartOperation(Operation $eOperationBase, float $amount, string $class): Operation {
-
-		$eOperation = clone $eOperationBase;
-		unset($eOperation['id']);
-
-		$eOperation['account'] = \accounting\AccountLib::getByClass($class);
-
-		if($class === \Setting::get('accounting\bankAccountClass')) {
-
-			$eOperation['accountLabel'] = \bank\AccountLib::getDefaultAccount()['label'];
-
-		} else {
-
-			$eOperation['accountLabel'] = \accounting\AccountLib::padClass($eOperation['account']['class']);
-
-		}
-
-		$eOperation['type'] = $eOperationBase['type'] === OperationElement::CREDIT ? OperationElement::DEBIT : OperationElement::CREDIT;
-		$eOperation['amount'] = $amount;
-
-		\journal\Operation::model()->insert($eOperation);
-
-		return $eOperation;
 	}
 
 	public static function createVatOperation(Operation $eOperationLinked, \accounting\Account $eAccount, float $vatValue, array $defaultValues): Operation {
@@ -351,7 +299,7 @@ class OperationLib extends OperationCrud {
 		$eOperationVat->build(
 			[
 				'cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'documentDate',
-				'thirdParty', 'type', 'amount', 'operation', 'journalType',
+				'thirdParty', 'type', 'amount', 'operation',
 				'paymentDate', 'paymentMode',
 			],
 			$values,
@@ -449,11 +397,10 @@ class OperationLib extends OperationCrud {
 
 	public static function attachIdsToCashflow(\bank\Cashflow $eCashflow, array $operationIds): int {
 
-		$properties = ['cashflow', 'updatedAt', 'journalType'];
+		$properties = ['cashflow', 'updatedAt'];
 		$eOperation = new Operation([
 			'cashflow' => $eCashflow,
 			'updatedAt' => Operation::model()->now(),
-			'journalType' => OperationElement::BANK,
 			'paymentDate' => $eCashflow['date'],
 			'paymentMode' => new \bank\CashflowUi()::extractPaymentTypeFromCashflowDescription($eCashflow['memo']),
 		]);
@@ -502,7 +449,6 @@ class OperationLib extends OperationCrud {
 				\bank\Cashflow::DEBIT => Operation::CREDIT,
 			},
 			'amount' => abs($eCashflow['amount']),
-			'journalOperation' => OperationElement::BANK,
 			'documentDate' => $document !== NULL ? new \Sql('NOW()') : NULL,
 			'paymentDate' => $eCashflow['date'],
 			'paymentMode'=> $eOperation['paymentMode'],

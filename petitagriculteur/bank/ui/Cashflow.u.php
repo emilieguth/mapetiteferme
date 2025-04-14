@@ -283,7 +283,6 @@ class CashflowUi {
 		$eOperation = new \journal\Operation(['account' => new Account()]);
 		$index = 0;
 		$defaultValues = [
-			'journalType' => \journal\OperationElement::BANK,
 			'date' => $eCashflow['date'],
 			'amount' => abs($eCashflow['amount']),
 			'type' => $eCashflow['type'],

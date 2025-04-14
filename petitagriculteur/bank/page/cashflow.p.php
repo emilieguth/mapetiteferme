@@ -82,7 +82,6 @@ new \bank\CashflowPage(
 		}
 
 		$cOperation = \journal\OperationLib::prepareOperations($_POST, new \journal\Operation([
-			'journalType' => \journal\OperationElement::BANK,
 			'cashflow' => $data->eCashflow,
 			'date' => $data->eCashflow['date'],
 		]));
