@@ -17,6 +17,11 @@ abstract class OperationElement extends \Element {
 	const STOCK_END = 'stock-end';
 	const MISC = 'misc';
 
+	const TRANSFER = 'transfer';
+	const CHEQUE = 'cheque';
+	const CREDIT_CARD = 'credit-card';
+	const DIRECT_DEBIT = 'direct-debit';
+
 	public static function getSelection(): array {
 		return Operation::model()->getProperties();
 	}
@@ -53,6 +58,7 @@ class OperationModel extends \ModuleModel {
 			'date' => ['date', 'min' => toDate('NOW - 2 YEARS'), 'max' => toDate('NOW + 1 YEARS'), 'cast' => 'string'],
 			'description' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'document' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
+			'documentDate' => ['date', 'null' => TRUE, 'cast' => 'string'],
 			'amount' => ['decimal', 'digits' => 8, 'decimal' => 2, 'cast' => 'float'],
 			'type' => ['enum', [\journal\Operation::DEBIT, \journal\Operation::CREDIT], 'cast' => 'enum'],
 			'journalType' => ['enum', [\journal\Operation::BANK, \journal\Operation::CASH, \journal\Operation::OPENING, \journal\Operation::STOCK_START, \journal\Operation::STOCK_END, \journal\Operation::MISC], 'cast' => 'enum'],
@@ -62,13 +68,15 @@ class OperationModel extends \ModuleModel {
 			'operation' => ['element32', 'journal\Operation', 'null' => TRUE, 'cast' => 'element'],
 			'asset' => ['element32', 'asset\Asset', 'null' => TRUE, 'cast' => 'element'],
 			'comment' => ['text8', 'min' => 1, 'max' => NULL, 'null' => TRUE, 'cast' => 'string'],
+			'paymentDate' => ['date', 'null' => TRUE, 'cast' => 'string'],
+			'paymentMode' => ['enum', [\journal\Operation::TRANSFER, \journal\Operation::CHEQUE, \journal\Operation::CASH, \journal\Operation::CREDIT_CARD, \journal\Operation::DIRECT_DEBIT], 'null' => TRUE, 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
 			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'amount', 'type', 'journalType', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'createdAt', 'updatedAt', 'createdBy'
+			'id', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'documentDate', 'amount', 'type', 'journalType', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'paymentDate', 'paymentMode', 'createdAt', 'updatedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
@@ -91,6 +99,9 @@ class OperationModel extends \ModuleModel {
 	public function getDefaultValue(string $property) {
 
 		switch($property) {
+
+			case 'documentDate' :
+				return new \Sql('CURDATE()');
 
 			case 'journalType' :
 				return Operation::BANK;
@@ -122,6 +133,9 @@ class OperationModel extends \ModuleModel {
 				return ($value === NULL) ? NULL : (string)$value;
 
 			case 'journalType' :
+				return ($value === NULL) ? NULL : (string)$value;
+
+			case 'paymentMode' :
 				return ($value === NULL) ? NULL : (string)$value;
 
 			default :
@@ -167,6 +181,10 @@ class OperationModel extends \ModuleModel {
 		return $this->where('document', ...$data);
 	}
 
+	public function whereDocumentDate(...$data): OperationModel {
+		return $this->where('documentDate', ...$data);
+	}
+
 	public function whereAmount(...$data): OperationModel {
 		return $this->where('amount', ...$data);
 	}
@@ -201,6 +219,14 @@ class OperationModel extends \ModuleModel {
 
 	public function whereComment(...$data): OperationModel {
 		return $this->where('comment', ...$data);
+	}
+
+	public function wherePaymentDate(...$data): OperationModel {
+		return $this->where('paymentDate', ...$data);
+	}
+
+	public function wherePaymentMode(...$data): OperationModel {
+		return $this->where('paymentMode', ...$data);
 	}
 
 	public function whereCreatedAt(...$data): OperationModel {

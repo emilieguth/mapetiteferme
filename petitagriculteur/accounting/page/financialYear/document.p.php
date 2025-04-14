@@ -22,6 +22,10 @@ new \accounting\FinancialYearPage(
 )
 	->get('fec', function($data) {
 
+		$fecData = \accounting\FecLib::generate($data->eFinancialYear);
+
+		// TODO : date de clôture de l'exercice comptable
+		throw new DataAction($fecData, 'text/txt', $data->eCompany['siret'].'FEC'.date('Ymd').'.txt');
 	})
 	->get('closing', function($data) {
 

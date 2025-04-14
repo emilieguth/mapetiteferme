@@ -135,6 +135,10 @@ class OperationLib extends OperationCrud {
 
 		$e['updatedAt'] = new \Sql('NOW()');
 		$properties[] = 'updatedAt';
+		if(in_array('document', $properties) === TRUE) {
+			$properties[] = 'documentDate';
+			$e['documentDate'] =  new \Sql('NOW()');
+		}
 		parent::update($e, $properties);
 
 		// Quick document update
@@ -145,9 +149,9 @@ class OperationLib extends OperationCrud {
 				$eCashflow['document'] = $e['document'];
 				\bank\CashflowLib::update($eCashflow, ['document']);
 				Operation::model()
-					->select('document')
+					->select('document', 'documentDate')
 					->whereCashflow('=', $e['cashflow']['id'])
-					->update(['document' => $e['document']]);
+					->update(['document' => $e['document'], 'documentDate' => new \Sql('NOW()')]);
 			}
 		}
 	}
@@ -156,7 +160,7 @@ class OperationLib extends OperationCrud {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
 		$vatValues = var_filter($input['vatValue'] ?? [], 'array');
-		$document = $input['cashflow']['document'] ?? NULL;
+		$document = cast($input['cashflow']['document'] ?? NULL, 'string');
 		$isFromCashflow = ($eOperationDefault->offsetExists('cashflow') === TRUE);
 
 		$fw = new \FailWatch();
@@ -164,7 +168,11 @@ class OperationLib extends OperationCrud {
 		$cAccounts = \accounting\AccountLib::getByIdsWithVatAccount($accounts);
 
 		$cOperation = new \Collection();
-		$properties = ['account', 'accountLabel', 'description', 'amount', 'type', 'document', 'vatRate', 'comment'];
+		$properties = [
+			'account', 'accountLabel',
+			'description', 'amount', 'type', 'document', 'vatRate', 'comment',
+			'paymentDate', 'paymentMode',
+		];
 		if($isFromCashflow === FALSE) {
 			$properties[] = 'date';
 			$properties[] = 'journalType';
@@ -180,7 +188,18 @@ class OperationLib extends OperationCrud {
 
 			$eOperation->buildIndex($properties, $input, $index);
 
+			if($eOperation->offsetExists('paymentMode') === TRUE) {
+				$eOperationDefault['paymentMode'] ??= $eOperation['paymentMode'];
+			}
+
 			$eOperation['amount'] = abs($eOperation['amount']);
+
+			// Date de la pièce justificative : date d'enregistrement
+			if($eOperation['document'] !== NULL) {
+				$eOperation['documentDate'] = new \Sql('NOW()');
+			} else {
+				$eOperation['documentDate'] = NULL;
+			}
 
 			$thirdParty = $input['thirdParty'][$index] ?? null;
 			if($thirdParty !== null) {
@@ -239,7 +258,7 @@ class OperationLib extends OperationCrud {
 			}
 
 			// Journal de caisse : créer une entrée contrepartie en caisse (TTC) si elle a été demandée
-			if($isFromCashflow === FALSE and cast($input[$index] ?? FALSE, 'bool') === TRUE) {
+			if($isFromCashflow === FALSE and cast($input['counterpart'][$index] ?? FALSE, 'bool') === TRUE) {
 
 				if($eOperation['journalType'] === OperationElement::CASH) {
 
@@ -268,8 +287,8 @@ class OperationLib extends OperationCrud {
 
 			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow(
 				$eOperationDefault['cashflow'],
+				$eOperationDefault,
 				$document,
-				$eOperationDefault['thirdParty'],
 			);
 			$cOperation->append($eOperationBank);
 
@@ -314,8 +333,11 @@ class OperationLib extends OperationCrud {
 			'account' => $eAccount['vatAccount']['id'] ?? NULL,
 			'accountLabel' => \accounting\AccountLib::padClass($eAccount['vatAccount']['class']),
 			'document' => $eOperationLinked['document'],
+			'documentDate' => $eOperationLinked['document'] === NULL ? NULL : new \Sql('SPECIAL(NOW)'),
 			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
 			'type' => $eOperationLinked['type'],
+			'paymentDate' => $eOperationLinked['paymentDate'],
+			'paymentMode' => $eOperationLinked['paymentMode'],
 			'amount' => abs($vatValue),
 		];
 		if($eOperationLinked['cashflow']->exists() === TRUE) {
@@ -327,7 +349,11 @@ class OperationLib extends OperationCrud {
 		$fw = new \FailWatch();
 
 		$eOperationVat->build(
-			['cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation', 'journalType'],
+			[
+				'cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'documentDate',
+				'thirdParty', 'type', 'amount', 'operation', 'journalType',
+				'paymentDate', 'paymentMode',
+			],
 			$values,
 			new \Properties('create'),
 		);
@@ -428,6 +454,8 @@ class OperationLib extends OperationCrud {
 			'cashflow' => $eCashflow,
 			'updatedAt' => Operation::model()->now(),
 			'journalType' => OperationElement::BANK,
+			'paymentDate' => $eCashflow['date'],
+			'paymentMode' => new \bank\CashflowUi()::extractPaymentTypeFromCashflowDescription($eCashflow['memo']),
 		]);
 
 		$updated = self::addOpenFinancialYearCondition()
@@ -444,14 +472,16 @@ class OperationLib extends OperationCrud {
 			->update($eOperation);
 
 		// Create Bank line
-		OperationLib::createBankOperationFromCashflow($eCashflow);
+		OperationLib::createBankOperationFromCashflow($eCashflow, $eOperation);
 
 		return $updated;
 	}
 
-	public static function createBankOperationFromCashflow(\bank\Cashflow $eCashflow, ?string $document = NULL, ?ThirdParty $eThirdParty = NULL): Operation {
+	public static function createBankOperationFromCashflow(\bank\Cashflow $eCashflow, Operation $eOperation, ?string $document = NULL): Operation {
 
 		$eAccountBank = \bank\AccountLib::getByClass(\Setting::get('accounting\bankAccountClass'));
+
+		$eThirdParty = $eOperation['thirdParty'] ?? NULL;
 
 		if($eCashflow['import']['account']['label'] !== NULL) {
 			$label = $eCashflow['import']['account']['label'];
@@ -473,13 +503,19 @@ class OperationLib extends OperationCrud {
 			},
 			'amount' => abs($eCashflow['amount']),
 			'journalOperation' => OperationElement::BANK,
+			'documentDate' => $document !== NULL ? new \Sql('NOW()') : NULL,
+			'paymentDate' => $eCashflow['date'],
+			'paymentMode'=> $eOperation['paymentMode'],
 		];
 
 		$eOperationBank = new Operation();
 
 		$fw = new \FailWatch();
 
-		$eOperationBank->build(['cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation'], $values, new \Properties('create'));
+		$eOperationBank->build([
+			'cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount',
+			'operation', 'paymentDate', 'paymentMode', 'documentDate',
+		], $values, new \Properties('create'));
 
 		$fw->validate();
 

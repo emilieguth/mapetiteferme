@@ -8,6 +8,7 @@ Operation:
   # Libellé de l'opération
   description: text8(1, null) @collate(general)
   document: ?text8(1, null) @collate(general)
+  documentDate: ?date = SPECIAL(now)
   # Une opération est toujours HT
   amount: decimal(8, 2)
   type: enum(DEBIT, CREDIT)
@@ -20,6 +21,8 @@ Operation:
   # Immobilisation à laquelle cette opération est liée (obligatoire pour une classe 2)
   asset: ?asset\Asset
   comment: ?text8(1, null)
+  paymentDate: ?date
+  paymentMode: ?enum(TRANSFER, CHEQUE, CASH, CREDIT_CARD, DIRECT_DEBIT)
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
   createdBy: user\User = SPECIAL(user)

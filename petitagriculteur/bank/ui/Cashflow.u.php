@@ -234,6 +234,44 @@ class CashflowUi {
 		return $h;
 	}
 
+	public static function extractPaymentTypeFromCashflowDescription(string $description): ?string {
+
+		if(mb_strpos(mb_strtolower($description), 'carte') !== FALSE) {
+			return \journal\OperationElement::CREDIT_CARD;
+		}
+
+		if(
+			mb_strpos(mb_strtolower($description), 'virement') !== FALSE
+			or mb_strpos(mb_strtolower($description), 'sepa') !== FALSE
+		) {
+			return \journal\OperationElement::TRANSFER;
+		}
+
+		if(
+			mb_strpos(mb_strtolower($description), 'prélèvement') !== FALSE
+			or mb_strpos(mb_strtolower($description), 'prelevement') !== FALSE
+		) {
+			return \journal\OperationElement::DIRECT_DEBIT;
+		}
+
+		if(
+			mb_strpos(mb_strtolower($description), 'chèque') !== FALSE
+			or mb_strpos(mb_strtolower($description), 'cheque') !== FALSE
+		) {
+			return \journal\OperationElement::CHEQUE;
+		}
+
+		if(
+			mb_strpos(mb_strtolower($description), 'espèce') !== FALSE
+			or mb_strpos(mb_strtolower($description), 'espece') !== FALSE
+		) {
+			return \journal\OperationElement::CHEQUE;
+		}
+
+		return NULL;
+
+	}
+
 	public static function getAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow): \Panel {
 
 		\Asset::js('bank', 'cashflow.js');
@@ -250,6 +288,8 @@ class CashflowUi {
 			'amount' => abs($eCashflow['amount']),
 			'type' => $eCashflow['type'],
 			'description' => $eCashflow['memo'],
+			'paymentDate' => $eCashflow['date'],
+			'paymentMode' => self::extractPaymentTypeFromCashflowDescription($eCashflow['memo']),
 		];
 
 		$h .= $form->openAjax(

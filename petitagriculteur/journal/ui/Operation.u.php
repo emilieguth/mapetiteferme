@@ -314,9 +314,31 @@ class OperationUi {
 					).$form->addon('€'))
 			);
 
-		$h .= '<div data-index="'.$index.'" class="util-warning hide" data-vat-warning>';
-			$h .= s("Attention, le montant de TVA ne correspond pas au montant HT et au taux de TVA indiqués. Notez que pourrez tout de même enregistrer.");
-		$h .= '</div>';
+			$h .= '<div data-index="'.$index.'" class="util-warning hide" data-vat-warning>';
+				$h .= s("Attention, le montant de TVA ne correspond pas au montant HT et au taux de TVA indiqués. Notez que pourrez tout de même enregistrer.");
+			$h .= '</div>';
+
+
+			$h .= $form->group(
+				self::p('paymentDate')->label,
+				$form->date('paymentDate'.$suffix, $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+			);
+			$paymentModeInput = '';
+			foreach(self::p('paymentMode')->values as $paymentMode => $text) {
+				$paymentModeInput .= $form->radio(
+					'paymentMode'.$suffix,
+					$paymentMode,
+					self::p('paymentMode')->values[$paymentMode],
+					$defaultValues['paymentMode'] ?? '',
+					[
+						'data-index' => $index
+					],
+				);
+			}
+			$h .= $form->group(
+				self::p('paymentMode')->label,
+				$paymentModeInput,
+			);
 
 		$h .= '</div>';
 
@@ -332,15 +354,20 @@ class OperationUi {
 			'date' => s("Date de l'opération"),
 			'description' => s("Libellé"),
 			'document' => s("Pièce comptable"),
+			'documentDate' => s("Date de la pièce comptable"),
 			'amount' => s("Montant (HT)"),
 			'type' => s("Type (débit / crédit)"),
 			'thirdParty' => s("Tiers"),
 			'comment' => s("Commentaire"),
 			'journalType' => s("Type de journal"),
+			'paymentMode' => s("Mode de paiement"),
+			'paymentDate' => s("Date de paiement"),
 		]);
 
 		switch($property) {
 
+			case 'documentDate' :
+			case 'paymentDate' :
 			case 'date' :
 				$d->prepend = \Asset::icon('calendar-date');
 				break;
@@ -401,6 +428,16 @@ class OperationUi {
 					OperationElement::STOCK_START => s("Journal Stocks Début ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::STOCK_START]]),
 					OperationElement::STOCK_END => s("Journal Stocks Fin ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::STOCK_END]]),
 					OperationElement::MISC => s("Journal des Opérations Divers ({code})", ['code' => \Setting::get('journal\codes')[OperationElement::MISC]]),
+				];
+				break;
+
+			case 'paymentMode' :
+				$d->values = [
+					OperationElement::CREDIT_CARD => s("Carte bancaire"),
+					OperationElement::CHEQUE => s("Chèque bancaire"),
+					OperationElement::CASH => s("Espèces"),
+					OperationElement::TRANSFER => s("Virement bancaire"),
+					OperationElement::DIRECT_DEBIT => s("Prélèvement"),
 				];
 				break;
 
