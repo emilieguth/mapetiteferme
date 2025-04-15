@@ -22,10 +22,10 @@ class PdfLib extends \pdf\PdfCrud {
 				$args .= ' "--footer='.rawurlencode($footer).'"';
 			}
 
-			exec('node '.LIME_DIRECTORY.'/petitagriculteur/main/nodejs/pdf.js '.$args.' 2>&1');
+			exec('node '.LIME_DIRECTORY.'/mapetiteferme/main/nodejs/pdf.js '.$args.' 2>&1');
 
-			if(\LIME_ENV === 'dev') {
-				\d('node '.LIME_DIRECTORY.'/petitagriculteur/main/nodejs/pdf.js '.$args.' 2>&1');
+			if(LIME_ENV === 'dev') {
+				d('node '.LIME_DIRECTORY.'/mapetiteferme/main/nodejs/pdf.js '.$args.' 2>&1');
 			}
 
 			$content = file_get_contents($file);

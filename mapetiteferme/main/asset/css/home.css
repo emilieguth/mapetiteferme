@@ -10,11 +10,11 @@ body[data-template^="home"] header {
 }
 
 body[data-template="home-main"] header {
-   background-image: url(/asset/petitagriculteur/main/image/banner.jpg);
+   background-image: url(/asset/mapetiteferme/main/image/banner.jpg);
 }
 
 body[data-template="home-employee"] header {
-   background-image: url(/asset/petitagriculteur/main/image/banner-employee.jpg);
+   background-image: url(/asset/mapetiteferme/main/image/banner-employee.jpg);
 }
 
 body[data-template="home-legal"] header {

@@ -83,7 +83,7 @@ class LegalUi {
 		$h .= '<div class="home-category">';
 
 			$h .= '<p>'.s(
-				"La plateforme petitagriculteur.fr est née du constat qu'il n'est pas simple de gérer sa comptabilité dans le monde agricole. De plus, avec la <link>généralisation de la facturation électronique {icon}</link>, de nouvelles contraintes réglementaires vont se poser dans les prochains mois. {siteName} a été conçu pour que ces changements soient les plus simples pour vous.",
+				"La plateforme mapetiteferme.app est née du constat qu'il n'est pas simple de gérer sa comptabilité dans le monde agricole. De plus, avec la <link>généralisation de la facturation électronique {icon}</link>, de nouvelles contraintes réglementaires vont se poser dans les prochains mois. {siteName} a été conçu pour que ces changements soient les plus simples pour vous.",
 					['link' => '<a href="https://entreprendre.service-public.fr/actualites/A15683" target="_blank">', 'icon' => \Asset::icon('box-arrow-up-right')]
 				).'</p>';
 
@@ -134,7 +134,7 @@ class LegalUi {
 			$h .= '<p>'.s("Plusieurs ressources sont disponibles :").'</p>';
 			$h .= '<ul>';
 				$h .= '<li>'.s("Un journal des modifications pour suivre l'actualité du site").'<br/><a href="https://'.\Lime::getDomain().'/updates" class="btn btn-secondary mb-1">'.s("Voir les actualités").'</a></li>';
-				$h .= '<li>'.s("Un salon de discussion ouvert à tous").'<br/><a href="https://app.element.io/#/room/#petitagriculteur:matrix.org" class="btn btn-secondary mb-1">'.s("Voir le salon de discussion").'</a></li>';
+				$h .= '<li>'.s("Un salon de discussion ouvert à tous").'<br/><a href="https://app.element.io/#/room/#mapetiteferme:matrix.org" class="btn btn-secondary mb-1">'.s("Voir le salon de discussion").'</a></li>';
 				$h .= '<li>'.s("Probablement des collègues qui utilisent l'outil et pourraient vous aider !").'</li>';
 			$h .= '</ul>';
 

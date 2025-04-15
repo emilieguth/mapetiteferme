@@ -4,11 +4,7 @@ new Page()
 
 		$data = 'User-agent: *'."\n";
 
-		if(LIME_GENDER === 'm') {
-			$data .= 'Disallow: '.Setting::get('main\robotsDisallow').''."\n";
-		} else {
-			$data .= 'Disallow: /'."\n";
-		}
+		$data .= 'Disallow: '.Setting::get('main\robotsDisallow').''."\n";
 
 		throw new DataAction($data, 'text/txt');
 

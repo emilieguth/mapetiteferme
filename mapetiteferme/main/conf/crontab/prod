@@ -1,14 +1,14 @@
 ############################
-# www.petitagriculteur.fr  #
+# www.mapetiteferme.app  #
 ############################
 
-*/5 * * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur session/cron/sessionClean
-0 * * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur mail/cron/mail
-0 * * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur storage/cron/buffer
-0 12 * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur mail/cron/clean
-0 2 * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur media/cron/clean
-0 6 * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur cron/sitemap
-0 6 * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur user/cron/close
-0 6 * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur user/cron/log
-17 7 * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur dev/cron/minifyClean
-47 5 * * * php /var/www/pa/framework/lime.php -e prod -a petitagriculteur dev/cron/error
+*/5 * * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme session/cron/sessionClean
+0 * * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme mail/cron/mail
+0 * * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme storage/cron/buffer
+0 12 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme mail/cron/clean
+0 2 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme media/cron/clean
+0 6 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme cron/sitemap
+0 6 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme user/cron/close
+0 6 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme user/cron/log
+17 7 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme dev/cron/minifyClean
+47 5 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme dev/cron/error

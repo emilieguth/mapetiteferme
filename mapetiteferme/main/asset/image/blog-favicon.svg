@@ -9,7 +9,7 @@
    id="svg8"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="blog-favicon.svg"
-   inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/favicon.png"
+   inkscape:export-filename="/var/www/mpf/mapetiteferme/main/asset/image/favicon.png"
    inkscape:export-xdpi="91"
    inkscape:export-ydpi="91"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -236,7 +236,7 @@
        d="m 80.236,103.192 a 17,17 0 0 1 -16.999999,17 l -1e-6,-17 z"
        inkscape:export-xdpi="605.33826"
        inkscape:export-ydpi="605.33826"
-       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/logo-native.png" />
+       inkscape:export-filename="/var/www/mpf/mapetiteferme/main/asset/image/logo-native.png" />
     <path
        style="fill:#505075;fill-opacity:1;fill-rule:evenodd;stroke-width:1.27953"
        id="path1338-3-5"
@@ -249,7 +249,7 @@
        sodipodi:end="1.5707963"
        inkscape:export-xdpi="605.33826"
        inkscape:export-ydpi="605.33826"
-       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/logo-native.png"
+       inkscape:export-filename="/var/www/mpf/mapetiteferme/main/asset/image/logo-native.png"
        sodipodi:arc-type="slice"
        d="m 120.192,-63.236 a 17,17 0 0 1 -17,17 v -17 z"
        transform="rotate(90)" />
@@ -265,7 +265,7 @@
        sodipodi:end="1.5707963"
        inkscape:export-xdpi="605.33826"
        inkscape:export-ydpi="605.33826"
-       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/logo-native.png"
+       inkscape:export-filename="/var/www/mpf/mapetiteferme/main/asset/image/logo-native.png"
        sodipodi:arc-type="slice"
        d="m -86.192001,63.236 a 17,17 0 0 1 -16.999999,17 v -17 z"
        transform="rotate(-90)" />
@@ -283,7 +283,7 @@
        transform="scale(-1)"
        inkscape:export-xdpi="605.33826"
        inkscape:export-ydpi="605.33826"
-       inkscape:export-filename="/var/www/pa/petitagriculteur/main/asset/image/logo-native.png" />
+       inkscape:export-filename="/var/www/mpf/mapetiteferme/main/asset/image/logo-native.png" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.6333px;line-height:1.25;font-family:'Baekmuk Headline';-inkscape-font-specification:'Baekmuk Headline';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"

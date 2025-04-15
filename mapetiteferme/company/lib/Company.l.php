@@ -127,17 +127,17 @@ class CompanyLib extends CompanyCrud {
 			\Database::addPackages([$package => $base]);
 		}
 
-		\Database::addBase($base, 'petitagriculteur-default');
+		\Database::addBase($base, 'mapetiteferme-default');
 
 	}
 
 	public static function getDatabaseName(Company $eCompany): string {
 
 		if(LIME_ENV === 'prod') {
-			return'petitagriculteur_'.$eCompany['id'];
+			return'mapetiteferme_'.$eCompany['id'];
 		}
 
-		return 'dev_petitagriculteur_'.$eCompany['id'];
+		return 'dev_mapetiteferme_'.$eCompany['id'];
 	}
 
 	public static function createSpecificDatabaseAndTables(Company $eCompany): void {

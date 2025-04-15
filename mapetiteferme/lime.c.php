@@ -1,17 +1,15 @@
 <?php
-define('LIME_GENDER', in_array(GET('limeGender', 'string', 'm'), ['f', 'm']) === TRUE ? GET('limeGender', 'string', 'm') : 'm');
-$hostname = match(LIME_GENDER) { 'f' => 'petiteagricultrice', default => 'petitagriculteur'};
 Lime::setUrls([
-  'dev' => 'http://www.dev-'.$hostname.'.fr',
-  'prod' => 'https://www.'.$hostname.'.fr',
+  'dev' => 'http://www.mapetiteferme.fr',
+  'prod' => 'https://www.mapetiteferme.app',
 ]);
 
-Lime::setName( match(LIME_GENDER) { 'f' => 'PetiteAgricultrice', default => 'PetitAgriculteur'});
-Lime::setApps(['framework', 'petitagriculteur']);
+Lime::setName( 'MaPetiteFerme');
+Lime::setApps(['framework', 'mapetiteferme']);
 
 L::setLang('fr_FR');
 L::setVariables([
-  'siteName' => $hostname,
+  'siteName' => 'MaPetiteFerme',
 ]);
 
 require_once Lime::getPath().'/secret.c.php';
@@ -24,15 +22,15 @@ switch(LIME_ENV) {
     Asset::setVersion(hash_file('crc32', LIME_DIRECTORY.'/.git/FETCH_HEAD'));
 
     Database::setPackages([
-      'company' => 'petitagriculteur',
-      'dev' => 'petitagriculteur',
-      'mail' => 'petitagriculteur',
-      'main' => 'petitagriculteur',
-      'media' => 'petitagriculteur',
-      'util' => 'petitagriculteur',
-      'session' => 'petitagriculteur',
-      'user' => 'petitagriculteur',
-      'storage' => 'petitagriculteur',
+      'company' => 'mapetiteferme',
+      'dev' => 'mapetiteferme',
+      'mail' => 'mapetiteferme',
+      'main' => 'mapetiteferme',
+      'media' => 'mapetiteferme',
+      'util' => 'mapetiteferme',
+      'session' => 'mapetiteferme',
+      'user' => 'mapetiteferme',
+      'storage' => 'mapetiteferme',
     ]);
 
     break;
@@ -42,15 +40,15 @@ switch(LIME_ENV) {
     Database::setDebug(get_exists('sql'));
 
     Database::addPackages([
-      'company' => 'dev_petitagriculteur',
-      'dev' => 'dev_petitagriculteur',
-      'mail' => 'dev_petitagriculteur',
-      'main' => 'dev_petitagriculteur',
-      'media' => 'dev_petitagriculteur',
-      'util' => 'dev_petitagriculteur',
-      'session' => 'dev_petitagriculteur',
-      'user' => 'dev_petitagriculteur',
-      'storage' => 'dev_petitagriculteur',
+      'company' => 'dev_mapetiteferme',
+      'dev' => 'dev_mapetiteferme',
+      'mail' => 'dev_mapetiteferme',
+      'main' => 'dev_mapetiteferme',
+      'media' => 'dev_mapetiteferme',
+      'util' => 'dev_mapetiteferme',
+      'session' => 'dev_mapetiteferme',
+      'user' => 'dev_mapetiteferme',
+      'storage' => 'dev_mapetiteferme',
     ]);
 
     break;

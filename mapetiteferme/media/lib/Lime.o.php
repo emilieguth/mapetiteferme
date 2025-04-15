@@ -67,7 +67,7 @@ class LimeObserverLib {
 
 		$data .= '};'."\n";
 
-		$path = \Lime::getPath('petitagriculteur').'/media/asset/js/conf.js';
+		$path = \Lime::getPath('mapetiteferme').'/media/asset/js/conf.js';
 
 		file_put_contents($path, $data);
 

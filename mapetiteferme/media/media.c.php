@@ -204,10 +204,10 @@ Setting::register('media', [
 		if($driver instanceof \storage\DriverLib) {
 
 			if(LIME_ENV === 'dev') {
-				return 'http://media.dev-petitagriculteur.fr';
+				return 'http://media.mapetiteferme.fr';
 			}
 
-			return 'https://media.petitagriculteur.fr';
+			return 'https://media.mapetiteferme.app';
 
 		}
 
@@ -215,7 +215,7 @@ Setting::register('media', [
 
 	},
 
-	'basePath' => '/var/www/pa-storage',
+	'basePath' => '/var/www/mpf-storage',
 
 ]);
 

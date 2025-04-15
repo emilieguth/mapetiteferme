@@ -652,7 +652,7 @@ div.h-line > div.h-tabs > a.h-tab:not(:last-child) {
 div.soil-icon {
 	display: inline-block;
 	vertical-align: middle;
-	background-image: url(/asset/petitagriculteur/production/image/soil.jpg);
+	background-image: url(/asset/mapetiteferme/production/image/soil.jpg);
 	background-size: cover;
 	border-radius: 50%;
 }

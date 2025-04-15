@@ -1,6 +1,6 @@
 <?php
 Package::setList([
-	'main' => 'petitagriculteur',
+	'main' => 'mapetiteferme',
 	'core' => 'framework',
 	'dev' => 'framework',
 	'editor' => 'framework',
@@ -10,16 +10,16 @@ Package::setList([
 	'storage' => 'framework',
 	'user' => 'framework',
 	'util' => 'framework',
-	'accounting' => 'petitagriculteur',
-	'analyze' => 'petitagriculteur',
-	'asset' => 'petitagriculteur',
-	'bank' => 'petitagriculteur',
-	'company' => 'petitagriculteur',
-	'journal' => 'petitagriculteur',
-	'mail' => 'petitagriculteur',
-	'media' => 'petitagriculteur',
-	'overview' => 'petitagriculteur',
-	'pdf' => 'petitagriculteur',
+	'accounting' => 'mapetiteferme',
+	'analyze' => 'mapetiteferme',
+	'asset' => 'mapetiteferme',
+	'bank' => 'mapetiteferme',
+	'company' => 'mapetiteferme',
+	'journal' => 'mapetiteferme',
+	'mail' => 'mapetiteferme',
+	'media' => 'mapetiteferme',
+	'overview' => 'mapetiteferme',
+	'pdf' => 'mapetiteferme',
 ]);
 
 Package::setObservers([

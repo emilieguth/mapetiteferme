@@ -13,7 +13,7 @@ class CompanyUi {
 	}
 
 	public static function url(Company $eCompany): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.$eCompany['id'].'/company';
+		return \Lime::getUrl().'/'.$eCompany['id'].'/company';
 	}
 
 	public static function urlSettings(Company $eCompany): string {
@@ -21,27 +21,27 @@ class CompanyUi {
 	}
 
 	public static function urlJournal(int|Company $company): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/journal';
+		return \Lime::getUrl().'/'.(is_int($company) ? $company : $company['id']).'/journal';
 	}
 
 	public static function urlAnalyze(int|Company $company): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/analyze';
+		return \Lime::getUrl().'/'.(is_int($company) ? $company : $company['id']).'/analyze';
 	}
 
 	public static function urlOverview(int|Company $company): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/overview';
+		return \Lime::getUrl().'/'.(is_int($company) ? $company : $company['id']).'/overview';
 	}
 
 	public static function urlAsset(int|Company $company): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/asset';
+		return \Lime::getUrl().'/'.(is_int($company) ? $company : $company['id']).'/asset';
 	}
 
 	public static function urlBank(int|Company $company): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/bank';
+		return \Lime::getUrl().'/'.(is_int($company) ? $company : $company['id']).'/bank';
 	}
 
 	public static function urlAccounting(int|Company $company): string {
-		return str_replace('www', 'app', \Lime::getUrl()).'/'.(is_int($company) ? $company : $company['id']).'/accounting';
+		return \Lime::getUrl().'/'.(is_int($company) ? $company : $company['id']).'/accounting';
 	}
 
 	/**
