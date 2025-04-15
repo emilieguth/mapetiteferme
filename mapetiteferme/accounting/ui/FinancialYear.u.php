@@ -52,7 +52,7 @@ class FinancialYearUi {
 			$h .= '<div class="dropdown-title">'.s("Exercice {year}", ['year' => self::getYear($eFinancialYear)]).'</div>';
 			//$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/vat:pdf?type='.$type.'&financialYear='.$eFinancialYear['id'].'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
 			$h .= '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:fec?id='.$eFinancialYear['id'].'" data-ajax-navigation="never" class="dropdown-item">';
-				$h .= s("Télécharger le FEC (Bientôt disponible !)");
+				$h .= s("Télécharger le FEC");
 			$h .= '</a>';
 			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:opening" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan d'Ouverture (Bientôt disponible !)").'</a>';;
 			$h .= '<a data-ajax="'.\company\CompanyUi::urlAccounting($eCompany).'/financialYear/document:closing" post-id="'.$eFinancialYear['id'].'" class="dropdown-item">'.s("Télécharger le Bilan de Clôture (Bientôt disponible !)").'</a>';;

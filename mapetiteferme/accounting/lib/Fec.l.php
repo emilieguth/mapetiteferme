@@ -8,7 +8,7 @@ namespace accounting;
 class FecLib  {
 
 	/**
-	 * TODO : faire une notice justificative
+	 * TODO : faire une notice justificative (?)
 	 * @param FinancialYear $eFinancialYear
 	 * @return string
 	 */
