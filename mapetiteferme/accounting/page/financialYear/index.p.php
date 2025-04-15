@@ -58,12 +58,12 @@ new \accounting\FinancialYearPage(
 
 		\accounting\FinancialYearLib::closeFinancialYear($data->e, createNew: FALSE);
 
-		throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear?success=accounting:FinancialYear::closed');
+		throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear/?success=accounting:FinancialYear::closed');
 	})
 	->write('closeAndCreateNew', function($data) {
 
 		\accounting\FinancialYearLib::closeFinancialYear($data->e, createNew: TRUE);
 
-		throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear?success=accounting:FinancialYear::closedAndCreated');
+		throw new RedirectAction(\company\CompanyUi::urlAccounting($data->eCompany).'/financialYear/?success=accounting:FinancialYear::closedAndCreated');
 	});
 ?>

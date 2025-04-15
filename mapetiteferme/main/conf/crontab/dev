@@ -1,5 +1,5 @@
 ############################
-# www.mapetiteferme.fr #
+#   www.mapetiteferme.dev  #
 ############################
 
 * * * * * php /var/www/mpf/framework/lime.php -e dev -a mapetiteferme website/cron/certbot:ping

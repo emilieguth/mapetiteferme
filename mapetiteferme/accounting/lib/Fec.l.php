@@ -56,7 +56,7 @@ class FecLib  {
 				'',
 				'',
 				$eOperation['document'],
-				date('Ymd', strtotime($eOperation['documentDate'])),
+				$eOperation['documentDate'] !== NULL ? date('Ymd', strtotime($eOperation['documentDate'])) : NULL,
 				$eOperation['description'],
 				$eOperation['type'] === \journal\OperationElement::DEBIT ? $eOperation['amount'] : 0,
 				$eOperation['type'] === \journal\OperationElement::CREDIT ? $eOperation['amount'] : 0,
