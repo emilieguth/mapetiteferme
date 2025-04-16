@@ -102,9 +102,6 @@ Class VatUi {
 				$h .= \util\TextUi::money($totals['vat']);
 			$h .= '</td>';
 
-			$h .= '<td class="text-center">';
-			$h .= '</td>';
-
 		$h .= '</tr>';
 
 		return $h;
