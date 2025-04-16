@@ -19,11 +19,22 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	echo '<div class="tabs-h" id="overview-balance" onrender="'.encode('Lime.Tab.restore(this, "balance-summarized")').'">';
 
 		echo '<div class="tabs-item">';
-			echo '<a class="tab-item selected" data-tab="balance-summarized" onclick="Lime.Tab.select(this)">'.s("Bilan comptable").'</a>';
+			echo '<a class="tab-item selected" data-tab="balance-opening" onclick="Lime.Tab.select(this)">'.s("Bilan d'ouverture").'</a>';
+			echo '<a class="tab-item" data-tab="balance-summarized" onclick="Lime.Tab.select(this)">'.s("Bilan comptable").'</a>';
 			echo '<a class="tab-item" data-tab="balance-detailed" onclick="Lime.Tab.select(this)">'.s("Bilan comptable détaillé").'</a>';
 		echo '</div>';
 
+		echo '<div class="tab-panel" data-tab="balance-opening">';
+			if(empty($data->balanceOpening) === FALSE) {
+				echo new \overview\BalanceUi()->displayPdfLink($data->eCompany, $data->eFinancialYear, 'opening');
+			}
+			echo new \overview\BalanceUi()->displaySummarizedBalance($data->balanceOpening);
+		echo '</div>';
+
 		echo '<div class="tab-panel" data-tab="balance-summarized">';
+			if(empty($data->balanceSummarized) === FALSE) {
+				echo new \overview\BalanceUi()->displayPdfLink($data->eCompany, $data->eFinancialYear, 'summary');
+			}
 			echo new \overview\BalanceUi()->displaySummarizedBalance($data->balanceSummarized);
 		echo '</div>';
 

@@ -71,7 +71,7 @@ class BalanceUi {
 	public function displaySummarizedBalance(array $balance): string {
 
 		if(empty($balance) === TRUE) {
-			return '<div class="util-info">'.s("Il n'y a rien à afficher pour le moment.").'</div>';
+			return '<div class="util-info">'.s("Il n'y a rien à afficher.").'</div>';
 		}
 
 		$h = '<div class="util-overflow-sm">';
@@ -198,6 +198,16 @@ class BalanceUi {
 		return $h;
 	}
 
+	public function displayPdfLink(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, string $type): string {
+
+		$h = '<div class="text-end mb-1">';
+			$h .= '<a href="'.\overview\PdfUi::urlBalance($eCompany, $eFinancialYear).'?type='.$type.'" data-ajax-navigation="never" class="btn btn-primary">';
+				$h .= \Asset::icon('download').'&nbsp;'.s("Télécharger en PDF");
+			$h .= '</a>';
+		$h .= '</div>';
+
+		return $h;
+	}
 }
 
 ?>

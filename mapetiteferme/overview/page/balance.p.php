@@ -10,6 +10,7 @@ new Page(function($data) {
 })
 ->get('index', function($data) {
 
+	$data->balanceOpening = \overview\BalanceLib::getOpeningBalance($data->eFinancialYear);
 	$data->balanceSummarized = \overview\BalanceLib::getSummarizedBalance($data->eFinancialYear);
 	$data->balanceDetailed = \overview\BalanceLib::getDetailedBalance($data->eFinancialYear);
 
@@ -17,7 +18,13 @@ new Page(function($data) {
 })
 ->get('pdf', function($data) {
 
-	$content = \pdf\PdfLib::generate($data->eCompany, $data->eFinancialYear, \pdf\PdfElement::OVERVIEW_BALANCE_SUMMARY);
+	$type = match(GET('type')) {
+		'opening' => \pdf\PdfElement::OVERVIEW_BALANCE_OPENING,
+		'summary' => \pdf\PdfElement::OVERVIEW_BALANCE_SUMMARY,
+		default => throw new NotExpectedAction('Unknown type of balance PDF.'),
+	};
+
+	$content = \pdf\PdfLib::generate($data->eCompany, $data->eFinancialYear, $type);
 
 	if($content === NULL) {
 		throw new NotExistsAction();

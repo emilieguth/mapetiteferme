@@ -14,5 +14,11 @@ new Page(function($data) {
 		$data->balanceSummarized = \overview\BalanceLib::getSummarizedBalance($data->eFinancialYear);
 
 		throw new ViewAction($data);
+	})
+	->get('opening', function($data) {
+
+		$data->balanceSummarized = \overview\BalanceLib::getOpeningBalance($data->eFinancialYear);
+
+		throw new ViewAction($data, ':summary');
 	});
 ?>

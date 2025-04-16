@@ -9,6 +9,12 @@ class PdfUi {
 
 	}
 
+	public static function getBalanceOpeningTitle(): string {
+
+		return s("Bilan d'ouverture");
+
+	}
+
 	public static function getTitle(): string {
 
 		return s("Bilan comptable");

@@ -29,10 +29,6 @@ class OverviewUi {
 				$h .= s("Les bilans");
 			$h .= '</h1>';
 
-			$h .= '<div>';
-				$h .= '<a href="'.PdfUi::urlBalance($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
-			$h .= '</div>';
-
 		$h .= '</div>';
 
 		return $h;

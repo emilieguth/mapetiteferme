@@ -120,6 +120,17 @@ Class BalanceLib {
 
 	}
 
+	public static function getOpeningBalance(\accounting\FinancialYear $eFinancialYear): array {
+
+		$eFinancialYearPrevious = \accounting\FinancialYearLib::getPreviousFinancialYear($eFinancialYear);
+
+		if($eFinancialYearPrevious->exists() === FALSE) {
+			return [];
+		}
+
+		return self::getSummarizedBalance($eFinancialYearPrevious);
+	}
+
 	public static function getSummarizedBalance(\accounting\FinancialYear $eFinancialYear): array {
 
 		$balanceAssetCategories = \Setting::get('accounting\balanceAssetCategories');
