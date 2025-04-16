@@ -3,6 +3,12 @@ namespace asset;
 
 Class AssetUi {
 
+	public function getAssetShortTranslation(): string {
+
+		return s("I");
+
+	}
+
 	public static function getAcquisitionTitle(): string {
 
 		$h = '<div class="util-action">';
@@ -325,7 +331,7 @@ Class AssetUi {
 		$h = self::getHeader($eAsset);
 
 		$h .= '<div>';
-			$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?asset='.$eAsset['id'].'">'.s("Voir toutes les écritures comptables pour cet exercice comptable").'&nbsp;'.\Asset::icon('box-arrow-up-right').'</a>';
+			$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?asset='.$eAsset['id'].'">'.s("Voir toutes les écritures comptables de cette immobilisation pour cet exercice comptable").'&nbsp;'.\Asset::icon('box-arrow-up-right').'</a>';
 		$h .= '</div>';
 
 		if($eAsset['status'] === AssetElement::ONGOING) {

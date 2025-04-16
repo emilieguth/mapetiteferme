@@ -159,6 +159,65 @@ class AssetLib extends \asset\AssetCrud {
 
 	}
 
+	public static function subventionReversal(\accounting\FinancialYear $eFinancialYear): void {
+
+		\journal\Operation::model()->beginTransaction();
+
+		$cAsset = self::getSubventionsByFinancialYear($eFinancialYear);
+
+		$eAccountSubventionAssetDepreciation = \accounting\AccountLib::getByClass(\Setting::get('accounting\subventionAssetsDepreciationChargeClass'));
+
+		foreach($cAsset as $eAsset) {
+
+			if(
+				$eAsset !== AssetElement::ONGOING
+				or $eAsset['endDate'] > $eFinancialYear['endDate']
+				or $eAsset['endDate'] < $eFinancialYear['startDate']
+			) {
+				continue;
+			}
+
+			// Crée l'opération 13x au débit
+			$eOperationSubvention = new \journal\Operation([
+				'type' => \journal\OperationElement::DEBIT,
+				'amount' => $eAsset['value'],
+				'account' => $eAsset['account'],
+				'accountLabel' => $eAsset['accountLabel'],
+				'description' => $eAsset['description'],
+				'document' => new AssetUi()->getAssetShortTranslation(),
+				'documentDate' => new \Sql('NOW()'),
+				'asset' => $eAsset,
+			]);
+
+			\journal\Operation::model()->insert($eOperationSubvention);
+
+			// Crée l'opération de reprise au crédit
+			$eOperationReversal = new \journal\Operation([
+				'type' => \journal\OperationElement::CREDIT,
+				'amount' => $eAsset['value'],
+				'account' => $eAccountSubventionAssetDepreciation,
+				'accountLabel' => \accounting\ClassLib::pad($eAccountSubventionAssetDepreciation['class']),
+				'description' => $eAsset['description'],
+				'document' => new AssetUi()->getAssetShortTranslation(),
+				'documentDate' => new \Sql('NOW()'),
+				'asset' => $eAsset,
+			]);
+
+			\journal\Operation::model()->insert($eOperationReversal);
+
+			// Solde la subvention
+			$eAsset['status'] = AssetElement::ENDED;
+			$eAsset['updatedAt'] = new \Sql('NOW()');
+			Asset::model()
+				->select(['status', 'updatedAt'])
+				->update($eAsset);
+
+		}
+
+		\journal\Operation::model()->commit();
+
+	}
+
 	public static function depreciateAll(\accounting\FinancialYear $eFinancialYear): void {
 
 		Asset::model()->beginTransaction();

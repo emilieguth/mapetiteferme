@@ -59,6 +59,9 @@ class FinancialYearLib extends FinancialYearCrud {
 		// Calcul des amortissements
 		\asset\AssetLib::depreciateAll($eFinancialYear);
 
+		// Reprise des subventions dont l'amortissement de l'immobilisation est terminé
+		\asset\AssetLib::subventionReversal($eFinancialYear);
+
 		// Calcul de la TVA
 		\journal\VatLib::balance($eFinancialYear);
 
