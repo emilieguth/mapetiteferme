@@ -3,12 +3,6 @@ namespace accounting;
 
 class AccountLib extends AccountCrud {
 
-	public static function padClass(string $account): string {
-		
-		return str_pad($account, 8, '0');
-		
-	}
-	
 	public static function getByClassWithVatAccount(string $class): Account {
 
 		$eAccount = new Account();

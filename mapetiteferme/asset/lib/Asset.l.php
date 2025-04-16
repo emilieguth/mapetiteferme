@@ -13,9 +13,9 @@ class AssetLib extends \asset\AssetCrud {
 	public static function isTangibleAsset(string $account): bool {
 
 		foreach(\Setting::get('accounting\tangibleAssetsClasses') as $tangibleAssetsClass) {
-			if(mb_substr($account, 0, strlen($tangibleAssetsClass)) === $tangibleAssetsClass) {
+			if(\accounting\ClassLib::isFromClass($account, $tangibleAssetsClass) === TRUE) {
 				return TRUE;
-			}
+			};
 		}
 
 		return FALSE;
@@ -24,13 +24,13 @@ class AssetLib extends \asset\AssetCrud {
 
 	public static function isIntangibleAsset(string $account): bool {
 
-		return mb_substr($account, 0, strlen(\Setting::get('accounting\intangibleAssetsClass'))) === \Setting::get('accounting\intangibleAssetsClass');
+		return \accounting\ClassLib::isFromClass($account, \Setting::get('accounting\intangibleAssetsClass'));
 
 	}
 
 	public static function isSubventionAsset(string $account): bool {
 
-		return mb_substr($account, 0, strlen(\Setting::get('accounting\subventionAssetClass'))) === \Setting::get('accounting\subventionAssetClass');
+		return \accounting\ClassLib::isFromClass($account, \Setting::get('accounting\subventionAssetClass'));
 
 	}
 
@@ -201,7 +201,7 @@ class AssetLib extends \asset\AssetCrud {
 		$eAccountDepreciationCharge = \accounting\AccountLib::getByClass($depreciationChargeClass);
 		$values = [
 			'account' => $eAccountDepreciationCharge['id'],
-			'accountLabel' => \accounting\AccountLib::padClass($eAccountDepreciationCharge['class']),
+			'accountLabel' => \accounting\ClassLib::pad($eAccountDepreciationCharge['class']),
 			'date' => $endDate,
 			'description' => $eAccountDepreciationCharge['description'],
 			'amount' => $depreciationValue,
@@ -246,7 +246,7 @@ class AssetLib extends \asset\AssetCrud {
 
 		return [
 			'account' => $eAccountDepreciation['id'],
-			'accountLabel' => \accounting\AccountLib::padClass($eAccountDepreciation['class']),
+			'accountLabel' => \accounting\ClassLib::pad($eAccountDepreciation['class']),
 			'date' => $date,
 			'description' => $eAccountDepreciation['description'],
 			'amount' => $amount,
@@ -333,7 +333,7 @@ class AssetLib extends \asset\AssetCrud {
 		// Sortir l'actif (immo : 2x)
 		$values = [
 			'account' => $eAsset['account']['id'],
-			'accountLabel' => \accounting\AccountLib::padClass($eAsset['accountLabel']),
+			'accountLabel' => \accounting\ClassLib::pad($eAsset['accountLabel']),
 			'date' => $date,
 			'description' => $eAsset['description'],
 			'amount' => $eAsset['value'],
@@ -355,7 +355,7 @@ class AssetLib extends \asset\AssetCrud {
 		$eAccountDisposal = \accounting\AccountLib::getByClass(\Setting::get('accounting\disposalAssetValueClass'));
 		$values = [
 			'account' => $eAccountDisposal['id'],
-			'accountLabel' => \accounting\AccountLib::padClass($eAccountDisposal['class']),
+			'accountLabel' => \accounting\ClassLib::pad($eAccountDisposal['class']),
 			'date' => $date,
 			'description' => $eAccountDisposal['description'],
 			'amount' => $netAccountingValue,
@@ -371,7 +371,7 @@ class AssetLib extends \asset\AssetCrud {
 			$eAccountProduct = \accounting\AccountLib::getByClass(\Setting::get('accounting\productAssetValueClass'));
 			$values = [
 				'account' => $eAccountProduct['id'],
-				'accountLabel' => \accounting\AccountLib::padClass($eAccountProduct['class']),
+				'accountLabel' => \accounting\ClassLib::pad($eAccountProduct['class']),
 				'date' => $date,
 				'description' => $eAccountProduct['description'],
 				'amount' => $amount,
@@ -384,13 +384,13 @@ class AssetLib extends \asset\AssetCrud {
 			if($createReceivable === TRUE) {
 
 				$receivablesOnAssetDisposalClass = \Setting::get('accounting\receivablesOnAssetDisposalClass');
-				$debitAccountLabel = \accounting\AccountLib::padClass($receivablesOnAssetDisposalClass);
+				$debitAccountLabel = \accounting\ClassLib::pad($receivablesOnAssetDisposalClass);
 				$eAccountDebit = \accounting\AccountLib::getByClass($receivablesOnAssetDisposalClass);
 
 			} else {
 
 				$bankClass = \Setting::get('accounting\bankAccountClass');
-				$debitAccountLabel = \accounting\AccountLib::padClass($bankClass);
+				$debitAccountLabel = \accounting\ClassLib::pad($bankClass);
 				$eAccountDebit = \accounting\AccountLib::getByClass($bankClass);
 
 			}

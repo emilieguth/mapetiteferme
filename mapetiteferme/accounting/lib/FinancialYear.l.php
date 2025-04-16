@@ -54,9 +54,13 @@ class FinancialYearLib extends FinancialYearCrud {
 
 		self::update($eFinancialYear, ['status', 'closeDate']);
 
-		// Effectuer toutes les opérations de clôture
+		// Effectuer toutes les opérations de clôture :
+
 		// Calcul des amortissements
 		\asset\AssetLib::depreciateAll($eFinancialYear);
+
+		// Calcul de la TVA
+		\journal\VatLib::balance($eFinancialYear);
 
 		if($createNew === TRUE) {
 

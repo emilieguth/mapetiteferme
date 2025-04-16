@@ -279,7 +279,7 @@ class OperationLib extends OperationCrud {
 		$values = [
 			...$defaultValues,
 			'account' => $eAccount['vatAccount']['id'] ?? NULL,
-			'accountLabel' => \accounting\AccountLib::padClass($eAccount['vatAccount']['class']),
+			'accountLabel' => \accounting\ClassLib::pad($eAccount['vatAccount']['class']),
 			'document' => $eOperationLinked['document'],
 			'documentDate' => $eOperationLinked['document'] === NULL ? NULL : new \Sql('SPECIAL(NOW)'),
 			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
@@ -433,7 +433,7 @@ class OperationLib extends OperationCrud {
 		if($eCashflow['import']['account']['label'] !== NULL) {
 			$label = $eCashflow['import']['account']['label'];
 		} else {
-			$label = \accounting\AccountLib::padClass(\Setting::get('accounting\defaultBankAccountLabel'));
+			$label = \accounting\ClassLib::pad(\Setting::get('accounting\defaultBankAccountLabel'));
 		}
 
 		$values = [
