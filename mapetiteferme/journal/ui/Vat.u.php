@@ -80,9 +80,6 @@ Class VatUi {
 			$h .= '</td>';
 
 			$h .= '<td>';
-			$h .= '</td>';
-
-			$h .= '<td>';
 				if($currentMonth !== NULL) {
 					$h .= s("Mois de {month}", ['month' => \util\DateUi::textual($currentMonth.'-01', \util\DateUi::MONTH_YEAR)]);
 				} else {
@@ -100,6 +97,9 @@ Class VatUi {
 
 			$h .= '<td class="text-end">';
 				$h .= \util\TextUi::money($totals['vat']);
+			$h .= '</td>';
+
+			$h .= '<td>';
 			$h .= '</td>';
 
 		$h .= '</tr>';
