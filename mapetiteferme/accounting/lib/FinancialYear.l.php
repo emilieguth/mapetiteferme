@@ -49,12 +49,14 @@ class FinancialYearLib extends FinancialYearCrud {
 
 		FinancialYear::model()->beginTransaction();
 
-		// Effectuer toutes les opérations de clôture
-
 		$eFinancialYear['status'] = FinancialYearElement::CLOSE;
 		$eFinancialYear['closeDate'] = new \Sql('NOW()');
 
 		self::update($eFinancialYear, ['status', 'closeDate']);
+
+		// Effectuer toutes les opérations de clôture
+		// Calcul des amortissements
+		\asset\AssetLib::depreciateAll($eFinancialYear);
 
 		if($createNew === TRUE) {
 

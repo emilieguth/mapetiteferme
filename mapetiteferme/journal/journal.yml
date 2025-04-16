@@ -9,7 +9,7 @@ Operation:
   # Libellé de l'opération
   description: text8(1, null) @collate(general)
   document: ?text8(1, null) @collate(general)
-  documentDate: ?date = SPECIAL(now)
+  documentDate: ?date
   # Une opération est toujours HT
   amount: decimal(8, 2)
   type: enum(DEBIT, CREDIT)
@@ -25,7 +25,7 @@ Operation:
   paymentMode: ?enum(TRANSFER, CHEQUE, CASH, CREDIT_CARD, DIRECT_DEBIT)
   createdAt: datetime = SPECIAL(now)
   updatedAt: datetime = SPECIAL(now)
-  createdBy: user\User = SPECIAL(user)
+  createdBy: ?user\User = SPECIAL(user)
   INDEX: [
     ["document"],
     ["cashflow"]

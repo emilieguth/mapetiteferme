@@ -28,7 +28,17 @@ class AssetLib extends \asset\AssetCrud {
 
 	}
 
+	public static function isSubventionAsset(string $account): bool {
+
+		return mb_substr($account, 0, strlen(\Setting::get('accounting\subventionAssetClass'))) === \Setting::get('accounting\subventionAssetClass');
+
+	}
+
 	public static function depreciationClassByAssetClass(string $class): string {
+
+		if(self::isSubventionAsset($class) === TRUE) {
+			return \Setting::get('accounting\subventionDepreciationAssetClass');
+		}
 
 		return mb_substr($class, 0, 1).'8'.mb_substr($class, 1);
 
@@ -76,6 +86,7 @@ class AssetLib extends \asset\AssetCrud {
 				+ ['account' => \accounting\Account::getSelection()]
 			)
 			->whereStartDate('<=', $eFinancialYear['endDate'])
+			->whereEndDate('>=', $eFinancialYear['startDate'])
 			->whereAccountLabel('LIKE', \Setting::get('accounting\assetClass').'%')
 			->sort(['accountLabel' => SORT_ASC, 'startDate' => SORT_ASC])
 			->getCollection();
@@ -148,6 +159,21 @@ class AssetLib extends \asset\AssetCrud {
 
 	}
 
+	public static function depreciateAll(\accounting\FinancialYear $eFinancialYear): void {
+
+		Asset::model()->beginTransaction();
+
+		$cAsset = self::getAssetsByFinancialYear($eFinancialYear)->mergeCollection(self::getSubventionsByFinancialYear($eFinancialYear));
+
+		foreach($cAsset as $eAsset) {
+
+			self::depreciate($eFinancialYear, $eAsset, NULL);
+
+		}
+
+		Asset::model()->commit();
+	}
+
 	/**
 	 * Amortit l'immobilisation sur l'exercice comptable dépendant de sa date d'acquisition / date de fin d'amortissement
 	 * Crée une entrée "Dotation aux amortissements" (classe 6) et une entrée "Amortissement" (classe 2)
@@ -161,10 +187,12 @@ class AssetLib extends \asset\AssetCrud {
 			$endDate = $eFinancialYear['endDate'];
 		}
 
-		$depreciationValue = DepreciationLib::calculateDepreciationByEndDate($eFinancialYear['startDate'], $endDate, $eAsset);
+		$depreciationValue = DepreciationLib::calculateDepreciation($eFinancialYear['startDate'], $endDate, $eAsset);
 
 		// Dotation aux amortissements
-		if(self::isIntangibleAsset($eAsset['account'])) {
+		if(self::isSubventionAsset($eAsset['accountLabel'])) {
+			$depreciationChargeClass = \Setting::get('accounting\subventionAssetsDepreciationChargeClass');
+		} else if(self::isIntangibleAsset($eAsset['accountLabel'])) {
 			$depreciationChargeClass = \Setting::get('accounting\intangibleAssetsDepreciationChargeClass');
 		} else {
 			$depreciationChargeClass = \Setting::get('accounting\tangibleAssetsDepreciationChargeClass');
@@ -184,7 +212,10 @@ class AssetLib extends \asset\AssetCrud {
 
 		// Amortissement
 		$values = self::getDepreciationOperationValues($eAsset, $endDate, $depreciationValue);
-		\journal\OperationLib::createFromValues($values);
+
+		if($depreciationValue !== 0.0) {
+			\journal\OperationLib::createFromValues($values);
+		}
 
 		// Créer une entrée dans la table Depreciation
 		$eDepreciation = new Depreciation([
@@ -210,7 +241,7 @@ class AssetLib extends \asset\AssetCrud {
 	 */
 	private static function getDepreciationOperationValues(Asset $eAsset, string $date, float $amount): array {
 
-		$depreciationClass = self::depreciationClassByAssetClass($eAsset['accountLabel']);
+		$depreciationClass = self::depreciationClassByAssetClass(substr($eAsset['accountLabel'], 0, 3));
 		$eAccountDepreciation = \accounting\AccountLib::getByClass(trim($depreciationClass, '0'));
 
 		return [

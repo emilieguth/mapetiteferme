@@ -479,7 +479,14 @@ class OperationLib extends OperationCrud {
 		$fw = new \FailWatch();
 
 		$eOperation->build(
-			['cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount', 'operation', 'vatRate', 'vatAccount', 'asset'],
+			[
+				'date',
+				'cashflow', 'operation', 'asset', 'thirdParty',
+				'account', 'accountLabel',
+				'description', 'type', 'amount',
+				'document', 'documentDate',
+				'vatRate', 'vatAccount',
+			],
 			$values,
 			new \Properties('create')
 		);

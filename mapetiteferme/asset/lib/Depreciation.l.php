@@ -53,8 +53,34 @@ class DepreciationLib extends \asset\DepreciationCrud {
 			return 0;
 		}
 
-		return self::calculateDepreciationByEndDate($eFinancialYear['startDate'], $eFinancialYear['endDate'], $eAsset);
+		return self::calculateDepreciation($eFinancialYear['startDate'], $eFinancialYear['endDate'], $eAsset);
 
+	}
+
+	private static function getDays(string $startDate, string $endDate, Asset $eAsset): int {
+
+		// Calcul du nombre de mois complets
+		$startDatetime = new \DateTime($startDate);
+		$endDatetime = new \DateTime($endDate);
+		$interval = $startDatetime->diff($endDatetime);
+		$months = (int)$interval->format('%m');
+		$days = $months * 30; // En comptabilité, un mois fait 30 jours.
+
+		// Ajout du nombre de jours de prorata (début)
+		if($eAsset['startDate'] >= $startDate) {
+
+			$lastDayOfMonth = date("Y-m-d", mktime(0, 0, 0, (int)date('m', strtotime($eAsset['startDate'])) + 1, 0, date('Y', strtotime($startDate))));
+
+			// Intervalle : on aurait du faire +1 mais ce n'est pas le calcul de ISTEA.
+			$days += min(30, max((int)date('d', strtotime($lastDayOfMonth)) - (int)date('d', strtotime($eAsset['startDate'])), 1));
+		}
+
+		// Ajout du nombre de jours de prorata (fin)
+		if($eAsset['endDate'] < $endDate) {
+			$days += min(date('d', strtotime($eAsset['endDate'])), 30);
+		}
+
+		return $days;
 	}
 
 	/**
@@ -65,29 +91,16 @@ class DepreciationLib extends \asset\DepreciationCrud {
 	 * @param Asset $eAsset
 	 * @return float
 	 */
-	public static function calculateDepreciationByEndDate(string $startDate, string $endDate, Asset $eAsset): float {
+	public static function calculateDepreciation(string $startDate, string $endDate, Asset $eAsset): float {
+
+		if($eAsset['type'] === AssetElement::WITHOUT) {
+			return 0.0;
+		}
 
 		$base = $eAsset['value'];
 		$rate = DepreciationLib::computeDepreciationRate($eAsset);
 
-		// Calcul du nombre de mois complets
-		$startDatetime = new \DateTime(max($startDate, $eAsset['startDate']));
-		$endDatetime = new \DateTime(min($endDate, $eAsset['endDate']));
-		$interval = $startDatetime->diff($endDatetime);
-		$months = (int)$interval->format('%m');
-		$days = $months * 30; // En comptabilité, un mois fait 30 jours.
-
-		// Ajout du nombre de jours de prorata (début)
-		if($eAsset['startDate'] > $startDate) {
-			$lastDayOfMonth = date("Y-m-d", mktime(0, 0, 0, (int)date('m', strtotime($eAsset['startDate'])) + 1, 0, date('Y', strtotime($eAsset['startDate']))));
-
-			$days += min(30, (int)date('d', strtotime($lastDayOfMonth)) - (int)date('d', strtotime($eAsset['startDate'])) + 1);
-		}
-
-		// Ajout du nombre de jours de prorata (fin)
-		if($eAsset['endDate'] < $endDate) {
-			$days += min(date('d', strtotime($eAsset['endDate'])), 30);
-		}
+		$days = self::getDays(max($startDate, $eAsset['startDate']), min($endDate, $eAsset['endDate']), $eAsset);
 
 		$prorata = min(1, $days / 360);
 
@@ -121,43 +134,6 @@ class DepreciationLib extends \asset\DepreciationCrud {
 		}
 
 		throw new \NotExpectedAction('Unable to calculate depreciation for asset '.$eAsset['id']);
-	}
-
-	private static function computeCurrentFinancialYearDepreciation(Asset $eAsset, float $alreadyDepreciated, \accounting\FinancialYear $eFinancialYear): float {
-
-		if($eAsset['type'] === AssetElement::WITHOUT) {
-			return 0.0;
-		}
-
-		$base = $eAsset['value'];
-		$rate = 1 / $eAsset['duration']; // duration in year
-
-		// Calcul du nombre de jours dans l'exercice comptable
-		$daysInFinancialYear = self::countMonthsBetweenTwoDates(
-				$eFinancialYear['startDate'],
-				$eFinancialYear['endDate']
-			) * 30;
-
-		// Calcul du nombre de mois complets
-		$days = self::countMonthsBetweenTwoDates(
-			max($eFinancialYear['startDate'], $eAsset['startDate']),
-			min($eFinancialYear['endDate'], $eAsset['endDate'])
-		) * 30; // En comptabilité, un mois fait 30 jours.
-
-		// Ajout du nombre de jours de prorata (début)
-		if($eAsset['startDate'] > $eFinancialYear['startDate']) {
-			$lastDayOfMonth = date("Y-m-d", mktime(0, 0, 0, (int)date('m', strtotime($eAsset['startDate'])) + 1, 0, date('Y', strtotime($eAsset['startDate']))));
-
-			$days += min(30, (int)date('d', strtotime($lastDayOfMonth)) - (int)date('d', strtotime($eAsset['startDate'])) + 1);
-		}
-
-		// Ajout du nombre de jours de prorata (fin)
-		if($eAsset['endDate'] < $eFinancialYear['endDate']) {
-			$days += min(date('d', strtotime($eAsset['endDate'])), 30);
-		}
-
-		return min($eAsset['value'] - $alreadyDepreciated, round($base * $rate * $days / $daysInFinancialYear, 2));
-
 	}
 
 	public static function getSummary(\accounting\FinancialYear $eFinancialYear): array {
@@ -258,7 +234,7 @@ class DepreciationLib extends \asset\DepreciationCrud {
 			} else {
 
 				// Estimate
-				$currentDepreciation = self::computeCurrentFinancialYearDepreciation($eAsset, $alreadyDepreciated, $eFinancialYear);
+				$currentDepreciation = self::calculateDepreciation($eFinancialYear['startDate'], $eFinancialYear['endDate'], $eAsset);
 				$currentExcessDepreciation = self::computeCurrentFinancialYearExcessDepreciation($eAsset, $alreadyExcessDepreciated, $eFinancialYear);
 
 			}

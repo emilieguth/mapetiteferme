@@ -6,10 +6,11 @@ Privilege::register('accounting', [
 
 Setting::register('accounting', [
 	'assetClass' => 2,
-	'subventionAssetClass' => 13,
+	'subventionAssetClass' => '13',
+	'subventionDepreciationAssetClass' => '777',
 
 	'thirdAccountGeneralClass' => 4,
-	'vatClass' => 445,
+	'vatClass' => '445',
 	'bankAccountGeneralClass' => 5,
 	'chargeAccountClass' => 6,
 	'productAccountClass' => 7,
@@ -28,6 +29,7 @@ Setting::register('accounting', [
 	'intangibleAssetsClass' => '20', // Immobilisations incorporelles
 	'tangibleAssetsClasses' => ['21', '24'], // Immobilisations corporelles
 
+	'subventionAssetsDepreciationChargeClass' => '139', // Subventions d'investissement inscrites au CdR
 	'intangibleAssetsDepreciationChargeClass' => '68111', // Dotation aux amortissements sur immos incorporelles
 	'tangibleAssetsDepreciationChargeClass' => '68112', // Dotation aux amortissements sur immos corporelles
 	'exceptionalDepreciationChargeClass' => '6871', // Dotation aux amortissements exceptionnels

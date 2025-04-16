@@ -66,7 +66,7 @@ class OperationModel extends \ModuleModel {
 			'paymentMode' => ['enum', [\journal\Operation::TRANSFER, \journal\Operation::CHEQUE, \journal\Operation::CASH, \journal\Operation::CREDIT_CARD, \journal\Operation::DIRECT_DEBIT], 'null' => TRUE, 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'updatedAt' => ['datetime', 'cast' => 'string'],
-			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
+			'createdBy' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
@@ -93,9 +93,6 @@ class OperationModel extends \ModuleModel {
 	public function getDefaultValue(string $property) {
 
 		switch($property) {
-
-			case 'documentDate' :
-				return new \Sql('CURDATE()');
 
 			case 'vatRate' :
 				return 0;
