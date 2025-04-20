@@ -298,7 +298,7 @@ class OperationLib extends OperationCrud {
 
 		$eOperationVat->build(
 			[
-				'cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'documentDate',
+				'cashflow', 'date', 'account', 'accountLabel', 'description', 'document',
 				'thirdParty', 'type', 'amount', 'operation',
 				'paymentDate', 'paymentMode',
 			],
@@ -460,7 +460,7 @@ class OperationLib extends OperationCrud {
 
 		$eOperationBank->build([
 			'cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount',
-			'operation', 'paymentDate', 'paymentMode', 'documentDate',
+			'operation', 'paymentDate', 'paymentMode',
 		], $values, new \Properties('create'));
 
 		$fw->validate();

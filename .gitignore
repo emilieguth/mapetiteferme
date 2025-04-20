@@ -1,3 +1,4 @@
 .idea/
 secret.c.php
 .DS_Store
+.min/
