@@ -16,3 +16,18 @@ table.td-vertical-top td {
 table.no-background tbody {
     background-color: white;
 }
+
+#create-operation-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+}
+
+#create-operation-list > div > div {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+#create-operation-list a.btn {
+    align-content: center;
+}

@@ -94,7 +94,7 @@ new \bank\CashflowPage(
 
 		\bank\Cashflow::model()->update(
 			$data->eCashflow,
-			['status' => \bank\CashflowElement::ALLOCATED, 'document' => POST('cashflow[document]'), 'updatedAt' => \bank\Cashflow::model()->now()]
+			['status' => \bank\CashflowElement::ALLOCATED, 'updatedAt' => \bank\Cashflow::model()->now()]
 		);
 
 		\journal\Operation::model()->commit();

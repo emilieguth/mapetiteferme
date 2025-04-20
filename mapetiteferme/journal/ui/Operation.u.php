@@ -43,15 +43,14 @@ class OperationUi {
 			$index = 0;
 			$defaultValues = $eOperation->getArrayCopy();
 
-			$h .= '<div id="create-operation-list">';
-				$h .= self::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
-			$h .= '</div>';
+			$addButton = '<a id="add-operation" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
+				$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
+			$addButton .= '</a>';
 
-			$buttons = '<a id="add-operation" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
-				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
-			$buttons .= '</a>';
-			$buttons .= '&nbsp;';
-			$buttons .= $form->submit(
+			$h .= \journal\OperationUi::operationCreateContainer($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton);
+
+			$h .= '<div class="text-end mt-1">';
+				$h .= $form->submit(
 				s("Enregistrer l'écriture"),
 				[
 					'id' => 'submit-save-operation',
@@ -62,8 +61,7 @@ class OperationUi {
 					'onclick' => 'return Operation.warnVatConsistency(this);',
 				],
 			);
-
-			$h .= $form->group(content: $buttons);
+		$h .= '</div>';
 
 		$h .= $form->close();
 
@@ -73,6 +71,29 @@ class OperationUi {
 			body: $h
 		);
 
+	}
+
+	public static function operationCreateContainer(
+		Operation $eOperation,
+		\accounting\FinancialYear $eFinancialYear,
+		int $index,
+		\util\FormUi $form,
+		array $defaultValues,
+		string $addButton
+	): string {
+
+		$h = '<div id="">';
+
+			$h .= '<div id="create-operation-list">';
+
+				$h .= \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
+				$h .= $addButton;
+
+			$h .= '</div>';
+
+		$h .= '</div>';
+
+		return $h;
 	}
 
 	public static function addOperation(

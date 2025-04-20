@@ -32,8 +32,8 @@ class Cashflow {
         const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 
         qs('#create-operation-list [name="amount[' + index + ']"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
-        qs('#create-operation-list [name="document[' + index + ']"]').setAttribute('value', qs('#bank-cashflow-allocate [name="cashflow[document]"]').value || '');
-        qs('#create-operation-list [name="description[' + index + ']"]').setAttribute('value', qs('#create-operation-list [name="description[' + (index - 1) + ']"]').value);
+
+        Operation.preFillNewOperation(index);
 
     }
 

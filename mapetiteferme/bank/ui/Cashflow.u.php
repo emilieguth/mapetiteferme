@@ -313,33 +313,22 @@ class CashflowUi {
 					);
 				$h .= '</div>';
 
-				$h .= $form->group(
-					self::p('document'),
-					$form->text(
-						'document',
-						attributes: ['name' => 'cashflow[document]'] + self::p('document')->attributes)
-					.self::p('document')->after
-				);
 			$h .= '</div>';
 
-			$h .= '<div id="create-operation-list">';
-				$h .= \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
-			$h .= '</div>';
+			$addButton = '<a id="add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
+				$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
+			$addButton .= '</a>';
+
+			$h .= \journal\OperationUi::operationCreateContainer($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton);
 
 			$h .= '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
 				$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
 			$h .= '</div>';
 
-			$buttons = '<a id="add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
-				$buttons .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
-			$buttons .= '</a>';
-			$buttons .= '&nbsp;';
-			$buttons .= $form->submit(
+			$h .= '<div class="text-end mt-1">'.$form->submit(
 				s("Attribuer l'écriture"),
 				['id' => 'submit-save-operation', 'data-text-singular' => s("Attribuer l'écriture"), 'data-text-plural' => s(("Attribuer les écritures"))],
-			);
-
-			$h .= $form->group(content: $buttons);
+			).'</div>';
 
 		$h .= $form->close();
 
