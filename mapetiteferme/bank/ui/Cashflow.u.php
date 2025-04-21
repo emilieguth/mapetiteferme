@@ -325,7 +325,7 @@ class CashflowUi {
 			$h .= '</div>';
 
 			$h .= $form->group(
-				\journal\OperationUi::p('paymentMode'),
+				\journal\OperationUi::p('paymentDate'),
 				$form->date('paymentDate', $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
 			);
 			$paymentModeInput = '';
