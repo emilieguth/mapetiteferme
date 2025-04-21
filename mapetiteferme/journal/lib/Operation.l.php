@@ -170,14 +170,16 @@ class OperationLib extends OperationCrud {
 		$properties = [
 			'account', 'accountLabel',
 			'description', 'amount', 'type', 'document', 'vatRate', 'comment',
-			'paymentDate', 'paymentMode',
 		];
 		if($isFromCashflow === FALSE) {
-			$properties[] = 'date';
-			$properties[] = 'cashflow';
+			$properties = array_merge($properties, ['date', 'cashflow', 'paymentDate', 'paymentMode']);
 		}
 
 		$eOperationDefault['thirdParty'] = NULL;
+
+		if($isFromCashflow === TRUE) {
+			$eOperationDefault->build(['paymentMode', 'paymentDate'], $input);
+		}
 
 		foreach($accounts as $index => $account) {
 
@@ -185,10 +187,6 @@ class OperationLib extends OperationCrud {
 			$eOperation['index'] = $index;
 
 			$eOperation->buildIndex($properties, $input, $index);
-
-			if($eOperation->offsetExists('paymentMode') === TRUE) {
-				$eOperationDefault['paymentMode'] ??= $eOperation['paymentMode'];
-			}
 
 			$eOperation['amount'] = abs($eOperation['amount']);
 

@@ -1,0 +1,65 @@
+
+:root {
+    --create-operation-rows: 15;
+}
+@supports (grid-template-columns: subgrid) {
+
+    .create-operations-container {
+        grid-template-rows: repeat(var(--create-operation-rows), auto);
+    }
+
+}
+.create-operations-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-gap: 1rem;
+}
+.create-operations-container[data-columns="2"] {
+    grid-template-columns: auto repeat(2, 1fr) auto;
+}
+.create-operations-container[data-columns="3"] {
+    grid-template-columns: auto repeat(3, 1fr) auto;
+}
+.create-operations-container[data-columns="4"] {
+    grid-template-columns: auto repeat(4, 1fr) auto;
+}
+.create-operations-container[data-columns="5"] {
+    grid-template-columns: auto repeat(5, 1fr) auto;
+}
+.create-operations-container[data-columns="6"] {
+    grid-template-columns: auto repeat(6, 1fr) auto;
+}
+.create-operations-container[data-columns="7"] {
+    grid-template-columns: auto repeat(7, 1fr) auto;
+}
+.create-operations-container[data-columns="8"] {
+    grid-template-columns: auto repeat(8, 1fr) auto;
+}
+
+@supports (grid-template-columns: subgrid) {
+    .create-operation,
+    .create-operation-validation {
+        grid-row: span var(--create-operation-rows);
+        grid-template-rows: subgrid;
+    }
+}
+.create-operation {
+    display: grid;
+    grid-gap: 1rem;
+    transition: border-color 0.5s;
+    color: var(--text);
+}
+.create-operation > * {
+    align-self: center;
+}
+
+.create-operation-validation > .btn{
+    display: block;
+}
+
+#create-operation-list {
+    overflow-x: auto;
+}
+#create-operation-list > div:nth-child(2n + 1) {
+    background-color: var(--background-light) !important;
+}

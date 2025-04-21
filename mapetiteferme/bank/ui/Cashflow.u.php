@@ -274,8 +274,10 @@ class CashflowUi {
 
 	public static function getAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow): \Panel {
 
+		\Asset::css('bank', 'cashflow.css');
 		\Asset::js('bank', 'cashflow.js');
 		\Asset::js('journal', 'operation.js');
+		\Asset::css('journal', 'operation.css');
 		\Asset::js('journal', 'thirdParty.js');
 		$h = CashflowUi::getCashflowHeader($eCashflow);
 
@@ -313,28 +315,50 @@ class CashflowUi {
 					);
 				$h .= '</div>';
 
+				$h .= $form->group(
+					\journal\OperationUi::p('paymentMode'),
+					$form->date('paymentDate', $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+				);
+				$paymentModeInput = '';
+				foreach(\journal\OperationUi::p('paymentMode')->values as $paymentMode => $text) {
+					$paymentModeInput .= $form->radio(
+						'paymentMode',
+						$paymentMode,
+						\journal\OperationUi::p('paymentMode')->values[$paymentMode],
+						$defaultValues['paymentMode'] ?? '',
+						[
+							'data-index' => $index
+						],
+					);
+				}
+				$h .= $form->group(
+					\journal\OperationUi::p('paymentMode'),
+					$paymentModeInput
+				);
+
 			$h .= '</div>';
 
 			$addButton = '<a id="add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
 				$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$addButton .= '</a>';
 
-			$h .= \journal\OperationUi::operationCreateContainer($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton);
+			$saveButton = $form->submit(
+				s("Créer l'écriture"),
+				['id' => 'submit-save-operation', 'data-text-singular' => s("Créer l'écriture"), 'data-text-plural' => s(("Créer les écritures")), 'class' => 'mt-1 btn btn-primary'],
+			);
+
+			$h .= \journal\OperationUi::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton, $saveButton);
 
 			$h .= '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
 				$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
 			$h .= '</div>';
 
-			$h .= '<div class="text-end mt-1">'.$form->submit(
-				s("Attribuer l'écriture"),
-				['id' => 'submit-save-operation', 'data-text-singular' => s("Attribuer l'écriture"), 'data-text-plural' => s(("Attribuer les écritures"))],
-			).'</div>';
 
 		$h .= $form->close();
 
 		return new \Panel(
 			id: 'panel-cashflow-allocate',
-			title: s("Attribuer des écritures"),
+			title: s("Créer des écritures"),
 			body: $h
 		);
 
@@ -350,7 +374,7 @@ class CashflowUi {
 			'description' => $eCashflow['memo'],
 		];
 
-		return \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
+		return \journal\OperationUi::getFieldsCreateGrid($form, $eOperation, $eFinancialYear, '['.$index.']', $defaultValues, []);
 
 	}
 

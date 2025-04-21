@@ -1,20 +1,20 @@
 document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
-    if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') === null) {
+    if(e.detail.input.firstParent('div.create-operation').qs('[name^="thirdParty"]') === null) {
         return;
     }
-    const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
+    const thirdParty = e.detail.input.firstParent('div.create-operation').qs('[name^="thirdParty"]').getAttribute('value');
     e.detail.body.append('thirdParty', thirdParty);
 });
 
 document.delegateEventListener('autocompleteBeforeQuery', '[data-account-label="journal-operation-create"], [data-account-label="bank-cashflow-allocate"]', function(e) {
 
-    if(e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]') !== null) {
-        const thirdParty = e.detail.input.firstParent('div.operation-write').qs('[name^="thirdParty"]').getAttribute('value');
+    if(e.detail.input.firstParent('div.create-operation').qs('[name^="thirdParty"]') !== null) {
+        const thirdParty = e.detail.input.firstParent('div.create-operation').qs('[name^="thirdParty"]').getAttribute('value');
         e.detail.body.append('thirdParty', thirdParty);
     }
 
-    if(e.detail.input.firstParent('div.operation-write').qs('[name^="account"]') !== null) {
-        const account = e.detail.input.firstParent('div.operation-write').qs('[name^="account"]').getAttribute('value');
+    if(e.detail.input.firstParent('div.create-operation').qs('[name^="account"]') !== null) {
+        const account = e.detail.input.firstParent('div.create-operation').qs('[name^="account"]').getAttribute('value');
         e.detail.body.append('account', account);
     }
 
@@ -103,10 +103,14 @@ class Operation {
         qs('[name="document[' + index + ']"]').setAttribute('value', qs('[name="document[' + (index - 1) + ']"]').value)
         qs('[name="description[' + index + ']"]').setAttribute('value', qs('[name="description[' + (index - 1) + ']"]').value)
 
-        const checked = qs('[name="paymentMode[' + (index - 1) + ']"]:checked').value || '';
-        qs('[name="paymentMode[' + index + ']"][value="' + checked + '"]').setAttribute('checked', 'checked');
+        if(qs('[name="paymentMode[' + (index - 1) + ']"]:checked')) {
+            const checked = qs('[name="paymentMode[' + (index - 1) + ']"]:checked')?.value || '';
+            qs('[name="paymentMode[' + index + ']"][value="' + checked + '"]').setAttribute('checked', 'checked');
+        }
         qs('[name="paymentDate[' + index + ']"]').setAttribute('value', qs('[name="paymentDate[' + (index - 1) + ']"]').value)
-        qs('[name="thirdParty[' + index + ']"]').setAttribute('value', qs('[name="thirdParty[' + (index - 1) + ']"]').value)
+        if(qs('[name="thirdParty[' + index + ']"]') && qs('[name="thirdParty[' + (index - 1) + ']"]')) {
+            qs('[name="thirdParty[' + index + ']"]').setAttribute('value', qs('[name="thirdParty[' + (index - 1) + ']"]').value || null)
+        }
 
     }
 
@@ -181,16 +185,16 @@ class Operation {
         const index = accountDetail.input.getAttribute('data-index');
 
         // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
-        const amountElement = accountDetail.input.firstParent('div.operation-write').qs('[name^="amount["]');
+        const amountElement = accountDetail.input.firstParent('div.create-operation').qs('[name^="amount["]');
         const amount = amountElement.getAttribute('value');
-        const vatRate = parseFloat(accountDetail.input.firstParent('div.operation-write').qs('[name^="vatRate["]').getAttribute('value'));
+        const vatRate = parseFloat(accountDetail.input.firstParent('div.create-operation').qs('[name^="vatRate["]').getAttribute('value'));
         if(vatRate === 0.0) {
             const newAmount = (amount / (1 + accountDetail.vatRate / 100)).toFixed(2);
             amountElement.setAttribute('value', Math.abs(newAmount));
         }
 
         // On remplit ensuite le taux de TVA
-        accountDetail.input.firstParent('.operation-write').qs('[data-field="vatRate"]').setAttribute('value', accountDetail.vatRate);
+        accountDetail.input.firstParent('.create-operation').qs('[data-field="vatRate"]').setAttribute('value', accountDetail.vatRate);
 
         // On vérifie les calculs de TVA
         this.updateVatValue(index);

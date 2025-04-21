@@ -15,7 +15,6 @@ class Asset {
             const formId = e.delegateTarget.form.getAttribute('id');
 
             qs('[data-asset="' + formId + '"][data-index="' + index + '"]').hide();
-            qs('[data-asset="' + formId + '"][data-index="' + index + '"]').hide();
 
             return;
         }
@@ -23,7 +22,6 @@ class Asset {
 
         const formId = e.delegateTarget.form.getAttribute('id');
 
-        qs('[data-asset="' + formId + '"][data-index="' + index + '"]').removeHide();
         qs('[data-asset="' + formId + '"][data-index="' + index + '"]').removeHide();
 
         Asset.initializeData(index);

@@ -14,6 +14,7 @@ class OperationUi {
 
 	public function create(\company\Company $eCompany, Operation $eOperation, \accounting\FinancialYear $eFinancialYear): \Panel {
 
+		\Asset::css('journal', 'operation.css');
 		\Asset::js('journal', 'operation.js');
 		\Asset::js('journal', 'thirdParty.js');
 		$form = new \util\FormUi();
@@ -47,10 +48,7 @@ class OperationUi {
 				$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
 			$addButton .= '</a>';
 
-			$h .= \journal\OperationUi::operationCreateContainer($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton);
-
-			$h .= '<div class="text-end mt-1">';
-				$h .= $form->submit(
+			$saveButton = $form->submit(
 				s("Enregistrer l'écriture"),
 				[
 					'id' => 'submit-save-operation',
@@ -61,7 +59,8 @@ class OperationUi {
 					'onclick' => 'return Operation.warnVatConsistency(this);',
 				],
 			);
-		$h .= '</div>';
+
+			$h .= self::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton, $saveButton);
 
 		$h .= $form->close();
 
@@ -73,155 +72,242 @@ class OperationUi {
 
 	}
 
-	public static function operationCreateContainer(
-		Operation $eOperation,
-		\accounting\FinancialYear $eFinancialYear,
-		int $index,
-		\util\FormUi $form,
-		array $defaultValues,
-		string $addButton
-	): string {
+	private static function getCreateHeader(bool $isFromCashflow): string {
 
-		$h = '<div id="">';
+		$h = '<div class="create-operation util-block">';
 
-			$h .= '<div id="create-operation-list">';
+			$h .= '<h4>&nbsp;</h4>';
+			$h .= '<div>'.self::p('date')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('document')->label.'</div>';
+			$h .= '<div>'.self::p('thirdParty')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('account')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('accountLabel')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('description')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('comment')->label.'</div>';
+			$h .= '<div>'.s("Montant TTC").\util\FormUi::info(s("Facultatif, ne sera pas enregistré")).'</div>';
+			$h .= '<div>'.self::p('amount')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('type')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('vatRate')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div>'.self::p('vatValue')->label.' '.\util\FormUi::asterisk().'</div>';
 
-				$h .= \journal\OperationUi::addOperation($eOperation, $eFinancialYear, $index, $form, $defaultValues);
-				$h .= $addButton;
+			if($isFromCashflow === FALSE) {
 
-			$h .= '</div>';
+				$h .= '<div>'.self::p('paymentDate')->label.' '.\util\FormUi::asterisk().'</div>';
+				$h .= '<div>'.self::p('paymentMode')->label.' '.\util\FormUi::asterisk().'</div>';
 
-		$h .= '</div>';
-
-		return $h;
-	}
-
-	public static function addOperation(
-		Operation $eOperation,
-		\accounting\FinancialYear $eFinancialYear,
-		int $index,
-		\util\FormUi $form,
-		array $defaultValues,
-	): string {
-
-		$suffix = '['.$index.']';
-
-		$h = '<div class="create-operation">';
-
-			$h .= '<div class="util-block bg-background-light">';
-
-				$h .= '<div class="util-title">';
-
-					$h .= '<div class="create-operation-title">';
-					$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
-				$h .= '</div>';
-
-				$h .= '<div class="create-operation-delete hide" data-index="'.$index.'">';
-					$h .= '<a onclick="Operation.deleteOperation(this)" class="btn btn-outline-primary">'.\Asset::icon('trash').'</a>';
-				$h .= '</div>';
-
-				$h .= '</div>';
-
-				$h .= \journal\OperationUi::getFieldsCreate($form, $eOperation, $eFinancialYear, $suffix, $defaultValues, []);
-
-			$h .= '</div>';
+			}
 
 		$h .= '</div>';
 
 		return $h;
+
 	}
 
-	public static function getFieldsCreate(
+	public static function getFieldsCreateGrid(
 		\util\FormUi $form,
 		Operation $eOperation,
 		\accounting\FinancialYear $eFinancialYear,
 		?string $suffix,
 		array $defaultValues,
-		array $disabled
+		array $disabled,
 	): string {
 
 		\Asset::js('journal', 'asset.js');
 		\Asset::js('journal', 'operation.js');
+
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
+		$isFromCashflow = (isset($defaultValues['cashflow']) and $defaultValues['cashflow']->exists() === TRUE);
 
-		$h = '<div class="operation-write">';
+		$h = '<div class="create-operation util-block" data-index="'.$index.'">';
+			$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
+			$h .= $form->date('date'.$suffix, $defaultValues['date'] ?? '', [
+					'min' => $eFinancialYear['startDate'],
+					'max' => $eFinancialYear['endDate'],
+				]);
 
-			if(isset($defaultValues['cashflow']) === TRUE) {
-				$h .= $form->hidden('cashflow'.$suffix, $defaultValues['cashflow']);
+			$h .= '<div data-wrapper="document'.$suffix.'">';
+				$h .=  $form->dynamicField($eOperation, 'document'.$suffix);
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="thirdParty'.$suffix.'">';
+				$h .= $form->dynamicField($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
+					$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"]';
+					$d->attributes['data-index'] = $index;
+					if(in_array('thirdParty', $disabled) === TRUE) {
+						$d->attributes['disabled'] = TRUE;
+					}
+					$d->attributes['data-third-party'] = $form->getId();
+					$d->default = fn($e, $property) => get('thirdParty');
+				});
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="account'.$suffix.'">';
+				$h .= $form->dynamicField($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
+					$d->autocompleteDispatch = '[data-account="'.$form->getId().'"]';
+					$d->attributes['data-wrapper'] = 'account'.$suffix;
+					$d->attributes['data-index'] = $index;
+					if(in_array('account', $disabled) === TRUE) {
+						$d->attributes['disabled'] = TRUE;
+					}
+					$d->attributes['data-account'] = $form->getId();
+					$d->label .=  ' '.\util\FormUi::asterisk();
+				});
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="accountLabel'.$suffix.'">';
+				$h .= $form->dynamicField($eOperation, 'accountLabel'.$suffix, function($d) use($form, $index, $suffix) {
+					$d->autocompleteDispatch = '[data-account-label="'.$form->getId().'"]';
+					$d->attributes['data-wrapper'] = 'accountLabel'.$suffix;
+					$d->attributes['data-index'] = $index;
+					$d->attributes['data-account-label'] = $form->getId();
+					$d->label .=  ' '.\util\FormUi::asterisk();
+				});
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="description'.$suffix.'">';
+				$h .= $form->dynamicField($eOperation, 'description'.$suffix, fn($d) => $d->default = $defaultValues['description'] ?? '');
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="comment'.$suffix.'">';
+				$h .= $form->dynamicField($eOperation, 'comment'.$suffix, fn($d) => $d->default = $defaultValues['comment'] ?? '');
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="amountIncludingVAT'.$suffix.'">';
+				$h .= $form->inputGroup($form->number(
+						'amountIncludingVAT'.$suffix,
+						$defaultValues['amountIncludingVAT'] ?? '',
+						[
+							'min' => 0, 'step' => 0.01, 'data-field' => 'amountIncludingVAT',
+							'data-index' => $index,
+						]
+					)
+					.$form->addon('€ '));
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="amount'.$suffix.'">';
+				$h .= $form->inputGroup(
+					$form->number(
+						'amount'.$suffix,
+						$defaultValues['amount'] ?? '',
+						[
+							'min' => 0, 'step' => 0.01, 'data-field' => 'amount',
+							'data-index' => $index,
+						]
+					)
+					.$form->addon('€ '));
+			$h .='</div>';
+
+			$h .= '<div data-wrapper="type'.$suffix.'">';
+					$h .= $form->radio(
+						'type'.$suffix,
+						OperationElement::DEBIT,
+						self::p('type')->values[OperationElement::DEBIT],
+						$defaultValues['type'] ?? '',
+						[
+							'data-index' => $index
+						]
+					).
+					$form->radio(
+						'type'.$suffix, OperationElement::CREDIT,
+						self::p('type')->values[OperationElement::CREDIT],
+						$defaultValues['type'] ?? '',
+						[
+							'data-index' => $index
+						]
+					);
+			$h .= '</div>';
+
+			$vatRateDefault = 0;
+			if($eOperation['account']->exists() === TRUE) {
+				if($eOperation['account']['vatRate'] !== NULL) {
+					$vatRateDefault = $eOperation['account']['vatRate'];
+				} else if($eOperation['account']['vatAccount']->exists() === TRUE) {
+					$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
+				}
+			}
+			$vatAmountDefault = $vatRateDefault !== 0 ? round(($defaultValues['amount'] ?? 0) * $vatRateDefault / 100,2) : 0;
+
+			$eOperation['vatRate'.$suffix] = '';
+
+			$h .= '<div data-wrapper="vatRate'.$suffix.'">';
+				$h .= $form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-index' => $index, 'data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1]).$form->addon('% '));
+			$h .= '</div>';
+
+			$h .= '<div data-wrapper="vatValue'.$suffix.'">';
+				$h .= $form->inputGroup(
+					$form->number(
+						'vatValue'.$suffix,
+						$vatAmountDefault,
+						['data-field' => 'vatValue', 'data-vat-value' => $form->getId(), 'min' => 0.0, 'step' => 0.01, 'data-index' => $index],
+					).$form->addon('€'));
+			$h .= '</div>';
+
+			if($isFromCashflow === FALSE) {
+
+				$h .= '<div data-wrapper="paymentDate'.$suffix.'">';
+					$h .= $form->date('paymentDate'.$suffix, $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]);
+				$h .= '</div>';
+
+				$paymentModeInput = '';
+				foreach(self::p('paymentMode')->values as $paymentMode => $text) {
+					$paymentModeInput .= $form->radio(
+						'paymentMode'.$suffix,
+						$paymentMode,
+						self::p('paymentMode')->values[$paymentMode],
+						$defaultValues['paymentMode'] ?? '',
+						[
+							'data-index' => $index
+						],
+					);
+				}
+				$h .= '<div data-wrapper="paymentMode'.$suffix.'">';
+					$h .= $paymentModeInput;
+				$h .= '</div>';
+
 			}
 
-			$h .= $form->group(
-				self::p('date')->label.' '.\util\FormUi::asterisk(),
-				$form->date('date'.$suffix, $defaultValues['date'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
-			);
+		$h .= '</div>';
 
-			$h .= $form->dynamicGroup($eOperation, 'document'.$suffix);
+		return $h;
 
-			$h .= $form->dynamicGroup($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
-				$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"]';
-				$d->attributes['data-index'] = $index;
-				if(in_array('thirdParty', $disabled) === TRUE) {
-					$d->attributes['disabled'] = TRUE;
-				}
-				$d->attributes['data-third-party'] = $form->getId();
-				$d->default = fn($e, $property) => get('thirdParty');
-			});
+	}
 
-			$h .= $form->dynamicGroup($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
-				$d->autocompleteDispatch = '[data-account="'.$form->getId().'"]';
-				$d->attributes['data-wrapper'] = 'account'.$suffix;
-				$d->attributes['data-index'] = $index;
-				if(in_array('account', $disabled) === TRUE) {
-					$d->attributes['disabled'] = TRUE;
-				}
-				$d->attributes['data-account'] = $form->getId();
-				$d->label .=  ' '.\util\FormUi::asterisk();
-			});
+	private static function getCreateValidate(string $addButton, string $saveButton): string {
 
-			$h .= $form->dynamicGroup($eOperation, 'accountLabel'.$suffix, function($d) use($form, $index, $suffix) {
-				$d->autocompleteDispatch = '[data-account-label="'.$form->getId().'"]';
-				$d->attributes['data-wrapper'] = 'accountLabel'.$suffix;
-				$d->attributes['data-index'] = $index;
-				$d->attributes['data-account-label'] = $form->getId();
-				$d->label .=  ' '.\util\FormUi::asterisk();
-			});
-			$h .= $form->group(
-				self::p('description')->label.' '.\util\FormUi::asterisk(),
-				$form->text('description'.$suffix, $defaultValues['description'] ?? '')
-			);
-			$h .= $form->group(
-				self::p('comment')->label,
-				$form->text('comment'.$suffix, $defaultValues['comment'] ?? '')
-			);
-			$h .= $form->group(
-				s("Montant TTC").\util\FormUi::info(s("Facultatif, ne sera pas enregistré")),
-					$form->inputGroup(
-						$form->number(
-							'amountIncludingVAT'.$suffix,
-							$defaultValues['amountIncludingVAT'] ?? '',
-							[
-								'min' => 0, 'step' => 0.01, 'data-field' => 'amountIncludingVAT',
-								'data-index' => $index,
-							]
-						)
-						.$form->addon('€ ')
-					)
-			);
-			$h .= $form->group(
-				self::p('amount')->label.' '.\util\FormUi::asterisk(),
-					$form->inputGroup(
-						$form->number(
-							'amount'.$suffix,
-							$defaultValues['amount'] ?? '',
-							[
-								'min' => 0, 'step' => 0.01, 'data-field' => 'amount',
-								'data-index' => $index,
-							]
-						)
-						.$form->addon('€ ')
-					)
-			);
+		$h = '<div class="create-operation-validation util-block">';
+			$h .= $addButton;
+			$h .= $saveButton;
+		$h .= '</div>';
 
+		return $h;
+
+	}
+
+	public static function getCreateGrid(
+		Operation $eOperation,
+		\accounting\FinancialYear $eFinancialYear,
+		int $index,
+		\util\FormUi $form,
+		array $defaultValues,
+		string $addButton,
+		string $saveButton,
+	): string {
+
+		$suffix = '['.$index.']';
+
+		$h = '<div id="create-operation-list" class="create-operations-container" data-columns="1">';
+
+			$h .= self::getCreateHeader(!($defaultValues['cashflow'] ?? NULL));
+			$h .= self::getFieldsCreateGrid($form, $eOperation, $eFinancialYear, $suffix, $defaultValues, []);
+			$h .= self::getCreateValidate($addButton, $saveButton);
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
+/*
 			$h .= '<div data-asset="'.$form->getId().'" data-index="'.$index.'" class="util-block bg-white hide">';
 				$h .= '<h4>'.s("Immobilisation").'</h4>';
 					$h .= $form->group(
@@ -265,84 +351,7 @@ class OperationUi {
 						$form->number('asset'.$suffix.'[duration]', '')
 					);
 			$h .= '</div>';
-
-			$h .= $form->group(
-				self::p('type')->label.' '.\util\FormUi::asterisk(),
-				$form->radio(
-					'type'.$suffix,
-					OperationElement::DEBIT,
-					self::p('type')->values[OperationElement::DEBIT],
-					$defaultValues['type'] ?? '',
-					[
-						'data-index' => $index
-					]
-				).
-				$form->radio(
-					'type'.$suffix, OperationElement::CREDIT,
-					self::p('type')->values[OperationElement::CREDIT],
-					$defaultValues['type'] ?? '',
-					[
-						'data-index' => $index
-					]
-				)
-			);
-
-			$vatRateDefault = 0;
-			if($eOperation['account']->exists() === TRUE) {
-				if($eOperation['account']['vatRate'] !== NULL) {
-					$vatRateDefault = $eOperation['account']['vatRate'];
-				} else if($eOperation['account']['vatAccount']->exists() === TRUE) {
-					$vatRateDefault = $eOperation['account']['vatAccount']['vatRate'];
-				}
-			}
-			$vatAmountDefault = $vatRateDefault !== 0 ? round(($defaultValues['amount'] ?? 0) * $vatRateDefault / 100,2) : 0;
-
-			$eOperation['vatRate'.$suffix] = '';
-			$h .= $form->group(
-				s("Taux de TVA").' '.\util\FormUi::asterisk(),
-				$form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-index' => $index, 'data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1]).$form->addon('% '))
-			);
-			$h .= $form->group(
-				s("Valeur de TVA"),
-				$form->inputGroup(
-					$form->number(
-						'vatValue'.$suffix,
-						$vatAmountDefault,
-						['data-field' => 'vatValue', 'data-vat-value' => $form->getId(), 'min' => 0.0, 'step' => 0.01, 'data-index' => $index],
-					).$form->addon('€'))
-			);
-
-			$h .= '<div data-index="'.$index.'" class="util-warning hide" data-vat-warning>';
-				$h .= s("Attention, le montant de TVA ne correspond pas au montant HT et au taux de TVA indiqués. Notez que pourrez tout de même enregistrer.");
-			$h .= '</div>';
-
-
-			$h .= $form->group(
-				self::p('paymentDate')->label,
-				$form->date('paymentDate'.$suffix, $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
-			);
-			$paymentModeInput = '';
-			foreach(self::p('paymentMode')->values as $paymentMode => $text) {
-				$paymentModeInput .= $form->radio(
-					'paymentMode'.$suffix,
-					$paymentMode,
-					self::p('paymentMode')->values[$paymentMode],
-					$defaultValues['paymentMode'] ?? '',
-					[
-						'data-index' => $index
-					],
-				);
-			}
-			$h .= $form->group(
-				self::p('paymentMode')->label,
-				$paymentModeInput,
-			);
-
-		$h .= '</div>';
-
-		return $h;
-
-	}
+*/
 
 	public static function p(string $property): \PropertyDescriber {
 
@@ -359,6 +368,8 @@ class OperationUi {
 			'comment' => s("Commentaire"),
 			'paymentMode' => s("Mode de paiement"),
 			'paymentDate' => s("Date de paiement"),
+			'vatRate' => s("Taux de TVA"),
+			'vatValue' => s("Valeur de TVA"),
 		]);
 
 		switch($property) {
