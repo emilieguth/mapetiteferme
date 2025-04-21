@@ -1,18 +1,21 @@
 
 :root {
     --create-operation-rows: 15;
+    --create-operation-rows-with-asset: 21;
 }
 @supports (grid-template-columns: subgrid) {
 
-    .create-operations-container {
+    .create-operations-container:not(.has-asset) {
         grid-template-rows: repeat(var(--create-operation-rows), auto);
+    }
+    .create-operations-container.has-asset {
+        grid-template-rows: repeat(var(--create-operation-rows-with-asset), auto);
     }
 
 }
 .create-operations-container {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    grid-gap: 1rem;
 }
 .create-operations-container[data-columns="2"] {
     grid-template-columns: auto repeat(2, 1fr) auto;
@@ -39,27 +42,58 @@
 @supports (grid-template-columns: subgrid) {
     .create-operation,
     .create-operation-validation {
-        grid-row: span var(--create-operation-rows);
         grid-template-rows: subgrid;
+    }
+    .create-operations-container:not(.has-asset) .create-operation,
+    .create-operations-container:not(.has-asset) .create-operation-validation {
+        grid-row: span var(--create-operation-rows);
+    }
+    .create-operations-container.has-asset .create-operation,
+    .create-operations-container.has-asset .create-operation-validation {
+        grid-row: span var(--create-operation-rows-with-asset);
     }
 }
 .create-operation {
     display: grid;
-    grid-gap: 1rem;
     transition: border-color 0.5s;
     color: var(--text);
+    border-radius: 8px;
 }
 .create-operation > * {
-    align-self: center;
+    padding: 0.5rem;
+    height: 100%;
 }
 
 .create-operation-validation > .btn{
     display: block;
 }
 
-#create-operation-list {
+.create-operations-container {
     overflow-x: auto;
 }
-#create-operation-list > div:nth-child(2n + 1) {
+
+.create-operations-container > div:nth-child(2n + 1) {
     background-color: var(--background-light) !important;
+}
+
+.operation-asset {
+    background-color: #0001;
+}
+.create-operations-container.has-asset .operation-asset {
+    display: block;
+}
+.create-operations-container.has-asset div.create-operation:not(.is-asset) div.operation-asset > * {
+    visibility: hidden;
+}
+.create-operations-container:not(.has-asset) div.operation-asset {
+    display: none;
+}
+
+.create-operation div.operation-asset:not([data-index]) {
+    padding-left: 0.5rem;
+    border-left: 3px solid #0001;
+}
+.create-operation-buttons {
+    display: flex;
+    justify-content: space-between;
 }

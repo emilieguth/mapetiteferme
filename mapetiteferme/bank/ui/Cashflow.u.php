@@ -277,8 +277,10 @@ class CashflowUi {
 		\Asset::css('bank', 'cashflow.css');
 		\Asset::js('bank', 'cashflow.js');
 		\Asset::js('journal', 'operation.js');
+		\Asset::js('journal', 'asset.js');
 		\Asset::css('journal', 'operation.css');
 		\Asset::js('journal', 'thirdParty.js');
+
 		$h = CashflowUi::getCashflowHeader($eCashflow);
 
 		$form = new \util\FormUi();
@@ -291,75 +293,82 @@ class CashflowUi {
 			'description' => $eCashflow['memo'],
 			'paymentDate' => $eCashflow['date'],
 			'paymentMode' => self::extractPaymentTypeFromCashflowDescription($eCashflow['memo']),
+			'cashflow' => $eCashflow,
 		];
 
-		$h .= $form->openAjax(
+		$dialogOpen = $form->openAjax(
 			\company\CompanyUi::urlBank($eCompany).'/cashflow:doAllocate',
-			['id' => 'bank-cashflow-allocate', 'third-party-create-index' => 0, 'autocomplete' => 'off', 'onrender' => 'Operation.initAutocomplete();',]
+			[
+				'id' => 'bank-cashflow-allocate',
+				'third-party-create-index' => 0,
+				'autocomplete' => 'off',
+				'onrender' => 'Operation.initAutocomplete();',
+				'class' => 'panel-dialog container',
+			]
 		);
 
-			$h .= $form->hidden('company', $eCompany['id']);
-			$h .= $form->hidden('id', $eCashflow['id']);
+		$h .= $form->hidden('company', $eCompany['id']);
+		$h .= $form->hidden('id', $eCashflow['id']);
 
-			$h .= $form->asteriskInfo();
+		$h .= $form->asteriskInfo();
 
-			$h .= '<div>';
-				$h .= '<div class="create-operation-title">';
-					$h .= '<h4>'.s("Opération bancaire #{id}", ['id' => $eCashflow['id']]).'</h4>';
-				$h .= '</div>';
-
-				$h .= '<div class="util-info">';
-					$h .= s(
-						"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
-						['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
-					);
-				$h .= '</div>';
-
-				$h .= $form->group(
-					\journal\OperationUi::p('paymentMode'),
-					$form->date('paymentDate', $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
-				);
-				$paymentModeInput = '';
-				foreach(\journal\OperationUi::p('paymentMode')->values as $paymentMode => $text) {
-					$paymentModeInput .= $form->radio(
-						'paymentMode',
-						$paymentMode,
-						\journal\OperationUi::p('paymentMode')->values[$paymentMode],
-						$defaultValues['paymentMode'] ?? '',
-						[
-							'data-index' => $index
-						],
-					);
-				}
-				$h .= $form->group(
-					\journal\OperationUi::p('paymentMode'),
-					$paymentModeInput
-				);
-
+		$h .= '<div>';
+			$h .= '<div class="create-operation-title">';
+				$h .= '<h4>'.s("Opération bancaire #{id}", ['id' => $eCashflow['id']]).'</h4>';
 			$h .= '</div>';
 
-			$addButton = '<a id="add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
-				$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
-			$addButton .= '</a>';
+			$h .= '<div class="util-info">';
+				$h .= s(
+					"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
+					['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
+				);
+			$h .= '</div>';
 
-			$saveButton = $form->submit(
-				s("Créer l'écriture"),
-				['id' => 'submit-save-operation', 'data-text-singular' => s("Créer l'écriture"), 'data-text-plural' => s(("Créer les écritures")), 'class' => 'mt-1 btn btn-primary'],
+			$h .= $form->group(
+				\journal\OperationUi::p('paymentMode'),
+				$form->date('paymentDate', $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+			);
+			$paymentModeInput = '';
+			foreach(\journal\OperationUi::p('paymentMode')->values as $paymentMode => $text) {
+				$paymentModeInput .= $form->radio(
+					'paymentMode',
+					$paymentMode,
+					\journal\OperationUi::p('paymentMode')->values[$paymentMode],
+					$defaultValues['paymentMode'] ?? '',
+					[
+						'data-index' => $index
+					],
+				);
+			}
+			$h .= $form->group(
+				\journal\OperationUi::p('paymentMode'),
+				$paymentModeInput
 			);
 
-			$h .= \journal\OperationUi::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton, $saveButton);
+		$h .= '</div>';
 
-			$h .= '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
-				$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
-			$h .= '</div>';
+		$h .= \journal\OperationUi::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 
+		$h .= '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
+			$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
+		$h .= '</div>';
 
-		$h .= $form->close();
+		$addButton = '<a id="add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
+		$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
+		$addButton .= '</a>';
+
+		$saveButton = $form->submit(
+			s("Enregistrer l'écriture"),
+			['id' => 'submit-save-operation', 'data-text-singular' => s("Enregistrer l'écriture"), 'data-text-plural' => s(("Enregistrer les écritures")), 'class' => 'btn btn-primary'],
+		);
 
 		return new \Panel(
 			id: 'panel-cashflow-allocate',
-			title: s("Créer des écritures"),
-			body: $h
+			title: s("Créer une ou plusieurs écriture(s)"),
+			dialogOpen: $dialogOpen,
+			dialogClose: $form->close(),
+			body: $h,
+			footer: '<div class="create-operation-buttons">'.$addButton.$saveButton.'</div>',
 		);
 
 	}
@@ -372,6 +381,7 @@ class CashflowUi {
 			'date' => $eCashflow['date'],
 			'type' => $eCashflow['type'],
 			'description' => $eCashflow['memo'],
+			'cashflow' => $eCashflow,
 		];
 
 		return \journal\OperationUi::getFieldsCreateGrid($form, $eOperation, $eFinancialYear, '['.$index.']', $defaultValues, []);

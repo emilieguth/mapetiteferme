@@ -107,7 +107,11 @@ class Operation {
             const checked = qs('[name="paymentMode[' + (index - 1) + ']"]:checked')?.value || '';
             qs('[name="paymentMode[' + index + ']"][value="' + checked + '"]').setAttribute('checked', 'checked');
         }
-        qs('[name="paymentDate[' + index + ']"]').setAttribute('value', qs('[name="paymentDate[' + (index - 1) + ']"]').value)
+
+        if(qs('[name="paymentDate[' + index + ']"]') && qs('[name="paymentDate[' + (index - 1) + ']"]')) {
+            qs('[name="paymentDate[' + index + ']"]').setAttribute('value', qs('[name="paymentDate[' + (index - 1) + ']"]').value)
+        }
+
         if(qs('[name="thirdParty[' + index + ']"]') && qs('[name="thirdParty[' + (index - 1) + ']"]')) {
             qs('[name="thirdParty[' + index + ']"]').setAttribute('value', qs('[name="thirdParty[' + (index - 1) + ']"]').value || null)
         }
@@ -175,7 +179,7 @@ class Operation {
             return;
         }
         const classValue = parseInt(accountDetail.itemText.substring(0, 1));
-        const value = [4, 6].includes(classValue) ? 'debit' : 'credit';
+        const value = [2, 4, 6].includes(classValue) ? 'debit' : 'credit';
         qs('[name="type[' + index + ']"][value="' + value + '"]').setAttribute('checked', true);
 
     }

@@ -12,17 +12,22 @@ class Asset {
         // assetClass & subventionAssetClass
         if(!accountClass || (!accountClass.startsWith('2') && !accountClass.startsWith('13'))) {
 
-            const formId = e.delegateTarget.form.getAttribute('id');
+            e.delegateTarget.firstParent('.create-operation').classList.remove('is-asset');
 
-            qs('[data-asset="' + formId + '"][data-index="' + index + '"]').hide();
+            const hasAsset = qsa('.create-operation:not(.create-operation-headers).is-asset').length > 0;
+
+            if(hasAsset === false) {
+                qs('.create-operation-headers').classList.remove('is-asset');
+                e.delegateTarget.firstParent('.create-operations-container').classList.remove('has-asset')
+            }
 
             return;
         }
 
 
-        const formId = e.delegateTarget.form.getAttribute('id');
-
-        qs('[data-asset="' + formId + '"][data-index="' + index + '"]').removeHide();
+        e.delegateTarget.firstParent('.create-operation').classList.add('is-asset');
+        e.delegateTarget.firstParent('.create-operations-container').classList.add('has-asset');
+        qs('.create-operation-headers').classList.add('is-asset');
 
         Asset.initializeData(index);
 

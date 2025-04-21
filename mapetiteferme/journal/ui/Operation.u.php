@@ -16,65 +16,70 @@ class OperationUi {
 
 		\Asset::css('journal', 'operation.css');
 		\Asset::js('journal', 'operation.js');
+		\Asset::js('journal', 'asset.js');
 		\Asset::js('journal', 'thirdParty.js');
+
 		$form = new \util\FormUi();
 
-		$h = '';
-
-		$h .= $form->openAjax(
+		$dialogOpen = $form->openAjax(
 			\company\CompanyUi::urlJournal($eCompany).'/operation:doCreate',
 			[
 				'id' => 'journal-operation-create',
 				'third-party-create-index' => 0,
 				'onrender' => 'Operation.initAutocomplete();',
+				'class' => 'panel-dialog container',
 			],
 		);
 
-			$h .= $form->asteriskInfo();
+		$h = $form->asteriskInfo();
 
-			$h .= $form->hidden('company', $eCompany['id']);
+		$h .= $form->hidden('company', $eCompany['id']);
 
-			$h .= '<div class="util-info">';
-			$h .= s(
-				"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
-				['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
-			);
-			$h .= '</div>';
+		$h .= '<div class="util-info">';
+		$h .= s(
+			"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
+			['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
+		);
+		$h .= '</div>';
 
-			$index = 0;
-			$defaultValues = $eOperation->getArrayCopy();
+		$index = 0;
+		$defaultValues = $eOperation->getArrayCopy();
 
-			$addButton = '<a id="add-operation" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
-				$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
-			$addButton .= '</a>';
+		$h .= self::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 
-			$saveButton = $form->submit(
-				s("Enregistrer l'écriture"),
-				[
-					'id' => 'submit-save-operation',
-					'data-text-singular' => s("Enregistrer l'écriture"),
-					'data-text-plural' => s(("Enregistrer les écritures")),
-					'data-confirm-text-singular' => s("Il y a une incohérence de valeur de TVA, voulez-vous quand même enregistrer ?"),
-					'data-confirm-text-plural' => s("Il y a plusieurs incohérences de valeur de TVA, voulez-vous quand même enregistrer ?"),
-					'onclick' => 'return Operation.warnVatConsistency(this);',
-				],
-			);
 
-			$h .= self::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues, $addButton, $saveButton);
+		$addButton = '<a id="add-operation" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
+		$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
+		$addButton .= '</a>';
 
-		$h .= $form->close();
+		$saveButton = $form->submit(
+			s("Enregistrer l'écriture"),
+			[
+				'id' => 'submit-save-operation',
+				'data-text-singular' => s("Enregistrer l'écriture"),
+				'data-text-plural' => s(("Enregistrer les écritures")),
+				'data-confirm-text-singular' => s("Il y a une incohérence de valeur de TVA, voulez-vous quand même enregistrer ?"),
+				'data-confirm-text-plural' => s("Il y a plusieurs incohérences de valeur de TVA, voulez-vous quand même enregistrer ?"),
+				'onclick' => 'return Operation.warnVatConsistency(this);',
+			],
+		);
+
+		$dialogClose = $form->close();
 
 		return new \Panel(
 			id: 'panel-journal-operation-create',
 			title: s("Ajouter une ou plusieurs écriture(s)"),
-			body: $h
+			dialogOpen: $dialogOpen,
+			dialogClose: $dialogClose,
+			body: $h,
+			footer: '<div class="create-operation-buttons">'.$addButton.$saveButton.'</div>',
 		);
 
 	}
 
 	private static function getCreateHeader(bool $isFromCashflow): string {
 
-		$h = '<div class="create-operation util-block">';
+		$h = '<div class="create-operation create-operation-headers">';
 
 			$h .= '<h4>&nbsp;</h4>';
 			$h .= '<div>'.self::p('date')->label.' '.\util\FormUi::asterisk().'</div>';
@@ -86,6 +91,18 @@ class OperationUi {
 			$h .= '<div>'.self::p('comment')->label.'</div>';
 			$h .= '<div>'.s("Montant TTC").\util\FormUi::info(s("Facultatif, ne sera pas enregistré")).'</div>';
 			$h .= '<div>'.self::p('amount')->label.' '.\util\FormUi::asterisk().'</div>';
+
+			$h .= '<div class="operation-asset" data-is-asset="1">';
+				$h .= '<h4>'.s("Immobilisation").'</h4>';
+			$h .= '</div>';
+			$h .= '<div class="operation-asset" data-is-asset="1">';
+				$h .= \asset\AssetUi::p('type')->label.' '.\util\FormUi::asterisk();
+			$h .= '</div>';
+			$h .= '<div class="operation-asset" data-is-asset="1">'.\asset\AssetUi::p('acquisitionDate')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="operation-asset" data-is-asset="1">'.\asset\AssetUi::p('startDate')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="operation-asset" data-is-asset="1">'.\asset\AssetUi::p('value')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="operation-asset" data-is-asset="1">'.\asset\AssetUi::p('duration')->label.' '.\util\FormUi::asterisk().'</div>';
+
 			$h .= '<div>'.self::p('type')->label.' '.\util\FormUi::asterisk().'</div>';
 			$h .= '<div>'.self::p('vatRate')->label.' '.\util\FormUi::asterisk().'</div>';
 			$h .= '<div>'.self::p('vatValue')->label.' '.\util\FormUi::asterisk().'</div>';
@@ -118,12 +135,14 @@ class OperationUi {
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
 		$isFromCashflow = (isset($defaultValues['cashflow']) and $defaultValues['cashflow']->exists() === TRUE);
 
-		$h = '<div class="create-operation util-block" data-index="'.$index.'">';
+		$h = '<div class="create-operation" data-index="'.$index.'">';
 			$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
-			$h .= $form->date('date'.$suffix, $defaultValues['date'] ?? '', [
-					'min' => $eFinancialYear['startDate'],
-					'max' => $eFinancialYear['endDate'],
-				]);
+			$h .= '<div data-wrapper="date'.$suffix.'">';
+				$h .= $form->date('date'.$suffix, $defaultValues['date'] ?? '', [
+						'min' => $eFinancialYear['startDate'],
+						'max' => $eFinancialYear['endDate'],
+					]);
+			$h .='</div>';
 
 			$h .= '<div data-wrapper="document'.$suffix.'">';
 				$h .=  $form->dynamicField($eOperation, 'document'.$suffix);
@@ -131,7 +150,7 @@ class OperationUi {
 
 			$h .= '<div data-wrapper="thirdParty'.$suffix.'">';
 				$h .= $form->dynamicField($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
-					$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"]';
+					$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"][data-index="'.$index.'"]';
 					$d->attributes['data-index'] = $index;
 					if(in_array('thirdParty', $disabled) === TRUE) {
 						$d->attributes['disabled'] = TRUE;
@@ -143,7 +162,7 @@ class OperationUi {
 
 			$h .= '<div data-wrapper="account'.$suffix.'">';
 				$h .= $form->dynamicField($eOperation, 'account'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
-					$d->autocompleteDispatch = '[data-account="'.$form->getId().'"]';
+					$d->autocompleteDispatch = '[data-account="'.$form->getId().'"][data-index="'.$index.'"]';
 					$d->attributes['data-wrapper'] = 'account'.$suffix;
 					$d->attributes['data-index'] = $index;
 					if(in_array('account', $disabled) === TRUE) {
@@ -156,7 +175,7 @@ class OperationUi {
 
 			$h .= '<div data-wrapper="accountLabel'.$suffix.'">';
 				$h .= $form->dynamicField($eOperation, 'accountLabel'.$suffix, function($d) use($form, $index, $suffix) {
-					$d->autocompleteDispatch = '[data-account-label="'.$form->getId().'"]';
+					$d->autocompleteDispatch = '[data-account-label="'.$form->getId().'"][data-index="'.$index.'"]';
 					$d->attributes['data-wrapper'] = 'accountLabel'.$suffix;
 					$d->attributes['data-index'] = $index;
 					$d->attributes['data-account-label'] = $form->getId();
@@ -196,6 +215,49 @@ class OperationUi {
 					)
 					.$form->addon('€ '));
 			$h .='</div>';
+
+			$h .= '<div class="operation-asset" data-is-asset="1" data-index="'.$index.'">';
+			$h .='</div>';
+
+			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[type]" data-is-asset="1" data-index="'.$index.'">';
+				$h .= $form->radio(
+					'asset'.$suffix.'[type]',
+					\asset\AssetElement::LINEAR,
+					\asset\AssetUi::p('type')->values[\asset\AssetElement::LINEAR],
+					''
+				)
+				.$form->radio(
+					'asset'.$suffix.'[type]',
+					\asset\AssetElement::WITHOUT,
+					\asset\AssetUi::p('type')->values[\asset\AssetElement::WITHOUT],
+					'',
+				);
+			$h .='</div>';
+
+			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[acquisitionDate]" data-is-asset="1" data-index="'.$index.'">';
+				$h .= $form->date('asset'.$suffix.'[acquisitionDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]);
+			$h .='</div>';
+
+			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[startDate]" data-is-asset="1" data-index="'.$index.'">';
+				$h .= $form->date('asset'.$suffix.'[startDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]);
+			$h .= '</div>';
+
+			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[value]" data-is-asset="1" data-index="'.$index.'">';
+				$h .= $form->inputGroup(
+					$form->number(
+						'asset'.$suffix.'[value]',
+						'',
+						[
+							'min' => 0, 'step' => 0.01,
+						]
+					)
+					.$form->addon('€ ')
+				);
+			$h .= '</div>';
+
+			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[duration]" data-is-asset="1" data-index="'.$index.'">';
+				$h .= $form->number('asset'.$suffix.'[duration]', '');
+			$h .= '</div>';
 
 			$h .= '<div data-wrapper="type'.$suffix.'">';
 					$h .= $form->radio(
@@ -272,11 +334,9 @@ class OperationUi {
 
 	}
 
-	private static function getCreateValidate(string $addButton, string $saveButton): string {
+	private static function getCreateValidate(): string {
 
-		$h = '<div class="create-operation-validation util-block">';
-			$h .= $addButton;
-			$h .= $saveButton;
+		$h = '<div class="create-operation-validation">';
 		$h .= '</div>';
 
 		return $h;
@@ -289,69 +349,25 @@ class OperationUi {
 		int $index,
 		\util\FormUi $form,
 		array $defaultValues,
-		string $addButton,
-		string $saveButton,
 	): string {
 
 		$suffix = '['.$index.']';
+		$isFromCashflow = ($defaultValues['cashflow']->exists() === TRUE);
 
 		$h = '<div id="create-operation-list" class="create-operations-container" data-columns="1">';
 
-			$h .= self::getCreateHeader(!($defaultValues['cashflow'] ?? NULL));
+			$h .= self::getCreateHeader($isFromCashflow);
 			$h .= self::getFieldsCreateGrid($form, $eOperation, $eFinancialYear, $suffix, $defaultValues, []);
-			$h .= self::getCreateValidate($addButton, $saveButton);
+
+			if($isFromCashflow === TRUE) {
+				$h .= self::getCreateValidate();
+			}
 
 		$h .= '</div>';
 
 		return $h;
 
 	}
-
-/*
-			$h .= '<div data-asset="'.$form->getId().'" data-index="'.$index.'" class="util-block bg-white hide">';
-				$h .= '<h4>'.s("Immobilisation").'</h4>';
-					$h .= $form->group(
-						\asset\AssetUi::p('type')->label.' '.\util\FormUi::asterisk(),
-						$form->radio(
-							'asset'.$suffix.'[type]',
-							\asset\AssetElement::LINEAR,
-							\asset\AssetUi::p('type')->values[\asset\AssetElement::LINEAR],
-							''
-						)
-						.$form->radio(
-							'asset'.$suffix.'[type]',
-							\asset\AssetElement::WITHOUT,
-							\asset\AssetUi::p('type')->values[\asset\AssetElement::WITHOUT],
-							'',
-						)
-					);
-					$h .= $form->group(
-						\asset\AssetUi::p('acquisitionDate')->label.' '.\util\FormUi::asterisk(),
-						$form->date('asset'.$suffix.'[acquisitionDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
-					);
-					$h .= $form->group(
-						\asset\AssetUi::p('startDate')->label.' '.\util\FormUi::asterisk(),
-						$form->date('asset'.$suffix.'[startDate]', '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
-					);
-					$h .= $form->group(
-						\asset\AssetUi::p('value')->label.' '.\util\FormUi::asterisk(),
-							$form->inputGroup(
-								$form->number(
-									'asset'.$suffix.'[value]',
-									'',
-									[
-										'min' => 0, 'step' => 0.01,
-									]
-								)
-								.$form->addon('€ ')
-							)
-					);
-					$h .= $form->group(
-						\asset\AssetUi::p('duration')->label.' '.\util\FormUi::asterisk(),
-						$form->number('asset'.$suffix.'[duration]', '')
-					);
-			$h .= '</div>';
-*/
 
 	public static function p(string $property): \PropertyDescriber {
 
