@@ -28,15 +28,12 @@ new Page(function($data) {
 	$query = POST('query');
 	$thirdParty = POST('thirdParty', '?int');
 	$classPrefix = REQUEST('classPrefix');
+	$accountsAlreadyUsed = POST('accountAlready', 'array', []);
 
 	$data->search = new Search(['classPrefix' => $classPrefix]);
 	$data->cAccount = \accounting\AccountLib::getAll(query: $query, search: $data->search);
 
-	if(post_exists('thirdParty') === TRUE) {
-
-		$data->cAccount = \accounting\AccountLib::orderAccountsWithThirdParty($thirdParty, $data->cAccount);
-
-	}
+	$data->cAccount = \accounting\AccountLib::orderAccounts($data->cAccount, $thirdParty, $accountsAlreadyUsed);
 
 	throw new \ViewAction($data);
 

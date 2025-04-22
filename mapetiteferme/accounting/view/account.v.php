@@ -14,9 +14,37 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 
 new JsonView('query', function($data, AjaxTemplate $t) {
 
-	$results = $data->cAccount->makeArray(function($eAccount) use ($data) {
-		return \accounting\AccountUi::getAutocomplete($data->eCompany['id'], $eAccount, $data->search);
-	});
+	$results = [];
+	$found = FALSE;
+	$others = FALSE;
+
+	foreach($data->cAccount as $eAccount) {
+
+		if($found === FALSE and $eAccount['thirdParty'] === TRUE and $others === FALSE) {
+
+			$results[] = [
+				'type' => 'title',
+				'itemHtml' => '<div>'.s("Classes de compte trouvées automatiquement").'</div>',
+				'itemText' => s("Classes de compte trouvées automatiquement"),
+			];
+
+			$found = TRUE;
+
+		} else if($found === TRUE and $eAccount['thirdParty'] === FALSE and $others === FALSE) {
+
+			$results[] = [
+				'type' => 'title',
+				'itemHtml' => '<div>'.s("Toutes les autres classes de compte").'</div>',
+				'itemText' => s("Toutes les autres classes de compte"),
+			];
+
+			$others = TRUE;
+
+		}
+
+		$results[] = \accounting\AccountUi::getAutocomplete($data->eCompany['id'], $eAccount);
+
+	}
 
 	$t->push('results', $results);
 

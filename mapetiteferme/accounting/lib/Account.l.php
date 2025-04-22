@@ -116,7 +116,11 @@ class AccountLib extends AccountCrud {
 			->getCollection(NULL, NULL, 'id');
 	}
 
-	public static function orderAccountsWithThirdParty(int $thirdParty, \Collection $cAccount): \Collection {
+	public static function orderAccounts(\Collection $cAccount, ?int $thirdParty, array $accountsAlreadyUsed): \Collection {
+
+		if($thirdParty === NULL and count($accountsAlreadyUsed) === 0) {
+			return $cAccount;
+		}
 
 		$eThirdParty = \journal\ThirdPartyLib::getById($thirdParty);
 
@@ -127,28 +131,37 @@ class AccountLib extends AccountCrud {
 
 		// Comptes liés au tiers en priorité :
 		// - triés par nombre d'usages décroissants
-		// - en mettant classes 4 (comptes de tiers : TVA) et classe 5 (comptes financiers)
+		// - en mettant classes 4 (comptes de tiers : TVA) et classe 5 (comptes financiers) et classes déjà utilisées
 		$cAccountClassThird = new \Collection();
-		$cAccountClassBank = new \Collection();
+		$cAccountClassAfter = new \Collection();
 
 		foreach($cOperationThirdParty as $eOperation) {
 
 			if($cAccount->offsetExists($eOperation['account']['id']) === TRUE) {
 
 				$eAccount = $cAccount->offsetGet($eOperation['account']['id']);
+				$eAccount['thirdParty'] = TRUE;
 
-				switch((int)mb_substr($eAccount['class'], 0, 1)) {
+				if(in_array($eAccount['id'], $accountsAlreadyUsed) === TRUE) {
 
-					case \Setting::get('accounting\thirdAccountGeneralClass'):
-						$cAccountClassThird->append($eAccount);
-						break;
+						$cAccountClassAfter->append($eAccount);
 
-					case \Setting::get('accounting\bankAccountGeneralClass'):
-						$cAccountClassBank->append($eAccount);
-						break;
+				} else {
 
-					default:
-						$cAccountByThirdParty->append($cAccount->offsetGet($eOperation['account']['id']));
+					switch((int)mb_substr($eAccount['class'], 0, 1)) {
+
+						case \Setting::get('accounting\thirdAccountGeneralClass'):
+							$cAccountClassThird->append($eAccount);
+							break;
+
+						case \Setting::get('accounting\bankAccountGeneralClass'):
+							$cAccountClassAfter->append($eAccount);
+							break;
+
+						default:
+							$cAccountByThirdParty->append($cAccount->offsetGet($eOperation['account']['id']));
+					}
+
 				}
 
 			}
@@ -156,11 +169,12 @@ class AccountLib extends AccountCrud {
 		}
 
 		$cAccountByThirdParty->mergeCollection($cAccountClassThird);
-		$cAccountByThirdParty->mergeCollection($cAccountClassBank);
+		$cAccountByThirdParty->mergeCollection($cAccountClassAfter);
 
 		// On empile tous les autres comptes
 		foreach($cAccount as $eAccount) {
 			if($cOperationThirdParty->offsetExists($eAccount['id']) === FALSE) {
+				$eAccount['thirdParty'] = FALSE;
 				$cAccountOthers->append($eAccount);
 			}
 		}
