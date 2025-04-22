@@ -136,7 +136,12 @@ class OperationUi {
 		$isFromCashflow = (isset($defaultValues['cashflow']) and $defaultValues['cashflow']->exists() === TRUE);
 
 		$h = '<div class="create-operation" data-index="'.$index.'">';
-			$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
+			$h .= '<div class="create-operation-title">';
+				$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
+				$h .= '<div class="create-operation-delete hide" data-index="'.$index.'">';
+					$h .= '<a onclick="Operation.deleteOperation(this)" class="btn btn-outline-primary">'.\Asset::icon('trash').'</a>';
+				$h .= '</div>';
+			$h .= '</div>';
 			$h .= '<div data-wrapper="date'.$suffix.'">';
 				$h .= $form->date('date'.$suffix, $defaultValues['date'] ?? '', [
 						'min' => $eFinancialYear['startDate'],

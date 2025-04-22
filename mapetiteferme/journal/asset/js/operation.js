@@ -156,9 +156,11 @@ class Operation {
 
     static showOrHideDeleteOperation() {
 
-        const operations = qsa('#create-operation-list .create-operation').length;
+        const operations = qsa('#create-operation-list .create-operation:not(.create-operation-headers)').length;
 
-        qsa('#create-operation-list .create-operation-delete', node => (operations > 1 && Number(node.getAttribute('data-index')) === operations - 1) ? node.classList.remove('hide') : node.classList.add('hide'));
+        qsa('.create-operation-delete', node => (operations > 1 && Number(node.getAttribute('data-index')) === operations - 1) ? node.classList.remove('hide') : node.classList.add('hide'));
+
+        qs('.create-operations-container').setAttribute('data-columns', operations);
 
         Operation.updateSubmitText();
 

@@ -97,3 +97,8 @@
     display: flex;
     justify-content: space-between;
 }
+.create-operation-title {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
