@@ -146,6 +146,8 @@ class OperationUi {
 				$h .= $form->date('date'.$suffix, $defaultValues['date'] ?? '', [
 						'min' => $eFinancialYear['startDate'],
 						'max' => $eFinancialYear['endDate'],
+						'data-date' => $form->getId(),
+						'data-index' => $index,
 					]);
 			$h .='</div>';
 

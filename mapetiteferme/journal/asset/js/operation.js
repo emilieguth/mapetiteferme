@@ -52,6 +52,10 @@ document.delegateEventListener('mouseout', '[data-highlight]', function(e) {
     Operation.unhighlight(highlight);
 });
 
+document.delegateEventListener('change', '[data-date="journal-operation-create"]', function(e) {
+    Operation.copyDate(e);
+});
+
 document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"]', function(e) {
 
     const index = this.dataset.index;
@@ -279,6 +283,21 @@ class Operation {
 
         const text = needsConfirm === 1 ? element.dataset.confirmTextSingular : element.dataset.confirmTextPlural;
         return confirm(text);
+
+    }
+
+    static copyDate(e) {
+
+        if(e.delegateTarget.value === null) {
+            return;
+        }
+
+        const index = e.delegateTarget.getAttribute('data-index');
+        const paymentDateElement = e.delegateTarget.firstParent('div.create-operation').qs('[name="paymentDate[' + index + ']"]');
+
+        if(!paymentDateElement.value) {
+            paymentDateElement.setAttribute('value', e.delegateTarget.value);
+        }
 
     }
 }
