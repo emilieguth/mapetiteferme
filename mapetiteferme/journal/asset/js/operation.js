@@ -1,3 +1,11 @@
+document.delegateEventListener('autocompleteBeforeQuery', '[data-third-party="bank-cashflow-allocate"]', function(e) {
+    if(e.detail.input.firstParent('form').qs('[name="id"]') === null) {
+        return;
+    }
+    const cashflowId = e.detail.input.firstParent('form').qs('[name="id"]').value;
+    e.detail.body.append('cashflowId', cashflowId);
+});
+
 document.delegateEventListener('autocompleteBeforeQuery', '[data-account="journal-operation-create"], [data-account="bank-cashflow-allocate"]', function(e) {
     if(e.detail.input.firstParent('div.create-operation').qs('[name^="thirdParty"]') === null) {
         return;

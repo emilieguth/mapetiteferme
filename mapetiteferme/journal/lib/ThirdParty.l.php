@@ -28,5 +28,23 @@ class ThirdPartyLib extends ThirdPartyCrud {
 
 	}
 
+	public static function filterByCashflow(\Collection $cThirdParty, \bank\Cashflow $eCashflow): \Collection {
+
+		$memoItems = explode(' ', $eCashflow['memo']);
+
+		foreach($cThirdParty as &$eThirdParty) {
+			$eThirdParty['weight'] = 0;
+
+			foreach($memoItems as $memoItem) {
+				if(mb_strpos($eThirdParty['name'], $memoItem) !== FALSE) {
+					$eThirdParty['weight'] ++;
+				}
+			}
+		}
+
+		return $cThirdParty->sort(['weight' => SORT_DESC, 'name' => SORT_ASC]);
+
+	}
+
 }
 ?>

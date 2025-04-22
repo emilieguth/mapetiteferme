@@ -21,7 +21,38 @@ new AdaptativeView('create', function($data, PanelTemplate $t) {
 
 new JsonView('query', function($data, AjaxTemplate $t) {
 
-	$results = $data->cThirdParty->makeArray(function($eThirdParty) use ($data) { return \journal\ThirdPartyUi::getAutocomplete($data->eCompany['id'], $eThirdParty); });
+	$results = [];
+	$found = FALSE;
+	$others = FALSE;
+
+	foreach($data->cThirdParty as $eThirdParty) {
+
+		if($found === FALSE and ($eThirdParty['weight'] ?? 0) > 0 and $others === FALSE) {
+
+			$results[] = [
+				'type' => 'title',
+				'itemHtml' => '<div>'.s("Tiers trouvés automatiquement").'</div>',
+				'itemText' => s("Tiers trouvés automatiquement"),
+			];
+
+			$found = TRUE;
+
+		} else if($found === TRUE and ($eThirdParty['weight'] ?? 0) === 0 and $others === FALSE) {
+
+			$results[] = [
+				'type' => 'title',
+				'itemHtml' => '<div>'.s("Tous les autres tiers").'</div>',
+				'itemText' => s("Tous les autres tiers"),
+			];
+
+			$others = TRUE;
+
+		}
+
+		$results[] = \journal\ThirdPartyUi::getAutocomplete($data->eCompany['id'], $eThirdParty);
+
+	}
+
 	$results[] = \journal\ThirdPartyUi::getAutocompleteCreate($data->eCompany);
 
 	$t->push('results', $results);

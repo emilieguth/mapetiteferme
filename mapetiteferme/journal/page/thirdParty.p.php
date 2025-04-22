@@ -44,9 +44,16 @@ new Page(function($data) {
 
 	$data->search = new Search([
 		'name' => POST('query'),
-	], GET('sort'));
+	], GET('sort', default: 'name'));
 
-	$data->cThirdParty = \journal\ThirdPartyLib::getAll($data->search);
+	$cThirdParty = \journal\ThirdPartyLib::getAll($data->search);
+
+	if(post_exists('cashflowId') === TRUE) {
+		$eCashflow = \bank\CashflowLib::getById(POST('cashflowId', 'int'));
+		$cThirdParty = \journal\ThirdPartyLib::filterByCashflow($cThirdParty, $eCashflow);
+	}
+
+	$data->cThirdParty = $cThirdParty;
 
 	throw new \ViewAction($data);
 
