@@ -143,7 +143,7 @@ class CompanyLib extends CompanyCrud {
 	public static function createSpecificDatabaseAndTables(Company $eCompany): void {
 
 		// Create database
-		(new \ModuleAdministration('company\Company'))->createDatabase(CompanyLib::getDatabaseNameFromCompany($eCompany));
+		new \ModuleAdministration('company\Company')->createDatabase(CompanyLib::getDatabaseNameFromCompany($eCompany));
 
 		// Connect database
 		self::connectSpecificDatabaseAndServer($eCompany);

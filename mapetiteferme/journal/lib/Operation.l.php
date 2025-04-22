@@ -159,7 +159,6 @@ class OperationLib extends OperationCrud {
 
 		$accounts = var_filter($input['account'] ?? [], 'array');
 		$vatValues = var_filter($input['vatValue'] ?? [], 'array');
-		$document = cast($input['cashflow']['document'] ?? NULL, 'string');
 		$isFromCashflow = ($eOperationDefault->offsetExists('cashflow') === TRUE);
 
 		$fw = new \FailWatch();
@@ -253,6 +252,15 @@ class OperationLib extends OperationCrud {
 			}
 		}
 
+		// Si toutes les écritures sont sur le même document, on utilise aussi celui-ci pour l'opération bancaire;
+		$documents = $cOperation->getColumn('document');
+		$uniqueDocuments = array_unique($documents);
+		if(count($uniqueDocuments) === 1 and count($documents) === $cOperation->count()) {
+			$document = first($uniqueDocuments);
+		} else {
+			$document = NULL;
+		}
+
 		// Ajout de la transaction sur la classe de compte bancaire 512
 		if($isFromCashflow === TRUE) {
 
@@ -279,7 +287,6 @@ class OperationLib extends OperationCrud {
 			'account' => $eAccount['vatAccount']['id'] ?? NULL,
 			'accountLabel' => \accounting\ClassLib::pad($eAccount['vatAccount']['class']),
 			'document' => $eOperationLinked['document'],
-			'documentDate' => $eOperationLinked['document'] === NULL ? NULL : new \Sql('SPECIAL(NOW)'),
 			'thirdParty' => $eOperationLinked['thirdParty']['id'] ?? NULL,
 			'type' => $eOperationLinked['type'],
 			'paymentDate' => $eOperationLinked['paymentDate'],
@@ -304,6 +311,9 @@ class OperationLib extends OperationCrud {
 			new \Properties('create'),
 		);
 		$eOperationVat['operation'] = $eOperationLinked;
+		if($eOperationLinked['document'] !== NULL) {
+			$eOperationVat['documentDate'] = new \Sql('NOW()');
+		}
 
 		$fw->validate();
 
@@ -447,7 +457,6 @@ class OperationLib extends OperationCrud {
 				\bank\Cashflow::DEBIT => Operation::CREDIT,
 			},
 			'amount' => abs($eCashflow['amount']),
-			'documentDate' => $document !== NULL ? new \Sql('NOW()') : NULL,
 			'paymentDate' => $eCashflow['date'],
 			'paymentMode'=> $eOperation['paymentMode'],
 		];
@@ -460,6 +469,10 @@ class OperationLib extends OperationCrud {
 			'cashflow', 'date', 'account', 'accountLabel', 'description', 'document', 'thirdParty', 'type', 'amount',
 			'operation', 'paymentDate', 'paymentMode',
 		], $values, new \Properties('create'));
+
+		if($document !== NULL) {
+			$eOperationBank['documentDate'] = new \Sql('NOW()');
+		}
 
 		$fw->validate();
 
