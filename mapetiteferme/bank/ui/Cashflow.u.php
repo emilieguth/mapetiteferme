@@ -294,6 +294,7 @@ class CashflowUi {
 			'paymentDate' => $eCashflow['date'],
 			'paymentMode' => self::extractPaymentTypeFromCashflowDescription($eCashflow['memo']),
 			'cashflow' => $eCashflow,
+			'amountIncludingVAT' => abs($eCashflow['amount']),
 		];
 
 		$dialogOpen = $form->openAjax(

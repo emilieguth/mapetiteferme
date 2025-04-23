@@ -2,25 +2,28 @@ class Cashflow {
 
     static recalculateAmounts() {
 
-        const amounts = qsa('#create-operation-list [data-field="amount"]');
+        const operationNumber = qs('#add-operation').getAttribute('post-index');
 
-        return Math.round(Array.from(amounts).reduce((accumulator, amount) => {
+        let sum = 0;
+        for(let index = 0; index < operationNumber; index++) {
 
-            const index = amount.getAttribute('data-index');
+            const targetAmount = qs('[name="amount[' + index + ']"');
+            const amount = CalculationField.getValue(targetAmount);
 
-            const amountValue = (isNaN(amount.valueAsNumber) ? 0 : amount.valueAsNumber);
-
-            const vatValue = qs('#create-operation-list [name="vatValue[' + index + ']"]').valueAsNumber;
+            const targetVatValue = qs('[name="vatValue[' + index + ']"');
+            const vatValue = CalculationField.getValue(targetVatValue);
 
             const type = Array.from(qsa('#create-operation-list [name="type[' + index + ']"]')).find((checkboxType) => checkboxType.checked === true);
 
-            const amountToAdd = Math.abs(amountValue);
+            const amountToAdd = Math.abs(amount);
             const vatAmountToAdd = Math.abs((isNaN(vatValue) ? 0 : vatValue));
 
             const totalAmountToAdd = amountToAdd + vatAmountToAdd;
 
-            return accumulator + (type.value === 'credit' ? totalAmountToAdd : totalAmountToAdd * -1)
-        }, 0) * 100) / 100;
+            sum += (type.value === 'credit' ? totalAmountToAdd : totalAmountToAdd * -1);
+        }
+
+        return (sum * 100) / 100;
 
     }
 
@@ -31,7 +34,8 @@ class Cashflow {
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 
-        qs('#create-operation-list [name="amount[' + index + ']"]').setAttribute('value', Math.abs(totalAmount - sum).toFixed(2));
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        CalculationField.updateValue(targetAmount, Math.abs(totalAmount - sum).toFixed(2));
 
         Operation.preFillNewOperation(index);
 

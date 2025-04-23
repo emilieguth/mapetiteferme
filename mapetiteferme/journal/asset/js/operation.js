@@ -1,3 +1,7 @@
+document.delegateEventListener('focus', '.create-operation [name^="amount"], .create-operation [name^="vat"]', function() {
+    this.select();
+});
+
 document.delegateEventListener('autocompleteBeforeQuery', '[data-third-party="bank-cashflow-allocate"]', function(e) {
     if(e.detail.input.firstParent('form').qs('[name="id"]') === null) {
         return;
@@ -69,7 +73,7 @@ document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [da
         Cashflow.fillShowHideAmountWarning();
     }
 
-    Operation.checkVatConsistency(index);
+    //Operation.checkVatConsistency(index);
 });
 document.delegateEventListener('change', '[data-vat-value="journal-operation-create"], [data-vat-value="bank-cashflow-allocate"]', function() {
 
@@ -79,7 +83,7 @@ document.delegateEventListener('change', '[data-vat-value="journal-operation-cre
         Cashflow.fillShowHideAmountWarning();
     }
 
-    Operation.checkVatConsistency(index);
+    //Operation.checkVatConsistency(index);
 });
 
 document.delegateEventListener('change', '[data-journal-type="journal-operation-create"]', function (e) {
@@ -203,16 +207,17 @@ class Operation {
         const index = accountDetail.input.getAttribute('data-index');
 
         // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
-        const amountElement = accountDetail.input.firstParent('div.create-operation').qs('[name^="amount["]');
-        const amount = amountElement.getAttribute('value');
-        const vatRate = parseFloat(accountDetail.input.firstParent('div.create-operation').qs('[name^="vatRate["]').getAttribute('value'));
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        const amount = CalculationField.getValue(targetAmount);
+
+        const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"').valueAsNumber || 0);
         if(vatRate === 0.0) {
             const newAmount = (amount / (1 + accountDetail.vatRate / 100)).toFixed(2);
-            amountElement.setAttribute('value', Math.abs(newAmount));
+            CalculationField.updateValue(targetAmount, Math.abs(newAmount));
         }
 
         // On remplit ensuite le taux de TVA
-        accountDetail.input.firstParent('.create-operation').qs('[data-field="vatRate"]').setAttribute('value', accountDetail.vatRate);
+        accountDetail.input.firstParent('.create-operation').qs('[data-field="vatRate"]').value = accountDetail.vatRate;
 
         // On vérifie les calculs de TVA
         this.updateVatValue(index);
@@ -223,9 +228,15 @@ class Operation {
     // si montant TTC ET taux de TVA remplis ET montant HT + montant TVA non remplis
     static updateAmountValue(index) {
 
-        const amount = parseFloat(qs('[name="amount[' + index + ']"').valueAsNumber || 0);
-        const vatValue = parseFloat(qs('[name="vatValue[' + index + ']"]').valueAsNumber || 0);
-        const amountIncludingVAT = parseFloat(qs('[name="amountIncludingVAT[' + index + ']"]').valueAsNumber || 0);
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        const amount = CalculationField.getValue(targetAmount);
+
+        const targetVatValue = qs('[name="vatValue[' + index + ']"');
+        const vatValue = CalculationField.getValue(targetVatValue);
+
+        const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
+        const amountIncludingVAT = CalculationField.getValue(targetAmountIncludingVAT);
+
         const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"]').valueAsNumber || 0);
 
         if(
@@ -239,27 +250,36 @@ class Operation {
 
         const amountWithoutVAT = Math.round(100 * 100 * amountIncludingVAT / (100 + vatRate)) / 100;
         const amountVAT = amountIncludingVAT - amountWithoutVAT
-        qs('[name="amount[' + index + ']"]').setAttribute('value', amountWithoutVAT);
-        qs('[name="vatValue[' + index + ']"]').setAttribute('value', amountVAT);
+
+        CalculationField.updateValue(targetAmount, amountWithoutVAT);
+        CalculationField.updateValue(targetVatValue, amountVAT);
 
 
     }
 
     static updateVatValue(index) {
 
-        const amount = qs('[name="amount[' + index + ']"').valueAsNumber;
-        const vatRate = qs('[name="vatRate[' + index + ']"').valueAsNumber;
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        const amount = CalculationField.getValue(targetAmount);
+
+        const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"').valueAsNumber || 0);
 
         const newVatAmount = Math.round(amount * vatRate) / 100;
-        qs('[name="vatValue[' + index + ']"').setAttribute('value', newVatAmount);
+        const target = qs('[name="vatValue[' + index + ']"');
+
+        CalculationField.updateValue(target, newVatAmount);
 
     }
 
     static checkVatConsistency(index) {
 
-        const amount = qs('[name="amount[' + index + ']"]').valueAsNumber;
-        const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
-        const vatValue = Math.round(qs('[name="vatValue[' + index + ']"]').valueAsNumber * 100) / 100;
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        const amount = CalculationField.getValue(targetAmount);
+        const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"').valueAsNumber || 0);
+
+        const targetVatValue = qs('[name="vatValue[' + index + ']"');
+        const vatValue = CalculationField.getValue(targetVatValue);
+
         const expectedVatValue = Math.round(amount * vatRate) / 100;
 
         if(vatValue !== expectedVatValue) {

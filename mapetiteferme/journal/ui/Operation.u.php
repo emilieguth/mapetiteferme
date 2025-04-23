@@ -199,7 +199,7 @@ class OperationUi {
 			$h .='</div>';
 
 			$h .= '<div data-wrapper="amountIncludingVAT'.$suffix.'">';
-				$h .= $form->inputGroup($form->number(
+				$h .= $form->inputGroup($form->calculation(
 						'amountIncludingVAT'.$suffix,
 						$defaultValues['amountIncludingVAT'] ?? '',
 						[
@@ -211,16 +211,13 @@ class OperationUi {
 			$h .='</div>';
 
 			$h .= '<div data-wrapper="amount'.$suffix.'">';
-				$h .= $form->inputGroup(
-					$form->number(
-						'amount'.$suffix,
-						$defaultValues['amount'] ?? '',
-						[
-							'min' => 0, 'step' => 0.01, 'data-field' => 'amount',
-							'data-index' => $index,
-						]
-					)
-					.$form->addon('€ '));
+				$h .= $form->dynamicField($eOperation, 'amount'.$suffix, function($d) use($defaultValues, $index) {
+					$d->default = $defaultValues['amount'] ?? '';
+					$d->attributes['min'] = 0;
+					$d->attributes['step'] = 0.01;
+					$d->attributes['data-field'] = 'amount';
+					$d->attributes['data-index'] = $index;
+				});
 			$h .='</div>';
 
 			$h .= '<div class="operation-asset" data-is-asset="1" data-index="'.$index.'">';
@@ -303,12 +300,13 @@ class OperationUi {
 			$h .= '</div>';
 
 			$h .= '<div data-wrapper="vatValue'.$suffix.'">';
-				$h .= $form->inputGroup(
-					$form->number(
-						'vatValue'.$suffix,
-						$vatAmountDefault,
-						['data-field' => 'vatValue', 'data-vat-value' => $form->getId(), 'min' => 0.0, 'step' => 0.01, 'data-index' => $index],
-					).$form->addon('€'));
+				$h .= $form->dynamicField($eOperation, 'vatValue'.$suffix, function($d) use($vatAmountDefault, $index) {
+					$d->default = $vatAmountDefault ?? '';
+					$d->attributes['min'] = 0;
+					$d->attributes['step'] = 0.01;
+					$d->attributes['data-field'] = 'vatValue';
+					$d->attributes['data-index'] = $index;
+				});
 			$h .= '</div>';
 
 			if($isFromCashflow === FALSE) {
@@ -428,7 +426,15 @@ class OperationUi {
 				new \accounting\AccountUi()->queryLabel($d, GET('company', '?int'), query: GET('query'));
 				break;
 
+			case 'vatValue' :
+				$d->field = 'calculation';
+				$d->append = function(\util\FormUi $form, Operation $e) {
+					return $form->addon(s("€"));
+				};
+				break;
+
 			case 'amount' :
+				$d->field = 'calculation';
 				$d->append = function(\util\FormUi $form, Operation $e) {
 					return $form->addon(s("€"));
 				};

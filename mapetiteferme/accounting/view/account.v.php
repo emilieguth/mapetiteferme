@@ -20,7 +20,7 @@ new JsonView('query', function($data, AjaxTemplate $t) {
 
 	foreach($data->cAccount as $eAccount) {
 
-		if($found === FALSE and $eAccount['thirdParty'] === TRUE and $others === FALSE) {
+		if($found === FALSE and ($eAccount['thirdParty'] ?? FALSE) === TRUE and $others === FALSE) {
 
 			$results[] = [
 				'type' => 'title',
@@ -30,7 +30,7 @@ new JsonView('query', function($data, AjaxTemplate $t) {
 
 			$found = TRUE;
 
-		} else if($found === TRUE and $eAccount['thirdParty'] === FALSE and $others === FALSE) {
+		} else if($found === TRUE and ($eAccount['thirdParty'] ?? FALSE) === FALSE and $others === FALSE) {
 
 			$results[] = [
 				'type' => 'title',
