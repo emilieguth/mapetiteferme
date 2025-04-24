@@ -15,8 +15,8 @@ class Cashflow {
 
             const type = Array.from(qsa('#create-operation-list [name="type[' + index + ']"]')).find((checkboxType) => checkboxType.checked === true);
 
-            const amountToAdd = Math.abs(amount);
-            const vatAmountToAdd = Math.abs((isNaN(vatValue) ? 0 : vatValue));
+            const amountToAdd = Math.abs(isNaN(amount) ? 0 : amount);
+            const vatAmountToAdd = Math.abs(isNaN(vatValue) ? 0 : vatValue);
 
             const totalAmountToAdd = amountToAdd + vatAmountToAdd;
 
@@ -27,17 +27,31 @@ class Cashflow {
 
     }
 
+    // Remplit les valeurs de l'écriture en fonction des autres écritures créées et du montant total attendu
+    static fillIndexAccordingly(index) {
+
+        const totalAmountIncludingVat = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
+
+        const sum = Cashflow.recalculateAmounts();
+
+        const missingValue = Math.round((totalAmountIncludingVat - sum) * 100) / 100;
+
+        if(missingValue !== 0.0) {
+
+            const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
+            CalculationField.setValue(targetAmountIncludingVAT, Math.abs(missingValue));
+
+        }
+    }
+
     static updateNewOperationLine(index) {
 
-        Operation.updateVatValue(index);
+        Operation.preFillNewOperation(index); // On copie ce qu'on peut copier
 
-        const sum = this.recalculateAmounts();
-        const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
+        Cashflow.fillIndexAccordingly(index); // On remplit les trous
+        Operation.updateAmountValue(index); // On complète les calculs
 
-        const targetAmount = qs('[name="amount[' + index + ']"');
-        CalculationField.updateValue(targetAmount, Math.abs(totalAmount - sum).toFixed(2));
-
-        Operation.preFillNewOperation(index);
+        Cashflow.fillShowHideAmountWarning(); // On vérifie les warnings à allumer
 
     }
 

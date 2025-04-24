@@ -64,7 +64,6 @@ new \bank\CashflowPage(
 
 	})
 	->post('doAllocate', function($data) {
-		//dd($_POST);
 		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'),
 			\bank\Cashflow::getSelection() +
 			[

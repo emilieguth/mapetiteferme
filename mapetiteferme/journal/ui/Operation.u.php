@@ -89,7 +89,7 @@ class OperationUi {
 			$h .= '<div>'.self::p('accountLabel')->label.' '.\util\FormUi::asterisk().'</div>';
 			$h .= '<div>'.self::p('description')->label.' '.\util\FormUi::asterisk().'</div>';
 			$h .= '<div>'.self::p('comment')->label.'</div>';
-			$h .= '<div>'.s("Montant TTC").\util\FormUi::info(s("Facultatif, ne sera pas enregistré")).'</div>';
+			$h .= '<div>'.s("Montant TTC").'</div>';
 			$h .= '<div>'.self::p('amount')->label.' '.\util\FormUi::asterisk().'</div>';
 
 			$h .= '<div class="operation-asset" data-is-asset="1">';
@@ -120,6 +120,17 @@ class OperationUi {
 
 	}
 
+	private static function getAmountButtonIcons(string $type, int $index): string {
+
+		$h = '<div class="merchant-write hide">'.\Asset::icon('pencil').'</div>';
+		$h .= '<div class="merchant-lock hide">'.\Asset::icon('lock-fill').'</div>';
+		$h .= '<div class="merchant-erase hide">';
+			$h .= '<a '.attr('onclick', "Operation.resetAmount('".$type."', ".$index.")").' title="'.s("Revenir à zéro").'">'.\Asset::icon('eraser-fill', ['style' => 'transform: scaleX(-1);']).'</a>';
+		$h .= '</div>';
+
+		return $h;
+	}
+
 	public static function getFieldsCreateGrid(
 		\util\FormUi $form,
 		Operation $eOperation,
@@ -135,7 +146,7 @@ class OperationUi {
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
 		$isFromCashflow = (isset($defaultValues['cashflow']) and $defaultValues['cashflow']->exists() === TRUE);
 
-		$h = '<div class="create-operation" data-index="'.$index.'">';
+		$h = '<div class="create-operation" data-index="'.$index.'" onrender="Operation.initAmountLock('.$index.')">';
 			$h .= '<div class="create-operation-title">';
 				$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
 				$h .= '<div class="create-operation-delete hide" data-index="'.$index.'">';
@@ -199,7 +210,8 @@ class OperationUi {
 			$h .='</div>';
 
 			$h .= '<div data-wrapper="amountIncludingVAT'.$suffix.'">';
-				$h .= $form->inputGroup($form->calculation(
+				$h .= $form->inputGroup($form->addon(self::getAmountButtonIcons('amountIncludingVAT', $index))
+					.$form->calculation(
 						'amountIncludingVAT'.$suffix,
 						$defaultValues['amountIncludingVAT'] ?? '',
 						[
@@ -217,6 +229,7 @@ class OperationUi {
 					$d->attributes['step'] = 0.01;
 					$d->attributes['data-field'] = 'amount';
 					$d->attributes['data-index'] = $index;
+					$d->prepend = OperationUi::getAmountButtonIcons('amount', $index);
 				});
 			$h .='</div>';
 
@@ -296,7 +309,14 @@ class OperationUi {
 			$eOperation['vatRate'.$suffix] = '';
 
 			$h .= '<div data-wrapper="vatRate'.$suffix.'">';
-				$h .= $form->inputGroup($form->number('vatRate'.$suffix,  $vatRateDefault, ['data-index' => $index, 'data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1]).$form->addon('% '));
+				$h .= $form->inputGroup(
+					$form->addon(self::getAmountButtonIcons('vatRate', $index))
+					.$form->number(
+						'vatRate'.$suffix,
+						$vatRateDefault,
+						['data-index' => $index, 'data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1],
+					)
+					.$form->addon('% '));
 			$h .= '</div>';
 
 			$h .= '<div data-wrapper="vatValue'.$suffix.'">';
@@ -306,6 +326,7 @@ class OperationUi {
 					$d->attributes['step'] = 0.01;
 					$d->attributes['data-field'] = 'vatValue';
 					$d->attributes['data-index'] = $index;
+					$d->prepend = OperationUi::getAmountButtonIcons('vatValue', $index);
 				});
 			$h .= '</div>';
 
