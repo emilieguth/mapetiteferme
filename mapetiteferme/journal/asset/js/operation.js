@@ -208,7 +208,7 @@ class Operation {
         const amount = CalculationField.getValue(targetAmount);
 
         const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"').valueAsNumber || 0);
-        if(vatRate === 0.0) {
+        if(vatRate === 0.0 && isNaN(amount) === false) {
             const newAmount = (amount / (1 + accountDetail.vatRate / 100)).toFixed(2);
             CalculationField.setValue(targetAmount, Math.abs(newAmount));
         }

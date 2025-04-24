@@ -149,8 +149,18 @@ class OperationUi {
 		$h = '<div class="create-operation" data-index="'.$index.'" onrender="Operation.initAmountLock('.$index.')">';
 			$h .= '<div class="create-operation-title">';
 				$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
-				$h .= '<div class="create-operation-delete hide" data-index="'.$index.'">';
-					$h .= '<a onclick="Operation.deleteOperation(this)" class="btn btn-outline-primary">'.\Asset::icon('trash').'</a>';
+
+					$h .= '<div class="create-operation-actions">';
+						if($isFromCashflow === TRUE) {
+
+							$h .= '<div class="create-operation-magic" data-index="'.$index.'">';
+								$h .= '<a onclick="Cashflow.recalculate('.$index.')" class="btn btn-outline-primary" title="'.s("Réinitialiser par rapport aux autres écritures").'">'.\Asset::icon('magic').'</a>';
+							$h .= '</div>';
+
+						}
+					$h .= '<div class="create-operation-delete hide" data-index="'.$index.'">';
+						$h .= '<a onclick="Operation.deleteOperation(this)" class="btn btn-outline-primary">'.\Asset::icon('trash').'</a>';
+					$h .= '</div>';
 				$h .= '</div>';
 			$h .= '</div>';
 			$h .= '<div data-wrapper="date'.$suffix.'">';

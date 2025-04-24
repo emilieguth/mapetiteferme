@@ -1,11 +1,15 @@
 class Cashflow {
 
-    static recalculateAmounts() {
+    static recalculateAmounts(excludeIndex) {
 
         const operationNumber = qs('#add-operation').getAttribute('post-index');
 
         let sum = 0;
         for(let index = 0; index < operationNumber; index++) {
+
+            if(excludeIndex === index) {
+                continue;
+            }
 
             const targetAmount = qs('[name="amount[' + index + ']"');
             const amount = CalculationField.getValue(targetAmount);
@@ -32,7 +36,7 @@ class Cashflow {
 
         const totalAmountIncludingVat = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 
-        const sum = Cashflow.recalculateAmounts();
+        const sum = Cashflow.recalculateAmounts(index);
 
         const missingValue = Math.round((totalAmountIncludingVat - sum) * 100) / 100;
 
@@ -84,6 +88,15 @@ class Cashflow {
 
         return true;
 
+    }
+
+    // Recalcule le montant TTC / HT en fonction de la TVA et des montants des autres écritures déjà remplies.
+    static recalculate(index) {
+
+        Cashflow.fillIndexAccordingly(index); // On remplit les trous
+        Operation.updateAmountValue(index); // On complète les calculs
+
+        Cashflow.fillShowHideAmountWarning(); // On vérifie les warnings à allumer
     }
 }
 
