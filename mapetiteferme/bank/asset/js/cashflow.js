@@ -55,23 +55,6 @@ class Cashflow {
         Cashflow.fillIndexAccordingly(index); // On remplit les trous
         Operation.updateAmountValue(index); // On complète les calculs
 
-        Cashflow.fillShowHideAmountWarning(); // On vérifie les warnings à allumer
-
-    }
-
-    static fillShowHideAmountWarning() {
-
-        const sum = this.recalculateAmounts();
-        const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
-
-        if(sum !== totalAmount) {
-            var difference = totalAmount - sum;
-            qs('#cashflow-allocate-difference-warning').classList.remove('hide');
-            qs('#cashflow-allocate-difference-value').innerHTML = Math.round(Math.abs(difference) * 100) / 100;
-        } else {
-            qs('#cashflow-allocate-difference-warning').classList.add('hide');
-        }
-
     }
 
     static copyDocument(target) {
@@ -96,7 +79,46 @@ class Cashflow {
         Cashflow.fillIndexAccordingly(index); // On remplit les trous
         Operation.updateAmountValue(index); // On complète les calculs
 
-        Cashflow.fillShowHideAmountWarning(); // On vérifie les warnings à allumer
+    }
+
+    static checkValidationValues() {
+
+        if(qs('form').getAttribute('id') !== 'bank-cashflow-allocate') {
+            return;
+        }
+
+        const sum = this.recalculateAmounts();
+        const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
+
+        qs('.create-operation-validate-title > [data-field="cashflowAmount"]').innerHTML = money(Math.abs(totalAmount));
+
+        const amountIncludingVAT = Array.from(qsa('[type="hidden"][name^="amountIncludingVAT["]', element => element.value))
+            .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
+        const amount = Array.from(qsa('[type="hidden"][name^="amount["]', element => element.value))
+            .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
+        const vatValue = Array.from(qsa('[type="hidden"][name^="vatValue["]', element => element.value))
+            .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
+        const assetValue = Array.from(qsa('[type="number"][name^="asset["]')).map(function(node) {
+            if(node.name.match(/asset\[\d+\]\[value\]/)) {
+                return node;
+            }
+        }).filter(asset => asset)
+            .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
+        qs('.create-operation-validate[data-field="amountIncludingVAT"]').innerHTML = '= ' + money(amountIncludingVAT);
+        qs('.create-operation-validate[data-field="amount"]').innerHTML = '= ' + money(amount);
+        qs('.create-operation-validate[data-field="vatValue"]').innerHTML = '= ' + money(vatValue);
+        qs('.create-operation-validate[data-field="assetValue"]').innerHTML = '= ' + money(assetValue);
+
+
+        if(sum !== totalAmount) {
+            var difference = totalAmount - sum;
+            qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('util-danger');
+            qs('#cashflow-allocate-difference-warning').classList.remove('hide');
+            qs('#cashflow-allocate-difference-value').innerHTML = money(Math.abs(difference));
+        } else {
+            qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.remove('util-danger');
+            qs('#cashflow-allocate-difference-warning').classList.add('hide');
+        }
     }
 }
 

@@ -26,7 +26,6 @@ class OperationUi {
 			[
 				'id' => 'journal-operation-create',
 				'third-party-create-index' => 0,
-				'onrender' => 'Operation.initAutocomplete();',
 				'class' => 'panel-dialog container',
 			],
 		);
@@ -82,15 +81,15 @@ class OperationUi {
 		$h = '<div class="create-operation create-operation-headers">';
 
 			$h .= '<h4>&nbsp;</h4>';
-			$h .= '<div>'.self::p('date')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div>'.self::p('document')->label.'</div>';
-			$h .= '<div>'.self::p('thirdParty')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div>'.self::p('account')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div>'.self::p('accountLabel')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div>'.self::p('description')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div>'.self::p('comment')->label.'</div>';
-			$h .= '<div>'.s("Montant TTC").'</div>';
-			$h .= '<div>'.self::p('amount')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('date')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('document')->label.'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('thirdParty')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('account')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('accountLabel')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('description')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('comment')->label.'</div>';
+			$h .= '<div class="create-operation-header">'.s("Montant TTC").'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('amount')->label.' '.\util\FormUi::asterisk().'</div>';
 
 			$h .= '<div class="operation-asset" data-is-asset="1">';
 				$h .= '<h4>'.s("Immobilisation").'</h4>';
@@ -103,14 +102,14 @@ class OperationUi {
 			$h .= '<div class="operation-asset" data-is-asset="1">'.\asset\AssetUi::p('value')->label.' '.\util\FormUi::asterisk().'</div>';
 			$h .= '<div class="operation-asset" data-is-asset="1">'.\asset\AssetUi::p('duration')->label.' '.\util\FormUi::asterisk().'</div>';
 
-			$h .= '<div>'.self::p('type')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div>'.self::p('vatRate')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div>'.self::p('vatValue')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('type')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('vatRate')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header">'.self::p('vatValue')->label.' '.\util\FormUi::asterisk().'</div>';
 
 			if($isFromCashflow === FALSE) {
 
-				$h .= '<div>'.self::p('paymentDate')->label.' '.\util\FormUi::asterisk().'</div>';
-				$h .= '<div>'.self::p('paymentMode')->label.' '.\util\FormUi::asterisk().'</div>';
+				$h .= '<div class="create-operation-header">'.self::p('paymentDate')->label.' '.\util\FormUi::asterisk().'</div>';
+				$h .= '<div class="create-operation-header">'.self::p('paymentMode')->label.' '.\util\FormUi::asterisk().'</div>';
 
 			}
 
@@ -372,7 +371,30 @@ class OperationUi {
 
 	private static function getCreateValidate(): string {
 
-		$h = '<div class="create-operation-validation">';
+		$h = '<div class="create-operation create-operation-validation">';
+
+			$h .= '<h4 class="create-operation-validate-title"><div>'.s("Montant total :").'</div><div data-field="cashflowAmount"></div></h4>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate" data-field="amountIncludingVAT"></div>';
+			$h .= '<div class="create-operation-validate" data-field="amount"></div>';
+
+			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"><h4></h4></div>';
+			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
+			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
+			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
+			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1" data-field="assetValue"></div>';
+			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
+
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate" data-field="vatValue"></div>';
+
 		$h .= '</div>';
 
 		return $h;

@@ -303,7 +303,7 @@ class CashflowUi {
 				'id' => 'bank-cashflow-allocate',
 				'third-party-create-index' => 0,
 				'autocomplete' => 'off',
-				'onrender' => 'Operation.initAutocomplete();',
+				'onrender' => 'Cashflow.checkValidationValues();',
 				'class' => 'panel-dialog container',
 			]
 		);
@@ -350,9 +350,9 @@ class CashflowUi {
 
 		$h .= \journal\OperationUi::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 
-		$h .= '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
-			$h .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}€.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
-		$h .= '</div>';
+		$amountWarning = '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
+			$amountWarning .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
+		$amountWarning .= '</div>';
 
 		$addButton = '<a id="add-operation" onclick="Cashflow.recalculateAmounts(); return TRUE;" data-ajax="'.\company\CompanyUi::urlBank($eCompany).'/cashflow:addAllocate" post-index="'.($index + 1).'" post-id="'.$eCashflow['id'].'" post-third-party="" post-amount="" class="btn btn-outline-secondary">';
 		$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
@@ -369,7 +369,7 @@ class CashflowUi {
 			dialogOpen: $dialogOpen,
 			dialogClose: $form->close(),
 			body: $h,
-			footer: '<div class="create-operation-buttons">'.$addButton.$saveButton.'</div>',
+			footer: $amountWarning.'<div class="create-operation-buttons">'.$addButton.$saveButton.'</div>',
 		);
 
 	}

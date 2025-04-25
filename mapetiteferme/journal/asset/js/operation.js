@@ -60,25 +60,12 @@ document.delegateEventListener('change', '[data-date="journal-operation-create"]
     Operation.copyDate(e);
 });
 
-document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"], [data-field="vatValue"]', function(e) {
+document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"], [data-field="vatValue"]', function() {
 
     const index = this.dataset.index;
 
     Operation.updateAmountValue(index);
     Asset.initializeData(index);
-
-    const formId = e.delegateTarget.form.getAttribute('id');
-    if(formId === 'bank-cashflow-allocate') {
-        Cashflow.fillShowHideAmountWarning();
-    }
-
-    //Operation.checkVatConsistency(index);
-});
-document.delegateEventListener('change', '[data-vat-value="journal-operation-create"], [data-vat-value="bank-cashflow-allocate"]', function() {
-
-    if(this.dataset.vatValue === 'bank-cashflow-allocate') {
-        Cashflow.fillShowHideAmountWarning();
-    }
 
     //Operation.checkVatConsistency(index);
 });
@@ -140,18 +127,6 @@ class Operation {
         }
     }
 
-    static initAutocomplete() {
-
-        qsa('[data-autocomplete-field]', (node) => {
-            const field = node.dataset.autocompleteField;
-            // Exemple : formulaire de recherche
-            if(node.firstParent('[data-wrapper]') === null) {
-                return;
-            }
-            node.firstParent('[data-wrapper]').setAttribute('data-wrapper', field);
-        });
-    }
-
     static updateThirdParty(detail) {
         detail.input.firstParent('form').qs('#add-operation').setAttribute('post-third-party', detail.value);
     }
@@ -169,7 +144,7 @@ class Operation {
 
     static showOrHideDeleteOperation() {
 
-        const operations = qsa('#create-operation-list .create-operation:not(.create-operation-headers)').length;
+        const operations = qsa('#create-operation-list .create-operation:not(.create-operation-headers):not(.create-operation-validation)').length;
 
         qsa('.create-operation-delete', node => (operations > 1 && Number(node.getAttribute('data-index')) === operations - 1) ? node.classList.remove('hide') : node.classList.add('hide'));
 
@@ -321,7 +296,7 @@ class Operation {
         } else if(!isNaN(amount) && !isNaN(vatRate) && !isAmountLocked && !isVatRateLocked) {
             // Si on a Montant HT + Taux TVA
 
-            const newAmountIncludingVAT = vatRate === 0.0 ? amount : (amount * vatValue) / 100;
+            const newAmountIncludingVAT = vatRate === 0.0 ? amount : amount + (amount * vatRate) / 100;
             const newVatValue = newAmountIncludingVAT - amount;
 
             CalculationField.setValue(targetAmountIncludingVAT, newAmountIncludingVAT);
@@ -369,6 +344,10 @@ class Operation {
         }
         // Si on a Taux TVA + Montant TVA => do nothing
 
+        const formId = qs('form').getAttribute('id');
+        if(formId === 'bank-cashflow-allocate') {
+            Cashflow.checkValidationValues();
+        }
     }
 
 

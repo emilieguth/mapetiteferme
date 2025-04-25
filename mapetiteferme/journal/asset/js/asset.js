@@ -39,6 +39,7 @@ class Asset {
         qs('[name="asset[' + index + '][startDate]"]').setAttribute('value', qs('[name="date[' + index + ']"').value);
         qs('[name="asset[' + index + '][value]"]').setAttribute('value', qs('[name="amount[' + index + ']"').value);
 
+        Cashflow.checkValidationValues();
 
     }
 }

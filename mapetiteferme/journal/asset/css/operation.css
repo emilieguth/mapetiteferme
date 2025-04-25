@@ -64,7 +64,11 @@
     height: 100%;
 }
 
-.create-operation-validation > .btn{
+.create-operation-validation {
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+.create-operation-validation > .btn {
     display: block;
 }
 
@@ -80,7 +84,7 @@
     background-color: #0001;
 }
 .create-operations-container.has-asset .operation-asset {
-    display: block;
+    display: flex;
 }
 .create-operations-container.has-asset div.create-operation:not(.is-asset) div.operation-asset > * {
     visibility: hidden;
@@ -105,4 +109,18 @@
     display: flex;
     justify-content: space-between;
     align-content: center;
+}
+.create-operation-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.create-operation-validate {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+}
+.create-operation-validate-title {
+    text-align: center;
 }
