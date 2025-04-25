@@ -303,7 +303,6 @@ class CashflowUi {
 				'id' => 'bank-cashflow-allocate',
 				'third-party-create-index' => 0,
 				'autocomplete' => 'off',
-				'onrender' => 'Cashflow.checkValidationValues();',
 				'class' => 'panel-dialog container',
 			]
 		);

@@ -377,7 +377,7 @@ class OperationUi {
 
 	private static function getCreateValidate(): string {
 
-		$h = '<div class="create-operation create-operation-validation">';
+		$h = '<div class="create-operation create-operation-validation" onrender="Cashflow.checkValidationValues();">';
 
 			$h .= '<h4 class="create-operation-validate-title"><div>'.s("Montant total :").'</div><div data-field="cashflowAmount"></div></h4>';
 			$h .= '<div class="create-operation-validate"></div>';

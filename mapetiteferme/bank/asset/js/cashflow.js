@@ -90,7 +90,7 @@ class Cashflow {
 
     static checkValidationValues() {
 
-        if(qs('form').getAttribute('id') !== 'bank-cashflow-allocate') {
+        if(qs('form#bank-cashflow-allocate') === null) {
             return;
         }
 
