@@ -337,6 +337,12 @@ class OperationUi {
 					$d->attributes['data-index'] = $index;
 					$d->prepend = OperationUi::getAmountButtonIcons('vatValue', $index);
 				});
+				$h .= '<div class="util-warning hide mt-1" data-vat-warning data-index="'.$index.'">';
+					$h .= s(
+						"Il y a une incohérence de calcul de TVA, souhaitiez-vous plutôt indiquer {amountVAT} ?",
+						['amountVAT' => '<a onclick="Operation.updateVatValue('.$index.');" data-vat-warning-value data-index="'.$index.'"></a>'],
+					);
+				$h .= '</div>';
 			$h .= '</div>';
 
 			if($isFromCashflow === FALSE) {

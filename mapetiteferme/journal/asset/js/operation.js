@@ -60,14 +60,23 @@ document.delegateEventListener('change', '[data-date="journal-operation-create"]
     Operation.copyDate(e);
 });
 
-document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"], [data-field="vatRate"], [data-field="vatValue"]', function() {
+document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [data-field="amount"]', function() {
 
     const index = this.dataset.index;
 
+    Operation.lockAmount(this.dataset.field === 'amountIncludingVAT' ? 'amount' : 'amountIncludingVAT', index);
     Operation.updateAmountValue(index);
     Asset.initializeData(index);
 
-    //Operation.checkVatConsistency(index);
+    Operation.checkVatConsistency(index);
+});
+
+document.delegateEventListener('change', '[data-field="vatRate"], [data-field="vatValue"]', function() {
+
+    const index = this.dataset.index;
+    Operation.setIsWrittenAmount(this.dataset.field, index);
+    Operation.checkVatConsistency(index);
+
 });
 
 document.delegateEventListener('change', '[data-journal-type="journal-operation-create"]', function (e) {
@@ -191,25 +200,57 @@ class Operation {
         // On remplit ensuite le taux de TVA
         qs('[name="vatRate[' + index + ']"]').value = accountDetail.vatRate;
 
+        Operation.recalculateVAT(index);
+
+    }
+
+    static recalculateVAT(index) {
+
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        const amount = CalculationField.getValue(targetAmount);
+
+        const vatRate = qs('[name="vatRate[' + index + ']"]').value;
+
+        const targetVatValue = qs('[name="vatValue[' + index +']"');
+        const vatValue = Math.round(amount * vatRate) / 100;
+
+        CalculationField.setValue(targetVatValue, vatValue);
+
         // On vérifie les calculs de TVA
-        this.updateAmountValue(index);
+        Operation.checkVatConsistency(index);
+        Cashflow.checkValidationValues();
+
+    }
+
+    static updateVatValue(index) {
+
+        Operation.recalculateVAT(index);
+        Cashflow.checkValidationValues();
 
     }
 
     static checkVatConsistency(index) {
 
+        Cashflow.checkValidationValues();
+
         const targetAmount = qs('[name="amount[' + index + ']"');
         const amount = CalculationField.getValue(targetAmount);
+
         const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"').valueAsNumber || 0);
 
         const targetVatValue = qs('[name="vatValue[' + index + ']"');
         const vatValue = CalculationField.getValue(targetVatValue);
+
+        if(isNaN(amount) || isNaN(vatValue)) {
+            return;
+        }
 
         const expectedVatValue = Math.round(amount * vatRate) / 100;
 
         if(vatValue !== expectedVatValue) {
             qs('[data-vat-warning][data-index="' + index + '"]').removeHide();
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.add('form-warning-wrapper'));
+            qs('[data-vat-warning-value][data-index="' + index + '"]').innerHTML = money(expectedVatValue);
         } else {
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.remove('form-warning-wrapper'));
             qs('[data-vat-warning][data-index="' + index + '"]').hide();
@@ -258,14 +299,6 @@ class Operation {
             Operation.setIsWrittenAmount('amount', index);
         }
 
-        // Montant TVA
-        const targetVatValue = qs('[name="vatValue[' + index + ']"');
-        const vatValue = CalculationField.getValue(targetVatValue);
-        const isVatValueLocked = Operation.isLocked('vatValue', index);
-        if(isNaN(vatValue) === false) {
-            Operation.setIsWrittenAmount('vatValue', index);
-        }
-
         // Montant TTC
         const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
         const amountIncludingVAT = CalculationField.getValue(targetAmountIncludingVAT);
@@ -274,93 +307,44 @@ class Operation {
             Operation.setIsWrittenAmount('amountIncludingVAT', index);
         }
 
-        // Taux TVA
         const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
-        const isVatRateLocked = Operation.isLocked('vatRate', index);
-        if(isNaN(vatRate) === false) {
-            Operation.setIsWrittenAmount('vatRate', index);
+        const targetVatValue = qs('[name="vatValue[' + index + ']"');
+        const vatValue = CalculationField.getValue(targetVatValue);
+
+        if(isAmountLocked && isNaN(amountIncludingVAT) === false) {
+            let newAmount;
+            if(isNaN(vatValue) === false) {
+                newAmount = Math.round((amountIncludingVAT - vatValue) * 100) / 100;
+            } else if(isNaN(vatRate)) {
+                newAmount = Math.round((amountIncludingVAT / (1 + vatRate / 100)) * 100) / 100;
+            }
+            if(newAmount) {
+                CalculationField.setValue(targetAmount, newAmount);
+            }
+        } else if(isAmountIncludingVATLocked && isNaN(amount) === false) {
+            let newAmountIncludingVAT;
+            if(isNaN(vatValue) === false) {
+                newAmountIncludingVAT = Math.round((amount + vatValue) * 100) / 100;
+            } else if(isNaN(vatRate)) {
+                newAmountIncludingVAT = Math.round(amount + amount / vatRate * 100) / 100;
+            }
+            if(newAmountIncludingVAT) {
+                CalculationField.setValue(targetAmountIncludingVAT, newAmountIncludingVAT);
+            }
         }
 
-        if(!isNaN(amountIncludingVAT) && !isNaN(vatRate) && !isAmountIncludingVATLocked && !isVatRateLocked) {
-            // Si on a Montant TTC + Taux TVA
-
-            const newAmount = vatRate === 0.0 ? amountIncludingVAT : (amountIncludingVAT / (1 + vatRate / 100)).toFixed(2);
-            const newVatValue = (amountIncludingVAT - newAmount).toFixed(2);
-
-            CalculationField.setValue(targetVatValue, newVatValue);
-            CalculationField.setValue(targetAmount, newAmount);
-
-            Operation.lockAmount('amount', index);
-            Operation.lockAmount('vatValue', index);
-
-        } else if(!isNaN(amount) && !isNaN(vatRate) && !isAmountLocked && !isVatRateLocked) {
-            // Si on a Montant HT + Taux TVA
-
-            const newAmountIncludingVAT = vatRate === 0.0 ? amount : amount + (amount * vatRate) / 100;
-            const newVatValue = newAmountIncludingVAT - amount;
-
-            CalculationField.setValue(targetAmountIncludingVAT, newAmountIncludingVAT);
-            CalculationField.setValue(targetVatValue, newVatValue);
-
-            Operation.lockAmount('amountIncludingVAT', index);
-            Operation.lockAmount('vatValue', index);
-
-        } else if(!isNaN(amount) && !isNaN(amountIncludingVAT) && !isAmountLocked && !isAmountIncludingVATLocked) {
-            // Si on a Montant TTC + Montant HT
-
-            const newVatValue = (amountIncludingVAT - amount).toFixed(2);
-            const newVatRate = ((newVatValue / amount) * 100).toFixed(2);
-
-            CalculationField.setValue(targetVatValue, newVatValue);
-            qs('[name="vatRate[' + index + ']"]').value = newVatRate;
-
-            Operation.lockAmount('vatRate', index);
-            Operation.lockAmount('vatValue', index);
-
-        } else if(!isNaN(amountIncludingVAT) && !isNaN(vatValue) && !isAmountIncludingVATLocked && !isVatValueLocked) {
-            // Si on a Montant TTC + Montant TVA
-
-            const newAmount = (amountIncludingVAT - vatValue).toFixed(2);
-            const newVatRate = ((vatValue / amountIncludingVAT) * 100).toFixed(2);
-
-            qs('[name="vatRate[' + index + ']"]').value = newVatRate;
-            CalculationField.setValue(targetAmount, newAmount);
-
-            Operation.lockAmount('amount', index);
-            Operation.lockAmount('vatRate', index);
-
-        } else if(!isNaN(amount) && !isNaN(vatValue) && !isAmountLocked && !isVatValueLocked) {
-            // Si on a Montant HT + Montant TVA
-
-            const newAmountIncludingVat = (amount + vatValue).toFixed(2);
-            const newVatRate = (vatValue / amount * 100).toFixed(2);
-
-            CalculationField.setValue(targetAmountIncludingVAT, newAmountIncludingVat);
-            qs('[name="vatRate[' + index + ']"]').value = newVatRate;
-
-            Operation.lockAmount('amountIncludingVAT', index);
-            Operation.lockAmount('vatRate', index);
-
-        }
-        // Si on a Taux TVA + Montant TVA => do nothing
-
-        const formId = qs('form').getAttribute('id');
-        if(formId === 'bank-cashflow-allocate') {
-            Cashflow.checkValidationValues();
-        }
     }
-
 
     static initAmountLock(index) {
 
-        qs('[name="vatValue[' + index + ']-calculation"').classList.add('disabled');
-        qs('[data-wrapper="vatValue[' + index + ']"] .merchant-lock').removeHide();
-        qs('[data-wrapper="vatValue[' + index + ']"] .merchant-erase').hide();
+        qs('[data-wrapper="vatValue[' + index + ']"] .merchant-lock').hide();
         qs('[data-wrapper="vatValue[' + index + ']"] .merchant-write').hide();
+        qs('[data-wrapper="vatValue[' + index + ']"] .merchant-erase').removeHide();
 
+        qs('[name="amountIncludingVAT[' + index + ']-calculation"').classList.add('disabled');
         qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-write').hide();
-        qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-lock').hide();
-        qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-erase').removeHide();
+        qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-lock').removeHide();
+        qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-erase').hide();
 
         qs('[data-wrapper="amount[' + index + ']"] .merchant-write').hide();
         qs('[data-wrapper="amount[' + index + ']"] .merchant-lock').hide();
@@ -379,22 +363,10 @@ class Operation {
 
             case 'amountIncludingVAT':
                 Operation.unlockAmount('amount', index, true);
-                Operation.unlockAmount('vatValue', index, true);
                 break;
 
             case 'amount':
-                Operation.unlockAmount('vatRate', index, true);
-                Operation.unlockAmount('vatValue', index, true);
-                break;
-
-            case 'vatRate':
-                Operation.unlockAmount('amount', index, true);
-                Operation.unlockAmount('vatValue', index, true);
-                break;
-
-            case 'vatValue':
-                Operation.unlockAmount('amount', index, true);
-                Operation.unlockAmount('vatRate', index, true);
+                Operation.unlockAmount('amountIncludingVAT', index, true);
                 break;
 
         }

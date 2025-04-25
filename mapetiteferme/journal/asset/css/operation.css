@@ -124,3 +124,7 @@
 .create-operation-validate-title {
     text-align: center;
 }
+
+.create-operation-validate.util-danger {
+    margin: 0 0.5rem;
+}

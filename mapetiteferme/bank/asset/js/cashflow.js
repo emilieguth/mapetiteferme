@@ -45,6 +45,11 @@ class Cashflow {
             const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
             CalculationField.setValue(targetAmountIncludingVAT, Math.abs(missingValue));
 
+            const targetAmount = qs('[name="amount[' + index + ']"');
+            const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
+            const missingAmountValue = Math.round(missingValue / (1 + vatRate / 100) * 100) / 100;
+            CalculationField.setValue(targetAmount, Math.abs(missingAmountValue));
+
         }
     }
 
@@ -54,6 +59,8 @@ class Cashflow {
 
         Cashflow.fillIndexAccordingly(index); // On remplit les trous
         Operation.updateAmountValue(index); // On complète les calculs
+
+        Cashflow.checkValidationValues();
 
     }
 
@@ -108,7 +115,6 @@ class Cashflow {
         qs('.create-operation-validate[data-field="amount"]').innerHTML = '= ' + money(amount);
         qs('.create-operation-validate[data-field="vatValue"]').innerHTML = '= ' + money(vatValue);
         qs('.create-operation-validate[data-field="assetValue"]').innerHTML = '= ' + money(assetValue);
-
 
         if(sum !== totalAmount) {
             var difference = totalAmount - sum;
