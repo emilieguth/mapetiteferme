@@ -36,12 +36,12 @@ class ThirdPartyLib extends ThirdPartyCrud {
 			$eThirdParty['weight'] = 0;
 
 			foreach($memoItems as $memoItem) {
-				if(mb_strlen($memoItem) <= 3) {
+				if(mb_strlen($memoItem) < 3) {
 					continue;
 				}
 				if(strtolower($eThirdParty['name']) === strtolower($memoItem)) {
 					$eThirdParty['weight'] += 50;
-				} else if(mb_strpos(strtolower($eThirdParty['name']), strtolower($memoItem)) !== FALSE) {
+				} else if(mb_strlen($memoItem) > 3 and mb_strpos(strtolower($eThirdParty['name']), strtolower($memoItem)) !== FALSE) {
 					$eThirdParty['weight'] += levenshtein(strtolower($eThirdParty['name']), strtolower($memoItem));
 				}
 			}
