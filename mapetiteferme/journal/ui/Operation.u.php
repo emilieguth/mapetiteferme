@@ -219,7 +219,10 @@ class OperationUi {
 			$h .='</div>';
 
 			$h .= '<div data-wrapper="comment'.$suffix.'">';
-				$h .= $form->dynamicField($eOperation, 'comment'.$suffix, fn($d) => $d->default = $defaultValues['comment'] ?? '');
+				$h .= $form->dynamicField($eOperation, 'comment'.$suffix, function($d) {
+					$d->default = $defaultValues['comment'] ?? '';
+					$d->attributes['data-limit'] = 250;
+				});
 			$h .='</div>';
 
 			$h .= '<div data-wrapper="amountIncludingVAT'.$suffix.'">';
@@ -522,7 +525,6 @@ class OperationUi {
 				break;
 
 			case 'comment' :
-				$d->after = s("(maximum 250 caractères)");
 				break;
 
 			case 'paymentMode' :
