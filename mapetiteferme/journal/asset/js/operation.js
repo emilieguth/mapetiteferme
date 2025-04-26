@@ -196,7 +196,13 @@ class Operation {
         }
 
         const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"').valueAsNumber || 0);
-        if(vatRate === 0.0 && isNaN(amount) === false) {
+
+        // On ne surcharge pas ce qui a déjà été saisi par l'utilisateur
+        if(vatRate !== 0.0) {
+            return;
+        }
+
+        if(isNaN(amount) === false) {
             const newAmount = (amount / (1 + accountDetail.vatRate / 100)).toFixed(2);
             CalculationField.setValue(targetAmount, Math.abs(newAmount));
         }
