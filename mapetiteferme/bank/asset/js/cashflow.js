@@ -11,7 +11,7 @@ class Cashflow {
         let sum = 0;
         for(let index = 0; index < operationNumber; index++) {
 
-            if(excludeIndex === index) {
+            if(excludeIndex !== undefined && excludeIndex === index) {
                 continue;
             }
 
@@ -42,15 +42,19 @@ class Cashflow {
 
         const sum = Cashflow.recalculateAmounts(index);
 
-        const missingValue = Math.round((totalAmountIncludingVat - sum) * 100) / 100;
+        const missingAmountIncludingVATValue = Math.round((totalAmountIncludingVat - sum) * 100) / 100;
 
         const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
-        CalculationField.setValue(targetAmountIncludingVAT, Math.abs(missingValue));
+        CalculationField.setValue(targetAmountIncludingVAT, Math.abs(missingAmountIncludingVATValue));
 
         const targetAmount = qs('[name="amount[' + index + ']"');
         const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
-        const missingAmountValue = Math.round(missingValue / (1 + vatRate / 100) * 100) / 100;
+        const missingAmountValue = Math.round(missingAmountIncludingVATValue / (1 + vatRate / 100) * 100) / 100;
         CalculationField.setValue(targetAmount, Math.abs(missingAmountValue));
+
+        const missingVatValue = Math.round((missingAmountIncludingVATValue - missingAmountValue) * 100) / 100;
+        const targetVatValue = qs('[name="vatValue[' + index + ']"');
+        CalculationField.setValue(targetVatValue, Math.abs(missingVatValue));
 
     }
 
@@ -59,7 +63,6 @@ class Cashflow {
         Operation.preFillNewOperation(index); // On copie ce qu'on peut copier
 
         Cashflow.fillIndexAccordingly(index); // On remplit les trous
-        Operation.updateAmountValue(index); // On complète les calculs
 
         Cashflow.checkValidationValues();
 
@@ -85,7 +88,7 @@ class Cashflow {
     static recalculate(index) {
 
         Cashflow.fillIndexAccordingly(index); // On remplit les trous
-        Operation.updateAmountValue(index); // On complète les calculs
+        Cashflow.checkValidationValues();
 
     }
 
@@ -99,6 +102,7 @@ class Cashflow {
         const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
 
         qs('.create-operation-validate-title > [data-field="cashflowAmount"]').innerHTML = money(Math.abs(totalAmount));
+        qs('.create-operation-validate-title > [data-field="calculatedTotal"]').innerHTML = money(Math.abs(sum));
 
         const amountIncludingVAT = Array.from(qsa('[type="hidden"][name^="amountIncludingVAT["]', element => element.value))
             .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);

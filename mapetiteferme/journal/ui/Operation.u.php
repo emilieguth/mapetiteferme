@@ -385,7 +385,10 @@ class OperationUi {
 
 		$h = '<div class="create-operation create-operation-validation">';
 
-			$h .= '<h4 class="create-operation-validate-title"><div>'.s("Montant total :").'</div><div data-field="cashflowAmount"></div></h4>';
+			$h .= '<h4 class="create-operation-validate-title">';
+				$h .= '<div>'.s("Total opération :").'</div><div data-field="cashflowAmount"></div>';
+				$h .= '<div>'.s("Total écritures <br /><small>(HT + TVA)</small> :").'</div><div data-field="calculatedTotal"></div>';
+			$h .= '</h4>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';

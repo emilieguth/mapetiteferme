@@ -399,7 +399,10 @@ class Operation {
         qs('[data-wrapper="' + type + '[' + index + ']"] .merchant-write').removeHide();
 
 
-        qs('[name="' + type + '[' + index + ']-calculation"')?.classList?.remove('disabled');
+        if(qs('[name="' + type + '[' + index + ']-calculation"')) {
+            qs('[name="' + type + '[' + index + ']-calculation"').classList.remove('disabled');
+            qs('[name="' + type + '[' + index + ']-calculation"').removeAttribute('disabled');
+        }
         qs('[name="' + type + '[' + index + ']"')?.classList?.remove('disabled');
 
     }
