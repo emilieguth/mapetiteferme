@@ -44,17 +44,14 @@ class Cashflow {
 
         const missingValue = Math.round((totalAmountIncludingVat - sum) * 100) / 100;
 
-        if(missingValue !== 0.0) {
+        const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
+        CalculationField.setValue(targetAmountIncludingVAT, Math.abs(missingValue));
 
-            const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
-            CalculationField.setValue(targetAmountIncludingVAT, Math.abs(missingValue));
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
+        const missingAmountValue = Math.round(missingValue / (1 + vatRate / 100) * 100) / 100;
+        CalculationField.setValue(targetAmount, Math.abs(missingAmountValue));
 
-            const targetAmount = qs('[name="amount[' + index + ']"');
-            const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
-            const missingAmountValue = Math.round(missingValue / (1 + vatRate / 100) * 100) / 100;
-            CalculationField.setValue(targetAmount, Math.abs(missingAmountValue));
-
-        }
     }
 
     static updateNewOperationLine(index) {

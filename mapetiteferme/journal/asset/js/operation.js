@@ -191,6 +191,10 @@ class Operation {
         const targetAmount = qs('[name="amount[' + index + ']"');
         const amount = CalculationField.getValue(targetAmount);
 
+        if(isNaN(amount)) {
+            return;
+        }
+
         const vatRate = parseFloat(qs('[name="vatRate[' + index + ']"').valueAsNumber || 0);
         if(vatRate === 0.0 && isNaN(amount) === false) {
             const newAmount = (amount / (1 + accountDetail.vatRate / 100)).toFixed(2);
