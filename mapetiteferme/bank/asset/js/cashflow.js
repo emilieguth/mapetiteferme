@@ -27,7 +27,7 @@ class Cashflow {
             sum += (type.value === 'credit' ? totalAmountToAdd : totalAmountToAdd * -1);
         }
 
-        return (sum * 100) / 100;
+        return Math.round(sum * 100) / 100;
 
     }
 
@@ -118,6 +118,7 @@ class Cashflow {
 
         if(sum !== totalAmount) {
             var difference = totalAmount - sum;
+            d(sum, totalAmount, difference);
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('util-danger');
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
             qs('#cashflow-allocate-difference-value').innerHTML = money(Math.abs(difference));
