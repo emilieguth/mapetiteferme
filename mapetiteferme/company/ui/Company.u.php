@@ -146,7 +146,7 @@ class CompanyUi {
 				$h .= '<a href="'.CompanyUi::urlBank($eCompany).'/cashflow" class="company-tab '.($tab === 'bank' ? 'selected' : '').'" data-tab="bank">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('piggy-bank').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('piggy-bank-fill').'</span>';
-					$h .= '<span class="company-tab-label hide-xs-down">';
+					$h .= '<span class="company-tab-label">';
 						$h .= s("Banque");
 					$h .= '</span>';
 				$h .= '</a>';
@@ -156,8 +156,8 @@ class CompanyUi {
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/" class="company-tab '.($tab === 'journal' ? 'selected' : '').'" data-tab="journal">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('journal-bookmark').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('journal-bookmark-fill').'</span>';
-					$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Écritures comptables");
+					$h .= '<span class="company-tab-label">';
+						$h .= s("Écritures <span>comptables</span>", ['span' => '<span class="hide-xs-down">']);
 					$h .= '</span>';
 				$h .= '</a>';
 
@@ -166,7 +166,7 @@ class CompanyUi {
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/asset/" class="company-tab '.($tab === 'asset' ? 'selected' : '').'" data-tab="asset">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('house-door').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('house-door-fill').'</span>';
-					$h .= '<span class="company-tab-label hide-xs-down">';
+					$h .= '<span class="company-tab-label">';
 						$h .= s("Immobilisations");
 					$h .= '</span>';
 				$h .= '</a>';
@@ -177,7 +177,7 @@ class CompanyUi {
 				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/analyze/bank" class="company-tab '.($tab === 'analyze' ? 'selected' : '').'" data-tab="analyze">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('bar-chart').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('bar-chart-fill').'</span>';
-					$h .= '<span class="company-tab-label hide-xs-down">';
+					$h .= '<span class="company-tab-label">';
 						$h .= s("Analyse");
 					$h .= '</span>';
 				$h .= '</a>';
@@ -187,7 +187,7 @@ class CompanyUi {
 				$h .= '<a href="'.CompanyUi::urlOverview($eCompany).'/" class="company-tab '.($tab === 'overview' ? 'selected' : '').'" data-tab="statement">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet-fill').'</span>';
-					$h .= '<span class="company-tab-label hide-xs-down">';
+					$h .= '<span class="company-tab-label">';
 						$h .= s("Synthèse");
 					$h .= '</span>';
 				$h .= '</a>';
