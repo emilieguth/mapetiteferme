@@ -163,7 +163,7 @@ class CompanyUi {
 
 				$h .= $this->getJournalMenu($eCompany, prefix: $prefix, tab: $tab);
 
-				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/asset/" class="company-tab '.($tab === 'asset' ? 'selected' : '').'" data-tab="asset">';
+				$h .= '<a href="'.CompanyUi::urlAsset($eCompany).'/acquisition" class="company-tab '.($tab === 'asset' ? 'selected' : '').'" data-tab="asset">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('house-door').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('house-door-fill').'</span>';
 					$h .= '<span class="company-tab-label">';
@@ -174,7 +174,7 @@ class CompanyUi {
 				$h .= $this->getAssetMenu($eCompany, prefix: $prefix, tab: $tab);
 
 
-				$h .= '<a href="'.CompanyUi::urlJournal($eCompany).'/analyze/bank" class="company-tab '.($tab === 'analyze' ? 'selected' : '').'" data-tab="analyze">';
+				$h .= '<a href="'.CompanyUi::urlAnalyze($eCompany).'/bank" class="company-tab '.($tab === 'analyze' ? 'selected' : '').'" data-tab="analyze">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('bar-chart').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('bar-chart-fill').'</span>';
 					$h .= '<span class="company-tab-label">';
@@ -184,7 +184,7 @@ class CompanyUi {
 
 				$h .= $this->getAnalyzeMenu($eCompany, prefix: $prefix, tab: $tab);
 
-				$h .= '<a href="'.CompanyUi::urlOverview($eCompany).'/" class="company-tab '.($tab === 'overview' ? 'selected' : '').'" data-tab="statement">';
+				$h .= '<a href="'.CompanyUi::urlOverview($eCompany).'/balance" class="company-tab '.($tab === 'overview' ? 'selected' : '').'" data-tab="statement">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet-fill').'</span>';
 					$h .= '<span class="company-tab-label">';
