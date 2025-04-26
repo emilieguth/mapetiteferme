@@ -1,3 +1,7 @@
+document.delegateEventListener('panelAfterPaint', '#panel-bank-cashflow-allocate', function() {
+    Cashflow.checkValidationValues();
+});
+
 class Cashflow {
 
     static recalculateAmounts(excludeIndex) {
@@ -111,6 +115,7 @@ class Cashflow {
             }
         }).filter(asset => asset)
             .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
+
         qs('.create-operation-validate[data-field="amountIncludingVAT"]').innerHTML = '= ' + money(amountIncludingVAT);
         qs('.create-operation-validate[data-field="amount"]').innerHTML = '= ' + money(amount);
         qs('.create-operation-validate[data-field="vatValue"]').innerHTML = '= ' + money(vatValue);
@@ -118,7 +123,6 @@ class Cashflow {
 
         if(sum !== totalAmount) {
             var difference = totalAmount - sum;
-            d(sum, totalAmount, difference);
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('util-danger');
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
             qs('#cashflow-allocate-difference-value').innerHTML = money(Math.abs(difference));

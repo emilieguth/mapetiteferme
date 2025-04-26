@@ -37,8 +37,6 @@ switch(LIME_ENV) {
 
   case 'dev' :
 
-    //Setting::set('dev\minify', TRUE);
-    //Asset::setVersion('pouetpouet');
     Database::setDebug(get_exists('sql'));
 
     Database::addPackages([

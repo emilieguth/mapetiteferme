@@ -216,6 +216,12 @@ class Operation {
 
         CalculationField.setValue(targetVatValue, vatValue);
 
+        if(Operation.isLocked('amountIncludingVAT', index)) {
+
+            const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
+            CalculationField.setValue(targetAmountIncludingVAT, Math.round((vatValue + amount) * 100) / 100);
+        }
+
         // On vérifie les calculs de TVA
         Operation.checkVatConsistency(index);
         Cashflow.checkValidationValues();
@@ -332,27 +338,6 @@ class Operation {
                 CalculationField.setValue(targetAmountIncludingVAT, newAmountIncludingVAT);
             }
         }
-
-    }
-
-    static initAmountLock(index) {
-
-        qs('[data-wrapper="vatValue[' + index + ']"] .merchant-lock').hide();
-        qs('[data-wrapper="vatValue[' + index + ']"] .merchant-write').hide();
-        qs('[data-wrapper="vatValue[' + index + ']"] .merchant-erase').removeHide();
-
-        qs('[name="amountIncludingVAT[' + index + ']-calculation"').classList.add('disabled');
-        qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-write').hide();
-        qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-lock').removeHide();
-        qs('[data-wrapper="amountIncludingVAT[' + index + ']"] .merchant-erase').hide();
-
-        qs('[data-wrapper="amount[' + index + ']"] .merchant-write').hide();
-        qs('[data-wrapper="amount[' + index + ']"] .merchant-lock').hide();
-        qs('[data-wrapper="amount[' + index + ']"] .merchant-erase').removeHide();
-
-        qs('[data-wrapper="vatRate[' + index + ']"] .merchant-write').hide();
-        qs('[data-wrapper="vatRate[' + index + ']"] .merchant-lock').hide();
-        qs('[data-wrapper="vatRate[' + index + ']"] .merchant-erase').removeHide();
 
     }
 

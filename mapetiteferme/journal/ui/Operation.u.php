@@ -121,9 +121,13 @@ class OperationUi {
 
 	private static function getAmountButtonIcons(string $type, int $index): string {
 
+		$activeIcon = match($type) {
+			'amountIncludingVAT' => 'lock',
+			default => 'erase',
+		};
 		$h = '<div class="merchant-write hide">'.\Asset::icon('pencil').'</div>';
-		$h .= '<div class="merchant-lock hide">'.\Asset::icon('lock-fill').'</div>';
-		$h .= '<div class="merchant-erase hide">';
+		$h .= '<div class="merchant-lock '.($activeIcon === 'lock' ? '' : 'hide').'">'.\Asset::icon('lock-fill').'</div>';
+		$h .= '<div class="merchant-erase '.($activeIcon === 'erase' ? '' : 'hide').'">';
 			$h .= '<a '.attr('onclick', "Operation.resetAmount('".$type."', ".$index.")").' title="'.s("Revenir à zéro").'">'.\Asset::icon('eraser-fill', ['style' => 'transform: scaleX(-1);']).'</a>';
 		$h .= '</div>';
 
@@ -145,7 +149,7 @@ class OperationUi {
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
 		$isFromCashflow = (isset($defaultValues['cashflow']) and $defaultValues['cashflow']->exists() === TRUE);
 
-		$h = '<div class="create-operation" data-index="'.$index.'" onrender="Operation.initAmountLock('.$index.')">';
+		$h = '<div class="create-operation" data-index="'.$index.'">';
 			$h .= '<div class="create-operation-title">';
 				$h .= '<h4>'.s("Écriture #{number}", ['number' => $index + 1]).'</h4>';
 
@@ -224,7 +228,9 @@ class OperationUi {
 						'amountIncludingVAT'.$suffix,
 						$defaultValues['amountIncludingVAT'] ?? '',
 						[
-							'min' => 0, 'step' => 0.01, 'data-field' => 'amountIncludingVAT',
+							'min' => 0, 'step' => 0.01,
+							'disabled' => TRUE,
+							'data-field' => 'amountIncludingVAT',
 							'data-index' => $index,
 						]
 					)
@@ -340,7 +346,7 @@ class OperationUi {
 				$h .= '<div class="util-warning hide mt-1" data-vat-warning data-index="'.$index.'">';
 					$h .= s(
 						"Il y a une incohérence de calcul de TVA, souhaitiez-vous plutôt indiquer {amountVAT} ?",
-						['amountVAT' => '<a onclick="Operation.updateVatValue('.$index.');" data-vat-warning-value data-index="'.$index.'"></a>'],
+						['amountVAT' => '<a onclick="Operation.updateVatValue('.$index.')" data-vat-warning-value data-index="'.$index.'"></a>'],
 					);
 				$h .= '</div>';
 			$h .= '</div>';
@@ -377,7 +383,7 @@ class OperationUi {
 
 	private static function getCreateValidate(): string {
 
-		$h = '<div class="create-operation create-operation-validation" onrender="Cashflow.checkValidationValues();">';
+		$h = '<div class="create-operation create-operation-validation">';
 
 			$h .= '<h4 class="create-operation-validate-title"><div>'.s("Montant total :").'</div><div data-field="cashflowAmount"></div></h4>';
 			$h .= '<div class="create-operation-validate"></div>';

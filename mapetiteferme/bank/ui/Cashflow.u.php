@@ -302,7 +302,6 @@ class CashflowUi {
 			[
 				'id' => 'bank-cashflow-allocate',
 				'third-party-create-index' => 0,
-				'autocomplete' => 'off',
 				'class' => 'panel-dialog container',
 			]
 		);
@@ -363,7 +362,7 @@ class CashflowUi {
 		);
 
 		return new \Panel(
-			id: 'panel-cashflow-allocate',
+			id: 'panel-bank-cashflow-allocate',
 			title: s("Créer une ou plusieurs écriture(s)"),
 			dialogOpen: $dialogOpen,
 			dialogClose: $form->close(),
