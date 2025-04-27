@@ -1,4 +1,3 @@
-
 :root {
     --create-operation-rows: 15;
     --create-operation-rows-with-asset: 21;
@@ -18,25 +17,16 @@
     grid-template-columns: 15rem 1fr 10rem;
 }
 .create-operations-container[data-columns="2"] {
-    grid-template-columns: auto repeat(2, 1fr) auto;
+    grid-template-columns: 15rem repeat(2, 1fr) 10rem;
 }
 .create-operations-container[data-columns="3"] {
-    grid-template-columns: auto repeat(3, 1fr) auto;
+    grid-template-columns: 15rem repeat(3, 1fr) 10rem;
 }
 .create-operations-container[data-columns="4"] {
     grid-template-columns: auto repeat(4, 1fr) auto;
 }
 .create-operations-container[data-columns="5"] {
     grid-template-columns: auto repeat(5, 1fr) auto;
-}
-.create-operations-container[data-columns="6"] {
-    grid-template-columns: auto repeat(6, 1fr) auto;
-}
-.create-operations-container[data-columns="7"] {
-    grid-template-columns: auto repeat(7, 1fr) auto;
-}
-.create-operations-container[data-columns="8"] {
-    grid-template-columns: auto repeat(8, 1fr) auto;
 }
 
 @supports (grid-template-columns: subgrid) {
@@ -64,13 +54,8 @@
     height: 100%;
     align-content: center;
 }
-
-.create-operation-validation {
-    border: 1px solid var(--primary);
-    color: var(--primary);
-}
-.create-operation-validation > .btn {
-    display: block;
+.create-operation div div.input-group {
+    align-items: stretch;
 }
 
 .create-operations-container {
@@ -78,7 +63,7 @@
 }
 
 .create-operations-container > div:nth-child(2n + 1) {
-    background-color: var(--background-light) !important;
+    background-color: var(--background-light);
 }
 
 .operation-asset {
@@ -87,7 +72,7 @@
 .create-operations-container.has-asset .operation-asset {
     display: flex;
 }
-.create-operations-container.has-asset div.create-operation:not(.is-asset) div.operation-asset > * {
+.create-operations-container.has-asset div.create-operation:not(.is-asset):not(.create-operation-headers) div.operation-asset > * {
     visibility: hidden;
 }
 .create-operations-container:not(.has-asset) div.operation-asset {
@@ -116,21 +101,47 @@
     flex-direction: row;
     align-items: center;
 }
-.create-operation-validate {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: right;
-}
-.create-operation-validate-title {
-    text-align: center;
-}
-
-.create-operation-validate.util-danger {
-    margin: 0 0.5rem;
-}
 
 .create-operation-radio {
     display: flex;
     gap: 0.5rem;
+}
+
+[data-wrapper^="vatValue"] {
+    align-content: start;
+    align-items: start;
+}
+[data-wrapper^="vatValue"] .warning {
+    color: white;
+    background-color: var(--warning);
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1rem 0.5rem;
+    line-height: 1.6;
+}
+
+#create-operation-list .create-operation-headers,
+#create-operation-list .create-operation-validation {
+    background-color: transparent !important;
+}
+#create-operation-list .create-operation-headers > :nth-child(2),
+#create-operation-list .create-operation-validation > :nth-child(2) {
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+}
+#create-operation-list .create-operation-headers > :nth-child(n + 2),
+#create-operation-list .create-operation-validation > :nth-child(n + 2) {
+    background-color: var(--background-light);
+}
+#create-operation-list .create-operation-headers > :last-child,
+#create-operation-list .create-operation-validation > :last-child {
+    border-bottom-left-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
+}
+#create-operation-list.has-asset .create-operation-validation div.operation-asset div,
+#create-operation-list .create-operation-validation div:not(.operation-asset) div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 1.3rem;
 }

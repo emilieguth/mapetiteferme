@@ -56,6 +56,12 @@ class Cashflow {
         const targetVatValue = qs('[name="vatValue[' + index + ']"');
         CalculationField.setValue(targetVatValue, Math.abs(missingVatValue));
 
+        if(missingAmountValue > 0) {
+            qs('[data-field="type"][value="credit"][data-index="' + index + '"]').setAttribute('checked', true);
+        } else {
+            qs('[data-field="type"][value="debit"][data-index="' + index + '"]').setAttribute('checked', true);
+        }
+
     }
 
     static updateNewOperationLine(index) {
@@ -92,6 +98,23 @@ class Cashflow {
 
     }
 
+    static sumType(type) {
+
+        const allValues = Array.from(qsa('[type="hidden"][name^="' + type + '["]', element => element.value));
+
+        return Math.round(allValues.reduce(function (acc, value) {
+            const index = value.firstParent('.input-group').qs('input[data-index]').dataset.index;
+
+            const creditType = qs('[data-field="type"][data-index="' + index + '"]:checked').value;
+
+            if(creditType === 'credit') {
+                return acc - parseFloat(value.value || 0);
+            } else {
+                return acc + parseFloat(value.value || 0);
+            }
+        }, 0) * 100) / 100;
+    }
+
     static checkValidationValues() {
 
         if(qs('form#bank-cashflow-allocate') === null) {
@@ -101,12 +124,9 @@ class Cashflow {
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('span[name="cashflow-amount"]').innerHTML);
 
-        const amountIncludingVAT = Array.from(qsa('[type="hidden"][name^="amountIncludingVAT["]', element => element.value))
-            .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
-        const amount = Array.from(qsa('[type="hidden"][name^="amount["]', element => element.value))
-            .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
-        const vatValue = Array.from(qsa('[type="hidden"][name^="vatValue["]', element => element.value))
-            .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
+        const amountIncludingVAT = Cashflow.sumType('amountIncludingVAT');
+        const amount = Cashflow.sumType('amount');
+        const vatValue = Cashflow.sumType('vatValue');
         const assetValue = Array.from(qsa('[type="number"][name^="asset["]')).map(function(node) {
             if(node.name.match(/asset\[\d+\]\[value\]/)) {
                 return node;
@@ -114,19 +134,28 @@ class Cashflow {
         }).filter(asset => asset)
             .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
 
-        qs('.create-operation-validate[data-field="amountIncludingVAT"]').innerHTML = '= ' + money(amountIncludingVAT);
-        qs('.create-operation-validate[data-field="amount"]').innerHTML = '= ' + money(amount);
-        qs('.create-operation-validate[data-field="vatValue"]').innerHTML = '= ' + money(vatValue);
-        qs('.create-operation-validate[data-field="assetValue"]').innerHTML = '= ' + money(assetValue);
+        qs('.create-operation-validate[data-field="amountIncludingVAT"] [data-type="value"]').innerHTML = money(amountIncludingVAT);
+        qs('.create-operation-validate[data-field="amount"] [data-type="value"]').innerHTML = money(amount);
+        qs('.create-operation-validate[data-field="vatValue"] [data-type="value"]').innerHTML = money(vatValue);
+        qs('.create-operation-validate[data-field="assetValue"] [data-type="value"]').innerHTML = money(assetValue);
 
         if(sum !== totalAmount) {
             var difference = totalAmount - sum;
-            qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('util-danger');
+            qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('danger');
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
             qs('#cashflow-allocate-difference-value').innerHTML = money(Math.abs(difference));
         } else {
-            qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.remove('util-danger');
+            qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.remove('danger');
             qs('#cashflow-allocate-difference-warning').classList.add('hide');
+        }
+    }
+
+    static vatWarning(on) {
+
+        if(on === true) {
+            qs('.create-operation-validate[data-field="vatValue"]').classList.add('warning');
+        } else {
+            qs('.create-operation-validate[data-field="vatValue"]').classList.remove('warning');
         }
     }
 }

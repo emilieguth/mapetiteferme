@@ -88,16 +88,12 @@ document.delegateEventListener('change', '[data-field="vatValue"]', function() {
 
 });
 
-document.delegateEventListener('change', '[data-journal-type="journal-operation-create"]', function (e) {
+document.delegateEventListener('change', '[data-field="type"]', function () {
 
     const index = this.dataset.index;
 
-    //bankAccountClass and cashAccountClass
-    if(['bank', 'cash'].indexOf(e.delegateTarget.value) > -1) {
-        qs('[data-wrapper="counterpart[' + index + ']"]').removeHide();
-    } else {
-        qs('[data-wrapper="counterpart[' + index + ']"]').hide();
-    }
+    Operation.updateAmountValue(index);
+    Operation.checkVatConsistency(index);
 
 });
 
@@ -154,6 +150,7 @@ class Operation {
         target.firstParent('.create-operation').remove();
         const index = Number(qs('#add-operation').getAttribute('post-index'));
         qs('#add-operation').setAttribute('post-index', index - 1);
+        qs('#add-operation').classList.remove('not-visible');
 
         Operation.showOrHideDeleteOperation();
         Operation.updateSubmitText();
@@ -276,24 +273,12 @@ class Operation {
             qs('[data-vat-warning][data-index="' + index + '"]').removeHide();
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.add('form-warning-wrapper'));
             qs('[data-vat-warning-value][data-index="' + index + '"]').innerHTML = money(expectedVatValue);
+            Cashflow.vatWarning(true);
         } else {
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.remove('form-warning-wrapper'));
             qs('[data-vat-warning][data-index="' + index + '"]').hide();
+            Cashflow.vatWarning(false);
         }
-
-    }
-
-    static warnVatConsistency(element) {
-
-        let needsConfirm = 0;
-        qsa('[data-vat-warning]', (node) => needsConfirm += node.classList.contains('hide') === false ? 1 : 0);
-
-        if(needsConfirm === 0) {
-            return;
-        }
-
-        const text = needsConfirm === 1 ? element.dataset.confirmTextSingular : element.dataset.confirmTextPlural;
-        return confirm(text);
 
     }
 

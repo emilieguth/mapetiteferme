@@ -49,7 +49,6 @@ class OperationUi {
 				'data-text-plural' => s(("Enregistrer les écritures")),
 				'data-confirm-text-singular' => s("Il y a une incohérence de valeur de TVA, voulez-vous quand même enregistrer ?"),
 				'data-confirm-text-plural' => s("Il y a plusieurs incohérences de valeur de TVA, voulez-vous quand même enregistrer ?"),
-				'onclick' => 'return Operation.warnVatConsistency(this);',
 			],
 		);
 
@@ -94,7 +93,7 @@ class OperationUi {
 
 			$h .= '<div class="create-operation-header">'.self::p('type')->label.' '.\util\FormUi::asterisk().'</div>';
 			$h .= '<div class="create-operation-header">'.self::p('vatRate')->label.' '.\util\FormUi::asterisk().'</div>';
-			$h .= '<div class="create-operation-header">'.self::p('vatValue')->label.' '.\util\FormUi::asterisk().'</div>';
+			$h .= '<div class="create-operation-header" data-wrapper="vatValue">'.self::p('vatValue')->label.' '.\util\FormUi::asterisk().'</div>';
 
 			if($isFromCashflow === FALSE) {
 
@@ -291,7 +290,8 @@ class OperationUi {
 						self::p('type')->values[OperationElement::DEBIT],
 						$defaultValues['type'] ?? '',
 						[
-							'data-index' => $index
+							'data-index' => $index,
+							'data-field' => 'type',
 						]
 					).
 					$form->radio(
@@ -299,7 +299,8 @@ class OperationUi {
 						self::p('type')->values[OperationElement::CREDIT],
 						$defaultValues['type'] ?? '',
 						[
-							'data-index' => $index
+							'data-index' => $index,
+							'data-field' => 'type',
 						]
 					);
 			$h .= '</div>';
@@ -336,7 +337,7 @@ class OperationUi {
 					$d->attributes['data-index'] = $index;
 					$d->prepend = OperationUi::getAmountButtonIcons('vatValue', $index);
 				});
-				$h .= '<div class="util-warning hide mt-1" data-vat-warning data-index="'.$index.'">';
+				$h .= '<div class="warning hide mt-1" data-vat-warning data-index="'.$index.'">';
 					$h .= s(
 						"Il y a une incohérence de calcul de TVA, souhaitiez-vous plutôt indiquer {amountVAT} ?",
 						['amountVAT' => '<a onclick="Operation.updateVatValue('.$index.')" data-vat-warning-value data-index="'.$index.'"></a>'],
@@ -378,7 +379,7 @@ class OperationUi {
 
 		$h = '<div class="create-operation create-operation-validation">';
 
-			$h .= '<h4 class="create-operation-validate-title"></h4>';
+			$h .= '<h4></h4>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
@@ -386,19 +387,19 @@ class OperationUi {
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
-			$h .= '<div class="create-operation-validate" data-field="amountIncludingVAT"></div>';
-			$h .= '<div class="create-operation-validate" data-field="amount"></div>';
+			$h .= '<div class="create-operation-validate" data-field="amountIncludingVAT"><div><span>=</span><span data-type="value"></span></div></div>';
+			$h .= '<div class="create-operation-validate" data-field="amount"><div><span>=</span><span data-type="value"></span></div></div>';
 
 			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"><h4></h4></div>';
 			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
 			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
 			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
-			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1" data-field="assetValue"></div>';
+			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1" data-field="assetValue"><div><span>=</span><span data-type="value"></span></div></div>';
 			$h .= '<div class="create-operation-validate operation-asset" data-is-asset="1"></div>';
 
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
-			$h .= '<div class="create-operation-validate" data-field="vatValue"></div>';
+			$h .= '<div class="create-operation-validate" data-field="vatValue"><div><span>=</span><span data-type="value"></span></div></div>';
 
 		$h .= '</div>';
 

@@ -41,6 +41,15 @@
 
 /* Allocating form */
 
+.create-operation-validate div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
 .panel-header-content .create-operations-container > div:nth-child(2n+1),
 .panel-header-content .create-operations-container > * {
     background-color: transparent !important;
@@ -86,4 +95,26 @@
 }
 #cashflow-allocate-difference-value {
     font-weight: bold;
+}
+
+.create-operation-validate.danger > div {
+    color: white;
+    background-color: var(--danger) !important;
+}
+
+.create-operation-validate.warning {
+    align-content: baseline;
+    margin-top: -0.5rem;
+}
+.create-operation-validate.warning > div {
+    color: white;
+    background-color: var(--warning) !important;
+}
+
+.create-operation-validation {
+    color: var(--primary);
+    margin-left: 0.5rem;
+}
+.create-operation-validation > .btn {
+    display: block;
 }

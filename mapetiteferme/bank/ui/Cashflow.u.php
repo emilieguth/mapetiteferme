@@ -355,7 +355,7 @@ class CashflowUi {
 			$subtitle .= '</div>';
 			$subtitle .= '<div class="create-operation create-operation-total">';
 				$subtitle .= '<span name="cashflow-amount" class="hide">'.$eCashflow['amount'].'</span>';
-				$subtitle .= '<span class="amount">'.\util\TextUi::money($eCashflow['amount']).'</span>';
+				$subtitle .= '<span class="amount">'.\util\TextUi::money(abs($eCashflow['amount'])).'</span>';
 				$subtitle .= '<span id="cashflow-allocate-difference-warning" class="warning hide">';
 					$subtitle .= s("⚠️ Différence de <span></span>", ['span' => '<span id="cashflow-allocate-difference-value">']);
 				$subtitle .= '</span>';
