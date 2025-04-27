@@ -353,7 +353,7 @@ class CashflowUi {
 
 		$subtitle = '<h2 class="panel-subtitle">';
 			$subtitle .= s(
-				"Montant : <b class='color-primary'>{amount}</b> / Numéro : <b>{number}</b> / Type : <b>{type}</b> / Date de transaction : <b>{date}</b>",
+				"Opération bancaire #<b>{number}</b> du <b>{date}</b> | <b>{type}</b> d'un montant de <b class='color-primary'>{amount}</b>",
 				[
 					'amount' => \util\TextUi::money(abs($eCashflow['amount'])),
 					'number' => $eCashflow['id'],

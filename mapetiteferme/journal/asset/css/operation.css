@@ -115,6 +115,14 @@
     line-height: 1.6;
 }
 
+[data-wrapper^="vatValue"] .warning a {
+    color: white;
+    text-decoration: underline;
+}
+[data-wrapper^="vatValue"] .warning a:hover {
+    text-decoration: none;
+}
+
 #create-operation-list .create-operation-headers,
 #create-operation-list .create-operation-validation {
     background-color: transparent !important;
