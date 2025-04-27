@@ -71,10 +71,19 @@ document.delegateEventListener('change', '[data-field="amountIncludingVAT"], [da
     Operation.checkVatConsistency(index);
 });
 
-document.delegateEventListener('change', '[data-field="vatRate"], [data-field="vatValue"]', function() {
+document.delegateEventListener('change', '[data-field="vatRate"]', function() {
 
     const index = this.dataset.index;
     Operation.setIsWrittenAmount(this.dataset.field, index);
+    Operation.checkVatConsistency(index);
+
+});
+
+document.delegateEventListener('change', '[data-field="vatValue"]', function() {
+
+    const index = this.dataset.index;
+    Operation.setIsWrittenAmount(this.dataset.field, index);
+    Operation.updateAmountValue(index);
     Operation.checkVatConsistency(index);
 
 });
@@ -331,7 +340,7 @@ class Operation {
             let newAmount;
             if(isNaN(vatValue) === false) {
                 newAmount = Math.round((amountIncludingVAT - vatValue) * 100) / 100;
-            } else if(isNaN(vatRate)) {
+            } else if(isNaN(vatRate) === false) {
                 newAmount = Math.round((amountIncludingVAT / (1 + vatRate / 100)) * 100) / 100;
             }
             if(newAmount) {
@@ -341,7 +350,7 @@ class Operation {
             let newAmountIncludingVAT;
             if(isNaN(vatValue) === false) {
                 newAmountIncludingVAT = Math.round((amount + vatValue) * 100) / 100;
-            } else if(isNaN(vatRate)) {
+            } else if(isNaN(vatRate) === false) {
                 newAmountIncludingVAT = Math.round(amount + amount / vatRate * 100) / 100;
             }
             if(newAmountIncludingVAT) {
