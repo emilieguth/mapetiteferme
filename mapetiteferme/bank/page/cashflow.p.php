@@ -31,6 +31,7 @@ new Page(
 			$data->eImport = new \bank\Import();
 		}
 
+		$data->nCashflow = \bank\CashflowLib::countByStatus($search);
 		$data->cCashflow = \bank\CashflowLib::getAll($search, $hasSort);
 
 		throw new ViewAction($data);

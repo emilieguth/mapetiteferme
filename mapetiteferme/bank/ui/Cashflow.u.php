@@ -9,7 +9,7 @@ class CashflowUi {
 
 	public function getSearch(\Search $search, \accounting\FinancialYear $eFinancialYearSelected): string {
 
-		$h = '<div id="cashflow-search" class="util-block-search stick-xs '.($search->empty(['ids']) ? 'hide' : '').'">';
+		$h = '<div id="cashflow-search" class="util-block-search stick-xs '.($search->empty(['ids', 'status']) ? 'hide' : '').'">';
 
 		$form = new \util\FormUi();
 		$url = LIME_REQUEST_PATH.'?financialYear='.$eFinancialYearSelected['id'];
@@ -33,6 +33,41 @@ class CashflowUi {
 
 		return $h;
 
+	}
+
+	public function getSummarize(
+		\company\Company $eCompany,
+		\Collection $nCashflow,
+		\Search $search
+	): string {
+
+		$h = '<ul class="util-summarize util-summarize-overflow">';
+
+			foreach(CashflowUi::p('status')->translation as $status => $translation) {
+
+				$count = $nCashflow[$status]['count'] ?? 0;
+
+				$h .= '<li '.($search->get('status') === $status ? 'class="selected"' : '').'>';
+
+					$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/cashflow?'.$search->toQuery(['status']).'&status='.$status.'">';
+
+						$h .= '<h5>';
+							if($count > 1) {
+								$h .= $translation['plural'];
+							} else {
+								$h .= $translation['singular'];
+							}
+						$h .='</h5>';
+
+						$h .= '<div>'.$count.'</div>';
+
+					$h .= '</a>';
+
+				$h .= '</li>';
+
+			}
+		$h .= '</ul>';
+		return $h;
 	}
 
 	public function getCashflow(
@@ -620,6 +655,10 @@ class CashflowUi {
 				$d->values = [
 					CashflowElement::ALLOCATED => s("Attribuée"),
 					CashflowElement::WAITING => s("Attente"),
+				];
+				$d->translation = [
+					CashflowElement::ALLOCATED => ['singular' => s("Attribuée"), 'plural' => s("Attribuées")],
+					CashflowElement::WAITING => ['singular' => s("En attente"), 'plural' => s("En attente")],
 				];
 				$d->shortValues = [
 					CashflowElement::ALLOCATED => s("I"),

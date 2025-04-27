@@ -3,18 +3,35 @@ namespace bank;
 
 class CashflowLib extends CashflowCrud {
 
-	public static function getAll(\Search $search, bool $hasSort): \Collection {
+	public static function applySearch(\Search $search): CashflowModel {
+
 		return Cashflow::model()
-			->select(Cashflow::getSelection())
 			->whereImport('=', $search->get('import'), if: $search->has('import'))
 			->whereDate('LIKE', '%'.$search->get('date').'%', if: $search->get('date'))
 			->whereDate('>=', $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
 			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))
 			->whereFitid('LIKE', '%'.$search->get('fitid').'%', if: $search->get('fitid'))
-			->whereMemo('LIKE', '%'.mb_strtolower($search->get('memo')).'%', if: $search->get('memo'))
-			->whereStatus('=', $search->get('status'), if: $search->get('status'))
-			->sort($hasSort === TRUE ? $search->buildSort() : ['date' => SORT_DESC, 'fitid' => SORT_DESC])
-			->getCollection();
+			->whereMemo('LIKE', '%'.mb_strtolower($search->get('memo') ?? '').'%', if: $search->get('memo'))
+			->whereStatus('=', $search->get('status'), if: $search->get('status'));
+
+	}
+
+	public static function getAll(\Search $search, bool $hasSort): \Collection {
+
+			return self::applySearch($search)
+				->select(Cashflow::getSelection())
+				->sort($hasSort === TRUE ? $search->buildSort() : ['date' => SORT_DESC, 'fitid' => SORT_DESC])
+				->getCollection();
+
+	}
+	public static function countByStatus(\Search $search): \Collection {
+
+		$searchWithoutStatus = new \Search($search->getFiltered(['status']));
+
+			return self::applySearch($searchWithoutStatus)
+				->select(['count' => new \Sql('COUNT(*)'), 'status'])
+				->group(['status'])
+				->getCollection(NULL, NULL, 'status');
 	}
 
 	public static function insertMultiple(array $cashflows, \company\Company $eCompany): array {
