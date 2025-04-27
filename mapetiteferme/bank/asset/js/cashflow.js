@@ -140,7 +140,7 @@ class Cashflow {
         qs('.create-operation-validate[data-field="assetValue"] [data-type="value"]').innerHTML = money(assetValue);
 
         if(sum !== totalAmount) {
-            var difference = totalAmount - sum;
+            var difference = Math.round((totalAmount - sum) * 100) / 100;
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('danger');
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').previousSibling.classList.add('danger');
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
