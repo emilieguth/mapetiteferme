@@ -208,6 +208,12 @@ class Operation {
 
         // On ne surcharge pas ce qui a déjà été saisi par l'utilisateur
         if(vatRate !== 0.0) {
+            if(vatRate !== accountDetail.vatRate) {
+                qs('[data-vat-rate-warning]').removeHide();
+                qs('span[data-vat-rate-default][data-index="' + index + '"]').innerHTML = accountDetail.vatRate;
+                qs('span[data-vat-rate-class][data-index="' + index + '"]').innerHTML = accountDetail.class;
+                qs('a[data-vat-rate-link][data-index="' + index + '"]').setAttribute('onclick', 'Operation.updateVatRate(' + index + ', ' + accountDetail.vatRate + ')');
+            }
             return;
         }
 
@@ -250,6 +256,13 @@ class Operation {
 
     }
 
+    static updateVatRate(index, vatRate) {
+
+        qs('[name="vatRate[' + index + ']"]').value = vatRate;
+        Operation.recalculateVAT(index);
+
+    }
+
     static updateVatValue(index) {
 
         Operation.recalculateVAT(index);
@@ -288,6 +301,7 @@ class Operation {
                 Cashflow.vatWarning(true);
             }
         } else {
+            qs('[data-vat-rate-warning]').hide();
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.remove('form-warning-wrapper'));
             qs('[data-vat-warning][data-index="' + index + '"]').hide();
             if(typeof Cashflow !== 'undefined') {

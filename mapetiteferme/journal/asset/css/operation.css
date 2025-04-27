@@ -106,20 +106,19 @@
     align-content: start;
     align-items: start;
 }
-[data-wrapper^="vatValue"] .warning {
+[data-wrapper^="vat"] .warning {
     color: white;
     background-color: var(--warning);
     border-radius: var(--radius);
-    margin-bottom: 1.5rem;
     padding: 0.5rem 1rem 0.5rem;
     line-height: 1.6;
 }
 
-[data-wrapper^="vatValue"] .warning a {
+[data-wrapper^="vat"] .warning a {
     color: white;
     text-decoration: underline;
 }
-[data-wrapper^="vatValue"] .warning a:hover {
+[data-wrapper^="vat"] .warning a:hover {
     text-decoration: none;
 }
 

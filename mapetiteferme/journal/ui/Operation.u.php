@@ -306,6 +306,16 @@ class OperationUi {
 						['data-index' => $index, 'data-field' => 'vatRate', 'data-vat-rate' => $form->getId(), 'min' => 0, 'max' => 20, 'step' => 0.1],
 					)
 					.$form->addon('% '));
+					$h .= '<div class="warning hide mt-1" data-vat-rate-warning data-index="'.$index.'">';
+						$h .= s(
+							"Attention : Habituellement, pour la classe <b>{class}</b> le taux de <b>{vatRate}%</b> est utilisé. Souhaitez-vous <link>l'utiliser</link> ?",
+							[
+								'vatRate' => '<span data-vat-rate-default data-index="'.$index.'"></span>',
+								'class' => '<span data-vat-rate-class data-index="'.$index.'"></span>',
+								'link' => '<a data-vat-rate-link data-index="'.$index.'">',
+							],
+						);
+					$h .= '</div>';
 			$h .= '</div>';
 
 			$h .= '<div data-wrapper="vatValue'.$suffix.'">';
