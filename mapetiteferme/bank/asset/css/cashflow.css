@@ -112,9 +112,11 @@
 }
 
 .create-operation-validation {
-    color: var(--primary);
     margin-left: 0.5rem;
 }
 .create-operation-validation > .btn {
     display: block;
+}
+.create-operation-validate {
+    color: var(--primary);
 }
