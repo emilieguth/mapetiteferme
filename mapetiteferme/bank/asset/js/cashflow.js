@@ -38,7 +38,7 @@ class Cashflow {
     // Remplit les valeurs de l'écriture en fonction des autres écritures créées et du montant total attendu
     static fillIndexAccordingly(index) {
 
-        const totalAmountIncludingVat = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
+        const totalAmountIncludingVat = parseFloat(qs('span[name="cashflow-amount"]').innerHTML);
 
         const sum = Cashflow.recalculateAmounts(index);
 
@@ -99,10 +99,7 @@ class Cashflow {
         }
 
         const sum = this.recalculateAmounts();
-        const totalAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
-
-        qs('.create-operation-validate-title > [data-field="cashflowAmount"]').innerHTML = money(Math.abs(totalAmount));
-        qs('.create-operation-validate-title > [data-field="calculatedTotal"]').innerHTML = money(Math.abs(sum));
+        const totalAmount = parseFloat(qs('span[name="cashflow-amount"]').innerHTML);
 
         const amountIncludingVAT = Array.from(qsa('[type="hidden"][name^="amountIncludingVAT["]', element => element.value))
             .reduce((acc, value) => acc + parseFloat(value.value || 0), 0);
@@ -160,7 +157,7 @@ class CashflowAttach {
         total = Math.round(total * 100) / 100;
         qs('span[data-field="totalAmount"]').innerHTML = money(total);
 
-        const cashflowAmount = parseFloat(qs('span[name="cashflowAmount"]').innerHTML);
+        const cashflowAmount = parseFloat(qs('span[name="cashflow-amount"]').innerHTML);
 
         if(Math.abs(cashflowAmount) !== Math.abs(total)) {
             qs('#cashflow-attach-difference-warning').classList.remove('hide');

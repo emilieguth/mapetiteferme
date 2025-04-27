@@ -225,7 +225,7 @@ class CashflowUi {
 				$h .= '<dd>'.$type.'</dd>';
 				$h .= '<dt>'.s("Montant").'</dt>';
 				$h .= '<dd>';
-					$h .= '<span name="cashflowAmount" class="hide">'.$eCashflow['amount'].'</span>';
+					$h .= '<span name="cashflow-amount" class="hide">'.$eCashflow['amount'].'</span>';
 					$h .= '<span>'.\util\TextUi::money($eCashflow['amount']).'</span>';
 				$h .= '</dd>';
 			$h .= '</dl>';
@@ -274,16 +274,25 @@ class CashflowUi {
 
 	public static function getAllocate(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow): \Panel {
 
-		\Asset::css('bank', 'cashflow.css');
-		\Asset::js('bank', 'cashflow.js');
 		\Asset::js('journal', 'operation.js');
+		\Asset::js('bank', 'cashflow.js');
 		\Asset::js('journal', 'asset.js');
-		\Asset::css('journal', 'operation.css');
 		\Asset::js('journal', 'thirdParty.js');
 
-		$h = CashflowUi::getCashflowHeader($eCashflow);
+		\Asset::css('journal', 'operation.css');
+		\Asset::css('bank', 'cashflow.css');
 
 		$form = new \util\FormUi();
+
+		$dialogOpen = $form->openAjax(
+			\company\CompanyUi::urlBank($eCompany).'/cashflow:doAllocate',
+			[
+				'id' => 'bank-cashflow-allocate',
+				'third-party-create-index' => 0,
+				'class' => 'panel-dialog container',
+			]
+		);
+
 		$eOperation = new \journal\Operation(['account' => new Account()]);
 		$index = 0;
 		$defaultValues = [
@@ -297,54 +306,61 @@ class CashflowUi {
 			'amountIncludingVAT' => abs($eCashflow['amount']),
 		];
 
-		$dialogOpen = $form->openAjax(
-			\company\CompanyUi::urlBank($eCompany).'/cashflow:doAllocate',
-			[
-				'id' => 'bank-cashflow-allocate',
-				'third-party-create-index' => 0,
-				'class' => 'panel-dialog container',
-			]
-		);
-
-		$h .= $form->hidden('company', $eCompany['id']);
+		$h = $form->hidden('company', $eCompany['id']);
 		$h .= $form->hidden('id', $eCashflow['id']);
 
-		$h .= $form->asteriskInfo();
+		$title = '<div class="panel-title-container">';
+			$title .= '<h2 class="panel-title">'.encode($eCashflow['memo']).'</h2>';
+			$title .= '<a class="panel-close-desktop" onclick="Lime.Panel.closeLast()">'.\Asset::icon('x').'</a>';
+			$title .= '<a class="panel-close-mobile" onclick="Lime.Panel.closeLast()">'.\Asset::icon('arrow-left-short').'</a>';
+		$title .= '</div>';
 
-		$h .= '<div>';
-			$h .= '<div class="create-operation-title">';
-				$h .= '<h4>'.s("Opération bancaire #{id}", ['id' => $eCashflow['id']]).'</h4>';
-			$h .= '</div>';
-
-			$h .= '<div class="util-info">';
-				$h .= s(
-					"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
-					['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
-				);
-			$h .= '</div>';
-
-			$h .= $form->group(
-				\journal\OperationUi::p('paymentDate'),
-				$form->date('paymentDate', $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']])
+		$subtitle = '<h2 class="panel-subtitle">';
+			$subtitle .= s(
+				"Numéro : <b>{number}</b> / Type : <b>{type}</b> / Date de transaction : <b>{date}</b>",
+				[
+					'number' => $eCashflow['id'],
+					'type' => self::p('type')->values[$eCashflow['type']],
+					'date' => \util\DateUi::numeric($eCashflow['date'], \util\DateUi::DATE),
+				]
 			);
-			$paymentModeInput = '';
-			foreach(\journal\OperationUi::p('paymentMode')->values as $paymentMode => $text) {
-				$paymentModeInput .= $form->radio(
-					'paymentMode',
-					$paymentMode,
-					\journal\OperationUi::p('paymentMode')->values[$paymentMode],
-					$defaultValues['paymentMode'] ?? '',
-					[
-						'data-index' => $index
-					],
-				);
-			}
-			$h .= $form->group(
-				\journal\OperationUi::p('paymentMode'),
-				$paymentModeInput
-			);
-
-		$h .= '</div>';
+		$subtitle .= '</h2>';
+		$subtitle .= '<div class="create-operations-container mt-1">';
+			$subtitle .= '<div class="create-operation create-operation-headers">';
+				$subtitle .= '<div class="create-operation-header">';
+					$subtitle .= \journal\OperationUi::p('paymentDate');
+				$subtitle .= '</div>';
+				$subtitle .= '<div class="create-operation-header">';
+					$subtitle .= \journal\OperationUi::p('paymentMode');
+				$subtitle .= '</div>';
+			$subtitle .= '</div>';
+			$subtitle .= '<div class="create-operation">';
+				$subtitle .= '<div>';
+					$subtitle .= $form->date('paymentDate', $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]);
+				$subtitle .= '</div>';
+				$paymentModeInput = '<div class="create-operation-radio">';
+					foreach(\journal\OperationUi::p('paymentMode')->values as $paymentMode => $text) {
+						$paymentModeInput .= $form->radio(
+							'paymentMode',
+							$paymentMode,
+							\journal\OperationUi::p('paymentMode')->values[$paymentMode],
+							$defaultValues['paymentMode'] ?? '',
+							[
+								'data-index' => $index
+							],
+						);
+					}
+				$paymentModeInput .= '</div>';
+				$subtitle .= $paymentModeInput;
+			$subtitle .= '</div>';
+			$subtitle .= '<div class="create-operation create-operation-total">';
+				$subtitle .= '<span name="cashflow-amount" class="hide">'.$eCashflow['amount'].'</span>';
+				$subtitle .= '<span class="amount">'.\util\TextUi::money($eCashflow['amount']).'</span>';
+				$subtitle .= '<span id="cashflow-allocate-difference-warning" class="warning hide">';
+					$subtitle .= s("⚠️ Différence de <span></span>", ['span' => '<span id="cashflow-allocate-difference-value">']);
+				$subtitle .= '</span>';
+			$subtitle .= '</div>';
+		$subtitle .= '</div>';
 
 		$h .= \journal\OperationUi::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);
 
@@ -363,7 +379,9 @@ class CashflowUi {
 
 		return new \Panel(
 			id: 'panel-bank-cashflow-allocate',
-			title: s("Créer une ou plusieurs écriture(s)"),
+			header: $title.$subtitle,
+			//title: $title,
+			//subTitle: $subtitle,
 			dialogOpen: $dialogOpen,
 			dialogClose: $form->close(),
 			body: $h,
@@ -430,7 +448,7 @@ class CashflowUi {
 			$h .= $form->openAjax(\company\CompanyUi::urlBank($eCompany).'/cashflow:doAttach', ['method' => 'post', 'id' => 'cashflow-doAttach']);
 
 				$h .= $form->hidden('id', $eCashflow['id']);
-				$h .= '<span class="hide" name="cashflowAmount">'.$eCashflow['amount'].'</span>';
+				$h .= '<span class="hide" name="cashflow-amount">'.$eCashflow['amount'].'</span>';
 
 				$h .= '<div class="stick-sm util-overflow-sm">';
 					$h .= '<table class="tr-even tr-hover">';

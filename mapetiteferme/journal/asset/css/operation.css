@@ -15,7 +15,7 @@
 }
 .create-operations-container {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 15rem 1fr 10rem;
 }
 .create-operations-container[data-columns="2"] {
     grid-template-columns: auto repeat(2, 1fr) auto;
@@ -128,4 +128,9 @@
 
 .create-operation-validate.util-danger {
     margin: 0 0.5rem;
+}
+
+.create-operation-radio {
+    display: flex;
+    gap: 0.5rem;
 }

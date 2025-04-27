@@ -30,22 +30,12 @@ class OperationUi {
 			],
 		);
 
-		$h = $form->asteriskInfo();
-
-		$h .= $form->hidden('company', $eCompany['id']);
-
-		$h .= '<div class="util-info">';
-		$h .= s(
-			"Une écriture avec une classe de compte de TVA sera automatiquement créée si la classe de compte de l'écriture est associée à une classe de compte de TVA. Ceci est vérifiable dans <link>Paramétrage > Les classes de compte</link>. Vous pouvez corriger le taux ou le montant si nécessaire.",
-			['link' => '<a href="'.\company\CompanyUi::urlAccounting($eCompany).'/account" target="_blank">']
-		);
-		$h .= '</div>';
+		$h = $form->hidden('company', $eCompany['id']);
 
 		$index = 0;
 		$defaultValues = $eOperation->getArrayCopy();
 
 		$h .= self::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);
-
 
 		$addButton = '<a id="add-operation" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
 		$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
@@ -254,7 +244,7 @@ class OperationUi {
 			$h .= '<div class="operation-asset" data-is-asset="1" data-index="'.$index.'">';
 			$h .='</div>';
 
-			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[type]" data-is-asset="1" data-index="'.$index.'">';
+			$h .= '<div class="operation-asset create-operation-radio" data-wrapper="asset'.$suffix.'[type]" data-is-asset="1" data-index="'.$index.'">';
 				$h .= $form->radio(
 					'asset'.$suffix.'[type]',
 					\asset\AssetElement::LINEAR,
@@ -294,7 +284,7 @@ class OperationUi {
 				$h .= $form->number('asset'.$suffix.'[duration]', '');
 			$h .= '</div>';
 
-			$h .= '<div data-wrapper="type'.$suffix.'">';
+			$h .= '<div data-wrapper="type'.$suffix.'" class="create-operation-radio">';
 					$h .= $form->radio(
 						'type'.$suffix,
 						OperationElement::DEBIT,
@@ -372,7 +362,7 @@ class OperationUi {
 						],
 					);
 				}
-				$h .= '<div data-wrapper="paymentMode'.$suffix.'">';
+				$h .= '<div data-wrapper="paymentMode'.$suffix.'" class="create-operation-radio">';
 					$h .= $paymentModeInput;
 				$h .= '</div>';
 
@@ -388,10 +378,7 @@ class OperationUi {
 
 		$h = '<div class="create-operation create-operation-validation">';
 
-			$h .= '<h4 class="create-operation-validate-title">';
-				$h .= '<div>'.s("Total opération :").'</div><div data-field="cashflowAmount"></div>';
-				$h .= '<div>'.s("Total écritures <br /><small>(HT + TVA)</small> :").'</div><div data-field="calculatedTotal"></div>';
-			$h .= '</h4>';
+			$h .= '<h4 class="create-operation-validate-title"></h4>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';

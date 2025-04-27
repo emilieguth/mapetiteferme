@@ -166,7 +166,7 @@ class Operation {
 
         qsa('.create-operation-delete', node => (operations > 1 && Number(node.getAttribute('data-index')) === operations - 1) ? node.classList.remove('hide') : node.classList.add('hide'));
 
-        qs('.create-operations-container').setAttribute('data-columns', operations);
+        qs('#create-operation-list').setAttribute('data-columns', operations);
 
         Operation.updateSubmitText();
 

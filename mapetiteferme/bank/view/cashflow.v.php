@@ -29,7 +29,7 @@ new AdaptativeView('allocate', function($data, PanelTemplate $t) {
 
 new JsonView('addAllocate', function($data, AjaxTemplate $t) {
 
-	$t->qs('.create-operations-container')->setAttribute('data-columns', $data->index + 1);
+	$t->qs('#create-operation-list')->setAttribute('data-columns', $data->index + 1);
 	$t->qs('.create-operation[data-index="'.($data->index - 1).'"]')->insertAdjacentHtml('afterend', new \bank\CashflowUi()->addAllocate($data->eOperation, $data->eFinancialYear, $data->eCashflow, $data->index));
 	$t->qs('#add-operation')->setAttribute('post-index', $data->index + 1);
 	$t->js()->eval('Cashflow.updateNewOperationLine('.$data->index.')');

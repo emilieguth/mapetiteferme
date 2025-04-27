@@ -37,3 +37,53 @@
 .cashflow-status-allocated {
     color: var(--success);
 }
+
+
+/* Allocating form */
+
+.panel-header-content .create-operations-container > div:nth-child(2n+1),
+.panel-header-content .create-operations-container > * {
+    background-color: transparent !important;
+}
+
+#bank-cashflow-allocate > div.panel-header > a {
+    display: none;
+}
+#bank-cashflow-allocate div.panel-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-operation-total {
+    display: flex !important;
+    flex-direction: column;
+    align-self: baseline;
+    justify-content: end;
+}
+
+.create-operation-total .amount {
+    font-size: 1.3rem;
+    text-align: center;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 8px;
+}
+.create-operation-total .warning {
+    font-size: 0.9rem;
+    color: white;
+    background-color: var(--danger);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+@supports (grid-template-columns: subgrid) {
+
+    .create-operation-total {
+        grid-row: span 2 !important;
+    }
+
+}
+#cashflow-allocate-difference-value {
+    font-weight: bold;
+}
