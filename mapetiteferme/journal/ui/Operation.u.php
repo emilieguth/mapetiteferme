@@ -243,19 +243,12 @@ class OperationUi {
 			$h .= '<div class="operation-asset" data-is-asset="1" data-index="'.$index.'">';
 			$h .='</div>';
 
-			$h .= '<div class="operation-asset create-operation-radio" data-wrapper="asset'.$suffix.'[type]" data-is-asset="1" data-index="'.$index.'">';
-				$h .= $form->radio(
-					'asset'.$suffix.'[type]',
-					\asset\AssetElement::LINEAR,
-					\asset\AssetUi::p('type')->values[\asset\AssetElement::LINEAR],
-					''
-				)
-				.$form->radio(
-					'asset'.$suffix.'[type]',
-					\asset\AssetElement::WITHOUT,
-					\asset\AssetUi::p('type')->values[\asset\AssetElement::WITHOUT],
-					'',
-				);
+			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[type]" data-is-asset="1" data-index="'.$index.'">';
+				$h .= $form->radios('asset'.$suffix.'[type]', \asset\AssetUi::p('type')->values, '', [
+					'data-index' => $index,
+					'columns' => 2,
+					'mandatory' => TRUE,
+				]);
 			$h .='</div>';
 
 			$h .= '<div class="operation-asset" data-wrapper="asset'.$suffix.'[acquisitionDate]" data-is-asset="1" data-index="'.$index.'">';
@@ -283,26 +276,13 @@ class OperationUi {
 				$h .= $form->number('asset'.$suffix.'[duration]', '');
 			$h .= '</div>';
 
-			$h .= '<div data-wrapper="type'.$suffix.'" class="create-operation-radio">';
-					$h .= $form->radio(
-						'type'.$suffix,
-						OperationElement::DEBIT,
-						self::p('type')->values[OperationElement::DEBIT],
-						$defaultValues['type'] ?? '',
-						[
-							'data-index' => $index,
-							'data-field' => 'type',
-						]
-					).
-					$form->radio(
-						'type'.$suffix, OperationElement::CREDIT,
-						self::p('type')->values[OperationElement::CREDIT],
-						$defaultValues['type'] ?? '',
-						[
-							'data-index' => $index,
-							'data-field' => 'type',
-						]
-					);
+			$h .= '<div data-wrapper="type'.$suffix.'">';
+				$h .= $form->radios('type'.$suffix, self::p('type')->values, $defaultValues['type'] ?? '', [
+						'data-index' => $index,
+						'columns' => 2,
+						'data-field' => 'type',
+						'mandatory' => TRUE,
+					]);
 			$h .= '</div>';
 
 			$vatRateDefault = 0;
@@ -351,20 +331,13 @@ class OperationUi {
 					$h .= $form->date('paymentDate'.$suffix, $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]);
 				$h .= '</div>';
 
-				$paymentModeInput = '';
-				foreach(self::p('paymentMode')->values as $paymentMode => $text) {
-					$paymentModeInput .= $form->radio(
-						'paymentMode'.$suffix,
-						$paymentMode,
-						self::p('paymentMode')->values[$paymentMode],
+				$h .= '<div data-wrapper="paymentMode'.$suffix.'">';
+					$h .= $form->select(
+						'paymentMode',
+						\journal\OperationUi::p('paymentMode')->values,
 						$defaultValues['paymentMode'] ?? '',
-						[
-							'data-index' => $index
-						],
+						['mandatory' => TRUE],
 					);
-				}
-				$h .= '<div data-wrapper="paymentMode'.$suffix.'" class="create-operation-radio">';
-					$h .= $paymentModeInput;
 				$h .= '</div>';
 
 			}
@@ -384,9 +357,13 @@ class OperationUi {
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
 			$h .= '<div class="create-operation-validate"></div>';
-			$h .= '<div class="create-operation-validate"></div>';
-			$h .= '<div class="create-operation-validate"></div>';
-			$h .= '<div class="create-operation-validate"></div>';
+			$h .= '<div class="create-operation-validate cashflow-warning">';
+				$h .= '<div>';
+					$h .= '<span id="cashflow-allocate-difference-warning" class="warning hide">';
+					$h .= s("⚠️ Différence de <span></span>", ['span' => '<span id="cashflow-allocate-difference-value">']);
+					$h .= '</span>';
+				$h .= '</div>';
+			$h .= '</div>';
 			$h .= '<div class="create-operation-validate" data-field="amountIncludingVAT"><div><span>=</span><span data-type="value"></span></div></div>';
 			$h .= '<div class="create-operation-validate" data-field="amount"><div><span>=</span><span data-type="value"></span></div></div>';
 
@@ -462,8 +439,8 @@ class OperationUi {
 
 			case 'type':
 				$d->values = [
-					OperationElement::CREDIT => s("Crédit"),
 					OperationElement::DEBIT => s("Débit"),
+					OperationElement::CREDIT => s("Crédit"),
 				];
 				break;
 

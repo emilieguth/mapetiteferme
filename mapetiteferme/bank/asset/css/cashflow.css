@@ -40,8 +40,21 @@
 
 
 /* Allocating form */
-
-.create-operation-validate div {
+.create-operation-cashflow-general {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr;
+    grid-gap: 0.5rem;
+    align-items: center;
+}
+.create-operation-cashflow-title {
+    background-color: var(--background-light);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: var(--radius);
+}
+.create-operation .create-operation-validate div {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -92,16 +105,24 @@
         grid-row: span 2 !important;
     }
 
+    .cashflow-warning {
+        grid-row: span 3;
+    }
+
 }
 #cashflow-allocate-difference-value {
     font-weight: bold;
 }
-
 .create-operation-validate.danger > div {
     color: white;
     background-color: var(--danger) !important;
 }
-
+.cashflow-warning {
+    align-content: end;
+}
+#cashflow-allocate-difference-warning {
+    text-align: center;
+}
 .create-operation-validate.warning {
     align-content: baseline;
     margin-top: -0.5rem;
@@ -114,9 +135,11 @@
 .create-operation-validation {
     margin-left: 0.5rem;
 }
+
 .create-operation-validation > .btn {
     display: block;
 }
-.create-operation-validate {
+
+.create-operation .create-operation-validate {
     color: var(--primary);
 }

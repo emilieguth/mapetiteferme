@@ -308,6 +308,7 @@ class CashflowUi {
 
 		$h = $form->hidden('company', $eCompany['id']);
 		$h .= $form->hidden('id', $eCashflow['id']);
+		$h .= '<span name="cashflow-amount" class="hide">'.$eCashflow['amount'].'</span>';
 
 		$title = '<div class="panel-title-container">';
 			$title .= '<h2 class="panel-title">'.encode($eCashflow['memo']).'</h2>';
@@ -317,49 +318,29 @@ class CashflowUi {
 
 		$subtitle = '<h2 class="panel-subtitle">';
 			$subtitle .= s(
-				"Numéro : <b>{number}</b> / Type : <b>{type}</b> / Date de transaction : <b>{date}</b>",
+				"Montant : <b class='color-primary'>{amount}</b> / Numéro : <b>{number}</b> / Type : <b>{type}</b> / Date de transaction : <b>{date}</b>",
 				[
+					'amount' => \util\TextUi::money(abs($eCashflow['amount'])),
 					'number' => $eCashflow['id'],
 					'type' => self::p('type')->values[$eCashflow['type']],
 					'date' => \util\DateUi::numeric($eCashflow['date'], \util\DateUi::DATE),
 				]
 			);
 		$subtitle .= '</h2>';
-		$subtitle .= '<div class="create-operations-container mt-1">';
-			$subtitle .= '<div class="create-operation create-operation-headers">';
-				$subtitle .= '<div class="create-operation-header">';
-					$subtitle .= \journal\OperationUi::p('paymentDate');
-				$subtitle .= '</div>';
-				$subtitle .= '<div class="create-operation-header">';
-					$subtitle .= \journal\OperationUi::p('paymentMode');
-				$subtitle .= '</div>';
-			$subtitle .= '</div>';
-			$subtitle .= '<div class="create-operation">';
-				$subtitle .= '<div>';
-					$subtitle .= $form->date('paymentDate', $defaultValues['paymentDate'] ?? '', ['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']]);
-				$subtitle .= '</div>';
-				$paymentModeInput = '<div class="create-operation-radio">';
-					foreach(\journal\OperationUi::p('paymentMode')->values as $paymentMode => $text) {
-						$paymentModeInput .= $form->radio(
-							'paymentMode',
-							$paymentMode,
-							\journal\OperationUi::p('paymentMode')->values[$paymentMode],
-							$defaultValues['paymentMode'] ?? '',
-							[
-								'data-index' => $index
-							],
-						);
-					}
-				$paymentModeInput .= '</div>';
-				$subtitle .= $paymentModeInput;
-			$subtitle .= '</div>';
-			$subtitle .= '<div class="create-operation create-operation-total">';
-				$subtitle .= '<span name="cashflow-amount" class="hide">'.$eCashflow['amount'].'</span>';
-				$subtitle .= '<span class="amount">'.\util\TextUi::money(abs($eCashflow['amount'])).'</span>';
-				$subtitle .= '<span id="cashflow-allocate-difference-warning" class="warning hide">';
-					$subtitle .= s("⚠️ Différence de <span></span>", ['span' => '<span id="cashflow-allocate-difference-value">']);
-				$subtitle .= '</span>';
-			$subtitle .= '</div>';
+		$subtitle .= '<div class="create-operation-cashflow-general mt-1">';
+			$subtitle .= '<div class="create-operation-cashflow-title">'.\journal\OperationUi::p('paymentDate').'</div>';
+			$subtitle .= $form->date(
+				'paymentDate',
+					$defaultValues['paymentDate'] ?? '',
+				['min' => $eFinancialYear['startDate'], 'max' => $eFinancialYear['endDate']],
+			);
+			$subtitle .= '<div class="create-operation-cashflow-title">'.\journal\OperationUi::p('paymentMode').'</div>';
+			$subtitle .= $form->select(
+				'paymentMode',
+				\journal\OperationUi::p('paymentMode')->values,
+					$defaultValues['paymentMode'] ?? '',
+				['mandatory' => TRUE],
+			);
 		$subtitle .= '</div>';
 
 		$h .= \journal\OperationUi::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);

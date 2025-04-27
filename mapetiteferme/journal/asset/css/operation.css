@@ -102,11 +102,6 @@
     align-items: center;
 }
 
-.create-operation-radio {
-    display: flex;
-    gap: 0.5rem;
-}
-
 [data-wrapper^="vatValue"] {
     align-content: start;
     align-items: start;

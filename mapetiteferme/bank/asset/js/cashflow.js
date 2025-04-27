@@ -57,9 +57,9 @@ class Cashflow {
         CalculationField.setValue(targetVatValue, Math.abs(missingVatValue));
 
         if(missingAmountValue > 0) {
-            qs('[data-field="type"][value="credit"][data-index="' + index + '"]').setAttribute('checked', true);
+            qs('[name="type[' + index + ']"][value="credit"]').setAttribute('checked', true);
         } else {
-            qs('[data-field="type"][value="debit"][data-index="' + index + '"]').setAttribute('checked', true);
+            qs('[name="type[' + index + ']"][value="debit"]').setAttribute('checked', true);
         }
 
     }
@@ -105,7 +105,7 @@ class Cashflow {
         return Math.round(allValues.reduce(function (acc, value) {
             const index = value.firstParent('.input-group').qs('input[data-index]').dataset.index;
 
-            const creditType = qs('[data-field="type"][data-index="' + index + '"]:checked').value;
+            const creditType = qs('[name="type[' + index + ']"]:checked').getAttribute('value');
 
             if(creditType === 'credit') {
                 return acc - parseFloat(value.value || 0);
@@ -142,15 +142,21 @@ class Cashflow {
         if(sum !== totalAmount) {
             var difference = totalAmount - sum;
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('danger');
+            qs('.create-operation-validate[data-field="amountIncludingVAT"]').previousSibling.classList.add('danger');
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
             qs('#cashflow-allocate-difference-value').innerHTML = money(Math.abs(difference));
         } else {
+            qs('.create-operation-validate[data-field="amountIncludingVAT"]').previousSibling.classList.remove('danger');
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.remove('danger');
             qs('#cashflow-allocate-difference-warning').classList.add('hide');
         }
     }
 
     static vatWarning(on) {
+
+        if(qs('form#bank-cashflow-allocate') === null) {
+            return;
+        }
 
         if(on === true) {
             qs('.create-operation-validate[data-field="vatValue"]').classList.add('warning');

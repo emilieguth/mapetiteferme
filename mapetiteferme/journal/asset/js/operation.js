@@ -240,20 +240,28 @@ class Operation {
 
         // On vérifie les calculs de TVA
         Operation.checkVatConsistency(index);
-        Cashflow.checkValidationValues();
+
+        if(typeof Cashflow !== 'undefined') {
+            Cashflow.checkValidationValues();
+        }
 
     }
 
     static updateVatValue(index) {
 
         Operation.recalculateVAT(index);
-        Cashflow.checkValidationValues();
+
+        if(typeof Cashflow !== 'undefined') {
+            Cashflow.checkValidationValues();
+        }
 
     }
 
     static checkVatConsistency(index) {
 
-        Cashflow.checkValidationValues();
+        if(typeof Cashflow !== 'undefined') {
+            Cashflow.checkValidationValues();
+        }
 
         const targetAmount = qs('[name="amount[' + index + ']"');
         const amount = CalculationField.getValue(targetAmount);
@@ -273,11 +281,15 @@ class Operation {
             qs('[data-vat-warning][data-index="' + index + '"]').removeHide();
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.add('form-warning-wrapper'));
             qs('[data-vat-warning-value][data-index="' + index + '"]').innerHTML = money(expectedVatValue);
-            Cashflow.vatWarning(true);
+            if(typeof Cashflow !== 'undefined') {
+                Cashflow.vatWarning(true);
+            }
         } else {
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.remove('form-warning-wrapper'));
             qs('[data-vat-warning][data-index="' + index + '"]').hide();
-            Cashflow.vatWarning(false);
+            if(typeof Cashflow !== 'undefined') {
+                Cashflow.vatWarning(false);
+            }
         }
 
     }
