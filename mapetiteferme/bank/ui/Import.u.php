@@ -140,6 +140,17 @@ class ImportUi {
 							['number' => count($eImport['result']['imported'])]
 						);
 					$h.= '</a>';
+					if(empty($eImport['result']['alreadyImported']) === FALSE) {
+						$h .= '<div>';
+						$h.= \Asset::icon('slash-circle');
+						$h.= p(
+							"{number} mouvement ignoré (déjà importé)",
+							"{number} mouvements ignorés (déjà importés)",
+							count($eImport['result']['alreadyImported']),
+							['number' => count($eImport['result']['alreadyImported'])]
+						);
+						$h .= '</div>';
+					}
 
 				} else if($eImport['status'] === ImportElement::NONE) {
 
