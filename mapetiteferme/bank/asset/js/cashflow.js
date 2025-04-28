@@ -31,7 +31,7 @@ class Cashflow {
             sum += (type.value === 'credit' ? totalAmountToAdd : totalAmountToAdd * -1);
         }
 
-        return Math.round(sum * 100) / 100;
+        return round(sum);
 
     }
 
@@ -42,17 +42,17 @@ class Cashflow {
 
         const sum = Cashflow.recalculateAmounts(index);
 
-        const missingAmountIncludingVATValue = Math.round((totalAmountIncludingVat - sum) * 100) / 100;
+        const missingAmountIncludingVATValue = round(totalAmountIncludingVat - sum);
 
         const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
         CalculationField.setValue(targetAmountIncludingVAT, Math.abs(missingAmountIncludingVATValue));
 
         const targetAmount = qs('[name="amount[' + index + ']"');
         const vatRate = qs('[name="vatRate[' + index + ']"]').valueAsNumber;
-        const missingAmountValue = Math.round(missingAmountIncludingVATValue / (1 + vatRate / 100) * 100) / 100;
+        const missingAmountValue = round(missingAmountIncludingVATValue / (1 + vatRate / 100));
         CalculationField.setValue(targetAmount, Math.abs(missingAmountValue));
 
-        const missingVatValue = Math.round((missingAmountIncludingVATValue - missingAmountValue) * 100) / 100;
+        const missingVatValue = round(missingAmountIncludingVATValue - missingAmountValue);
         const targetVatValue = qs('[name="vatValue[' + index + ']"');
         CalculationField.setValue(targetVatValue, Math.abs(missingVatValue));
 
@@ -102,7 +102,7 @@ class Cashflow {
 
         const allValues = Array.from(qsa('[type="hidden"][name^="' + type + '["]', element => element.value));
 
-        return Math.round(allValues.reduce(function (acc, value) {
+        return round(allValues.reduce(function (acc, value) {
             const index = value.firstParent('.input-group').qs('input[data-index]').dataset.index;
 
             const creditType = qs('[name="type[' + index + ']"]:checked').getAttribute('value');
@@ -112,7 +112,7 @@ class Cashflow {
             } else {
                 return acc + parseFloat(value.value || 0);
             }
-        }, 0) * 100) / 100;
+        }, 0));
     }
 
     static fillVatValue(index) {
@@ -135,18 +135,18 @@ class Cashflow {
         const vatRate = qs('[name="vatRate[' + index + ']"]').value;
 
         const targetVatValue = qs('[name="vatValue[' + index +']"');
-        const vatValue = Math.round(amount * vatRate) / 100;
+        const vatValue = round(amount * vatRate / 100);
 
         if(amount + vatValue === totalAmountIncludingVat) {
             return;
         }
 
-        if(Math.abs(Math.round((totalAmountIncludingVat - amount - vatValue) * 100) / 100) <= 0.01) {
-            const newVatValue = totalAmountIncludingVat - amount;
+        if(Math.abs(round(totalAmountIncludingVat - amount - vatValue)) <= 0.01) {
+            const newVatValue = round(totalAmountIncludingVat - amount);
             CalculationField.setValue(targetVatValue, newVatValue);
 
             const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index +']"');
-            CalculationField.setValue(targetAmountIncludingVAT, Math.round((amount + newVatValue) * 100)/100);
+            CalculationField.setValue(targetAmountIncludingVAT, round(amount + newVatValue));
         }
 
     }
@@ -176,7 +176,7 @@ class Cashflow {
         qs('.create-operation-validate[data-field="assetValue"] [data-type="value"]').innerHTML = money(assetValue);
 
         if(sum !== totalAmount) {
-            var difference = Math.round((totalAmount - sum) * 100) / 100;
+            var difference = round(totalAmount - sum);
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.add('danger');
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').previousSibling.classList.add('danger');
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
@@ -225,7 +225,7 @@ class CashflowAttach {
 
         let total = 0;
         qsa('input[type="checkbox"][name="operation[]"]:checked', operation => total += parseFloat(qs('span[data-operation="' + operation.value + '"][name="amount"]').innerHTML));
-        total = Math.round(total * 100) / 100;
+        total = round(total);
         qs('span[data-field="totalAmount"]').innerHTML = money(total);
 
         const cashflowAmount = parseFloat(qs('span[name="cashflow-amount"]').innerHTML);

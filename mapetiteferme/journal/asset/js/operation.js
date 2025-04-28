@@ -218,7 +218,7 @@ class Operation {
         }
 
         if(isNaN(amount) === false) {
-            const newAmount = (amount / (1 + accountDetail.vatRate / 100)).toFixed(2);
+            const newAmount = round(amount / (1 + accountDetail.vatRate / 100));
             CalculationField.setValue(targetAmount, Math.abs(newAmount));
         }
 
@@ -237,14 +237,15 @@ class Operation {
         const vatRate = qs('[name="vatRate[' + index + ']"]').value;
 
         const targetVatValue = qs('[name="vatValue[' + index +']"');
-        const vatValue = Math.round(amount * vatRate) / 100;
+        const vatValue = round(amount * vatRate / 100);
 
         CalculationField.setValue(targetVatValue, vatValue);
 
         if(Operation.isLocked('amountIncludingVAT', index)) {
 
             const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index + ']"');
-            CalculationField.setValue(targetAmountIncludingVAT, Math.round((vatValue + amount) * 100) / 100);
+            CalculationField.setValue(targetAmountIncludingVAT, round(vatValue + amount));
+
         }
 
         if(typeof Cashflow !== 'undefined') {
@@ -295,7 +296,7 @@ class Operation {
             return;
         }
 
-        const expectedVatValue = Math.round(amount * vatRate) / 100;
+        const expectedVatValue = round(amount * vatRate / 100);
 
         if(Math.abs(vatValue - expectedVatValue) > 0.01) {
             qs('[data-vat-warning][data-index="' + index + '"]').removeHide();
@@ -357,9 +358,9 @@ class Operation {
         if(isAmountLocked && isNaN(amountIncludingVAT) === false) {
             let newAmount = null;
             if(isNaN(vatValue) === false) {
-                newAmount = Math.round((amountIncludingVAT - vatValue) * 100) / 100;
+                newAmount = round(amountIncludingVAT - vatValue);
             } else if(isNaN(vatRate) === false) {
-                newAmount = Math.round((amountIncludingVAT / (1 + vatRate / 100)) * 100) / 100;
+                newAmount = round(amountIncludingVAT / (1 + vatRate / 100));
             }
             if(newAmount !== null) {
                 CalculationField.setValue(targetAmount, newAmount);
@@ -367,9 +368,9 @@ class Operation {
         } else if(isAmountIncludingVATLocked && isNaN(amount) === false) {
             let newAmountIncludingVAT = null;
             if(isNaN(vatValue) === false) {
-                newAmountIncludingVAT = Math.round((amount + vatValue) * 100) / 100;
+                newAmountIncludingVAT = round(amount + vatValue);
             } else if(isNaN(vatRate) === false) {
-                newAmountIncludingVAT = Math.round(amount + amount / vatRate * 100) / 100;
+                newAmountIncludingVAT = round(amount * (1 + vatRate / 100));
             }
             if(newAmountIncludingVAT !== null) {
                 CalculationField.setValue(targetAmountIncludingVAT, newAmountIncludingVAT);
