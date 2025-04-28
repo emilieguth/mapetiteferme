@@ -6,6 +6,7 @@ class Employee extends EmployeeElement {
 	public static function getSelection(): array {
 
 		return [
+			'id',
 			'user' => [
 				'name' => new \Sql('IF(firstName IS NULL, lastName, CONCAT(firstName, " ", lastName))'),
 				'email', 'firstName', 'lastName', 'visibility', 'vignette', 'createdAt'

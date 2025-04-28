@@ -1,11 +1,11 @@
 <?php
-(new Page(function($data) {
+new Page(function($data) {
 
 	$data->eCompany = \company\CompanyLib::getById(INPUT('company'))->validate('canManage');
 
 	\user\ConnectionLib::checkLogged();
 
-}))
+})
   ->get('manage', function($data) {
 
     \company\EmployeeLib::register($data->eCompany);
@@ -90,11 +90,11 @@
 
   });
 
-(new \company\EmployeePage(function($data) {
+new \company\EmployeePage(function($data) {
 
   \user\ConnectionLib::checkLogged();
 
-}))
+})
   ->getCreateElement(function($data) {
 
     return new \company\Employee([
