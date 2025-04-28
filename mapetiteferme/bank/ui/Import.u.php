@@ -30,6 +30,9 @@ class ImportUi {
 
 	protected function getPeriod(string $period, \accounting\FinancialYear $eFinancialYear): string {
 
+		if($period > date('Y-m-d')) {
+			$period = date('Y-m-d');
+		}
 		$year = \accounting\FinancialYearUi::getYear($eFinancialYear);
 
 		if(mb_strlen($year) === 4) {
