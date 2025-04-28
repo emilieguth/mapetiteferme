@@ -210,7 +210,6 @@ class OperationUi {
 			$h .= '<div data-wrapper="comment'.$suffix.'">';
 				$h .= $form->dynamicField($eOperation, 'comment'.$suffix, function($d) {
 					$d->default = $defaultValues['comment'] ?? '';
-					$d->attributes['data-limit'] = 250;
 				});
 			$h .='</div>';
 
@@ -500,6 +499,7 @@ class OperationUi {
 				break;
 
 			case 'comment' :
+				$d->attributes['data-limit'] = 250;
 				break;
 
 			case 'paymentMode' :

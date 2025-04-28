@@ -14,6 +14,7 @@ Company:
   createdAt: datetime = SPECIAL(now)
   status: enum(ACTIVE, CLOSED) = ACTIVE
   accountingType: enum(ACCRUAL, CASH) = CASH
+  subscriptionType: ?set(ACCOUNTING, PRODUCTION, SALES)
 
 Employee:
   id: serial32
@@ -40,4 +41,24 @@ Invite:
   INDEX: [
     ["email"],
     ["key"]
+  ]
+
+Subscription:
+  company: company\Company
+  type: enum(ACCOUNTING, PRODUCTION, SALES)
+  startsAt: date
+  endsAt: date
+  createdAt: date = SQL(NOW())
+  updatedAt: date = SQL(NOW())
+  UNIQUE: [
+    ["company", "type"]
+  ]
+
+SubscriptionHistory:
+  company: company\Company
+  type: enum(ACCOUNTING, PRODUCTION, SALES)
+  createdBy: user\User = SPECIAL(user)
+  createdAt: date = SQL(NOW())
+  INDEX: [
+    ["company"]
   ]

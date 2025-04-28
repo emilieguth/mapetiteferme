@@ -560,11 +560,6 @@ class CompanyUi {
 				'url' => CompanyUi::urlOverview($eCompany).'/accounting',
 				'label' => s("Balances")
 			],
-			'p-and-l' => [
-				'url' => CompanyUi::urlOverview($eCompany).'/p-and-l',
-				'label' => s("Comptes de résultat (TODO)")
-			]
-			// immos (état + amortissements), TVA (achat + vente)
 		];
 
 	}

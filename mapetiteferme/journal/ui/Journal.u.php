@@ -256,12 +256,8 @@ class JournalUi {
 
 	private function getCommentButton(string $icon, string $content): string {
 
-		$buttonComment = '<span class="btn btn-outline-secondary"  data-dropdown="bottom-end" data-dropdown-hover="TRUE" data-dropdown-offset-x="0" >'.\Asset::icon($icon).'</span>';
-		$buttonComment .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
-			$buttonComment .= $content;
-		$buttonComment .= '</div>';
+		return '<span class="btn btn-outline-secondary" title="'.encode($content).'" >'.\Asset::icon($icon).'</span>';
 
-		return $buttonComment;
 	}
 
 	protected function displayActions(\company\Company $eCompany, Operation $eOperation, bool $canUpdate, ?string $cashflowLink): string {
@@ -301,7 +297,6 @@ class JournalUi {
 			$eOperation->isClassAccount(\Setting::get('accounting\chargeAccountClass')) === TRUE
 			// On ne rajoute pas des frais de port sur des frais de port
 			and mb_substr($eOperation['accountLabel'], 0, strlen((string)\Setting::get('accounting\shippingChargeAccountClass'))) !== (string)\Setting::get('accounting\shippingChargeAccountClass')
-			and $canUpdate === TRUE
 		) {
 
 			$args = [
@@ -315,11 +310,7 @@ class JournalUi {
 				'cashflow' => $eOperation['cashflow']['id'] ?? NULL,
 			];
 
-			$buttonDelivery = '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create?'.http_build_query($args).'" class="btn btn-outline-secondary" class="btn btn-outline-secondary"  data-dropdown="bottom-end" data-dropdown-hover="TRUE" data-dropdown-offset-x="0" >'.\Asset::icon('truck').'</a>';
-			$buttonDelivery .= '<div class="operation-comment-dropdown dropdown-list dropdown-list-unstyled">';
-				$buttonDelivery .= s("Ajouter des frais de livraison");
-			$buttonDelivery .= '</div>';
-			$h .= $buttonDelivery;
+			$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create?'.http_build_query($args).'" class="btn btn-outline-secondary" class="btn btn-outline-secondary" title="'.s("Ajouter des frais de livraison").'">'.\Asset::icon('truck').'</a>';
 
 		} else {
 
