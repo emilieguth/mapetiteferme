@@ -115,6 +115,42 @@ class Cashflow {
         }, 0) * 100) / 100;
     }
 
+    static fillVatValue(index) {
+
+        if(qs('form#bank-cashflow-allocate') === null) {
+            return;
+        }
+
+        const sum = Cashflow.recalculateAmounts(index);
+        // Ce n'est pas la seule écriture : on ne bricole pas automatiquement en cas d'écart de centime.
+        if(sum !== 0.0) {
+            return;
+        }
+
+        const totalAmountIncludingVat = Math.abs(parseFloat(qs('span[name="cashflow-amount"]').innerHTML));
+
+        const targetAmount = qs('[name="amount[' + index + ']"');
+        const amount = CalculationField.getValue(targetAmount);
+
+        const vatRate = qs('[name="vatRate[' + index + ']"]').value;
+
+        const targetVatValue = qs('[name="vatValue[' + index +']"');
+        const vatValue = Math.round(amount * vatRate) / 100;
+
+        if(amount + vatValue === totalAmountIncludingVat) {
+            return;
+        }
+
+        if(Math.abs(Math.round((totalAmountIncludingVat - amount - vatValue) * 100) / 100) <= 0.01) {
+            const newVatValue = totalAmountIncludingVat - amount;
+            CalculationField.setValue(targetVatValue, newVatValue);
+
+            const targetAmountIncludingVAT = qs('[name="amountIncludingVAT[' + index +']"');
+            CalculationField.setValue(targetAmountIncludingVAT, Math.round((amount + newVatValue) * 100)/100);
+        }
+
+    }
+
     static checkValidationValues() {
 
         if(qs('form#bank-cashflow-allocate') === null) {

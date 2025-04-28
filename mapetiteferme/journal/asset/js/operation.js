@@ -194,7 +194,7 @@ class Operation {
 
     static refreshVAT(accountDetail) {
 
-        const index = accountDetail.input.getAttribute('data-index');
+        const index = parseInt(accountDetail.input.getAttribute('data-index'));
 
         // Si le taux de TVA était à 0, on va re-calculer le montant HT pour éviter d'avoir à le ressaisir.
         const targetAmount = qs('[name="amount[' + index + ']"');
@@ -247,6 +247,10 @@ class Operation {
             CalculationField.setValue(targetAmountIncludingVAT, Math.round((vatValue + amount) * 100) / 100);
         }
 
+        if(typeof Cashflow !== 'undefined') {
+            Cashflow.fillVatValue(index);
+        }
+
         // On vérifie les calculs de TVA
         Operation.checkVatConsistency(index);
 
@@ -293,7 +297,7 @@ class Operation {
 
         const expectedVatValue = Math.round(amount * vatRate) / 100;
 
-        if(vatValue !== expectedVatValue) {
+        if(Math.abs(vatValue - expectedVatValue) > 0.01) {
             qs('[data-vat-warning][data-index="' + index + '"]').removeHide();
             qs('[data-wrapper="vatValue[' + index + ']"]', node => node.classList.add('form-warning-wrapper'));
             qs('[data-vat-warning-value][data-index="' + index + '"]').innerHTML = money(expectedVatValue);
@@ -351,23 +355,23 @@ class Operation {
         const vatValue = CalculationField.getValue(targetVatValue);
 
         if(isAmountLocked && isNaN(amountIncludingVAT) === false) {
-            let newAmount;
+            let newAmount = null;
             if(isNaN(vatValue) === false) {
                 newAmount = Math.round((amountIncludingVAT - vatValue) * 100) / 100;
             } else if(isNaN(vatRate) === false) {
                 newAmount = Math.round((amountIncludingVAT / (1 + vatRate / 100)) * 100) / 100;
             }
-            if(newAmount) {
+            if(newAmount !== null) {
                 CalculationField.setValue(targetAmount, newAmount);
             }
         } else if(isAmountIncludingVATLocked && isNaN(amount) === false) {
-            let newAmountIncludingVAT;
+            let newAmountIncludingVAT = null;
             if(isNaN(vatValue) === false) {
                 newAmountIncludingVAT = Math.round((amount + vatValue) * 100) / 100;
             } else if(isNaN(vatRate) === false) {
                 newAmountIncludingVAT = Math.round(amount + amount / vatRate * 100) / 100;
             }
-            if(newAmountIncludingVAT) {
+            if(newAmountIncludingVAT !== null) {
                 CalculationField.setValue(targetAmountIncludingVAT, newAmountIncludingVAT);
             }
         }
