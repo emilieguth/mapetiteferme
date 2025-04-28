@@ -194,13 +194,17 @@ class CompanyUi {
 
 				$h .= $this->getOverviewMenu($eCompany, prefix: $prefix, tab: $tab);
 
-				$h .= '<a href="'.CompanyUi::urlSettings($eCompany).'" class="company-tab '.($tab === 'settings' ? 'selected' : '').'" data-tab="settings">';
-					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('gear').'</span>';
-					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('gear-fill').'</span>';
-					$h .= '<span class="company-tab-label hide-xs-down">';
-						$h .= s("Paramétrage");
-					$h .= '</span>';
-				$h .= '</a>';
+				if($eCompany->canWrite() === TRUE) {
+
+					$h .= '<a href="'.CompanyUi::urlSettings($eCompany).'" class="company-tab '.($tab === 'settings' ? 'selected' : '').'" data-tab="settings">';
+						$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('gear').'</span>';
+						$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('gear-fill').'</span>';
+						$h .= '<span class="company-tab-label hide-xs-down">';
+							$h .= s("Paramétrage");
+						$h .= '</span>';
+					$h .= '</a>';
+
+				}
 
 			$h .= '</div>';
 
@@ -258,15 +262,18 @@ class CompanyUi {
 
 			$h .= '<div class="util-buttons">';
 
-				$h .= '<a href="'.CompanyUi::url($eCompany).'/company:update?id='.$eCompany['id'].'" class="bg-secondary util-button">';
-					$h .= '<h4>'.s("Les réglages de base<br/>de la ferme").'</h4>';
-					$h .= \Asset::icon('gear-fill');
-				$h .= '</a>';
+				if($eCompany->canManage() === TRUE) {
 
-				$h .= '<a href="'.EmployeeUi::urlManage($eCompany).'" class="bg-secondary util-button">';
-					$h .= '<h4>'.s("L'équipe").'</h4>';
-					$h .= \Asset::icon('people-fill');
-				$h .= '</a>';
+					$h .= '<a href="'.CompanyUi::url($eCompany).'/company:update?id='.$eCompany['id'].'" class="bg-secondary util-button">';
+						$h .= '<h4>'.s("Les réglages de base<br/>de la ferme").'</h4>';
+						$h .= \Asset::icon('gear-fill');
+					$h .= '</a>';
+
+					$h .= '<a href="'.EmployeeUi::urlManage($eCompany).'" class="bg-secondary util-button">';
+						$h .= '<h4>'.s("L'équipe").'</h4>';
+						$h .= \Asset::icon('people-fill');
+					$h .= '</a>';
+				}
 
 				$h .= '<a href="'.CompanyUi::urlBank($eCompany).'/account" class="bg-secondary util-button">';
 					$h .= '<h4>'.s("Les comptes bancaires").'</h4>';
@@ -302,22 +309,25 @@ class CompanyUi {
 
 		$h .= '</div>';
 
-		$h .= '<div class="util-block-optional">';
+		if($eCompany->canManage() === TRUE) {
 
-			$h .= '<h2>😭</h2>';
+			$h .= '<div class="util-block-optional">';
 
-			$h .= '<div class="util-buttons">';
+				$h .= '<h2>😭</h2>';
 
-				$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Confirmez-vous vouloir supprimer votre ferme ?").'" class="bg-danger util-button">';
+				$h .= '<div class="util-buttons">';
 
-					$h .= '<h4>'.s("Supprimer la ferme").'</h4>';
-					$h .= \Asset::icon('trash');
+					$h .= '<a data-ajax="/company/company:doClose" post-id="'.$eCompany['id'].'" data-confirm="'.s("Confirmez-vous vouloir supprimer votre ferme ?").'" class="bg-danger util-button">';
 
-				$h .= '</a>';
+						$h .= '<h4>'.s("Supprimer la ferme").'</h4>';
+						$h .= \Asset::icon('trash');
+
+					$h .= '</a>';
+
+				$h .= '</div>';
 
 			$h .= '</div>';
-
-		$h .= '</div>';
+		}
 
 		return $h;
 

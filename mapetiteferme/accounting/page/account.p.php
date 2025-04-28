@@ -3,7 +3,7 @@ new Page(function($data) {
 
 	\user\ConnectionLib::checkLogged();
 
-	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canWrite');
 })
 ->get('index', function($data) {
 
@@ -69,7 +69,7 @@ new \accounting\AccountPage(function($data) {
 
 	\user\ConnectionLib::checkLogged();
 
-	$data->eCompany = \company\CompanyLib::getById(REQUEST('company'))->validate('canManage');
+	$data->eCompany = \company\CompanyLib::getById(REQUEST('company'))->validate('canWrite');
 })
 ->quick(['description'], [], ['canQuickUpdate'])
 ->create(function($data) {

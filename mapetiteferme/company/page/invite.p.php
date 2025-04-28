@@ -1,10 +1,10 @@
 <?php
-(new \company\InvitePage(function($data) {
+new \company\InvitePage(function($data) {
 
 	\user\ConnectionLib::checkLogged();
 	$data->eCompany = \company\CompanyLib::getById(INPUT('company'))->validate('canManage');
 
-}))
+})
   ->getCreateElement(function($data) {
 
     return new \company\Invite([

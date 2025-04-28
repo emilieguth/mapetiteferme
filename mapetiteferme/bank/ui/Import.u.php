@@ -14,7 +14,11 @@ class ImportUi {
 				$h .= s("Historique des imports de relevés bancaires");
 			$h .= '</h1>';
 
-			if($eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN and $eFinancialYear['endDate'] >= date('Y-m-d')) {
+			if(
+				$eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN
+				and $eFinancialYear['endDate'] >= date('Y-m-d')
+				and $eCompany->canWrite() === TRUE
+			) {
 
 				$h .= '<div>';
 					$h .= '<a href="'.\company\CompanyUi::urlBank($eCompany).'/import:import" class="btn btn-primary">'.\Asset::icon('file-earmark-plus').' '.s("Importer un relevé .ofx").'</a>';

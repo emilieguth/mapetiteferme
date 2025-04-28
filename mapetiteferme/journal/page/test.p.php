@@ -4,7 +4,7 @@ new Page(
 		\user\ConnectionLib::checkLogged();
 		$company = REQUEST('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 		\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 		if(LIME_ENV !== 'dev') {
 			throw new NotExistsAction();

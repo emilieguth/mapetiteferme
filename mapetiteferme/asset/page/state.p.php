@@ -6,7 +6,7 @@ new Page()
 
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canView');
 
 		[$data->cFinancialYear, $data->eFinancialYear] = \company\EmployeeLib::getDynamicFinancialYear($data->eCompany, GET('financialYear', 'int'));
 

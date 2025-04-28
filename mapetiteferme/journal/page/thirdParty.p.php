@@ -4,7 +4,7 @@ new \journal\ThirdPartyPage(
 		\user\ConnectionLib::checkLogged();
 		$company = REQUEST('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 	}
 )
 	->get('index', function($data) {
@@ -38,7 +38,7 @@ new Page(function($data) {
 
 	\user\ConnectionLib::checkLogged();
 
-	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canWrite');
 })
 ->post('query', function($data) {
 

@@ -7,7 +7,7 @@ new \asset\AssetPage(function($data) {
 		throw new NotExpectedAction('Asset Id is required.');
 	}
 
-	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canView');
 
 	$data->eAsset = \asset\AssetLib::getWithDepreciationsById(REQUEST('id'));
 
@@ -26,9 +26,9 @@ new \asset\AssetPage(function($data) {
 		throw new NotExpectedAction('Asset Id is required.');
 	}
 
-	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canManage');
+	$data->eCompany = \company\CompanyLib::getById(GET('company'))->validate('canView');
 
-	$data->eAsset = \asset\AssetLib::getWithDepreciationsById(REQUEST('id'))->validate('canManage');
+	$data->eAsset = \asset\AssetLib::getWithDepreciationsById(REQUEST('id'))->validate('canView');
 
 })
 	->get('dispose', function($data) {

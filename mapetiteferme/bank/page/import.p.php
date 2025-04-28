@@ -4,7 +4,7 @@ new Page(
 		\user\ConnectionLib::checkLogged();
 		$company = INPUT('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canView');
 
 		\Setting::set('main\viewBank', 'import');
 	}
@@ -18,7 +18,18 @@ new Page(
 
 		throw new ViewAction($data);
 
-	})
+	});
+
+new Page(
+	function($data) {
+		\user\ConnectionLib::checkLogged();
+		$company = INPUT('company');
+
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
+
+		\Setting::set('main\viewBank', 'import');
+	}
+)
 	->get('import', function($data) {
 
 		throw new ViewAction($data);

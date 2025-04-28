@@ -4,7 +4,7 @@ new \journal\OperationPage(
 		\user\ConnectionLib::checkLogged();
 		$company = REQUEST('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 		\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 	}
 )
@@ -99,7 +99,7 @@ new \journal\OperationPage(
 			\user\ConnectionLib::checkLogged();
 			$company = REQUEST('company');
 
-			$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+			$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 			\company\CompanyLib::connectSpecificDatabaseAndServer($data->eCompany);
 			$data->eOperation = \journal\OperationLib::getById(REQUEST('id', 'int'))->validate('canDelete');
 		}

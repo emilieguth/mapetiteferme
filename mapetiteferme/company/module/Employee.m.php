@@ -10,6 +10,10 @@ abstract class EmployeeElement extends \Element {
 	const ACTIVE = 'active';
 	const CLOSED = 'closed';
 
+	const OWNER = 'owner';
+	const EMPLOYEE = 'employee';
+	const ACCOUNTANT = 'accountant';
+
 	const INVITED = 'invited';
 	const IN = 'in';
 	const OUT = 'out';
@@ -47,13 +51,14 @@ class EmployeeModel extends \ModuleModel {
 			'user' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
 			'company' => ['element32', 'company\Company', 'cast' => 'element'],
 			'companyStatus' => ['enum', [\company\Employee::ACTIVE, \company\Employee::CLOSED], 'cast' => 'enum'],
+			'role' => ['enum', [\company\Employee::OWNER, \company\Employee::EMPLOYEE, \company\Employee::ACCOUNTANT], 'null' => TRUE, 'cast' => 'enum'],
 			'viewFinancialYear' => ['int16', 'min' => 0, 'max' => NULL, 'null' => TRUE, 'cast' => 'int'],
 			'status' => ['enum', [\company\Employee::INVITED, \company\Employee::IN, \company\Employee::OUT], 'cast' => 'enum'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'user', 'company', 'companyStatus', 'viewFinancialYear', 'status', 'createdAt'
+			'id', 'user', 'company', 'companyStatus', 'role', 'viewFinancialYear', 'status', 'createdAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -94,6 +99,9 @@ class EmployeeModel extends \ModuleModel {
 			case 'companyStatus' :
 				return ($value === NULL) ? NULL : (string)$value;
 
+			case 'role' :
+				return ($value === NULL) ? NULL : (string)$value;
+
 			case 'status' :
 				return ($value === NULL) ? NULL : (string)$value;
 
@@ -126,6 +134,10 @@ class EmployeeModel extends \ModuleModel {
 
 	public function whereCompanyStatus(...$data): EmployeeModel {
 		return $this->where('companyStatus', ...$data);
+	}
+
+	public function whereRole(...$data): EmployeeModel {
+		return $this->where('role', ...$data);
 	}
 
 	public function whereViewFinancialYear(...$data): EmployeeModel {

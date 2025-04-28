@@ -101,7 +101,7 @@ class EmployeeUi {
 
     return new \Panel(
 			id: 'company-employee-update',
-      title: s("Modifier un utilisateur de la ferme"),
+      title: s("Modifier une personne de l'équipe"),
       body: $h,
       close: 'reload'
     );
@@ -228,6 +228,15 @@ class EmployeeUi {
       $h .= '<dt>'.s("Adresse e-mail").'</dt>';
       $h .= '<dd>'.($eEmployee['user']['visibility'] === \user\User::PUBLIC ? encode($eEmployee['user']['email']) : '<i>'.s("Utilisateur fantôme").'</i>').'</dd>';
 
+		  $h .= '<dt>'.s("Rôle").'</dt>';
+		  $h .= '<dd>';
+				if($eEmployee['role'] === NULL) {
+					$h .= '<em>'.s("Aucun").'</em>';
+				} else {
+					$h .= self::p('role')->values[$eEmployee['role']];
+				}
+			$h .= '</dd>';
+
     $h .= '</dl>';
 
     $h .= '<br/>';
@@ -241,7 +250,7 @@ class EmployeeUi {
       $h .= '<div>';
 
       $h .= '<a href="'.CompanyUi::url($eEmployee['company']).'/employee:update?id='.$eEmployee['id'].'" class="btn btn-primary">';
-        $h .= s("Configurer l'utilisateur");
+        $h .= s("Configurer");
       $h .= '</a> ';
 
       $h .= '<a data-ajax="'.CompanyUi::url($eEmployee['company']).'/employee:doDelete" post-id="'.$eEmployee['id'].'" class="btn btn-primary" data-confirm="'.s("Souhaitez-vous réellement retirer cet utilisateur de la ferme ?").'">';
@@ -273,13 +282,14 @@ class EmployeeUi {
     $h .= $form->hidden('company', $eEmployee['company']['id']);
 
     $description = '<div class="util-block-help">';
-      $description .= '<p>'.s("En invitant un utilisateur à rejoindre l'équipe de votre ferme, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise.").'</p>';
-      $description .= '<p>'.s("Pour inviter un utilisateur, saisissez son adresse e-mail. Un e-mail avec les instructions à suivre lui sera envoyé. Ces instructions devront être réalisées dans un délai de trois jours.").'</p>';
+      $description .= '<p>'.s("En invitant une personne à rejoindre l'équipe de votre ferme, vous lui permettrez d'accéder à un grand nombre de données sur votre entreprise. Choisissez le rôle que vous donnez avec soin :").'</p>';
+	    $description .= $this->getRoles();
+      $description .= '<p>'.s("Pour inviter quelqu'un, saisissez son adresse e-mail. Un e-mail avec les instructions à suivre lui sera envoyé. Ces instructions devront être réalisées dans un délai de trois jours.").'</p>';
     $description .= '</div>';
 
     $h .= $form->group(content: $description);
 
-    $h .= $form->dynamicGroups($eEmployee, ['email*']);
+	  $h .= $form->dynamicGroups($eEmployee, ['email*', 'role*']);
 
     $h .= $form->group(
       content: $form->submit(s("Ajouter"))
@@ -291,6 +301,18 @@ class EmployeeUi {
 
   }
 
+	protected function getRoles(): string {
+
+		$h = '<ul>';
+		$h .= '<li>'.s("<b>Exploitant·e</b> : accède aux mêmes fonctionnalités que vous").'</li>';
+		$h .= '<li>'.s("<b>Salarié·e</b> : consulter les données uniquement, sans pouvoir les modifier").'</li>';
+		$h .= '<li>'.s("<b>Expert·e comptable</b> : accède à toutes les fonctionnalités sauf les réglages de base, l'équipe, et suppression de la ferme.").'</li>';
+		$h .= '</ul>';
+
+		return $h;
+
+	}
+
   public function update(\company\Employee $eEmployee): \Panel {
 
     $form = new \util\FormUi();
@@ -299,6 +321,21 @@ class EmployeeUi {
 
     $h .= $form->hidden('id', $eEmployee['id']);
 
+	  if($eEmployee->canUpdateRole()) {
+
+		  $h .= '<div class="util-block-help">';
+			  $h .= '<p>';
+					$h .= s(
+						"Pour rappel, le rôle que vous donnez à {name} conditionne les pages qui lui seront accessibles :",
+						['name' => '<b>'.encode($eEmployee['user']['firstName']).' '.encode($eEmployee['user']['lastName']).'</b>'],
+						);
+				$h .= '</p>';
+		    $h .= $this->getRoles();
+		  $h .= '</div>';
+
+		  $h .= $form->dynamicGroup($eEmployee, 'role');
+
+	  }
     $h .= $form->group(
       content: $form->submit(s("Modifier"))
     );
@@ -307,7 +344,7 @@ class EmployeeUi {
 
     return new \Panel(
 			id: 'company-employee-update',
-      title: s("Modifier un utilisateur de la ferme"),
+      title: s("Modifier une personne de l'équipe"),
       body: $h,
       close: 'reload'
     );
@@ -319,6 +356,7 @@ class EmployeeUi {
     $d = Employee::model()->describer($property, [
       'email' => s("Adresse e-mail"),
       'user' => s("Utilisateur"),
+	    'role' => s("Rôle"),
     ]);
 
     switch($property) {
@@ -326,6 +364,15 @@ class EmployeeUi {
       case 'email' :
         $d->field = 'email';
         break;
+
+	    case 'role' :
+		    $d->values = [
+			    EmployeeElement::OWNER => s("Exploitant·e"),
+			    EmployeeElement::EMPLOYEE => s("Salarié·e"),
+			    EmployeeElement::ACCOUNTANT => s("Expert·e comptable"),
+		    ];
+		    $d->attributes['mandatory'] = TRUE;
+		    break;
 
     }
 

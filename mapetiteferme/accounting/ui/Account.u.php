@@ -243,7 +243,6 @@ class AccountUi {
 		$h .= $form->dynamicGroup($eAccount, 'vatAccount', function($d) use($form) {
 		});
 		$h .= $form->dynamicGroup($eAccount,  'vatRate', function($d) use ($form) {
-				$d->after =  \util\FormUi::info(s("Facultatif"));
 				$d->default = NULL;
 			}
 		);

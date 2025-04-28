@@ -4,7 +4,7 @@ new \accounting\FinancialYearPage(
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 	}
 )
 	->get('opening', function($data) {
@@ -16,7 +16,7 @@ new \accounting\FinancialYearPage(
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 		$data->eFinancialYear = \accounting\FinancialYearLib::getById(GET('id'))->validate('canReadDocument');
 	}
 )

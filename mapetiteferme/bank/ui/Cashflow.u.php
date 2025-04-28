@@ -215,6 +215,10 @@ class CashflowUi {
 	}
 	protected function getUpdate(\company\Company $eCompany, Cashflow $eCashflow, string $btn): string {
 
+		if($eCompany->canWrite() === FALSE) {
+			return '';
+		}
+
 		$h = '<a data-dropdown="bottom-end" class="dropdown-toggle btn '.$btn.'">'.\Asset::icon('gear-fill').'</a>';
 		$h .= '<div class="dropdown-list">';
 			$h .= '<div class="dropdown-title">'.self::getName($eCashflow).'</div>';

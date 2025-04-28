@@ -4,7 +4,7 @@ new Page(
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canView');
 
 		\Setting::set('main\viewBank', 'cashflow');
 	}
@@ -43,7 +43,7 @@ new \bank\CashflowPage(
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'))->validate('canAllocate');
 
 		\Setting::set('main\viewBank', 'import');
@@ -143,7 +143,7 @@ new \bank\CashflowPage(
 		\user\ConnectionLib::checkLogged();
 		$company = GET('company');
 
-		$data->eCompany = \company\CompanyLib::getById($company)->validate('canManage');
+		$data->eCompany = \company\CompanyLib::getById($company)->validate('canWrite');
 		$data->eCashflow = \bank\CashflowLib::getById(INPUT('id'));
 
 		\Setting::set('main\viewBank', 'import');

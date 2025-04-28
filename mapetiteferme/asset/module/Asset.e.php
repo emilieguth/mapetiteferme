@@ -15,5 +15,14 @@ class Asset extends AssetElement {
 		return TRUE;
 	}
 
+	public function canView(): bool {
+
+		if($this->empty()) {
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
 }
 ?>

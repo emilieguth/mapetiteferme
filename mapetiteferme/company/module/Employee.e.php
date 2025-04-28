@@ -10,9 +10,24 @@ class Employee extends EmployeeElement {
 				'name' => new \Sql('IF(firstName IS NULL, lastName, CONCAT(firstName, " ", lastName))'),
 				'email', 'firstName', 'lastName', 'visibility', 'vignette', 'createdAt'
 			],
+			'role',
 		] + parent::getSelection();
 
 	}
+
+	public function canUpdateRole(): bool {
+
+		$this->expects(['user', 'company']);
+		$eUserOnline = \user\ConnectionLib::getOnline();
+
+		return (
+			$this->canWrite() and
+			$eUserOnline->notEmpty() and
+			($eUserOnline['id'] !== $this['user']['id'])
+		);
+
+	}
+
 	public function build(array $properties, array $input, \Properties $p = new \Properties()): void {
 
 		$p

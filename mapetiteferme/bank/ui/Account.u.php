@@ -30,11 +30,21 @@ class AccountUi {
 			return '<div class="util-info">'.s("Aucun compte bancaire n'a encore été enregistré. Lorsque vous effectuerez votre premier import de relevé bancaire, le compte bancaire rattaché sera automatiquement créé.").'</div>';
 		}
 
+		$canUpdate = $eCompany->canWrite();
+
 		\Asset::js('util', 'form.js');
 		\Asset::css('util', 'form.css');
 
-		$h = '<div class="util-info">'.s("Les comptes bancaires se créent automatiquement lors de l'import d'un relevé. Vous pouvez modifier le libellé du compte").'</div>';
-		$h .= '<div class="util-warning">'.s("Attention, en <b>modifiant le libellé d'un compte bancaire</b>, toutes les écritures comptables de l'exercice comptable en cours qui sont liées à ce compte bancaire verront leur n° de compte être mis à jour avec ce libellé.").'</div>';
+		$h = '';
+
+		if($canUpdate === TRUE) {
+
+			$h .= '<div class="util-info">'.s("Les comptes bancaires se créent automatiquement lors de l'import d'un relevé. Vous pouvez modifier le libellé du compte").'</div>';
+
+			$h .= '<div class="util-warning">'.s("Attention, en <b>modifiant le libellé d'un compte bancaire</b>, toutes les écritures comptables de l'exercice comptable en cours qui sont liées à ce compte bancaire verront leur n° de compte être mis à jour avec ce libellé.").'</div>';
+
+		}
+
 		$h .= '<div class="util-overflow-sm">';
 
 			$h .= '<table class="tr-even tr-hover">';
@@ -56,16 +66,19 @@ class AccountUi {
 						$h .= '<td>'.encode($eAccount['bankId']).'</td>';
 						$h .= '<td>'.encode($eAccount['accountId']).'</td>';
 						$h .= '<td>';
+							if($canUpdate === TRUE) {
 								$eAccount->setQuickAttribute('company', $eCompany['id']);
 								$h .= $eAccount->quick('label', $eAccount['label'] ? encode($eAccount['label']) : '<i>'.\Setting::get('accounting\defaultBankAccountLabel').'&nbsp;'.s("(Par défaut)").'</i>');
-							$h .= '</div>';
+							} else {
+								$h .= encode($eAccount['label']);
+							}
 						$h .= '</td>';
 
 					$h .= '</tr>';
 				}
 
 				$h .= '<tbody>';
-			$h .= '</table';
+			$h .= '</table>';
 
 		$h .= '</div>';
 

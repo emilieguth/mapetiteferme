@@ -17,7 +17,11 @@ class JournalUi {
 
 			$h .= '<div>';
 				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-				if(get_exists('cashflow') === FALSE and $eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN) {
+				if(
+					get_exists('cashflow') === FALSE
+					and $eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN
+					and $eCompany->canWrite() === TRUE
+				) {
 					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a> ';
 				}
 				$h .= '<a href="'.PdfUi::urlJournal($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
@@ -134,9 +138,10 @@ class JournalUi {
 
 					foreach($cOperation as $eOperation) {
 
-						$canUpdate = $eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
+						$canUpdate = ($eFinancialYearSelected['status'] === \accounting\FinancialYear::OPEN
 							and $eOperation['date'] <= $eFinancialYearSelected['endDate']
-							and $eOperation['date'] >= $eFinancialYearSelected['startDate'];
+							and $eOperation['date'] >= $eFinancialYearSelected['startDate']
+							and $eCompany->canWrite() === TRUE);
 
 						$eOperation->setQuickAttribute('company', $eCompany['id']);
 						if($eOperation['cashflow']->exists() === TRUE) {
@@ -261,7 +266,7 @@ class JournalUi {
 
 	protected function displayActions(\company\Company $eCompany, Operation $eOperation, bool $canUpdate, ?string $cashflowLink): string {
 
-		if($canUpdate === FALSE) {
+		if($canUpdate === FALSE or $eCompany->canWrite() === FALSE) {
 
 			if($eOperation['comment'] === NULL) {
 				return '';

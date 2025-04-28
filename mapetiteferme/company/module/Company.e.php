@@ -39,9 +39,49 @@ class Company extends CompanyElement {
 			return FALSE;
 		}
 
+		return $this->isRole(EmployeeElement::OWNER);
+
+	}
+
+	public function canView(): bool {
+		if($this->empty()) {
+			return FALSE;
+		}
+
+		if($this['status'] === CompanyElement::CLOSED) {
+			return FALSE;
+		}
+
 		$eEmployee = $this->getEmployee();
 
-		return $eEmployee->notEmpty();
+		return $eEmployee['role'] !== NULL;
+
+	}
+	public function canWrite(): bool {
+		if($this->empty()) {
+			return FALSE;
+		}
+
+		if($this['status'] === CompanyElement::CLOSED) {
+			return FALSE;
+		}
+
+		return ($this->isRole(EmployeeElement::OWNER) or $this->isRole(EmployeeElement::ACCOUNTANT));
+
+	}
+
+	public function isRole(string $role): bool {
+
+		if($this->empty()) {
+			return FALSE;
+		}
+
+		$eEmployee = $this->getEmployee();
+
+		return (
+			$eEmployee->notEmpty() and
+			$eEmployee['role'] === $role
+		);
 
 	}
 
