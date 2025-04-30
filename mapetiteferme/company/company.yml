@@ -44,21 +44,27 @@ Invite:
   ]
 
 Subscription:
+  id: serial32
   company: company\Company
   type: enum(ACCOUNTING, PRODUCTION, SALES)
   startsAt: date
   endsAt: date
-  createdAt: date = SQL(NOW())
-  updatedAt: date = SQL(NOW())
+  createdAt: datetime = SQL(NOW())
+  updatedAt: datetime = SQL(NOW())
+  createdBy: user\User = SPECIAL(user)
   UNIQUE: [
     ["company", "type"]
   ]
 
 SubscriptionHistory:
+  id: serial32
   company: company\Company
   type: enum(ACCOUNTING, PRODUCTION, SALES)
+  isPack: bool
+  startsAt: date
+  endsAt: date
   createdBy: user\User = SPECIAL(user)
-  createdAt: date = SQL(NOW())
+  createdAt: datetime = SQL(NOW())
   INDEX: [
     ["company"]
   ]

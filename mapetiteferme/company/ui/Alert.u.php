@@ -48,6 +48,10 @@ class AlertUi {
 			'Invite::extended' => s("L'invitation a bien été prolongée et un e-mail avec un nouveau lien a été renvoyé !"),
 			'Invite::deleted' => s("L'invitation à rejoindre votre ferme a bien été supprimée !"),
 
+			'Subscription::activated' => s("Votre abonnement a bien été activé !"),
+			'Subscription::prolongated' => s("Votre abonnement a bien été prolongé !"),
+			'Subscription::pack' => s("Votre pack est maintenant actif !"),
+
 			default => null
 
 		};

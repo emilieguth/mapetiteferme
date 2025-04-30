@@ -59,6 +59,26 @@ class CompanyLib extends CompanyCrud {
 
 	}
 
+	public static function getById(mixed $id, array $properties = []): Company {
+
+		$eCompany = new Company();
+
+		Company::model()
+      ->select(
+				Company::getSelection() + [
+						'cSubscription' => Subscription::model()
+              ->select(Subscription::getSelection())
+							->sort(['endsAt' => SORT_DESC])
+              ->delegateCollection('company')
+					],
+      )
+			->whereId($id)
+      ->get($eCompany);
+
+		return $eCompany;
+
+	}
+
 	public static function getByUsers(\Collection $cUser, ?string $role = NULL): \Collection {
 
 		return Company::model()

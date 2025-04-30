@@ -269,6 +269,11 @@ class CompanyUi {
 						$h .= \Asset::icon('gear-fill');
 					$h .= '</a>';
 
+					$h .= '<a href="'.SubscriptionUi::urlManage($eCompany).'" class="bg-secondary util-button">';
+						$h .= '<h4>'.s("L'abonnement<br/>de la ferme").'</h4>';
+						$h .= \Asset::icon('cart4');
+					$h .= '</a>';
+
 					$h .= '<a href="'.EmployeeUi::urlManage($eCompany).'" class="bg-secondary util-button">';
 						$h .= '<h4>'.s("L'équipe").'</h4>';
 						$h .= \Asset::icon('people-fill');

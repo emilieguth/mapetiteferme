@@ -13,6 +13,10 @@ abstract class CompanyElement extends \Element {
 	const ACCRUAL = 'accrual';
 	const CASH = 'cash';
 
+	const ACCOUNTING = 1;
+	const PRODUCTION = 2;
+	const SALES = 4;
+
 	public static function getSelection(): array {
 		return Company::model()->getProperties();
 	}
@@ -57,10 +61,11 @@ class CompanyModel extends \ModuleModel {
 			'createdAt' => ['datetime', 'cast' => 'string'],
 			'status' => ['enum', [\company\Company::ACTIVE, \company\Company::CLOSED], 'cast' => 'enum'],
 			'accountingType' => ['enum', [\company\Company::ACCRUAL, \company\Company::CASH], 'cast' => 'enum'],
+			'subscriptionType' => ['set', [\company\Company::ACCOUNTING, \company\Company::PRODUCTION, \company\Company::SALES], 'null' => TRUE, 'cast' => 'set'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'siret', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'createdAt', 'status', 'accountingType'
+			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'siret', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'createdAt', 'status', 'accountingType', 'subscriptionType'
 		]);
 
 	}
@@ -168,6 +173,10 @@ class CompanyModel extends \ModuleModel {
 
 	public function whereAccountingType(...$data): CompanyModel {
 		return $this->where('accountingType', ...$data);
+	}
+
+	public function whereSubscriptionType(...$data): CompanyModel {
+		return $this->where('subscriptionType', ...$data);
 	}
 
 
