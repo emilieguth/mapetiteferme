@@ -11,7 +11,7 @@ Setting::register('main', [
 	'viewAsset' => 'asset',
 	'viewBank' => 'cashflow',
 	'viewAnalyze' => 'bank',
-	'viewOverview' => 'overview',
+	'viewOverview' => 'balance',
 
 	'remoteKey' => 'toto',
 

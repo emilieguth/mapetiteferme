@@ -7,45 +7,12 @@ class OverviewUi {
 		\Asset::css('journal', 'journal.css');
 	}
 
-	public function getOverviewTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
+	public function getTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
 
-		$h = '<div class="util-action">';
+		$categories = \company\CompanyUi::getOverviewCategories($eCompany);
+		$selectedView = \Setting::get('main\viewOverview');
 
-			$h .= '<h1>';
-				$h .= \s("Les bilans");
-			$h .= '</h1>';
-
-		$h .= '</div>';
-
-		return $h;
-
-	}
-
-	public function getBalanceTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
-
-		$h = '<div class="util-action">';
-
-			$h .= '<h1>';
-				$h .= s("Les bilans");
-			$h .= '</h1>';
-
-		$h .= '</div>';
-
-		return $h;
-
-	}
-
-	public function getAccountingTitle(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear): string {
-
-		$h = '<div class="util-action">';
-
-			$h .= '<h1>';
-				$h .= s("Les balances");
-			$h .= '</h1>';
-
-		$h .= '</div>';
-
-		return $h;
+		return \main\MainUi::getDropdownMenuTitle($categories, $selectedView);
 
 	}
 

@@ -8,20 +8,6 @@ class ChargesUi {
 		\Asset::js('analyze', 'analyze.js');
 	}
 
-	public static function getTitle(\company\Company $eCompany): string {
-
-		$h = '<div class="util-action">';
-
-		$h .= '<h1>';
-			$h .= s("Analyse des charges");
-		$h .= '</h1>';
-
-		$h .= '</div>';
-
-		return $h;
-
-	}
-
 	public function get(\company\Company $eCompany, \accounting\FinancialYear $eFinancialYear, \Collection $cOperation, \Collection $cAccount): string {
 
 		if($cOperation->empty() === TRUE) {

@@ -4,9 +4,8 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->title = s("Le résultat de {company}", ['company' => $data->eCompany['name']]);
 	$t->tab = 'analyze';
 	$t->canonical = \company\CompanyUi::urlAnalyze($data->eCompany).'/result';
-	$t->subNav = new \company\CompanyUi()->getAnalyzeSubNav($data->eCompany);
 
-	$t->mainTitle = new \analyze\ResultUi()->getTitle($data->eCompany);
+	$t->mainTitle = new \analyze\AnalyzeUi()->getTitle($data->eCompany);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
@@ -15,6 +14,8 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->cFinancialYear,
 		$data->eFinancialYear,
 	);
+
+	$t->package('main')->updateNavAnalyze($t->canonical, 'result');
 
 	echo '<div class="tabs-h" id="analyze-result" onrender="'.encode('Lime.Tab.restore(this, "result-month")').'">';
 

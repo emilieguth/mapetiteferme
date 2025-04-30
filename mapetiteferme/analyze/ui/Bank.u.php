@@ -8,20 +8,6 @@ class BankUi {
 		\Asset::js('analyze', 'analyze.js');
 	}
 
-	public static function getTitle(\company\Company $eCompany): string {
-
-		$h = '<div class="util-action">';
-
-			$h .= '<h1>';
-				$h .= s("Suivi de la trésorerie");
-			$h .= '</h1>';
-
-		$h .= '</div>';
-
-		return $h;
-
-	}
-
 	public function get(array $operations): string {
 
 		[$cOperationBank, $cOperationCash] = $operations;

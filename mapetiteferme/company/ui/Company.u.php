@@ -173,6 +173,8 @@ class CompanyUi {
 
 				$h .= $this->getAssetMenu($eCompany, prefix: $prefix, tab: $tab);
 
+				$categories = $this->getAnalyzeCategories($eCompany);
+				$selectedCategory = \Setting::get('main\viewAnalyze');
 
 				$h .= '<a href="'.CompanyUi::urlAnalyze($eCompany).'/bank" class="company-tab '.($tab === 'analyze' ? 'selected' : '').'" data-tab="analyze">';
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('bar-chart').'</span>';
@@ -180,19 +182,52 @@ class CompanyUi {
 					$h .= '<span class="company-tab-label">';
 						$h .= s("Analyse");
 					$h .= '</span>';
+					if(count($categories) > 1) {
+						$h .= '<div class="company-tab-complement" data-dropdown="auto-left" data-dropdown-id="company-tab-analyze" data-dropdown-hover="true">';
+							$h .= '<span id="company-tab-analyze-category">'.$categories[$selectedCategory]['label'].'</span>';
+							$h .= ' '.\Asset::icon('chevron-down');
+						$h .= '</div>';
+					}
 				$h .= '</a>';
 
-				$h .= $this->getAnalyzeMenu($eCompany, prefix: $prefix, tab: $tab);
+				if(count($categories) > 1) {
 
-				$h .= '<a href="'.CompanyUi::urlOverview($eCompany).'/balance" class="company-tab '.($tab === 'overview' ? 'selected' : '').'" data-tab="statement">';
+					$h .= '<div data-dropdown-id="company-tab-analyze-list" class="dropdown-list bg-secondary">';
+					foreach($categories as $category => $categoryData) {
+						$h .= '<a href="'.$categoryData['url'].'" id="company-tab-analyze-'.$category.'" class="dropdown-item '.($category === $selectedCategory ? 'selected' : '').'">'.$categoryData['label'].'</a>';
+					}
+					$h .= '</div>';
+
+				}
+
+				$categories = $this->getOverviewCategories($eCompany);
+				$selectedCategory = \Setting::get('main\viewOverview');
+
+				$h .= '<a href="'.CompanyUi::urlOverview($eCompany).'/balance" class="company-tab '.($tab === 'overview' ? 'selected' : '').'" data-tab="overview">';
+
 					$h .= '<span class="hide-lateral-down company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet').'</span>';
 					$h .= '<span class="hide-lateral-up company-tab-icon">'.\Asset::icon('file-earmark-spreadsheet-fill').'</span>';
 					$h .= '<span class="company-tab-label">';
 						$h .= s("Synthèse");
 					$h .= '</span>';
-				$h .= '</a>';
 
-				$h .= $this->getOverviewMenu($eCompany, prefix: $prefix, tab: $tab);
+					if(count($categories) > 1) {
+							$h .= '<div class="company-tab-complement" data-dropdown="auto-left" data-dropdown-id="company-tab-overview" data-dropdown-hover="true">';
+								$h .= '<span id="company-tab-overview-category">'.$categories[$selectedCategory]['label'].'</span>';
+								$h .= ' '.\Asset::icon('chevron-down');
+							$h .= '</div>';
+						}
+					$h .= '</a>';
+
+				if(count($categories) > 1) {
+
+					$h .= '<div data-dropdown-id="company-tab-overview-list" class="dropdown-list bg-secondary">';
+					foreach($categories as $category => $categoryData) {
+						$h .= '<a href="'.$categoryData['url'].'" id="company-tab-overview-'.$category.'" class="dropdown-item '.($category === $selectedCategory ? 'selected' : '').'">'.$categoryData['label'].'</a>';
+					}
+					$h .= '</div>';
+
+				}
 
 				if($eCompany->canWrite() === TRUE) {
 
@@ -396,53 +431,28 @@ class CompanyUi {
 
 	}
 
-	public function getAnalyzeMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
-
-		$selectedView = ($tab === 'analyze') ? \Setting::get('main\viewAnalyze') : NULL;
-
-		$h = '<div class="company-subnav-wrapper">';
-
-			foreach($this->getAnalyzeCategories($eCompany) as $key => ['url' => $url, 'label' => $label]) {
-
-				$h .= '<a href="'.$url.'" class="company-subnav-item '.($key === $selectedView ? 'selected' : '').'" data-sub-tab="'.$key.'">';
-					$h .= $prefix.'<span>'.$label.'</span>';
-				$h .= '</a>';
-			}
-
-		$h .= '</div>';
-
-		return $h;
-
-	}
-
-	protected static function getAnalyzeCategories(Company $eCompany): array {
+	public static function getAnalyzeCategories(Company $eCompany): array {
 
 		return [
 			'bank' => [
 				'url' => CompanyUi::urlAnalyze($eCompany).'/bank',
-				'label' => s("Trésorerie")
+				'label' => s("Trésorerie"),
+				'longLabel' => s("Suivi de la trésorerie"),
 			],
 			'charges' => [
 				'url' => CompanyUi::urlAnalyze($eCompany).'/charges',
-				'label' => s("Charges")
+				'label' => s("Charges"),
+				'longLabel' => s("Suivi des charges"),
 			],
 			'result' => [
 				'url' => CompanyUi::urlAnalyze($eCompany).'/result',
-				'label' => s("Résultat")
+				'label' => s("Résultat"),
+				'longLabel' => s("Suivi du résultat"),
 			],
 		];
 
 	}
 
-	public function getAnalyzeSubNav(Company $eCompany): string {
-
-		$h = '<nav id="company-subnav">';
-		$h .= $this->getAnalyzeMenu($eCompany, tab: 'analyze');
-		$h .= '</nav>';
-
-		return $h;
-
-	}
 	public function getBankMenu(Company $eCompany, string $prefix = '', ?string $tab = NULL): string {
 
 		$selectedView = ($tab === 'bank') ? \Setting::get('main\viewBank') : NULL;
@@ -521,6 +531,23 @@ class CompanyUi {
 		$h .= '</div>';
 
 		return $h;
+
+	}
+
+	public static function getOverviewCategories(Company $eCompany): array {
+
+		return [
+			'balance' => [
+				'url' => CompanyUi::urlOverview($eCompany).'/balance',
+				'label' => s("Bilans"),
+				'longLabel' => s("Les bilans"),
+			],
+			'accounting' => [
+				'url' => CompanyUi::urlOverview($eCompany).'/accounting',
+				'label' => s("Balances"),
+				'longLabel' => s("Les balances"),
+			],
+		];
 
 	}
 

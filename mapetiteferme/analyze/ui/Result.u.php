@@ -9,20 +9,6 @@ Class ResultUi {
 		\Asset::js('analyze', 'analyze.js');
 	}
 
-	public static function getTitle(\company\Company $eCompany): string {
-
-		$h = '<div class="util-action">';
-
-		$h .= '<h1>';
-			$h .= s("Résultat");
-		$h .= '</h1>';
-
-		$h .= '</div>';
-
-		return $h;
-
-	}
-
 	public function get(array $result, \Collection $cAccount): string {
 
 		if(empty($result) === TRUE) {

@@ -6,7 +6,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->subNav = new \company\CompanyUi()->getOverviewSubNav($data->eCompany);
 	$t->canonical = \company\CompanyUi::urlOverview($data->eCompany).'/balance';
 
-	$t->mainTitle = new overview\OverviewUi()->getAccountingTitle($data->eCompany, $data->eFinancialYear);
+	$t->mainTitle = new overview\OverviewUi()->getTitle($data->eCompany, $data->eFinancialYear);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
@@ -15,6 +15,8 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->cFinancialYear,
 		$data->eFinancialYear,
 	);
+
+	$t->package('main')->updateNavOverview($t->canonical, 'accounting');
 
 	echo '<div class="tabs-h" id="overview-accounting" onrender="'.encode('Lime.Tab.restore(this, "accounting-balance")').'">';
 

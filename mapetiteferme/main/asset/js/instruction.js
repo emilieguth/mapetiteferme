@@ -50,7 +50,7 @@ new Lime.Instruction('main')
 		qs('#company-nav [data-tab="selling"]', node => node.setAttribute('href', url));
 	})
 	.register('updateNavAnalyze', function(url, category) {
-		
+
 		qs('#company-nav [data-tab="analyze"]', node => node.setAttribute('href', url));
 
 		if(qs('#company-tab-analyze-category')) {
@@ -60,6 +60,18 @@ new Lime.Instruction('main')
 		}
 
 		
+	})
+	.register('updateNavOverview', function(url, category) {
+
+		qs('#company-nav [data-tab="overview"]', node => node.setAttribute('href', url));
+
+		if(qs('#company-tab-overview-category')) {
+			qs('#company-tab-overview-category').innerHTML = qs('#company-tab-overview-'+ category).innerHTML;
+			qsa('[data-dropdown-id="company-tab-overview-list"] .dropdown-item', item => item.classList.remove('selected'))
+			qs('#company-tab-overview-'+ category).classList.add('selected');
+		}
+
+
 	})
 	.register('updateNavSettings', function(url) {
 		qs('#company-nav [data-tab="settings"]', node => node.setAttribute('href', url));
