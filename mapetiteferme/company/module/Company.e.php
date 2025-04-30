@@ -3,8 +3,6 @@ namespace company;
 
 class Company extends CompanyElement {
 
-	const DEMO = 1;
-
 	protected static array $companies = [];
 
 	public function __construct(array $array = []) {
@@ -52,11 +50,10 @@ class Company extends CompanyElement {
 			return FALSE;
 		}
 
-		$eEmployee = $this->getEmployee();
-
-		return $eEmployee['role'] !== NULL;
+		return ($this->canWrite() or $this->isRole(EmployeeElement::EMPLOYEE));
 
 	}
+
 	public function canWrite(): bool {
 		if($this->empty()) {
 			return FALSE;
@@ -66,7 +63,7 @@ class Company extends CompanyElement {
 			return FALSE;
 		}
 
-		return ($this->isRole(EmployeeElement::OWNER) or $this->isRole(EmployeeElement::ACCOUNTANT));
+		return ($this->canManage() or $this->isRole(EmployeeElement::OWNER));
 
 	}
 
