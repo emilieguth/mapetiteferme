@@ -5,8 +5,8 @@
 	--background-light: #f5f7f5;
 	--background-odd: #fafafc;
 	--background-even: #ededf1;
-	--primary: #753c1b;
-	--secondary: #4c5748;
+	--primary: #373737;
+	--secondary: #205160;
 	--secondary-dark: #252d23;
 
 	--demo: #722364;
@@ -370,6 +370,8 @@ div.nav-wrapper {
 	height: var(--mainNav);
 	min-height: var(--mainNav);
 	column-gap: 0.5rem;
+	background: linear-gradient(to bottom, var(--primary) 0, var(--primary) 33%, var(--secondary) 100%);
+	border-bottom: 1px solid #fffd;
 }
 
 body > nav ul > li > form > button {

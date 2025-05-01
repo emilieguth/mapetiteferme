@@ -7,8 +7,8 @@ Privilege::register('company', [
 Setting::register('company', [
 	'subscriptionPrices' => [
 		\company\SubscriptionElement::ACCOUNTING => 100,
-		\company\SubscriptionElement::PRODUCTION => 150,
-		\company\SubscriptionElement::SALES => 150,
+		\company\SubscriptionElement::PRODUCTION => 100,
+		\company\SubscriptionElement::SALES => 200,
 	],
 	'subscriptionPackPrice' => 300,
 ]);
