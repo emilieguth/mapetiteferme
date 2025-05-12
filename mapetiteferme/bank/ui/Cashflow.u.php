@@ -349,6 +349,7 @@ class CashflowUi {
 
 		$h = $form->hidden('company', $eCompany['id']);
 		$h .= $form->hidden('id', $eCashflow['id']);
+		$h .= $form->hidden('type', $eCashflow['type']);
 		$h .= '<span name="cashflow-amount" class="hide">'.$eCashflow['amount'].'</span>';
 
 		$title = '<div class="panel-title-container">';

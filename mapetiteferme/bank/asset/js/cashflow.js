@@ -159,10 +159,14 @@ class Cashflow {
 
         const sum = this.recalculateAmounts();
         const totalAmount = parseFloat(qs('span[name="cashflow-amount"]').innerHTML);
+        const cashflowType = qs('input[type="hidden"][name="type"]').value;
 
-        const amountIncludingVAT = Cashflow.sumType('amountIncludingVAT');
-        const amount = Cashflow.sumType('amount');
-        const vatValue = Cashflow.sumType('vatValue');
+        // Pour une lecture plus facile, crédit et débit doivent être affichés en positif
+        const multiplier = cashflowType === 'credit' ? -1 : 1;
+
+        const amountIncludingVAT = Cashflow.sumType('amountIncludingVAT') * multiplier;
+        const amount = Cashflow.sumType('amount') * multiplier;
+        const vatValue = Cashflow.sumType('vatValue') * multiplier;
         const assetValue = Array.from(qsa('[type="number"][name^="asset["]')).map(function(node) {
             if(node.name.match(/asset\[\d+\]\[value\]/)) {
                 return node;
