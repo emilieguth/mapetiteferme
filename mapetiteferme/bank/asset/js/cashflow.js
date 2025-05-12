@@ -185,10 +185,12 @@ class Cashflow {
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').previousSibling.classList.add('danger');
             qs('#cashflow-allocate-difference-warning').classList.remove('hide');
             qs('#cashflow-allocate-difference-value').innerHTML = money(Math.abs(difference));
+            qs('#submit-save-operation').setAttribute('data-confirm', qs('#submit-save-operation').getAttribute('data-confirm-text'));
         } else {
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').previousSibling.classList.remove('danger');
             qs('.create-operation-validate[data-field="amountIncludingVAT"]').classList.remove('danger');
             qs('#cashflow-allocate-difference-warning').classList.add('hide');
+            qs('#submit-save-operation').removeAttribute('data-confirm');
         }
     }
 

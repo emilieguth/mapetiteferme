@@ -397,18 +397,22 @@ class CashflowUi {
 
 		$saveButton = $form->submit(
 			s("Enregistrer l'écriture"),
-			['id' => 'submit-save-operation', 'data-text-singular' => s("Enregistrer l'écriture"), 'data-text-plural' => s(("Enregistrer les écritures")), 'class' => 'btn btn-primary'],
+			[
+				'id' => 'submit-save-operation',
+				'class' => 'btn btn-primary',
+				'data-text-singular' => s("Enregistrer l'écriture"),
+				'data-text-plural' => s("Enregistrer les écritures"),
+				'data-confirm-text' => s("Il y a une incohérence entre les écritures saisies et le montant de l'opération bancaire. Voulez-vous vraiment les enregistrer tel quel ?"),
+			],
 		);
 
 		return new \Panel(
-			id: 'panel-bank-cashflow-allocate',
-			header: $title.$subtitle,
-			//title: $title,
-			//subTitle: $subtitle,
-			dialogOpen: $dialogOpen,
+			id         : 'panel-bank-cashflow-allocate',
+			dialogOpen : $dialogOpen,
 			dialogClose: $form->close(),
-			body: $h,
-			footer: $amountWarning.'<div class="create-operation-buttons">'.$addButton.$saveButton.'</div>',
+			body       : $h,
+			header     : $title.$subtitle,
+			footer     : $amountWarning.'<div class="create-operation-buttons">'.$addButton.$saveButton.'</div>',
 		);
 
 	}
