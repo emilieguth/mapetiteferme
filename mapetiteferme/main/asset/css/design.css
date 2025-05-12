@@ -35,7 +35,7 @@
   background: #e5e5f3;
 }
 
-@media (max-height: 767px), (max-width: 767px) {
+@media (max-width: 1199px), (max-height: 599px) {
 
 	:root {
 		--companyNav: 5rem;
