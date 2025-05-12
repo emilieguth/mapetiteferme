@@ -404,7 +404,7 @@ class OperationUi {
 		$suffix = '['.$index.']';
 		$isFromCashflow = ($defaultValues['cashflow']->exists() === TRUE);
 
-		$h = '<div id="create-operation-list" class="create-operations-container" data-columns="1">';
+		$h = '<div id="create-operation-list" class="create-operations-container" data-columns="1" data-cashflow="'.($isFromCashflow ? '1' : '0').'">';
 
 			$h .= self::getCreateHeader($isFromCashflow);
 			$h .= self::getFieldsCreateGrid($form, $eOperation, $eFinancialYear, $suffix, $defaultValues, []);
