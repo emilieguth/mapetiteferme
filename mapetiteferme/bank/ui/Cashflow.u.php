@@ -96,6 +96,7 @@ class CashflowUi {
 		}
 
 		$highlightedCashflowId = GET('id', 'int');
+		$showMonthHighlight = $search->getSort() === 'date';
 
 		$h = '';
 
@@ -119,7 +120,8 @@ class CashflowUi {
 				$h .= '<thead class="thead-sticky">';
 					$h .= '<tr>';
 						$h .= '<th>';
-							$h .= s("Numéro");
+							$label = s("Numéro");
+							$h .= ($search ? $search->linkSort('id', $label) : $label);
 						$h .= '</th>';
 						$h .= '<th class="text-end">';
 							$label = s("Date");
@@ -141,7 +143,7 @@ class CashflowUi {
 				$lastMonth = '';
 				foreach($cCashflow as $eCashflow) {
 
-					if($lastMonth === '' or $lastMonth !== substr($eCashflow['date'], 0, 7)) {
+					if($showMonthHighlight and ($lastMonth === '' or $lastMonth !== substr($eCashflow['date'], 0, 7))) {
 						$lastMonth = substr($eCashflow['date'], 0, 7);
 
 							$h .= '<tr class="row-emphasis row-bold">';
