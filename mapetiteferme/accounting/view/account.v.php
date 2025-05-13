@@ -46,6 +46,8 @@ new JsonView('query', function($data, AjaxTemplate $t) {
 
 	}
 
+	$results[] = \accounting\AccountUi::getAutocompleteCreate($data->eCompany);
+
 	$t->push('results', $results);
 
 });

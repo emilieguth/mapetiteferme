@@ -185,6 +185,19 @@ class AccountUi {
 
 	}
 
+	public static function getAutocompleteCreate(\company\Company $eCompany): array {
+
+		$item = \Asset::icon('plus-circle');
+		$item .= '<div>'.s("Créer une classe de compte").'</div>';
+
+		return [
+			'type' => 'link',
+			'link' => \company\CompanyUi::urlAccounting($eCompany).'/account:create',
+			'itemHtml' => $item
+		];
+
+	}
+
 	public function query(\PropertyDescriber $d, int $company, bool $multiple = FALSE, array $query = []): void {
 
 		$d->prepend = \Asset::icon('journal-text');
