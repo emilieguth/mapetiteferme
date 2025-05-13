@@ -58,7 +58,7 @@ class CompanyTemplate extends MainTemplate {
 	}
 
 	protected function getCompanyNav(): string {
-		return (new \company\CompanyUi())->getMainTabs($this->data->eCompany, $this->tab);
+		return new \company\CompanyUi()->getMainTabs($this->data->eCompany, $this->tab);
 	}
 
 	protected function getCompanySubNav(): string {
@@ -138,9 +138,35 @@ class CompanyTemplate extends MainTemplate {
 				$company .= '</div>';
 			}
 
+			$company .= '<div class="nav-products-mobile">';
+
+				$company .= '<a class="nav-user nav-item" data-dropdown="bottom-end" data-dropdown-hover="TRUE">';
+					$company .= Asset::icon('piggy-bank').'<span class="">Compta</span>';
+					$company .= \Asset::icon('chevron-down');
+				$company .= '</a>';
+
+				$company .= '<div class="dropdown-list bg-primary">';
+
+					$company .= '<a href="'.Setting::get('main\otfUrl').'" class="dropdown-item">'.Asset::icon('flower2').'  '.'<span class="">Production</span></a>';
+					$company .= '<a href="'.Setting::get('main\otfUrl').'" class="dropdown-item">'.Asset::icon('cash-coin').'  '.'<span class="">Vente</span></a>';
+
+				$company .= '</div>';
+
+			$company .= '</div>';
+
 		$company .= '</div>';
 
-		return $this->getDefaultNav($company);
+		$nav = $this->getDefaultNav($company);
+
+		// Affichage à gauche (desktop)
+		$nav .= '<div class="nav-products">';
+			$nav .= '<a href="'.Setting::get('main\otfUrl').'" class="">'.Asset::icon('flower2').'<span class="">Production</span></a>';
+			$nav .= '<a href="'.Setting::get('main\otfUrl').'" class="">'.Asset::icon('cash-coin').'<span class="">Vente</span></a>';
+			$nav .= '<a href="'.Lime::getUrl().'" class="selected">'.Asset::icon('piggy-bank').'<span class="">Compta</span></a>';
+		$nav .= '</div>';
+
+		return $nav;
+
 
 	}
 

@@ -31,16 +31,6 @@ class ImageConf {
 			width: 500,
 			height: 100,
 			error: "La résolution de votre image n'est pas suffisante (le minimum est 500x100 pixels)"
-		},
-		'website-logo': {
-			width: 512,
-			height: 512,
-			error: "La résolution de votre image n'est pas suffisante (le minimum est 512x512 pixels)"
-		},
-		'website-favicon': {
-			width: 256,
-			height: 256,
-			error: "La résolution de votre image n'est pas suffisante (le minimum est 256x256 pixels)"
 		}
 	}
 };

@@ -15,5 +15,11 @@ Setting::register('main', [
 
 	'remoteKey' => 'toto',
 
+	'otfUrl' => match(LIME_ENV) {
+		'prod' => 'https://www.ouvretaferme.org',
+		'dev' => 'http://www.dev-ouvretaferme.org',
+		'demo' => 'https://demo.ouvretaferme.org',
+	}
+
 ]);
 ?>

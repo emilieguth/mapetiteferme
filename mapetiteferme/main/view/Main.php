@@ -176,39 +176,39 @@ class MainTemplate extends BaseTemplate {
 
 		$h = '<li>';
 
-		$h .= '<a class="nav-user nav-item" data-dropdown="bottom" data-dropdown-hover="TRUE">';
-			$h .= \user\UserUi::getVignette($data->eUserOnline, '1.75rem');
-			$h .= \Asset::icon('chevron-down');
-		$h .= '</a>';
+			$h .= '<a class="nav-user nav-item" data-dropdown="bottom" data-dropdown-hover="TRUE">';
+				$h .= \user\UserUi::getVignette($data->eUserOnline, '1.75rem');
+				$h .= \Asset::icon('chevron-down');
+			$h .= '</a>';
 
-		$h .= '<div class="dropdown-list bg-primary">';
+			$h .= '<div class="dropdown-list bg-primary">';
 
-		$h .= '<div class="dropdown-title">'.\user\UserUi::name($data->eUserOnline).'</div>';
+				$h .= '<div class="dropdown-title">'.\user\UserUi::name($data->eUserOnline).'</div>';
 
-		$h .= '<a href="'.Lime::getUrl().'" class="dropdown-item">'.s("Accueil").'</a>';
+				$h .= '<a href="'.Lime::getUrl().'" class="dropdown-item">'.s("Accueil").'</a>';
 
-		if(Lime::getHost() === LIME_HOST) {
-			$h .= '<a href="/main/account" class="dropdown-item">'.s("Mon compte").'</a>';
-		} else {
-			$h .= '<a href="'.Lime::getUrl().'/main/account" class="dropdown-item" target="_blank">'.s("Mon compte").'</a>';
-		}
+				if(Lime::getHost() === LIME_HOST) {
+					$h .= '<a href="/main/account" class="dropdown-item">'.s("Mon compte").'</a>';
+				} else {
+					$h .= '<a href="'.Lime::getUrl().'/main/account" class="dropdown-item" target="_blank">'.s("Mon compte").'</a>';
+				}
 
-		$h .= '<form method="post" action="'.Lime::getUrl().'/user/log:out">';
-			$h .= '<button type="submit" class="dropdown-item">'.s("Me déconnecter").'</button>';
+				$h .= '<form method="post" action="'.Lime::getUrl().'/user/log:out">';
+					$h .= '<button type="submit" class="dropdown-item">'.s("Me déconnecter").'</button>';
 
-			if(Lime::getHost() === LIME_HOST) {
-				$h .= '<input type="hidden" name="redirect" value="'.Lime::getProtocol().'://'.SERVER('HTTP_HOST').'"/>';
-			} else {
-				$h .= '<input type="hidden" name="redirect" value="'.Lime::getUrl().'"/>';
-			}
-		$h .='</form>';
+					if(Lime::getHost() === LIME_HOST) {
+						$h .= '<input type="hidden" name="redirect" value="'.Lime::getProtocol().'://'.SERVER('HTTP_HOST').'"/>';
+					} else {
+						$h .= '<input type="hidden" name="redirect" value="'.Lime::getUrl().'"/>';
+					}
+				$h .='</form>';
 
-		if(Privilege::can('user\admin')) {
-			$h .= '<div class="dropdown-divider"></div>';
-			$h .= '<a href="'.Lime::getUrl().'/user/admin/" class="dropdown-item">'.\Asset::icon('server').' '.s("Administrer").'</a>';
-		}
+				if(Privilege::can('user\admin')) {
+					$h .= '<div class="dropdown-divider"></div>';
+					$h .= '<a href="'.Lime::getUrl().'/user/admin/" class="dropdown-item">'.\Asset::icon('server').' '.s("Administrer").'</a>';
+				}
 
-		$h .= '</div>';
+			$h .= '</div>';
 
 		$h .= '</li>';
 

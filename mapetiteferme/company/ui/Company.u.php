@@ -243,6 +243,14 @@ class CompanyUi {
 
 			$h .= '</div>';
 
+			$h .= '<div id="product-version" class="'.(\Privilege::can('dev\admin') ? '' : 'hide').'">';
+				if(LIME_ENV === 'prod') {
+					$h .= s("Version {number}", ['number' => \Asset::getVersion()]);
+				} else {
+					$h .= s("Version : {env}", ['env' => LIME_ENV]);
+				}
+			$h .= '</div>';
+
 		$h .= '</nav>';
 
 		return $h;
