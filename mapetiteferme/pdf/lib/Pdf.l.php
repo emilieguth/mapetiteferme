@@ -3,10 +3,10 @@ namespace pdf;
 
 class PdfLib extends \pdf\PdfCrud {
 
-	public static function build(string $url, ?string $header, ?string $footer): string {
+	public static function build(string $url, ?string $title, ?string $header, ?string $footer): string {
 
 		return \Cache::redis()->lock(
-			'pdf-'.$url, function () use ($header, $footer, $url) {
+			'pdf-'.$url, function () use ($header, $footer, $title, $url) {
 
 			$file = tempnam('/tmp', 'pdf-').'.pdf';
 
@@ -15,6 +15,9 @@ class PdfLib extends \pdf\PdfCrud {
 
 			$args = '"--url='.$url.'"';
 			$args .= ' "--destination='.$file.'"';
+			if($title !== NULL) {
+				$args .= ' "--title='.rawurlencode($title).'"';
+			}
 			if($header !== NULL) {
 				$args .= ' "--header='.rawurlencode($header).'"';
 			}
@@ -44,32 +47,32 @@ class PdfLib extends \pdf\PdfCrud {
 		switch($type) {
 			case PdfElement::OVERVIEW_BALANCE_SUMMARY;
 				$url = \company\CompanyUi::urlOverview($eCompany).'/pdf/balance:summary?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
-				$header = PdfUi::getHeader(\overview\PdfUi::getTitle(), $eFinancialYear);
+				$title = \overview\PdfUi::getTitle();
 				break;
 
 			case PdfElement::OVERVIEW_BALANCE_OPENING;
 				$url = \company\CompanyUi::urlOverview($eCompany).'/pdf/balance:opening?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
-				$header = PdfUi::getHeader(\overview\PdfUi::getBalanceOpeningTitle(), $eFinancialYear);
+				$title = \overview\PdfUi::getBalanceOpeningTitle();
 				break;
 
 			case PdfElement::JOURNAL_INDEX:
 				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
-				$header = PdfUi::getHeader(\journal\PdfUi::getJournalTitle(), $eFinancialYear);
+				$title = \journal\PdfUi::getJournalTitle();
 				break;
 
 			case PdfElement::JOURNAL_BOOK:
 				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/book?financialYear='.$eFinancialYear['id'].'&key='.\Setting::get('main\remoteKey');
-				$header = PdfUi::getHeader(\journal\PdfUi::getBookTitle(), $eFinancialYear);
+				$title = \journal\PdfUi::getBookTitle();
 				break;
 
 			case PdfElement::JOURNAL_TVA_BUY:
 				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/vat?financialYear='.$eFinancialYear['id'].'&type=buy&key='.\Setting::get('main\remoteKey');
-				$header = PdfUi::getHeader(\journal\PdfUi::getVatTitle(PdfElement::JOURNAL_TVA_BUY), $eFinancialYear);
+				$title = \journal\PdfUi::getVatTitle(PdfElement::JOURNAL_TVA_BUY);
 				break;
 
 			case PdfElement::JOURNAL_TVA_SELL:
 				$url = \company\CompanyUi::urlJournal($eCompany).'/pdf/vat?financialYear='.$eFinancialYear['id'].'&type=sell&key='.\Setting::get('main\remoteKey');
-				$header = PdfUi::getHeader(\journal\PdfUi::getVatTitle(PdfElement::JOURNAL_TVA_SELL), $eFinancialYear);
+				$title = \journal\PdfUi::getVatTitle(PdfElement::JOURNAL_TVA_SELL);
 				break;
 
 			default:
@@ -77,7 +80,8 @@ class PdfLib extends \pdf\PdfCrud {
 		}
 
 		$footer = PdfUi::getFooter();
-		return self::build($url, $header, $footer);
+		$header = PdfUi::getHeader($title, $eFinancialYear);
+		return self::build($url, $title, $header, $footer);
 
 	}
 
