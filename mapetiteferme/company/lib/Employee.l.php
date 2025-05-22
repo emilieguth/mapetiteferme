@@ -188,6 +188,10 @@ class EmployeeLib extends EmployeeCrud {
 
 		$cFinancialYear = \accounting\FinancialYearLib::getAll();
 
+		if($cFinancialYear->empty()) {
+			throw new \RedirectAction(CompanyUi::urlAccounting($eCompany).'/financialYear/?redirect=1');
+		}
+
 		if($financialYear) {
 
 			$eFinancialYear = \accounting\FinancialYearLib::getById($financialYear);
@@ -202,6 +206,10 @@ class EmployeeLib extends EmployeeCrud {
 			return [$cFinancialYear, $eFinancialYear];
 
 		} else {
+
+			if($eCompany->getView('viewFinancialYear') === NULL) {
+				return [$cFinancialYear, $cFinancialYear->first()];
+			}
 
 			return [$cFinancialYear, \accounting\FinancialYearLib::getById($eCompany->getView('viewFinancialYear'))];
 

@@ -823,3 +823,6 @@ thead.thead-sticky th {
 	background-color: #edecec;
 }
 
+.is-bio {
+	color: var(--secondary);
+}

@@ -6,7 +6,7 @@ class BankUi {
 	public function __construct() {
 	}
 
-	public function getBankTitle(\company\Company $eCompany): string {
+	public function getBankTitle(\accounting\FinancialYear $eFinancialYear): string {
 
 		$h = '<div class="util-action">';
 
@@ -14,9 +14,13 @@ class BankUi {
 				$h .= s("Les opérations bancaires");
 			$h .= '</h1>';
 
-			$h .= '<div>';
-				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#cashflow-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-			$h .= '</div>';
+			if($eFinancialYear->notEmpty()) {
+
+				$h .= '<div>';
+					$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#cashflow-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
+				$h .= '</div>';
+
+			}
 
 		$h .= '</div>';
 

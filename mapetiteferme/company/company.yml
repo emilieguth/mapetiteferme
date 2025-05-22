@@ -15,6 +15,7 @@ Company:
   status: enum(ACTIVE, CLOSED) = ACTIVE
   accountingType: enum(ACCRUAL, CASH) = CASH
   subscriptionType: ?set(ACCOUNTING, PRODUCTION, SALES)
+  isBio: ?bool
 
 Employee:
   id: serial32
@@ -61,9 +62,10 @@ SubscriptionHistory:
   company: company\Company
   type: enum(ACCOUNTING, PRODUCTION, SALES)
   isPack: bool
+  isBio: bool
   startsAt: date
   endsAt: date
-  createdBy: user\User = SPECIAL(user)
+  createdBy: ?user\User = SPECIAL(user)
   createdAt: datetime = SQL(NOW())
   INDEX: [
     ["company"]

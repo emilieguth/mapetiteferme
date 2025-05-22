@@ -23,8 +23,8 @@ class OperationLib extends OperationCrud {
 
 		return Operation::model()
 			->whereDate('LIKE', '%'.$search->get('date').'%', if: $search->get('date'))
-			->whereDate('>=', $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
-			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))
+			->whereDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
+			->whereDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'))
 			->whereAccountLabel('LIKE', '%'.$search->get('accountLabel').'%', if: $search->get('accountLabel'))
 			->whereDescription('LIKE', '%'.$search->get('description').'%', if: $search->get('description'))
 			->whereDocument($search->get('document'), if: $search->get('document'))

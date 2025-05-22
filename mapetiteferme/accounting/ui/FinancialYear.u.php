@@ -65,7 +65,11 @@ class FinancialYearUi {
 	public function getManage(\company\Company $eCompany, \Collection $cFinancialYear): string {
 
 		if($cFinancialYear->empty() === TRUE) {
-			return '<div class="util-info">'.s("Aucun exercice comptable n'a encore été enregistré").'</div>'.(new \accounting\FinancialYearUi()->create($eCompany, new FinancialYear()))->body;
+
+			return '<div class="util-info">'
+				.s("Aucun exercice comptable n'a encore été enregistré, créez-en un maintenant pour pouvoir démarrer !")
+			.'</div>'
+			.(new \accounting\FinancialYearUi()->create($eCompany, new FinancialYear()))->body;
 		}
 
 		$h = '';
@@ -198,6 +202,10 @@ class FinancialYearUi {
 	}
 
 	public static function getYear(\accounting\FinancialYear $eFinancialYear): string {
+
+		if($eFinancialYear->empty()) {
+			return '';
+		}
 
 		if(substr($eFinancialYear['startDate'], 0, 4) === substr($eFinancialYear['endDate'], 0, 4)) {
 			return substr($eFinancialYear['startDate'], 0, 4);

@@ -6,17 +6,21 @@ class AccountUi {
 	public function __construct() {
 	}
 
-	public function getAccountTitle(\company\Company $eCompany): string {
+	public function getAccountTitle(\accounting\FinancialYear $eFinancialYear): string {
 
 		$h = '<div class="util-action">';
 
-		$h .= '<h1>';
-			$h .= s("Les comptes bancaires");
-		$h .= '</h1>';
+			$h .= '<h1>';
+				$h .= s("Les comptes bancaires");
+			$h .= '</h1>';
 
-		$h .= '<div>';
-			$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#cashflow-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-		$h .= '</div>';
+			if($eFinancialYear->notEmpty()) {
+
+				$h .= '<div>';
+					$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#cashflow-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
+				$h .= '</div>';
+
+			}
 
 		$h .= '</div>';
 

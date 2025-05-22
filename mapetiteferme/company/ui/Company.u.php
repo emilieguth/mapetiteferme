@@ -79,6 +79,20 @@ class CompanyUi {
 
 	}
 
+	public function warnFinancialYear(Company $eCompany, \Collection $cFinancialYear): string {
+
+		if($cFinancialYear->notEmpty()) {
+			return '';
+		}
+
+		$h = '<div class="util-info">';
+			$h .= \Asset::icon('leaf').' '.s("Avant de démarrer, rendez-vous <link>dans les paramètres de votre exploitation</link> pour créer votre premier exercice comptable !", ['link' => '<a href="'.CompanyUi::urlAccounting($eCompany).'/financialYear/">']);
+		$h .= '</div>';
+
+		return $h;
+
+	}
+
 	public function create(): \Panel {
 
 		$eCompany = new Company();
@@ -91,9 +105,7 @@ class CompanyUi {
 
 			$h .= $form->asteriskInfo();
 
-			$h .= $form-> group(self::p('siret'), $form->text('siret', null, ['oninput' => 'Company.getCompanyDataBySiret(this)']));
-
-			$h .= $form->dynamicGroups($eCompany, ['name*', 'addressLine1', 'addressLine2', 'postalCode', 'city']);
+			$h .= $form->dynamicGroups($eCompany, ['siret*', 'name*', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'isBio']);
 			$h .= $form->hidden('nafCode', null);
 
 			$h .= $form->group(
@@ -123,7 +135,7 @@ class CompanyUi {
 				new \media\CompanyVignetteUi()->getCamera($eCompany, size: '10rem')
 			);
 			$h .= $form->group(self::p('siret'), $form->text('siret', $eCompany['siret'], ['disabled' => TRUE]));
-			$h .= $form->dynamicGroups($eCompany, ['nafCode', 'name', 'accountingType', 'url', 'addressLine1', 'addressLine2', 'postalCode', 'city']);
+			$h .= $form->dynamicGroups($eCompany, ['nafCode', 'name', 'accountingType', 'url', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'isBio']);
 
 			$h .= $form->group(
 				content: $form->submit(s("Modifier"))
@@ -294,7 +306,7 @@ class CompanyUi {
 		if(get_exists('firstTime') === TRUE) {
 
 			$h .= '<div class="util-block-search stick-xs">';
-			$h .= s(
+			$h .= \Asset::icon('leaf').' '.s(
 				"Pour commencer, vérifiez le <b>type de comptabilité</b> de votre ferme dans la section ”Les réglages de base”. Puis ensuite, créez votre <b>premier exercice comptable</b>.",
 			);
 			$h .= '</div>';
@@ -721,15 +733,15 @@ class CompanyUi {
 			'accountingType' => s("Type de comptabilité"),
 			'addressLine1' => s("Adresse (ligne 1)"),
 			'addressLine2' => s("Adresse (ligne 2)"),
-			'banner' => s("Bandeau à afficher en haut des e-mails envoyés à vos clients"),
 			'city' => s("Ville"),
-			'logo' => s("Logo de votre ferme"),
-			'nafCode' => s("Code NAF de votre ferme (APE)"),
-			'name' => s("Nom de votre ferme"),
+			'logo' => s("Logo de votre exploitation"),
+			'nafCode' => s("Code NAF de votre exploitation (APE)"),
+			'name' => s("Nom de votre exploitation"),
 			'postalCode' => s("Code postal"),
-			'siret' => s("SIRET de votre ferme"),
+			'siret' => s("SIRET de votre exploitation"),
 			'url' => s("Site internet"),
 			'vignette' => s("Photo de présentation"),
+			'isBio' => s("En agriculture biologique (ou reconversion) ?"),
 		]);
 
 		switch($property) {
@@ -741,6 +753,19 @@ class CompanyUi {
 				];
 				break;
 
+			case 'siret':
+				$d->after = \util\FormUi::info(s("En remplissant le SIRET, les autres informations se rempliront automatiquement !"));
+				$d->attributes['oninput'] = 'Company.getCompanyDataBySiret(this)';
+				break;
+
+			case 'isBio' :
+				$d->field = 'yesNo';
+				$d->attributes = [
+					'labelOn' => s("Oui"),
+					'labelOff' => s("Non"),
+				];
+				$d->after = \util\FormUi::info(\Asset::icon('leaf').' '.s("Avec le label bio, les modules de production et de commercialisation vous sont offerts !"));
+				break;
 		}
 
 		return $d;

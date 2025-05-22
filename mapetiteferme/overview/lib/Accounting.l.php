@@ -50,6 +50,10 @@ Class AccountingLib {
 
 	public static function getSummaryAccountingBalance($accountingBalanceSheet): array {
 
+		if(empty($accountingBalanceSheet)) {
+			return [];
+		}
+
 		$categories = \Setting::get('accounting\summaryAccountingBalanceCategories');
 		$emptyBalance = [
 			'startCredit' => 0,
@@ -117,7 +121,7 @@ Class AccountingLib {
 	public static function getAccountingBalanceSheet(\accounting\FinancialYear $eFinancialYear): array {
 
 		$cOperation = \journal\Operation::model()
-		                                ->select([
+			->select([
 				'accountLabel',
 				'accountId' => new \Sql('ANY_VALUE(account)', 'int'),
 				'descriptionAny' => new \Sql('ANY_VALUE(description)'),
@@ -132,6 +136,10 @@ Class AccountingLib {
 			->group('accountLabel')
 			->sort(['accountLabel' => SORT_ASC])
 			->getCollection();
+
+		if($cOperation->empty()) {
+			return [];
+		}
 
 		$accountingBalanceSheet = $cOperation->getArrayCopy();
 

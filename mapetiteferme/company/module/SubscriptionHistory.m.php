@@ -44,14 +44,15 @@ class SubscriptionHistoryModel extends \ModuleModel {
 			'company' => ['element32', 'company\Company', 'cast' => 'element'],
 			'type' => ['enum', [\company\SubscriptionHistory::ACCOUNTING, \company\SubscriptionHistory::PRODUCTION, \company\SubscriptionHistory::SALES], 'cast' => 'enum'],
 			'isPack' => ['bool', 'cast' => 'bool'],
+			'isBio' => ['bool', 'cast' => 'bool'],
 			'startsAt' => ['date', 'cast' => 'string'],
 			'endsAt' => ['date', 'cast' => 'string'],
-			'createdBy' => ['element32', 'user\User', 'cast' => 'element'],
+			'createdBy' => ['element32', 'user\User', 'null' => TRUE, 'cast' => 'element'],
 			'createdAt' => ['datetime', 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'company', 'type', 'isPack', 'startsAt', 'endsAt', 'createdBy', 'createdAt'
+			'id', 'company', 'type', 'isPack', 'isBio', 'startsAt', 'endsAt', 'createdBy', 'createdAt'
 		]);
 
 		$this->propertiesToModule += [
@@ -118,6 +119,10 @@ class SubscriptionHistoryModel extends \ModuleModel {
 
 	public function whereIsPack(...$data): SubscriptionHistoryModel {
 		return $this->where('isPack', ...$data);
+	}
+
+	public function whereIsBio(...$data): SubscriptionHistoryModel {
+		return $this->where('isBio', ...$data);
 	}
 
 	public function whereStartsAt(...$data): SubscriptionHistoryModel {

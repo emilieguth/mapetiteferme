@@ -44,19 +44,6 @@ new AdaptativeView('index', function($data, MainTemplate $t) {
 
 		}
 
-		if($data->nCustomer > 0) {
-
-			$h .= '<a href="/selling/customer:updateOptIn" class="bg-secondary util-button">';
-
-				$h .= '<div>';
-					$h .= '<h4>'.s("Gérer mes préférences de communication par e-mail").'</h4>';
-				$h .= '</div>';
-				$h .= \Asset::icon('envelope-paper-fill');
-
-			$h .= '</a>';
-
-		}
-
 		if($data->canUpdate['drop']) {
 
 			$h .= '<a href="/user/settings:dropAccount" class="bg-danger util-button">';

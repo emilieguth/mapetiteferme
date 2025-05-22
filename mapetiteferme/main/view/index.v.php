@@ -1,22 +1,97 @@
 <?php
 new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
-	$t->title = s("Suite logicielle pour les agriculteurs et agricultrices");
-	$t->metaDescription = s("Suite logicielle en ligne pour le domaine agricole (comptabilité, ...)..");
+	$t->title = s("{name} - Conduire sa ferme à sa manière", ['name' => Lime::getName()]);
+	$t->metaDescription = s("{name} - Pour les exploitations agricoles qui font le choix de l'autonomie", ['name' => Lime::getName()]);
 	$t->template = 'home-main';
 
 	Asset::css('main', 'font-itim.css');
 	Asset::css('main', 'home.css');
 
-	$t->header .= '<h1>'.s("Facilitez-vous la comptabilité et concentrez-vous sur votre ferme !").'</h1>';
+	$t->header .= '<h1>'.s("Planifier, produire, vendre, comptabiliser. Simplement.").'</h1>';
+	$t->header .= '<h4 class="home-domain">'.s("Le logiciel pour conduire votre ferme à votre manière.").'</h4>';
 
-	$airtableForm = match(\L::getVariable('siteName')) {
-		'petiteagricultrice' => 'shraQryU7ejJZeyKv',
-		default => 'shrQ1Js8YZY1vcGxz',
-	};
+	$airtableForm = 'shrQ1Js8YZY1vcGxz';
 
-	echo '<script src="https://static.airtable.com/js/embed/embed_snippet_v1.js"></script>';
-	echo '<iframe class="airtable-embed airtable-dynamic-height" src="https://airtable.com/embed/appZX7JttC6YAjC4v/'.$airtableForm.'" onmousewheel="" width="100%" height="1329" style="background: transparent; border: 1px solid #ccc;"></iframe>';
+	if(LIME_ENV === 'prod' or get_exists('form')) {
+
+		echo '<script src="https://static.airtable.com/js/embed/embed_snippet_v1.js"></script>';
+		echo '<iframe class="airtable-embed airtable-dynamic-height" src="https://airtable.com/embed/appZX7JttC6YAjC4v/'.$airtableForm.'" onmousewheel="" width="100%" height="1329" style="background: transparent; border: 1px solid #ccc;"></iframe>';
+
+	} else {
+
+		$sentences = [
+			[
+				'block' => 'planification',
+				'word' => s("Planifiez"),
+				'points' => [
+					s("Préparez vos saisons"),
+					s("Gérez vos plans de culture et votre assolement"),
+					s("Améliorez vos pratiques années après années"),
+				],
+			],
+			[
+				'block' => 'production',
+				'word' => s("Produisez"),
+				'points' => [
+					s("Organisez et suivez finement vos interventions"),
+					s("Maîtrisez votre temps de travail"),
+				],
+			],
+			[
+				'block' => 'sale',
+				'word' => s("Vendez"),
+				'points' => [
+					s("Gérez vos ventes aux professionnels et particuliers"),
+					s("Créez vos boutiques en ligne"),
+					s("Utilisez le logiciel de caisse intégré"),
+				],
+			],
+			[
+				'block' => 'accounting',
+				'word' => s("Comptabilisez"),
+				'points' => [
+					s("Saisissez facilement votre comptabilité depuis <br />vos relevés bancaires et vos données de vente"),
+					s("Pilotez la santé financière de votre exploitation"),
+				],
+			],
+		];
+
+		echo '<div class="home-description-container">';
+
+			foreach($sentences as $sentence) {
+
+				//echo '<div class="home-description-sentence">';
+
+					echo '<div class="home-description-word">';
+						echo $sentence['word'];
+					echo '</div>';
+
+
+					echo '<div class="home-description-lines">';
+
+						echo '<ul>';
+							foreach($sentence['points'] as $point) {
+								echo '<li>'.$point.'</li>';
+							}
+						echo '</ul>';
+
+					echo '</div>';
+
+					echo '<a class="home-description-more" onclick="Home.open(\''.$sentence['block'].'\')">';
+						echo s("Voir plus");
+					echo '</a>';
+
+					echo '<div class="home-description-more-detail" data-block="'.$sentence['block'].'"> ';
+						echo new \main\HomeUi()->getDescriptionMore($sentence['block']);
+					echo '</div>';
+
+				//echo '</div>';
+			}
+
+		echo '</div>';
+
+	}
 
 });
 
@@ -47,15 +122,15 @@ new AdaptativeView('signUp', function($data, MainTemplate $t) {
 
 
 	$t->header = '<div class="home-user-already">';
-		$t->header .= s("Vous êtes déjà inscrit sur {siteName} ?").' &nbsp;&nbsp;';
-		$t->header .= '<a href="" class="btn btn-primary">'.s("Connectez-vous !").'</a>';
+		$t->header .= s("Vous avez déjà un compte sur {siteName} ?").' &nbsp;&nbsp;';
+		$t->header .= '<a href="/user/log:form" class="btn btn-primary">'.s("Connectez-vous !").'</a>';
 	$t->header .= '</div>';
 
 	$t->header .= '<h1>'.s("Je crée mon compte sur {siteName} !").'</h1>';
 
 		echo '<h2>'.s("Mes informations").'</h2>';
 
-		echo '<div class="util-info">'.s("Renseignez quelques informations qui vous permettront ensuite de vous connecter sur {siteName}. Vous pourrez créer votre ferme ou rejoindre une ferme existante juste après cette étape !").'</div>';
+		echo '<div class="util-info">'.s("Renseignez quelques informations qui vous permettront ensuite de vous connecter sur {siteName}. Vous pourrez créer votre exploitation ou rejoindre une exploitation existante juste après cette étape !").'</div>';
 
 		echo (new \user\UserUi())->signUp($data->eUserOnline, $data->cRole['employee'], REQUEST('redirect'));
 

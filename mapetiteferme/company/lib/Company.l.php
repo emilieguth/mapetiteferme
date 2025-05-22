@@ -11,7 +11,7 @@ class CompanyLib extends CompanyCrud {
 	}
 
 	public static function getPropertiesUpdate(): array {
-		return ['name', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'accountingType'];
+		return ['name', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'accountingType', 'isBio'];
 	}
 
 	public static function getOnline(): \Collection {
@@ -42,6 +42,7 @@ class CompanyLib extends CompanyCrud {
 		Company::model()
       ->select(Company::getSelection())
 			->whereSiret($siret)
+			->whereStatus(Company::ACTIVE)
       ->get($eCompany);
 
 		return $eCompany;
@@ -127,6 +128,7 @@ class CompanyLib extends CompanyCrud {
 				'user' => $e['owner'],
 				'company' => $e,
 				'status' => Employee::IN,
+				'role' => Employee::OWNER,
 			]);
 
 			Employee::model()->insert($eEmployee);
@@ -211,6 +213,13 @@ class CompanyLib extends CompanyCrud {
 				->update([
 					'companyStatus' => $e['status']
 				]);
+
+		}
+
+		if(in_array('isBio', $properties) and $e['isBio']) {
+
+			\company\SubscriptionLib::subscribe($e, CompanyElement::PRODUCTION, isBio: $e['isBio']);
+			\company\SubscriptionLib::subscribe($e, CompanyElement::SALES, isBio: $e['isBio']);
 
 		}
 

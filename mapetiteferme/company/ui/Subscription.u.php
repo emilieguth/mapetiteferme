@@ -95,7 +95,13 @@ class SubscriptionUi {
 								$h .= '</td>';
 
 								$h .= '<td>';
-										$h .= '<a class="btn btn-primary" title="'.s("Prolonger pour un an à {price}", ['price' => \util\TextUi::money($price)]).'" data-ajax="'.CompanyUi::url($eCompany).'/subscription:subscribe" post-type="'.self::getCompanySubscriptionTypeBySubscriptionType($eSubscription['type']).'">'.\Asset::icon('arrow-repeat').'</a>';
+
+									if($eCompany['isBio'] === FALSE) {
+
+											$h .= '<a class="btn btn-primary" title="'.s("Prolonger pour un an à {price}", ['price' => \util\TextUi::money($price)]).'" data-ajax="'.CompanyUi::url($eCompany).'/subscription:subscribe" post-type="'.self::getCompanySubscriptionTypeBySubscriptionType($eSubscription['type']).'">'.\Asset::icon('arrow-repeat').'</a>';
+
+									}
+
 								$h .= '</td>';
 
 							$h .= '</tr>';
@@ -147,6 +153,9 @@ class SubscriptionUi {
 								if($eSubscriptionHistory['isPack']) {
 									$h .= ' '.s("(pack)");
 								}
+								if($eSubscriptionHistory['isBio']) {
+									$h .= ' <span class="is-bio" title="'.s("Grâce à votre certification biologique").'">'.\Asset::icon('leaf').'</span>';
+								}
 							$h .= '</td>';
 
 							$h .= '<td>';
@@ -167,22 +176,10 @@ class SubscriptionUi {
 	private static function getModuleData(): array {
 
 		return [
-			SubscriptionElement::ACCOUNTING => [
-				'title' => s("Ma compta"),
-				'icon' => 'calculator',
-				'subtitle' => s("Gérer ma comptabilité"),
-				'items' => [
-					s("Importez vos relevés bancaires"),
-					s("Saisissez vos écritures à partir des opérations bancaires"),
-					s("Suivez la comptabilité, les amortissements et la TVA"),
-					s("Éditez des documents d'analyse"),
-					s("Ouvrez un accès à votre comptable"),
-				],
-			],
 			SubscriptionElement::PRODUCTION => [
 				'title' => s("Ma production"),
 				'icon' => 'calendar3',
-				'subtitle' => s("Gérer et planifier ma production"),
+				'subtitle' => s("Planifier et gérer ma production"),
 				'items' => [
 					s("Planifiez vos saisons"),
 					s("Créez et réutilisez vos itinéraires techniques"),
@@ -202,6 +199,18 @@ class SubscriptionUi {
 					s("Pilotez vos stocks"),
 				],
 			],
+			SubscriptionElement::ACCOUNTING => [
+				'title' => s("Ma compta"),
+				'icon' => 'calculator',
+				'subtitle' => s("Gérer ma comptabilité<sup>*</sup>"),
+				'items' => [
+					s("Importez vos relevés bancaires"),
+					s("Saisissez vos écritures à partir des opérations bancaires"),
+					s("Suivez la comptabilité, les amortissements et la TVA"),
+					s("Éditez des documents d'analyse"),
+					s("Ouvrez un accès à votre comptable"),
+				],
+			],
 		];
 
 	}
@@ -212,7 +221,7 @@ class SubscriptionUi {
 
 		$h .= '<div class="subscriptions">';
 
-			foreach([SubscriptionElement::ACCOUNTING, SubscriptionElement::PRODUCTION, SubscriptionElement::SALES] as $subscriptionType) {
+			foreach([SubscriptionElement::PRODUCTION, SubscriptionElement::SALES, SubscriptionElement::ACCOUNTING] as $subscriptionType) {
 
 				$moduleData = self::getModuleData()[$subscriptionType];
 				$companySubscriptionType = self::getCompanySubscriptionTypeBySubscriptionType($subscriptionType);
@@ -243,37 +252,40 @@ class SubscriptionUi {
 
 		$h .= '</div>';
 
-		$h .= '<p class="more-info"><sup>*</sup>'.s("Le logiciel de caisse n'est pas encore certifié NF525").'</p>';
+		$h .= '<p class="more-info"><sup>*</sup>'.s("Le logiciel de caisse n'est pas encore certifié NF525, et le module de comptabilité n'est pas encore certifié NF203.").'</p>';
 
-		$h .= '<div class="subscriptions-item">';
+		if($eCompany['isBio'] === FALSE) {
 
-			$h .= '<div class="subscriptions-item-title">';
-				$h .= '<span>'.s("Pack spécial").'</span>';
+			$h .= '<div class="subscriptions-item">';
+
+				$h .= '<div class="subscriptions-item-title">';
+					$h .= '<span>'.s("Pack spécial").'</span>';
+				$h .= '</div>';
+
+				$h .= '<div class="subscriptions-item-subtitle">'.s("Offre spéciale : module production, commercialisation et comptabilité").'</div>';
+
+				$h .= '<ul class="subscription-item-list">';
+					$h .= '<li>';
+						$h .= \Asset::icon('chevron-right');
+						$h .= s("Les 3 modules pour {pricePack} au lieu de {totalPrices} !", [
+							'pricePack' => \util\TextUi::money(\Setting::get('company\subscriptionPackPrice')),
+							'totalPrices' => \util\TextUi::money(array_sum(\Setting::get('company\subscriptionPrices'))),
+							]);
+						$h .= '</li>';
+				$h .= '</ul>';
+
+				if($eCompany['cSubscription']->count() === 3) {
+
+					$h .= '<a class="btn btn-outline-secondary" data-ajax="'.CompanyUi::url($eCompany).'/subscription:subscribePack">'.s("Renouveler mes 3 modules pour {pricePack}", ['pricePack' => \util\TextUi::money(\Setting::get('company\subscriptionPackPrice'))]).'</a>';
+
+				} else {
+
+					$h .= '<a class="btn btn-primary" data-ajax="'.CompanyUi::url($eCompany).'/subscription:subscribePack">'.s("Souscrire aux 3 modules pour 1 an à {pricePack}", ['pricePack' => \util\TextUi::money(\Setting::get('company\subscriptionPackPrice'))]).'</a>';
+
+				}
 			$h .= '</div>';
 
-			$h .= '<div class="subscriptions-item-subtitle">'.s("Offre spéciale : module production, commercialisation et comptabilité").'</div>';
-
-			$h .= '<ul class="subscription-item-list">';
-				$h .= '<li>';
-					$h .= \Asset::icon('chevron-right');
-					$h .= s("Les 3 modules pour {pricePack} au lieu de {totalPrices} !", [
-						'pricePack' => \util\TextUi::money(\Setting::get('company\subscriptionPackPrice')),
-						'totalPrices' => \util\TextUi::money(array_sum(\Setting::get('company\subscriptionPrices'))),
-						]);
-					$h .= '</li>';
-			$h .= '</ul>';
-
-			if($eCompany['cSubscription']->count() === 3) {
-
-				$h .= '<a class="btn btn-outline-secondary" data-ajax="'.CompanyUi::url($eCompany).'/subscription:subscribePack">'.s("Renouveler mes 3 modules pour {pricePack}", ['pricePack' => \util\TextUi::money(\Setting::get('company\subscriptionPackPrice'))]).'</a>';
-
-			} else {
-
-				$h .= '<a class="btn btn-primary" data-ajax="'.CompanyUi::url($eCompany).'/subscription:subscribePack">'.s("Souscrire aux 3 modules pour 1 an à {pricePack}", ['pricePack' => \util\TextUi::money(\Setting::get('company\subscriptionPackPrice'))]).'</a>';
-
-			}
-		$h .= '</div>';
-
+		}
 		return $h;
 
 	}

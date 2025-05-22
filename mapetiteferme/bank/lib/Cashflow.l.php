@@ -8,8 +8,8 @@ class CashflowLib extends CashflowCrud {
 		return Cashflow::model()
 			->whereImport('=', $search->get('import'), if: $search->has('import'))
 			->whereDate('LIKE', '%'.$search->get('date').'%', if: $search->get('date'))
-			->whereDate('>=', $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
-			->whereDate('<=', $search->get('financialYear')['endDate'], if: $search->get('financialYear'))
+			->whereDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
+			->whereDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'))
 			->whereFitid('LIKE', '%'.$search->get('fitid').'%', if: $search->get('fitid'))
 			->whereMemo('LIKE', '%'.mb_strtolower($search->get('memo') ?? '').'%', if: $search->get('memo'))
 			->whereStatus('=', $search->get('status'), if: $search->get('status'));

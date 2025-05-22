@@ -1,45 +1,48 @@
 body[data-template^="home"] header {
-   background-position: center center;
-   background-size: cover;
-   min-height: 20rem;
-	padding: 5rem 0;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   box-shadow: 0 0 2rem var(--border);
+	background-position: center center;
+	background-size: cover;
+	min-height: 20rem;
+	padding: 2.5rem 0;
+	display: flex;
+	justify-content: center;
+	box-shadow: 0 0 2rem var(--border);
 }
 
 body[data-template="home-main"] header {
-   background-image: url(/asset/mapetiteferme/main/image/banner.jpg);
+	background-image: url(/asset/mapetiteferme/main/image/banner.jpg);
+	filter: invert(0.05);
 }
 
 body[data-template="home-employee"] header {
-   background-image: url(/asset/mapetiteferme/main/image/banner-employee.jpg);
+	background-image: url(/asset/mapetiteferme/main/image/banner-employee.jpg);
 }
 
 body[data-template="home-legal"] header {
-   background-color: var(--secondary);
-   color: white;
+	background-color: var(--secondary);
+	color: white;
 }
 
 body[data-template^="home"] main {
-   font-size: 1.1rem;
+	font-size: 1.1rem;
 }
 
 body[data-template^="home"] header h1 {
-   color: white;
-   text-align: center;
-   font-family: 'Itim', cursive;
-   font-size: 4rem;
+	color: white;
+	text-align: center;
+	font-family: 'Itim', cursive;
+	font-size: 4rem;
 	max-width: 80rem;
 	margin: auto;
+}
+body[data-template="home-main"] header h1 {
+	color: var(--primary);
 }
 
 @media (max-width: 767px) {
 
-   body[data-template^="home"] header h1 {
-      font-size: 3rem;
-   }
+	body[data-template^="home"] header h1 {
+		font-size: 3rem;
+	}
 
 }
 
@@ -73,40 +76,40 @@ body[data-template^="home"] header h1 {
 }
 
 .home-domain {
-   color: white;
-   text-align: center;
+	color: white;
+	text-align: center;
 	font-size: 1.4rem;
 	line-height: 1.2;
-	margin-top: 1.5rem;
+	margin: 7rem 0 2rem;
 	font-weight: bold;
 }
 
 body[data-template^="home"] main h2 {
-   font-family: 'Itim', cursive;
+	font-family: 'Itim', cursive;
 	font-size: 1.9rem;
 }
 
 .home-presentation {
-   display: grid;
-   grid-template-columns: 1fr 1fr;
-   grid-gap: 2rem;
-   margin: 1rem 0 2rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 2rem;
+	margin: 1rem 0 2rem;
 }
 
 @media (max-width: 767px) {
 
-   .home-presentation {
-      grid-template-columns: 1fr;
-   }
+	.home-presentation {
+		grid-template-columns: 1fr;
+	}
 
 
 }
 
 .home-presentation > * {
-   padding: 1.5rem;
-   display: grid;
-   grid-template-columns: 1fr;
-   grid-template-rows: auto 1fr auto;
+	padding: 1.5rem;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto 1fr auto;
 	border-radius: var(--radius);
 	line-height: 1.4;
 	box-shadow: 0 0 1rem #eee;
@@ -121,7 +124,7 @@ body[data-template^="home"] main h2 {
 }
 
 .home-presentation > * h2 {
-   color: var(--secondary);
+	color: var(--secondary);
 	font-size: 2rem;
 	margin-bottom: 1.5rem;
 }
@@ -131,11 +134,11 @@ body[data-template^="home"] main h2 {
 }
 
 .home-presentation > * h2 svg {
-   margin-right: 1rem;
+	margin-right: 1rem;
 }
 
 .home-presentation > * ul {
-   font-size: 1.2rem;
+	font-size: 1.2rem;
 }
 
 .home-presentation > * ul:last-child {
@@ -143,47 +146,47 @@ body[data-template^="home"] main h2 {
 }
 
 .home-presentation > * li:not(:last-child) {
-   margin-bottom: 0.5rem;
+	margin-bottom: 0.5rem;
 }
 
 .home-presentation > * small {
-   font-size: 1rem;
+	font-size: 1rem;
 	color: var(--secondary);
 }
 
 .home-story {
-   padding: 1rem;
-   background-color: var(--background);
-   margin-bottom: 2rem;
+	padding: 1rem;
+	background-color: var(--background);
+	margin-bottom: 2rem;
 }
 
 ul.home-story {
-   padding: 1rem 1rem 1rem 3rem;
+	padding: 1rem 1rem 1rem 3rem;
 }
 
 .home-points {
-   display: grid;
-   grid-gap: 1rem;
-   grid-template-columns: repeat(4, 1fr);
-   margin-bottom: 1rem;
+	display: grid;
+	grid-gap: 1rem;
+	grid-template-columns: repeat(4, 1fr);
+	margin-bottom: 1rem;
 }
 
 @media (max-width: 767px) {
 
-   .home-points {
-      display: grid;
-      grid-gap: 1rem;
-      grid-template-columns: 1fr 1fr;
-   }
+	.home-points {
+		display: grid;
+		grid-gap: 1rem;
+		grid-template-columns: 1fr 1fr;
+	}
 
 
 }
 
 .home-point {
-   background-color: white;
-   border-radius: var(--radius);
-   padding: 1rem;
-   text-align: center;
+	background-color: white;
+	border-radius: var(--radius);
+	padding: 1rem;
+	text-align: center;
 	color: var(--shop);
 	font-family: 'Oswald', sans-serif;
 	margin-bottom: 0;
@@ -191,12 +194,12 @@ ul.home-story {
 }
 
 .home-point svg {
-   font-size: 3rem;
-   margin: 1rem 0;
+	font-size: 3rem;
+	margin: 1rem 0;
 }
 
 .home-point h4 {
-   margin-bottom: 0rem;
+	margin-bottom: 0rem;
 }
 
 div.home-user-types {
@@ -254,5 +257,77 @@ div.home-user-already {
 div.home-category {
 	margin-left: 1rem;
 	border-left: 0.5em solid var(--border);
+	padding-left: 1rem;
+}
+
+div.home-description-container {
+	display: grid;
+	grid-template-columns: 1fr 3fr 1fr;
+	grid-gap: 1rem;
+	max-width: 800px;
+	margin: auto;
+
+	@media (max-width: 767px) {
+		grid-template-columns: 1fr 2fr 1fr;
+		grid-gap: 0.5rem;
+	}
+}
+div.home-description-sentence {
+
+}
+div.home-description-word {
+	background-color: var(--primary);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+}
+
+a.home-description-more {
+	display: block;
+	border: 1px solid var(--primary);
+	color: var(--primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	transition: background-color 0.5s;
+}
+a.home-description-more:hover {
+	background-color: var(--primary);
+	color: white;
+	text-decoration: none;
+}
+div.home-description-more-detail {
+	grid-column: 1 / 4;
+	overflow-y: hidden;
+	max-height: 0;
+}
+
+div.home-description-detail-container {
+	display: grid;
+	grid-template-columns: 4fr 1fr;
+}
+div.home-description-detail-price {
+	width: 100px;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	background-color: var(--order);
+	color: white;
+	margin: auto;
+}
+div.home-description-detail-price span {
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+div.home-description-detail-price p {
+	margin: 0;
+}
+div.home-description-more-detail ul {
+	list-style-type: none;
 	padding-left: 1rem;
 }

@@ -140,6 +140,11 @@ Class BalanceLib {
 		$accountLabelsWithDepreciation = self::getAccountLabelsWithDepreciation($accountLabels);
 
 		[$resultTable, ] = \journal\AnalyzeLib::getResult($eFinancialYear);
+
+		if(count($resultTable) === 0) {
+			return [];
+		}
+
 		$result = array_sum(array_column($resultTable, 'credit')) - array_sum(array_column($resultTable, 'debit'));
 
 		$where = implode('%" OR accountLabel LIKE "', $accountLabelsWithDepreciation);
@@ -333,6 +338,10 @@ Class BalanceLib {
 		$accountLabelsWithDepreciation = self::getAccountLabelsWithDepreciation($accountLabels);
 
 		[$resultTable, ] = \journal\AnalyzeLib::getResult($eFinancialYear);
+		if(empty($resultTable)) {
+			return [];
+		}
+
 		$result = array_sum(array_column($resultTable, 'credit')) - array_sum(array_column($resultTable, 'debit'));
 
 		$where = implode('%" OR accountLabel LIKE "', $accountLabelsWithDepreciation);

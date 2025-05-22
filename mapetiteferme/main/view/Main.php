@@ -154,13 +154,13 @@ class MainTemplate extends BaseTemplate {
 
 			} else {
 
-				/*$h .= '<li id="signIn-item">';
+				$h .= '<li id="signIn-item">';
 					$h .= '<a href="'.Lime::getUrl().'/user/signUp" class="nav-item">'.s("Inscription").'</a>';
 				$h .= '</li>';
 
 				$h .= '<li id="logIn-item">';
 					$h .= '<a href="/user/log:form" class="nav-item">'.s("Connexion").'</a>';
-				$h .= '</li>';*/
+				$h .= '</li>';
 
 			}
 

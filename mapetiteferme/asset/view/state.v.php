@@ -16,6 +16,16 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYear,
 	);
 
-	echo new asset\AssetUi()->getSummary($data->eFinancialYear, $data->assetSummary);
+	if(empty($data->assetSummary)) {
+
+		echo '<div class="util-info">';
+			echo s("Il n'y a pas d'information à afficher pour le moment.");
+		echo '</div>';
+		
+	} else {
+
+		echo new asset\AssetUi()->getSummary($data->eFinancialYear, $data->assetSummary);
+
+	}
 
 });

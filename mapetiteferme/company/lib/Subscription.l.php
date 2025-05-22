@@ -31,12 +31,13 @@ class SubscriptionLib extends SubscriptionCrud {
 
 	}
 
-	private static function addHistory(Company $eCompany, string $subscriptionType, string $from, string $to, bool $isPack): void {
+	private static function addHistory(Company $eCompany, string $subscriptionType, string $from, string $to, bool $isPack, bool $isBio): void {
 
 		$eSubscriptionHistory = new SubscriptionHistory([
 			'company' => $eCompany,
 			'type' => $subscriptionType,
 			'isPack' => $isPack,
+			'isBio' => $isBio,
 			'startsAt' => $from,
 			'endsAt' => $to,
 		]);
@@ -59,7 +60,7 @@ class SubscriptionLib extends SubscriptionCrud {
 
 	}
 
-	public static function subscribe(Company $eCompany, int $type, bool $isPack = FALSE): string {
+	public static function subscribe(Company $eCompany, int $type, bool $isPack = FALSE, bool $isBio = FALSE): string {
 
 		Subscription::model()->beginTransaction();
 
@@ -127,7 +128,7 @@ class SubscriptionLib extends SubscriptionCrud {
 		$eCompany['subscriptionType']->value($type, TRUE);
 		CompanyLib::update($eCompany, ['subscriptionType']);
 
-		self::addHistory($eCompany, $subscriptionType, $from, $to, $isPack);
+		self::addHistory($eCompany, $subscriptionType, $from, $to, $isPack, $isBio);
 
 		Subscription::model()->commit();
 

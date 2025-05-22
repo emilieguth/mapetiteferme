@@ -28,6 +28,11 @@ class Company extends CompanyElement {
 	}
 
 	// Peut gérer l'entreprise
+	public function canCreate(): bool {
+
+		return TRUE;
+
+	}
 	public function canManage(): bool {
 		if($this->empty()) {
 			return FALSE;
@@ -55,7 +60,7 @@ class Company extends CompanyElement {
 	}
 
 	public function canWrite(): bool {
-		if($this->empty()) {
+		if($this->empty() or array_key_exists('id', $this->getArrayCopy()) === FALSE) {
 			return FALSE;
 		}
 

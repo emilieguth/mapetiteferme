@@ -25,7 +25,7 @@ class BalanceUi {
 			$h .= '<td class="text-end">'.(new OverviewUi()->number($net, valueIfEmpty: '', decimals: 0)).'</td>';
 		}
 
-		$h .= '<td class="text-center">'.($total === NULL ? '' : (new OverviewUi()->number(round($net / $total * 100), valueIfEmpty: '', decimals: 0))).'</td>';
+		$h .= '<td class="text-center">'.($total ? (new OverviewUi()->number(round($net / $total * 100), valueIfEmpty: '', decimals: 0)) : '').'</td>';
 
 		return $h;
 

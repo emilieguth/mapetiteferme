@@ -6,7 +6,7 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 	$t->subNav = new \company\CompanyUi()->getBankSubNav($data->eCompany);
 	$t->canonical = \company\CompanyUi::urlBank($data->eCompany).'/cashflow';
 
-	$t->mainTitle = new \bank\BankUi()->getBankTitle($data->eCompany);
+	$t->mainTitle = new \bank\BankUi()->getBankTitle($data->eFinancialYear);
 
 	$t->mainYear = new \accounting\FinancialYearUi()->getFinancialYearTabs(
 		function(\accounting\FinancialYear $eFinancialYear) use ($data) {
@@ -16,9 +16,17 @@ new AdaptativeView('index', function($data, CompanyTemplate $t) {
 		$data->eFinancialYear,
 	);
 
-	echo new \bank\CashflowUi()->getSearch($data->search, $data->eFinancialYear);
-	echo new \bank\CashflowUi()->getSummarize($data->eCompany, $data->nCashflow, $data->search);
-	echo new \bank\CashflowUi()->getCashflow($data->eCompany, $data->cCashflow, $data->eFinancialYear, $data->eImport, $data->search);
+	if($data->eFinancialYear->notEmpty()) {
+
+		echo new \bank\CashflowUi()->getSearch($data->search, $data->eFinancialYear);
+		echo new \bank\CashflowUi()->getSummarize($data->eCompany, $data->nCashflow, $data->search);
+		echo new \bank\CashflowUi()->getCashflow($data->eCompany, $data->cCashflow, $data->eFinancialYear, $data->eImport, $data->search);
+
+	} else {
+
+		echo new \company\CompanyUi()->warnFinancialYear($data->eCompany, $data->cFinancialYear);
+
+	}
 
 });
 

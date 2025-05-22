@@ -62,10 +62,11 @@ class CompanyModel extends \ModuleModel {
 			'status' => ['enum', [\company\Company::ACTIVE, \company\Company::CLOSED], 'cast' => 'enum'],
 			'accountingType' => ['enum', [\company\Company::ACCRUAL, \company\Company::CASH], 'cast' => 'enum'],
 			'subscriptionType' => ['set', [\company\Company::ACCOUNTING, \company\Company::PRODUCTION, \company\Company::SALES], 'null' => TRUE, 'cast' => 'set'],
+			'isBio' => ['bool', 'null' => TRUE, 'cast' => 'bool'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'siret', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'createdAt', 'status', 'accountingType', 'subscriptionType'
+			'id', 'name', 'vignette', 'url', 'logo', 'banner', 'siret', 'nafCode', 'addressLine1', 'addressLine2', 'postalCode', 'city', 'createdAt', 'status', 'accountingType', 'subscriptionType', 'isBio'
 		]);
 
 	}
@@ -177,6 +178,10 @@ class CompanyModel extends \ModuleModel {
 
 	public function whereSubscriptionType(...$data): CompanyModel {
 		return $this->where('subscriptionType', ...$data);
+	}
+
+	public function whereIsBio(...$data): CompanyModel {
+		return $this->where('isBio', ...$data);
 	}
 
 

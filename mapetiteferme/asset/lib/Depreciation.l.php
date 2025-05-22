@@ -140,6 +140,10 @@ class DepreciationLib extends \asset\DepreciationCrud {
 
 		$depreciations = self::getByFinancialYear($eFinancialYear, 'asset');
 
+		if(empty($depreciations)) {
+			return [];
+		}
+
 		$emptyLine = [
 			'account' => '',
 			'accountLabel' => '',

@@ -15,17 +15,25 @@ class JournalUi {
 				$h .= s("Le journal comptable");
 			$h .= '</h1>';
 
-			$h .= '<div>';
-				$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
-				if(
-					get_exists('cashflow') === FALSE
-					and $eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN
-					and $eCompany->canWrite() === TRUE
-				) {
-					$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a> ';
-				}
-				$h .= '<a href="'.PdfUi::urlJournal($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
-			$h .= '</div>';
+			if($eFinancialYear->notEmpty()) {
+
+				$h .= '<div>';
+
+					$h .= '<a '.attr('onclick', 'Lime.Search.toggle("#journal-search")').' class="btn btn-primary">'.\Asset::icon('search').'</a> ';
+
+					if(
+						get_exists('cashflow') === FALSE
+						and $eFinancialYear['status'] === \accounting\FinancialYearElement::OPEN
+						and $eCompany->canWrite() === TRUE
+					) {
+						$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a> ';
+					}
+
+					$h .= '<a href="'.PdfUi::urlJournal($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
+
+				$h .= '</div>';
+
+			}
 
 		$h .= '</div>';
 

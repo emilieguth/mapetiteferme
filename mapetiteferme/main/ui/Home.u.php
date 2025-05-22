@@ -30,6 +30,68 @@ class HomeUi {
 
 	}
 
+	public function getDescriptionMore(string $block): string {
+
+		\Asset::js('main', 'home.js');
+
+		switch($block) {
+
+			case 'planification':
+					$description = '<ul>'
+						.'<li>'.\Asset::icon('calendar3').' '.s("Planifiez votre saison de culture en concevant vos plans de culture et plans d'assolement").'</li>'
+						.'<li>'.\Asset::icon('cart4').' '.s("Consultez les quantités de semences et plants à produire ou commander").'</li>'
+						.'<li>'.\Asset::icon('file-earmark-richtext').' '.s("Créez des itinéraires techniques, réutilisez et améliorez-les saison après saison").'</li>'
+						.'<li>'.\Asset::icon('gear').' '.s("Enregistrez et suivez le matériel disponible à la ferme").'</li>'
+					.'</ul>';
+					$description .= '<sup>*</sup>'.\Asset::icon('stars').' '.s("Le module de production est inclus avec le module de planification !");
+					$price = '<p>'.s("{price}<br />/ an HT", ['price' => '<span>'.\util\TextUi::money(\Setting::get('company\subscriptionPrices')[\company\SubscriptionElement::PRODUCTION], 'EUR', 0).'</span>']).'</p>';
+					break;
+
+			case 'production':
+					$description = '<ul>'
+						.'<li>'.\Asset::icon('arrow-repeat').' '.s("Suivez précisément vos rotations sur votre parcellaire").'</li>'
+						.'<li>'.\Asset::icon('people').' '.s("Collaborez avec votre équipe : chacun est autonome sur son périmètre").'</li>'
+						.'<li>'.\Asset::icon('calendar-week').' '.s("Renseignez les interventions sur le planning et analysez où votre temps est consacré").'</li>'
+					.'</ul>';
+					$description .= '<sup>*</sup>'.\Asset::icon('stars').' '.s("Le module de planification est inclus avec le module de production !");
+					$price = '<p>'.s("{price}<br />/ an HT", ['price' => '<span>'.\util\TextUi::money(\Setting::get('company\subscriptionPrices')[\company\SubscriptionElement::PRODUCTION], 'EUR', 0).'</span>']).'</p>';
+					break;
+
+			case 'sale':
+					$description = '<ul>'
+						.'<li>'.\Asset::icon('currency-euro').' '.s("Créez des ventes à partir de vos produits, gérez vos clients et vos prix.").'</li>'
+						.'<li>'.\Asset::icon('phone').' '.s("Utilisez le logiciel de caisse paramétré avec vos produits et vos prix, simplement avec un téléphone ou une tablette.").'</li>'
+						.'<li>'.\Asset::icon('shop').' '.s("Ouvrez une boutique en ligne pour un retrait au lieu et à l'horaire convenu, ou livrez à domicile.").'</li>'
+						.'<li>'.\Asset::icon('stripe').' '.s("Inclus : paiement par carte bancaire via Stripe sans commission de {name}.", ['name' => \Lime::getName()]).'</li>'
+					.'</ul>';
+					$price = '<p>'.s("{price}<br />/ an HT", ['price' => '<span>'.\util\TextUi::money(\Setting::get('company\subscriptionPrices')[\company\SubscriptionElement::SALES], 'EUR', 0).'</span>']).'</p>';
+					break;
+
+			case 'accounting':
+					$description = '<ul>'
+						.'<li>'.\Asset::icon('upload').' '.s("Importez vos relevés bancaires et créez vos opérations comptables facilement à partir de ces transactions.").'</li>'
+						.'<li>'.\Asset::icon('wallet').' '.s("Utilisez vos données de vente du module de vente pour les rapprocher avec vos transactions.").'</li>'
+						.'<li>'.\Asset::icon('journals').' '.s("Exportez vos documents comptables en un clic (grand livre, ...).").'</li>'
+					.'</ul>';
+					$price = '<p>'.s("{price}<br />/ an HT", ['price' => '<span>'.\util\TextUi::money(\Setting::get('company\subscriptionPrices')[\company\SubscriptionElement::ACCOUNTING], 'EUR', 0).'</span>']).'</p>';
+					break;
+
+			default:
+				throw new \Exception('not expected');
+
+		}
+
+		return '<div class="home-description-detail-container">'
+			.'<div class="home-description-detail-content">'
+				.$description
+			.'</div>'
+			.'<div class="home-description-detail-price">'
+				.$price
+			.'</div>'
+		.'</div>';
+
+	}
+
 	public function getPoints(): string {
 
 		\Asset::css('main', 'font-oswald.css');

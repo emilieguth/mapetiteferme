@@ -1,19 +1,10 @@
 <?php
-(new Page())
-	->get('index', function($data) {
+new Page()
+		->get('index', function($data) {
 
 		if($data->eUserOnline->empty()) {
 			throw new ViewAction($data, path: ':anonymous');
 		}
-
-		$data->cCustomerPro = 0;
-		$data->cCustomerPrivate = 0;
-
-		$data->cShop = 0;
-
-		$data->cSale = new Collection();
-
-		$data->eNews = [];
 
 		throw new ViewAction($data, path: ':logged');
 
