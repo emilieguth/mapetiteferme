@@ -151,27 +151,6 @@ Setting::register('media', [
 		'field' => 'hash'
 	],
 
-	'website-favicon' => [
-		'class' => 'WebsiteFavicon',
-		'element' => 'website\Website',
-		'field' => 'favicon',
-		'imageFormat' => [
-			's' => [64, 64],
-			'm' => [128, 128],
-			'l' => [256, 256]
-		],
-		'imageResizeReference' => ['l'],
-		'imageOutputType' => [IMAGETYPE_JPEG, IMAGETYPE_PNG],
-		'imageMaxLength' => 1024,
-		'imageRequiredSize' => 'l'
-	],
-
-	'website-logo' => [
-		'class' => 'WebsiteLogo',
-		'element' => 'website\Website',
-		'field' => 'logo'
-	] + getMediaLogo(),
-
 	'imageCropRequiredFactor' => 1.1,
 	'imageResizeRequiredFactor' => 1.15,
 

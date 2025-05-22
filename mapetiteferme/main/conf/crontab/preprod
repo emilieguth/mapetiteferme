@@ -2,8 +2,6 @@
 #   www.mapetiteferme.fr   #
 ############################
 
-* * * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme website/cron/certbot:ping
-* * * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme website/cron/certbot:rewrite
 */5 * * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme session/cron/sessionClean
 0 * * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme mail/cron/mail
 0 * * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme selling/cron/invoice
@@ -19,6 +17,4 @@
 0 6 * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme user/cron/log
 17 7 * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme dev/cron/minifyClean
 19 5 * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme selling/cron/clean
-28 4 * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme website/cron/certbot:clean
-3 */12 * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme website/cron/certbot:certificate
 47 5 * * * php /var/www/mpf/framework/lime.php -e preprod -a mapetiteferme dev/cron/error
