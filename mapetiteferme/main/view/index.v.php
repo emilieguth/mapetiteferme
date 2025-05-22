@@ -13,7 +13,7 @@ new AdaptativeView('anonymous', function($data, MainTemplate $t) {
 
 	$airtableForm = 'shrQ1Js8YZY1vcGxz';
 
-	if((LIME_ENV === 'prod' or get_exists('form')) and GET('noairtable', 'bool', FALSE) !== FALSE) {
+	if((LIME_ENV === 'prod' or get_exists('form')) and GET('noairtable', 'bool', FALSE) !== TRUE) {
 
 		echo '<script src="https://static.airtable.com/js/embed/embed_snippet_v1.js"></script>';
 		echo '<iframe class="airtable-embed airtable-dynamic-height" src="https://airtable.com/embed/appZX7JttC6YAjC4v/'.$airtableForm.'" onmousewheel="" width="100%" height="1329" style="background: transparent; border: 1px solid #ccc;"></iframe>';
