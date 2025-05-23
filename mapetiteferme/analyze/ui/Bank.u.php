@@ -40,14 +40,23 @@ class BankUi {
 
 			$h .= '<div class="tab-panel" data-tab="cash">';
 
-				$h .= '<h2>'.s("Caisse").'</h2>';
+				if($cOperationCash->notEmpty()) {
 
-				$h .= '<div class="analyze-chart-table">';
+					$h .= '<div class="analyze-chart-table">';
 
-					$h .= $this->getChart($cOperationCash);
-					$h .= $this->getTable($cOperationCash);
+						$h .= $this->getChart($cOperationCash);
+						$h .= $this->getTable($cOperationCash);
 
-				$h .= '</div>';
+					$h .= '</div>';
+
+				} else {
+
+					$h .= '<div class="util-info">';
+						$h .= s("Il n'y a aucun mouvement de caisse pour cet exercice.");
+					$h .= '</div>';
+				}
+
+
 			$h .= '</div>';
 
 		$h .= '</div>';
