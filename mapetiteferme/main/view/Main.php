@@ -230,7 +230,7 @@ class MainTemplate extends BaseTemplate {
 						$h .= '<div>';
 							//$h .= '<a href="/presentation/faq">'.s("Foire aux questions").'</a><br/>';
 							$h .= '<a href="/presentation/engagements">'.s("Engagements environnementaux").'</a><br/>';
-							$h .= '<a href="https://discord.gg/jAFFrhCWsS">'.Asset::icon('discord').'&nbsp;'.s("Signaler un problème").'</a><br/>';
+							$h .= '<a href="https://discord.gg/5eYnaSBYMt">'.Asset::icon('discord').'&nbsp;'.s("Signaler un problème").'</a><br/>';
 						$h .= '</div>';
 						$h .= '<div>';
 							$h .= '<a href="/presentation/legal">'.s("Mentions légales").'</a><br/>';
