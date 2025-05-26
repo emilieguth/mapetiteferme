@@ -43,8 +43,8 @@ class LegalUi {
 
 		$h .= '<ul>';
 			$h .= '<li>'.s("{siteName} est hébergé en France pour limiter l'usage des infrastructures mondiales.").'</li>';
-			$h .= '<li><a href="https://www.websitecarbon.com/website/ouvretaferme-org/" target="_blank">'.s("L'empreinte carbone de {siteName} est évaluée à A, soit plus propre que 87% de toutes les pages web connues (source: Website Carbon Calculator)").'&nbsp;'.\Asset::icon('box-arrow-up-right').'</a></li>';
-			$h .= '<li>'.s("Seulement 0,14g de CO2 est produit à chaque visite (source : Website Carbon Calculator)").'</li>';
+			$h .= '<li><a href="https://www.websitecarbon.com/website/mapetiteferme-app-noairtable1/" target="_blank">'.s("L'empreinte carbone de {siteName} est évaluée à B, soit plus propre que 76% de toutes les pages web connues (source: Website Carbon Calculator)").'&nbsp;'.\Asset::icon('box-arrow-up-right').'</a></li>';
+			$h .= '<li>'.s("Seulement 0,23g de CO2 est produit à chaque visite (source : Website Carbon Calculator)").'</li>';
 			$h .= '<li><a href="https://www.ecoindex.fr/resultat/?id=e671de04-7209-4570-bd8f-ad5bb2e026d9" target="_blank">'.s("Performance environnementale de {siteName} par EcoIndex, proche de la perfection").'&nbsp;'.\Asset::icon('box-arrow-up-right').'</a></li>';
 		$h .= '</ul>';
 
@@ -54,7 +54,7 @@ class LegalUi {
 
 		$h .= '<ul>';
 			$h .= '<li>'.s("Respect autant que possible des <link>115 bonnes pratiques pour une écoconception web {icon}</link>, préconisées par le collectif greenIT.", ['link' => '<a href="https://collectif.greenit.fr/ecoconception-web/">', 'icon' => \Asset::icon('box-arrow-up-right')]).'</li>';
-			$h .= '<li>'.s("Design épuré : {siteName} s'adapte à l'écran (design <i>responsive</i>, utilisation d'icônes plutôt que d'images, si des images sont nécessaires, elles sont compressées avant usage, etc.").'</li>';
+			$h .= '<li>'.s("Design épuré : {siteName} s'adapte à l'écran (design <i>responsive</i>, utilisation d'icônes plutôt que d'images, si des images sont nécessaires, elles sont compressées avant usage, etc.)").'</li>';
 			$h .= '<li>'.s("Fonctionnalités utiles : pour un service maintenable et utilisable de tous, seules les fonctionnalités utiles sont développées et conservées.").'</li>';
 			$h .= '<li>'.s("Requêtes limitées : une attention particulière est portée au nombre d'interactions entre l'ordinateur de l'utilisateur et le serveur pour éviter de gaspiller de l'énergie.").'</li>';
 		$h .= '</ul>';

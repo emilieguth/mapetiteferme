@@ -228,13 +228,11 @@ class MainTemplate extends BaseTemplate {
 					$h .= '</div>';
 					$h .= '<div class="footer-content-legal">';
 						$h .= '<div>';
-							$h .= '<h4>'.s("Ressources").'</h4>';
 							//$h .= '<a href="/presentation/faq">'.s("Foire aux questions").'</a><br/>';
-							//$h .= '<a href="/presentation/engagements">'.s("Engagements environnementaux").'</a><br/>';
+							$h .= '<a href="/presentation/engagements">'.s("Engagements environnementaux").'</a><br/>';
 							$h .= '<a href="https://discord.gg/jAFFrhCWsS">'.Asset::icon('discord').'&nbsp;'.s("Signaler un problème").'</a><br/>';
 						$h .= '</div>';
 						$h .= '<div>';
-							$h .= '<h4>'.s("Usage").'</h4>';
 							$h .= '<a href="/presentation/legal">'.s("Mentions légales").'</a><br/>';
 							//$h .= '<a href="/presentation/service">'.s("Conditions d'utilisation").'</a><br/>';
 							//$h .= '<a href="/presentation/fonctionnalites">'.s("Fonctionnalités").'</a>';
