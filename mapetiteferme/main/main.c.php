@@ -19,7 +19,12 @@ Setting::register('main', [
 		'prod' => 'https://www.ouvretaferme.org',
 		'dev' => 'http://www.dev-ouvretaferme.org',
 		'demo' => 'https://demo.ouvretaferme.org',
-	}
+	},
+
+	'backupServer' => [
+		'user' => '',
+		'hostname' => '',
+	],
 
 ]);
 ?>

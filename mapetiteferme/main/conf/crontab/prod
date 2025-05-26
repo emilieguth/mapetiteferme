@@ -3,6 +3,7 @@
 ############################
 
 */5 * * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme session/cron/sessionClean
+30 4 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme main/cron/backup
 0 * * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme mail/cron/mail
 0 * * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme storage/cron/buffer
 0 12 * * * php /var/www/mpf/framework/lime.php -e prod -a mapetiteferme mail/cron/clean
