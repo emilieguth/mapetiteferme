@@ -234,6 +234,7 @@ class MainTemplate extends BaseTemplate {
 						$h .= '</div>';
 						$h .= '<div>';
 							$h .= '<a href="/presentation/legal">'.s("Mentions légales").'</a><br/>';
+							$h .= '<a href="/presentation/pricing">'.s("Tarifs").'</a><br/>';
 							//$h .= '<a href="/presentation/service">'.s("Conditions d'utilisation").'</a><br/>';
 							//$h .= '<a href="/presentation/fonctionnalites">'.s("Fonctionnalités").'</a>';
 						$h .= '</div>';

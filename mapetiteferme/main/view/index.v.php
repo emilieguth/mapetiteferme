@@ -252,6 +252,22 @@ new AdaptativeView('/presentation/legal', function($data, MainTemplate $t) {
 
 });
 
+new AdaptativeView('/presentation/pricing', function($data, MainTemplate $t) {
+
+	$t->title = s("Tarifs");
+	$t->metaNoindex = TRUE;
+	$t->template = 'home-legal';
+
+	Asset::css('main', 'font-itim.css');
+
+	Asset::css('main', 'home.css');
+
+	$t->header = '<h1>'.s("Grille tarifaire").'</h1>';
+
+	echo new \company\SubscriptionUi()->getPlans(new \company\Company());
+
+});
+
 new AdaptativeView('/presentation/service', function($data, MainTemplate $t) {
 
 	$t->title = s("Conditions d'utilisation du service");

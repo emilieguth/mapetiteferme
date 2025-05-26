@@ -14,5 +14,6 @@ new Page()
 	->get('/presentation/faq', fn($data) => throw new ViewAction($data))
 	->get('/presentation/engagements', fn($data) => throw new ViewAction($data))
 	->get('/presentation/legal', fn($data) => throw new ViewAction($data))
+	->get('/presentation/pricing', fn($data) => throw new ViewAction($data))
 	->get('/presentation/service', fn($data) => throw new ViewAction($data));
 ?>

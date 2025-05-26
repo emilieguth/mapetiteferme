@@ -33,6 +33,11 @@ Route::register([
 			'priority' => 5,
 			'route' => ['presentation', 'legal'],
 		],
+		'/presentation/pricing' => [
+			'request' => 'main/index',
+			'priority' => 5,
+			'route' => ['presentation', 'pricing'],
+		],
 		'/presentation/service' => [
 			'request' => 'main/index',
 			'priority' => 5,

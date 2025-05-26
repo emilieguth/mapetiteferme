@@ -8,7 +8,7 @@ new AdaptativeView('manage', function($data, CompanyTemplate $t) {
 	$t->mainTitle = new \company\SubscriptionUi()->getManageTitle($data->eCompany);
 
 	echo \company\SubscriptionUi::getCurrent($data->eCompany);
-	echo \company\SubscriptionUi::getPlans($data->eCompany);
+	echo new \company\SubscriptionUi()->getPlans($data->eCompany);
 	echo \company\SubscriptionUi::getHistory($data->cSubscriptionHistory);
 
 });
