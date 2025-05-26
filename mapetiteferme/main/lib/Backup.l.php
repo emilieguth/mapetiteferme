@@ -33,7 +33,7 @@ class BackupLib {
 		[$serverUser, $serverHostname] = self::getHostData();
 		$day = date('Y-m-d');
 
-		$command = 'scp '.self::LOCAL_STORAGE_BACKUP_DIR.' '.$serverUser.'@'.$serverHostname.':'.self::SERVER_BACKUP_DIR.self::STORAGE_FOLDER.'/'.$day;
+		$command = 'scp -r '.self::LOCAL_STORAGE_BACKUP_DIR.' '.$serverUser.'@'.$serverHostname.':'.self::SERVER_BACKUP_DIR.self::STORAGE_FOLDER.'/'.$day;
 		self::exec($command);
 
 	}
