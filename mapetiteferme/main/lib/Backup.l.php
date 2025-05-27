@@ -4,12 +4,12 @@ namespace main;
 class BackupLib {
 
 	const LOCAL_DATABASE_BACKUP_DIR = '/var/www/mysql-backup/';
-	const LOCAL_STORAGE_BACKUP_DIR = '/var/www/mpf-storage/';
+	const LOCAL_STORAGE_BACKUP_FILE = '/var/www/mpf-storage.tar.gz';
 	const SERVER_BACKUP_DIR = '/home/ubuntu/mpf-backup/';
 	const DATABASE_FOLDER = 'mysql';
 	const STORAGE_FOLDER = 'storage';
 
-	const DURATION_BACKUP_IN_DAYS = '7';
+	const DURATION_BACKUP_IN_DAYS = 15;
 	const DURATION_BACKUP_MAX_IN_DAYS = 365 * 7;
 
 	public static function backupDatabase(): void {
@@ -33,7 +33,7 @@ class BackupLib {
 		[$serverUser, $serverHostname] = self::getHostData();
 		$day = date('Y-m-d');
 
-		$command = 'scp -r '.self::LOCAL_STORAGE_BACKUP_DIR.' '.$serverUser.'@'.$serverHostname.':'.self::SERVER_BACKUP_DIR.self::STORAGE_FOLDER.'/'.$day;
+		$command = 'scp '.self::LOCAL_STORAGE_BACKUP_FILE.' '.$serverUser.'@'.$serverHostname.':'.self::SERVER_BACKUP_DIR.self::STORAGE_FOLDER.'/'.$day.'.tar.gz';
 		self::exec($command);
 
 	}
@@ -99,18 +99,23 @@ class BackupLib {
 			$fileDay = substr($fileDate, -2);
 
 			$interval = \util\DateLib::interval($today, $fileDate);
-			$days = $interval / 60 / 60 / 24;
+			$days = (int)($interval / 60 / 60 / 24);
 
-			if(in_array($fileDay, ['01, 15'])) { // Dans tous les cas on supprime les backups trop vieilles
-				$check = self::DURATION_BACKUP_MAX_IN_DAYS;
-			} else {
-				$check = self::DURATION_BACKUP_IN_DAYS;
+			if(
+				// On ne supprime pas les backups de moins de DURATION_BACKUP_IN_DAYS jours
+				$days <= self::DURATION_BACKUP_IN_DAYS
+				or (
+					// On ne supprime pas les backups de moins de DURATION_BACKUP_MAX_IN_DAYS jours ET du 1er ou du 15
+					$days <= self::DURATION_BACKUP_MAX_IN_DAYS
+					and in_array($fileDay, ['01, 15'])
+				)
+			) {
+				continue;
 			}
 
-			if($days > $check) {
-				$command = 'ssh '.$serverUser.'@'.$serverHostname.' "rm -rf '.$folder.'/'.$file.'"';
-				self::exec($command);
-			}
+			// Dans tous les cas on supprime les backups trop vieilles
+			$command = 'ssh '.$serverUser.'@'.$serverHostname.' "rm '.$folder.'/'.$file.'"';
+			self::exec($command);
 
 		}
 

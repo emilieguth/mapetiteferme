@@ -1,3 +1,5 @@
+45 3 * * * tar czf /var/www/mpf-storage.tar.gz /var/www/mpf-storage/
+
 ############################
 #   www.mapetiteferme.app  #
 ############################
