@@ -415,10 +415,12 @@ class CompanyUi {
 
 	protected static function getJournalCategories(Company $eCompany): array {
 
+		$journalTitle = $eCompany->isCashAccounting() ? s("Journal de trésorerie") : s("Journaux");
+
 		return [
 			'journal' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/',
-				'label' => s("Journal")
+				'label' => $journalTitle,
 			],
 			'book' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/book',
@@ -751,6 +753,7 @@ class CompanyUi {
 					CompanyElement::ACCRUAL => s("Comptabilité à l'engagement"),
 					CompanyElement::CASH => s("Comptabilité de trésorerie"),
 				];
+				$d->after = \util\FormUi::info(s("Généralement, la comptabilité de <b>trésorerie</b> est choisie en <b>micro-BA</b> ou <b>régime simplifié</b>.<br />La comptabilité à l'<b>engagement</b> est choisie en <b>régime réel</b> (normal ou simplifié)"));
 				break;
 
 			case 'siret':

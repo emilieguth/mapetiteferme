@@ -15,6 +15,21 @@ class Company extends CompanyElement {
 		return ($this['status'] === Company::ACTIVE);
 	}
 
+	public function isCashAccounting(): bool {
+
+		$this->expects(['accountingType']);
+
+		return $this['accountingType'] === CompanyElement::CASH;
+
+	}
+	public function isAccrualAccounting(): bool {
+
+		$this->expects(['accountingType']);
+
+		return $this['accountingType'] === CompanyElement::ACCRUAL;
+
+	}
+
 	public function getEmployee(): Employee {
 
 		$this->expects(['id']);
@@ -33,6 +48,7 @@ class Company extends CompanyElement {
 		return TRUE;
 
 	}
+
 	public function canManage(): bool {
 		if($this->empty()) {
 			return FALSE;

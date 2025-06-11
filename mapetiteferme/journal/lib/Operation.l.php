@@ -21,10 +21,25 @@ class OperationLib extends OperationCrud {
 
 	public static function applySearch(\Search $search = new \Search()): OperationModel {
 
-		return Operation::model()
+		$eCompany = \company\CompanyLib::getCurrent();
+
+		if($eCompany->isAccrualAccounting()) {
+
+			$model = Operation::model()
+       ->whereDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
+       ->whereDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'));
+
+		} else {
+
+			$model = Operation::model()
+       ->wherePaymentDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
+       ->wherePaymentDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'));
+
+		}
+
+		return $model
 			->whereDate('LIKE', '%'.$search->get('date').'%', if: $search->get('date'))
-			->whereDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
-			->whereDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'))
+			->wherePaymentDate('LIKE', '%'.$search->get('paymentDate').'%', if: $search->get('paymentDate'))
 			->whereAccountLabel('LIKE', '%'.$search->get('accountLabel').'%', if: $search->get('accountLabel'))
 			->whereDescription('LIKE', '%'.$search->get('description').'%', if: $search->get('description'))
 			->whereDocument($search->get('document'), if: $search->get('document'))
@@ -64,14 +79,16 @@ class OperationLib extends OperationCrud {
 	}
 	public static function getAllForJournal(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
+		$eCompany = \company\CompanyLib::getCurrent();
+		$defaultOrder = $eCompany->isCashAccounting() ? ['paymentDate' => SORT_ASC, 'id' => SORT_ASC] : ['date' => SORT_ASC, 'id' => SORT_ASC];
+
 		return self::applySearch($search)
 			->select(
 				Operation::getSelection()
-				+ ['operation' => ['id']]
 				+ ['account' => ['class', 'description']]
 				+ ['thirdParty' => ['id', 'name']]
 			)
-			->sort($hasSort === TRUE ? $search->buildSort() : ['date' => SORT_ASC, 'id' => SORT_ASC])
+			->sort($hasSort === TRUE ? $search->buildSort() : $defaultOrder)
 			->getCollection();
 
 	}

@@ -12,7 +12,12 @@ class JournalUi {
 		$h = '<div class="util-action">';
 
 			$h .= '<h1>';
-				$h .= s("Le journal comptable");
+				if($eCompany->isCashAccounting()) {
+					$h .= s("Le journal de trésorerie");
+				} else {
+					$h .= s("Les journaux");
+				}
+
 			$h .= '</h1>';
 
 			if($eFinancialYear->notEmpty()) {
@@ -122,8 +127,14 @@ class JournalUi {
 				$h .= '<thead class="thead-sticky">';
 					$h .= '<tr>';
 						$h .= '<th>';
-							$label = s("Date de l'écriture");
-							$h .= ($search ? $search->linkSort('date', $label) : $label);
+
+							if($eCompany->isCashAccounting()) {
+								$label = s("Date de transaction");
+								$h .= ($search ? $search->linkSort('paymentDate', $label) : $label);
+							} else {
+								$label = s("Date de l'écriture");
+								$h .= ($search ? $search->linkSort('date', $label) : $label);
+							}
 						$h .= '</th>';
 						$h .= '<th>'.s("# Opération bancaire").'</th>';
 						$h .= '<th>';

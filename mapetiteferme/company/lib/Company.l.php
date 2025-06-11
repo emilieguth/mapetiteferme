@@ -25,6 +25,21 @@ class CompanyLib extends CompanyCrud {
 
 	}
 
+	public static function getCurrent(): Company {
+
+		$eCompany = \company\CompanyLib::getById(INPUT('company'));
+		if($eCompany->empty()) {
+			return $eCompany;
+		}
+
+		if(self::getOnline()->find(fn($e) => $e['id'] === $eCompany['id'])) {
+			return $eCompany;
+		}
+
+		return new Company();
+
+	}
+
 	public static function getList(?array $properties = NULL): \Collection {
 
 		return Company::model()
