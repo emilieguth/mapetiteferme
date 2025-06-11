@@ -37,6 +37,13 @@ new Page(function($data) {
 			$search->set('cashflow', GET('cashflow'));
 		}
 
+		if($data->eCompany->isAccrualAccounting()) {
+
+			$journalType = GET('journalType',  'string', 'buy');
+			\journal\OperationLib::applyJournalTypeOnSearch($search, $journalType);
+
+		}
+
 		$data->cOperation = \journal\OperationLib::getAllForJournal($search, $hasSort);
 		$data->cAccount = \accounting\AccountLib::getAll();
 

@@ -13,7 +13,7 @@ class JournalUi {
 
 			$h .= '<h1>';
 				if($eCompany->isCashAccounting()) {
-					$h .= s("Le journal de trésorerie");
+					$h .= s("Le journal comptable");
 				} else {
 					$h .= s("Les journaux");
 				}
@@ -114,6 +114,48 @@ class JournalUi {
 			return '<div class="util-info">'.s("Aucune écriture ne correspond à vos critères de recherche").'</div>';
 
 		}
+
+		if($eCompany->isCashAccounting()) {
+			return $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search);
+		}
+
+		$journalTypes = [
+			'buy' => s("Achats"),
+			'sell' => s("Ventes"),
+			'cashflow' => s("Trésorerie"),
+			'misc' => s("Opérations diverses"),
+		];
+		$selectedJournalType = GET('journalType', 'string', 'buy');
+
+		$h = '<div class="tabs-h" id="journals">';
+
+			$h .= '<div class="tabs-item">';
+
+				foreach($journalTypes as $journalType => $translation) {
+
+					$h .= '<a class="tab-item'.($selectedJournalType === $journalType ? ' selected' : '').'" data-tab="journal-'.$journalType.'" href="'.\company\CompanyUi::urlJournal($eCompany).'/?journalType='.$journalType.'">'.$translation.'</a>';
+
+				}
+
+			$h .= '</div>';
+
+			foreach($journalTypes as $journalType => $translation) {
+				$h .= '<div class="tab-panel'.($selectedJournalType === $journalType ? ' selected' : '').'" data-tab="journal-'.$journalType.'">';
+					$h .= $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search);
+				$h .= '</div>';
+			}
+
+		$h .= '</div>';
+
+		return $h;
+
+	}
+	public function getTableContainer(
+		\company\Company $eCompany,
+		\Collection $cOperation,
+		\accounting\FinancialYear $eFinancialYearSelected,
+		\Search $search = new \Search()
+	): string {
 
 		\Asset::js('util', 'form.js');
 		\Asset::css('util', 'form.css');

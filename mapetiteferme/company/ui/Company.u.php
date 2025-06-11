@@ -415,7 +415,7 @@ class CompanyUi {
 
 	protected static function getJournalCategories(Company $eCompany): array {
 
-		$journalTitle = $eCompany->isCashAccounting() ? s("Journal de trésorerie") : s("Journaux");
+		$journalTitle = $eCompany->isCashAccounting() ? s("Journal comptable") : s("Journaux");
 
 		return [
 			'journal' => [

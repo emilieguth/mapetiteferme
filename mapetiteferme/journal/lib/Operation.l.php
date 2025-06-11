@@ -19,6 +19,17 @@ class OperationLib extends OperationCrud {
 
 	}
 
+	public static function applyJournalTypeOnSearch(\Search $search, ?string $journalType = NULL): \Search {
+
+		if($journalType === NULL) {
+			return $search;
+		}
+
+		$search->set('accountLabels', [\Setting::get('accounting\classesByJournal')[$journalType]]);
+
+		return $search;
+	}
+
 	public static function applySearch(\Search $search = new \Search()): OperationModel {
 
 		$eCompany = \company\CompanyLib::getCurrent();
@@ -41,6 +52,7 @@ class OperationLib extends OperationCrud {
 			->whereDate('LIKE', '%'.$search->get('date').'%', if: $search->get('date'))
 			->wherePaymentDate('LIKE', '%'.$search->get('paymentDate').'%', if: $search->get('paymentDate'))
 			->whereAccountLabel('LIKE', '%'.$search->get('accountLabel').'%', if: $search->get('accountLabel'))
+			->where(fn() => 'accountLabel LIKE "'.join('%" OR accountLabel LIKE "', $search->get('accountLabels')[0]).'%"', if: $search->get('accountLabels'))
 			->whereDescription('LIKE', '%'.$search->get('description').'%', if: $search->get('description'))
 			->whereDocument($search->get('document'), if: $search->get('document'))
 			->whereCashflow('=', $search->get('cashflow'), if: $search->get('cashflow'))
@@ -48,6 +60,7 @@ class OperationLib extends OperationCrud {
 			->whereType($search->get('type'), if: $search->get('type'))
 			->whereAsset($search->get('asset'), if: $search->get('asset'))
 			->whereThirdParty('=', $search->get('thirdParty'), if: $search->get('thirdParty'));
+
 
 	}
 

@@ -45,5 +45,13 @@ Setting::register('accounting', [
 	'vatSellVatClasses' => ['44571'],
 	'vatSellClassPrefix' => '4457',
 
+	// Classement des classes par journal
+	'classesByJournal' => [
+		'cashflow' => ['5'],
+		'buy' => ['60', '61', '62', '63', '64', '44566'],
+		'sell' => ['70', '71', '72', '74', '44571'],
+		'misc' => ['28', '29', '65', '68', '69'],
+	]
+
 ]);
 ?>
