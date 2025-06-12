@@ -385,7 +385,7 @@ class CashflowUi {
 			);
 		$subtitle .= '</div>';
 
-		$h .= \journal\OperationUi::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);
+		$h .= \journal\OperationUi::getCreateGrid($eCompany, $eOperation, $eFinancialYear, $index, $form, $defaultValues);
 
 		$amountWarning = '<div id="cashflow-allocate-difference-warning" class="util-danger hide">';
 			$amountWarning .= s("Attention, les montants saisis doivent correspondre au montant total de la transaction. Il y a une différence de {difference}.", ['difference' => '<span id="cashflow-allocate-difference-value">0</span>']);
@@ -417,7 +417,7 @@ class CashflowUi {
 
 	}
 
-	public static function addAllocate(\journal\Operation $eOperation, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, int $index): string {
+	public static function addAllocate(\company\Company $eCompany, \journal\Operation $eOperation, \accounting\FinancialYear $eFinancialYear, Cashflow $eCashflow, int $index): string {
 
 		$form = new \util\FormUi();
 		$form->open('bank-cashflow-allocate');
@@ -428,7 +428,7 @@ class CashflowUi {
 			'cashflow' => $eCashflow,
 		];
 
-		return \journal\OperationUi::getFieldsCreateGrid($form, $eOperation, $eFinancialYear, '['.$index.']', $defaultValues, []);
+		return \journal\OperationUi::getFieldsCreateGrid($eCompany, $form, $eOperation, $eFinancialYear, '['.$index.']', $defaultValues, []);
 
 	}
 

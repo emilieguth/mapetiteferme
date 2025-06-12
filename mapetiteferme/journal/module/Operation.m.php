@@ -7,6 +7,11 @@ abstract class OperationElement extends \Element {
 
 	private static ?OperationModel $model = NULL;
 
+	const ACH = 'ach';
+	const VEN = 'ven';
+	const BAN = 'ban';
+	const OD = 'od';
+
 	const DEBIT = 'debit';
 	const CREDIT = 'credit';
 
@@ -47,6 +52,7 @@ class OperationModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'number' => ['int32', 'min' => 0, 'max' => NULL, 'null' => TRUE, 'cast' => 'int'],
+			'journalCode' => ['enum', [\journal\Operation::ACH, \journal\Operation::VEN, \journal\Operation::BAN, \journal\Operation::OD], 'null' => TRUE, 'cast' => 'enum'],
 			'account' => ['element32', 'accounting\Account', 'cast' => 'element'],
 			'accountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'cast' => 'string'],
 			'thirdParty' => ['element32', 'journal\ThirdParty', 'null' => TRUE, 'cast' => 'element'],
@@ -70,7 +76,7 @@ class OperationModel extends \ModuleModel {
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'number', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'documentDate', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'paymentDate', 'paymentMode', 'createdAt', 'updatedAt', 'createdBy'
+			'id', 'number', 'journalCode', 'account', 'accountLabel', 'thirdParty', 'date', 'description', 'document', 'documentDate', 'amount', 'type', 'cashflow', 'vatRate', 'vatAccount', 'operation', 'asset', 'comment', 'paymentDate', 'paymentMode', 'createdAt', 'updatedAt', 'createdBy'
 		]);
 
 		$this->propertiesToModule += [
@@ -117,6 +123,9 @@ class OperationModel extends \ModuleModel {
 
 		switch($property) {
 
+			case 'journalCode' :
+				return ($value === NULL) ? NULL : (string)$value;
+
 			case 'type' :
 				return ($value === NULL) ? NULL : (string)$value;
 
@@ -144,6 +153,10 @@ class OperationModel extends \ModuleModel {
 
 	public function whereNumber(...$data): OperationModel {
 		return $this->where('number', ...$data);
+	}
+
+	public function whereJournalCode(...$data): OperationModel {
+		return $this->where('journalCode', ...$data);
 	}
 
 	public function whereAccount(...$data): OperationModel {

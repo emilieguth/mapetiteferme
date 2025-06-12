@@ -19,17 +19,6 @@ class OperationLib extends OperationCrud {
 
 	}
 
-	public static function applyJournalTypeOnSearch(\Search $search, ?string $journalType = NULL): \Search {
-
-		if($journalType === NULL) {
-			return $search;
-		}
-
-		$search->set('accountLabels', [\Setting::get('accounting\classesByJournal')[$journalType]]);
-
-		return $search;
-	}
-
 	public static function applySearch(\Search $search = new \Search()): OperationModel {
 
 		$eCompany = \company\CompanyLib::getCurrent();
@@ -37,14 +26,15 @@ class OperationLib extends OperationCrud {
 		if($eCompany->isAccrualAccounting()) {
 
 			$model = Operation::model()
-       ->whereDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
-       ->whereDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'));
+				->whereDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
+				->whereDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'))
+				->whereJournalCode('=', $search->get('journalCode'), if: $search->has('journalCode'));
 
 		} else {
 
 			$model = Operation::model()
-       ->wherePaymentDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
-       ->wherePaymentDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'));
+				->wherePaymentDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
+				->wherePaymentDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'));
 
 		}
 
@@ -90,6 +80,19 @@ class OperationLib extends OperationCrud {
 			->getCollection();
 
 	}
+
+	public static function getAllForAccounting(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
+
+		return self::applySearch($search)
+			->select(
+				Operation::getSelection()
+				+ ['account' => ['class', 'description']]
+				+ ['thirdParty' => ['id', 'name']]
+			)
+			->sort($hasSort === TRUE ? $search->buildSort() : ['date' => SORT_ASC, 'id' => SORT_ASC])
+			->getCollection();
+	}
+
 	public static function getAllForJournal(\Search $search = new \Search(), bool $hasSort = FALSE): \Collection {
 
 		$eCompany = \company\CompanyLib::getCurrent();
@@ -219,11 +222,17 @@ class OperationLib extends OperationCrud {
 
 			$eOperation['amount'] = abs($eOperation['amount']);
 
-			// Date de la pièce justificative : date d'enregistrement
+			// Date de la pièce justificative : date de l'écriture
 			if($eOperation['document'] !== NULL) {
-				$eOperation['documentDate'] = new \Sql('NOW()');
+				$eOperation['documentDate'] = $eOperation['date'];
 			} else {
 				$eOperation['documentDate'] = NULL;
+			}
+
+			foreach(['date', 'document', 'documentDate'] as $property) {
+				if(($eOperationDefault[$property] ?? NULL) === NULL) {
+					$eOperationDefault[$property] = $eOperation[$property];
+				}
 			}
 
 			$thirdParty = $input['thirdParty'][$index] ?? null;
@@ -233,6 +242,8 @@ class OperationLib extends OperationCrud {
 					$eOperationDefault['thirdParty'] = $eOperation['thirdParty'];
 				}
 			}
+
+			$eOperation['journalCode'] = \accounting\AccountLib::getJournalCodeByClass($eOperation['accountLabel']);
 
 			// Ce type d'écriture a un compte de TVA correspondant
 			$eAccount = $cAccounts[$account] ?? new \accounting\Account();
@@ -282,25 +293,103 @@ class OperationLib extends OperationCrud {
 			}
 		}
 
-		// Si toutes les écritures sont sur le même document, on utilise aussi celui-ci pour l'opération bancaire;
-		$documents = $cOperation->getColumn('document');
-		$uniqueDocuments = array_unique($documents);
-		if(count($uniqueDocuments) === 1 and count($documents) === $cOperation->count()) {
-			$document = first($uniqueDocuments);
-		} else {
-			$document = NULL;
-		}
+		// En cas de comptabilité à l'engagement : création de l'entrée en 401 ou 411
+		$eCompany = \company\CompanyLib::getCurrent();
 
-		// Ajout de la transaction sur la classe de compte bancaire 512
-		if($isFromCashflow === TRUE) {
+		if($eCompany->isAccrualAccounting()) {
+			// Additionner tous les débits => 401xxx / Additionner tous les crédits => 411xxx
+			$credits = 0;
+			$debits = 0;
+			foreach($cOperation as $eOperation) {
 
-			$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow(
-				$eOperationDefault['cashflow'],
-				$eOperationDefault,
-				$document,
+				if($eOperation['journalCode'] === \journal\Operation::ACH) {
+
+						$debits += $eOperation['amount'];
+
+				} else if($eOperation['journalCode'] === \journal\Operation::VEN) {
+
+						$credits += $eOperation['amount'];
+
+				}
+
+			}
+
+			// On en profilte pour affecter le numéro de accountLabel aux tiers
+			$eOperationThirdPartyDefault = new Operation(
+				[
+					'thirdParty' => $eOperationDefault['thirdParty'],
+					'date' => $eOperationDefault['date'],
+					'document' => $eOperationDefault['document'],
+					'documentDate' => $eOperationDefault['documentDate'],
+				]
 			);
-			$cOperation->append($eOperationBank);
 
+			if($credits > 0) {
+
+				$eOperationThirdPartyCredit = clone $eOperationThirdPartyDefault;
+
+				$eOperationThirdPartyCredit['account'] = \accounting\AccountLib::getByClass(\Setting::get('accounting\thirdAccountCustomerReceivableClass'));
+				$eOperationThirdPartyCredit['amount'] = $credits;
+				$eOperationThirdPartyCredit['type'] = Operation::CREDIT;
+
+				if($eOperationDefault['thirdParty']['clientAccountLabel'] === NULL) {
+					$accountLabel = ThirdPartyLib::getNextThirdPartyAccountLabel('clientAccountLabel', \Setting::get('accounting\thirdAccountCustomerReceivableClass'));
+					$eOperationDefault['thirdParty']['clientAccountLabel'] = $accountLabel;
+					ThirdPartyLib::update($eOperationDefault['thirdParty'], ['clientAccountLabel']);
+				} else {
+					$accountLabel = $eOperationDefault['thirdParty']['clientAccountLabel'];
+				}
+				$eOperationThirdPartyCredit['accountLabel'] = $accountLabel;
+				$eOperationThirdPartyCredit['description'] = new ThirdPartyUi()->getOperationDescription($eOperationDefault['thirdParty'], Operation::CREDIT);
+
+				\journal\Operation::model()->insert($eOperationThirdPartyCredit);
+				$cOperation->append($eOperationThirdPartyCredit);
+
+			}
+
+			if($debits > 0) {
+				$eOperationThirdPartyDebit = clone $eOperationThirdPartyDefault;
+				$eOperationThirdPartyDebit['account'] = \accounting\AccountLib::getByClass(\Setting::get('accounting\thirdAccountSupplierDebtClass'));
+				$eOperationThirdPartyDebit['amount'] = $debits;
+				$eOperationThirdPartyDebit['type'] = Operation::DEBIT;
+
+				if($eOperationDefault['thirdParty']['supplierAccountLabel'] === NULL) {
+					$accountLabel = ThirdPartyLib::getNextThirdPartyAccountLabel('supplierAccountLabel', \Setting::get('accounting\thirdAccountSupplierDebtClass'));
+					$eOperationDefault['thirdParty']['supplierAccountLabel'] = $accountLabel;
+					ThirdPartyLib::update($eOperationDefault['thirdParty'], ['supplierAccountLabel']);
+				} else {
+					$accountLabel = $eOperationDefault['thirdParty']['supplierAccountLabel'];
+				}
+				$eOperationThirdPartyDebit['accountLabel'] = $accountLabel;
+				$eOperationThirdPartyDebit['description'] = new ThirdPartyUi()->getOperationDescription($eOperationDefault['thirdParty'], Operation::DEBIT);
+
+				\journal\Operation::model()->insert($eOperationThirdPartyDebit);
+				$cOperation->append($eOperationThirdPartyDebit);
+
+			}
+
+		} else {
+
+			// Si toutes les écritures sont sur le même document, on utilise aussi celui-ci pour l'opération bancaire;
+			$documents = $cOperation->getColumn('document');
+			$uniqueDocuments = array_unique($documents);
+			if(count($uniqueDocuments) === 1 and count($documents) === $cOperation->count()) {
+				$document = first($uniqueDocuments);
+			} else {
+				$document = NULL;
+			}
+
+			// Ajout de la transaction sur la classe de compte bancaire 512
+			if($isFromCashflow === TRUE) {
+
+				$eOperationBank = \journal\OperationLib::createBankOperationFromCashflow(
+					$eOperationDefault['cashflow'],
+					$eOperationDefault,
+					$document,
+				);
+				$cOperation->append($eOperationBank);
+
+			}
 		}
 
 		if($fw->ko()) {

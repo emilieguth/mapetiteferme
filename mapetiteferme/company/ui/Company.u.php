@@ -417,20 +417,32 @@ class CompanyUi {
 
 		$journalTitle = $eCompany->isCashAccounting() ? s("Journal comptable") : s("Journaux");
 
-		return [
+		$categories = [
 			'journal' => [
 				'url' => CompanyUi::urlJournal($eCompany).'/',
 				'label' => $journalTitle,
 			],
-			'book' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/book',
-				'label' => s("Grand livre")
-			],
-			'vat' => [
-				'url' => CompanyUi::urlJournal($eCompany).'/vat',
-				'label' => s("Journaux de TVA")
-			],
 		];
+
+		if($eCompany->isAccrualAccounting()) {
+
+			$categories['account'] = [
+				'url' => CompanyUi::urlJournal($eCompany).'/accounts',
+				'label' => s("Comptes")
+			];
+
+		}
+
+		$categories['book'] = [
+			'url' => CompanyUi::urlJournal($eCompany).'/book',
+			'label' => s("Grand livre")
+		];
+		$categories['vat'] = [
+			'url' => CompanyUi::urlJournal($eCompany).'/vat',
+			'label' => s("Journaux de TVA")
+		];
+
+		return $categories;
 
 	}
 

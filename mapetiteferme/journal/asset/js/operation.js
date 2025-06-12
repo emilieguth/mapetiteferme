@@ -46,7 +46,14 @@ document.delegateEventListener('autocompleteUpdate', '[data-third-party="journal
 });
 
 document.delegateEventListener('autocompleteSelect', '[data-third-party="journal-operation-create"], [data-third-party="bank-cashflow-allocate"]', function(e) {
-    Operation.updateThirdParty(e.detail);
+
+    const index = parseInt(this.dataset.index);
+
+    if(this.disabled) {
+        return;
+    }
+
+    Operation.updateThirdParty(index, e.detail);
     Operation.checkAutocompleteStatus(e);
 });
 
@@ -59,7 +66,7 @@ document.delegateEventListener('mouseout', '[data-highlight]', function(e) {
     Operation.unhighlight(highlight);
 });
 
-document.delegateEventListener('change', '[data-date="journal-operation-create"]', function(e) {
+document.delegateEventListener('change', '[data-date="journal-operation-create"][data-accounting-type="cash"]', function(e) {
     Operation.copyDate(e);
 });
 
@@ -144,8 +151,18 @@ class Operation {
         }
     }
 
-    static updateThirdParty(detail) {
+    static updateThirdParty(index, detail) {
+
+        const columns = qs('#create-operation-list').getAttribute('data-columns');
         detail.input.firstParent('form').qs('#add-operation').setAttribute('post-third-party', detail.value);
+
+        for(let i = 0; i < columns; i++) {
+            if(i !== index && qs('[data-third-party][data-index="' + i + '"]').getAttribute('disabled') === '1') {
+                const dropdown = qs('[data-third-party][data-index="' + i + '"]');
+                AutocompleteField.apply(dropdown, detail);
+            }
+        }
+
     }
 
     static deleteOperation(target) {

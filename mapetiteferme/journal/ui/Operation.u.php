@@ -35,7 +35,7 @@ class OperationUi {
 		$index = 0;
 		$defaultValues = $eOperation->getArrayCopy();
 
-		$h .= self::getCreateGrid($eOperation, $eFinancialYear, $index, $form, $defaultValues);
+		$h .= self::getCreateGrid($eCompany, $eOperation, $eFinancialYear, $index, $form, $defaultValues);
 
 		$addButton = '<a id="add-operation" data-ajax="'.\company\CompanyUi::urlJournal($eCompany).'/operation:addOperation" post-index="'.($index + 1).'" post-amount="" post-third-party="" class="btn btn-outline-secondary">';
 		$addButton .= \Asset::icon('plus-circle').'&nbsp;'.s("Ajouter une autre écriture");
@@ -65,7 +65,7 @@ class OperationUi {
 
 	}
 
-	private static function getCreateHeader(bool $isFromCashflow): string {
+	private static function getCreateHeader(\company\Company $eCompany, bool $isFromCashflow): string {
 
 		$h = '<div class="create-operation create-operation-headers">';
 
@@ -97,8 +97,9 @@ class OperationUi {
 
 			if($isFromCashflow === FALSE) {
 
-				$h .= '<div class="create-operation-header">'.self::p('paymentDate')->label.' '.\util\FormUi::asterisk().'</div>';
-				$h .= '<div class="create-operation-header">'.self::p('paymentMode')->label.' '.\util\FormUi::asterisk().'</div>';
+				$mandatory = $eCompany->isCashAccounting() ? ' '.\util\FormUi::asterisk() : '';
+				$h .= '<div class="create-operation-header">'.self::p('paymentDate')->label.$mandatory.'</div>';
+				$h .= '<div class="create-operation-header">'.self::p('paymentMode')->label.$mandatory.'</div>';
 
 			}
 
@@ -124,6 +125,7 @@ class OperationUi {
 	}
 
 	public static function getFieldsCreateGrid(
+		\company\Company $eCompany,
 		\util\FormUi $form,
 		Operation $eOperation,
 		\accounting\FinancialYear $eFinancialYear,
@@ -137,6 +139,10 @@ class OperationUi {
 
 		$index = ($suffix !== NULL) ? mb_substr($suffix, 1, mb_strlen($suffix) - 2) : NULL;
 		$isFromCashflow = (isset($defaultValues['cashflow']) and $defaultValues['cashflow']->exists() === TRUE);
+
+		if($eCompany->isAccrualAccounting() and $index > 0) {
+			$disabled[] = 'thirdParty';
+		}
 
 		$h = '<div class="create-operation" data-index="'.$index.'">';
 			$h .= '<div class="create-operation-title">';
@@ -161,6 +167,7 @@ class OperationUi {
 						'max' => $eFinancialYear['endDate'],
 						'data-date' => $form->getId(),
 						'data-index' => $index,
+						'data-accounting-type' => $eCompany['accountingType'],
 					]);
 			$h .='</div>';
 
@@ -169,15 +176,17 @@ class OperationUi {
 			$h .='</div>';
 
 			$h .= '<div data-wrapper="thirdParty'.$suffix.'">';
-				$h .= $form->dynamicField($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
-					$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"][data-index="'.$index.'"]';
-					$d->attributes['data-index'] = $index;
-					if(in_array('thirdParty', $disabled) === TRUE) {
-						$d->attributes['disabled'] = TRUE;
-					}
-					$d->attributes['data-third-party'] = $form->getId();
-					$d->default = fn($e, $property) => get('thirdParty');
-				});
+
+			$h .= $form->dynamicField($eOperation, 'thirdParty'.$suffix, function($d) use($form, $index, $disabled, $suffix) {
+				$d->autocompleteDispatch = '[data-third-party="'.$form->getId().'"][data-index="'.$index.'"]';
+				$d->attributes['data-index'] = $index;
+				if(in_array('thirdParty', $disabled) === TRUE) {
+					$d->attributes['disabled'] = TRUE;
+				}
+				$d->attributes['data-third-party'] = $form->getId();
+				$d->default = fn($e, $property) => get('thirdParty');
+			});
+
 			$h .='</div>';
 
 			$h .= '<div data-wrapper="account'.$suffix.'">';
@@ -345,7 +354,7 @@ class OperationUi {
 						'paymentMode',
 						\journal\OperationUi::p('paymentMode')->values,
 						$defaultValues['paymentMode'] ?? '',
-						['mandatory' => TRUE],
+						['mandatory' => $eCompany->isCashAccounting()],
 					);
 				$h .= '</div>';
 
@@ -394,6 +403,7 @@ class OperationUi {
 	}
 
 	public static function getCreateGrid(
+		\company\Company $eCompany,
 		Operation $eOperation,
 		\accounting\FinancialYear $eFinancialYear,
 		int $index,
@@ -406,8 +416,8 @@ class OperationUi {
 
 		$h = '<div id="create-operation-list" class="create-operations-container" data-columns="1" data-cashflow="'.($isFromCashflow ? '1' : '0').'">';
 
-			$h .= self::getCreateHeader($isFromCashflow);
-			$h .= self::getFieldsCreateGrid($form, $eOperation, $eFinancialYear, $suffix, $defaultValues, []);
+			$h .= self::getCreateHeader($eCompany, $isFromCashflow);
+			$h .= self::getFieldsCreateGrid($eCompany, $form, $eOperation, $eFinancialYear, $suffix, $defaultValues, []);
 
 			if($isFromCashflow === TRUE) {
 				$h .= self::getCreateValidate();
@@ -450,6 +460,15 @@ class OperationUi {
 				$d->values = [
 					OperationElement::DEBIT => s("Débit"),
 					OperationElement::CREDIT => s("Crédit"),
+				];
+				break;
+
+			case 'journalCode':
+				$d->values = [
+					OperationElement::ACH => s("Achats"),
+					OperationElement::VEN => s("Ventes"),
+					OperationElement::BAN => s("Trésorerie"),
+					OperationElement::OD => s("Opérations diverses"),
 				];
 				break;
 

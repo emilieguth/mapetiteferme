@@ -38,10 +38,12 @@ class ThirdPartyModel extends \ModuleModel {
 		$this->properties = array_merge($this->properties, [
 			'id' => ['serial32', 'cast' => 'int'],
 			'name' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'unique' => TRUE, 'cast' => 'string'],
+			'clientAccountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
+			'supplierAccountLabel' => ['text8', 'min' => 1, 'max' => NULL, 'collate' => 'general', 'null' => TRUE, 'cast' => 'string'],
 		]);
 
 		$this->propertiesList = array_merge($this->propertiesList, [
-			'id', 'name'
+			'id', 'name', 'clientAccountLabel', 'supplierAccountLabel'
 		]);
 
 		$this->uniqueConstraints = array_merge($this->uniqueConstraints, [
@@ -64,6 +66,14 @@ class ThirdPartyModel extends \ModuleModel {
 
 	public function whereName(...$data): ThirdPartyModel {
 		return $this->where('name', ...$data);
+	}
+
+	public function whereClientAccountLabel(...$data): ThirdPartyModel {
+		return $this->where('clientAccountLabel', ...$data);
+	}
+
+	public function whereSupplierAccountLabel(...$data): ThirdPartyModel {
+		return $this->where('supplierAccountLabel', ...$data);
 	}
 
 

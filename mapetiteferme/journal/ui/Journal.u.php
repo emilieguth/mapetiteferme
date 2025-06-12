@@ -34,7 +34,7 @@ class JournalUi {
 						$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/operation:create" class="btn btn-primary">'.\Asset::icon('plus-circle').' '.s("Ajouter une écriture").'</a> ';
 					}
 
-					$h .= '<a href="'.PdfUi::urlJournal($eCompany, $eFinancialYear).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
+					$h .= '<a href="'.PdfUi::urlJournal($eCompany).'" data-ajax-navigation="never" class="btn btn-primary">'.\Asset::icon('download').'&nbsp;'.s("Télécharger en PDF").'</a>';
 
 				$h .= '</div>';
 
@@ -106,41 +106,29 @@ class JournalUi {
 		\Search $search = new \Search()
 	): string {
 
-		if($cOperation->empty() === TRUE) {
-
-			if($search->empty(['ids']) === TRUE) {
-				return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
-			}
-			return '<div class="util-info">'.s("Aucune écriture ne correspond à vos critères de recherche").'</div>';
-
-		}
-
 		if($eCompany->isCashAccounting()) {
 			return $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search);
 		}
 
-		$journalTypes = [
-			'buy' => s("Achats"),
-			'sell' => s("Ventes"),
-			'cashflow' => s("Trésorerie"),
-			'misc' => s("Opérations diverses"),
-		];
-		$selectedJournalType = GET('journalType', 'string', 'buy');
+		$selectedJournalCode = GET('code', 'string', \journal\Operation::ACH);
+		if(in_array($selectedJournalCode, Operation::model()->getPropertyEnum('journalCode')) === FALSE) {
+			$selectedJournalCode = \journal\Operation::ACH;
+		}
 
 		$h = '<div class="tabs-h" id="journals">';
 
 			$h .= '<div class="tabs-item">';
 
-				foreach($journalTypes as $journalType => $translation) {
+				foreach(Operation::model()->getPropertyEnum('journalCode') as $journalCode) {
 
-					$h .= '<a class="tab-item'.($selectedJournalType === $journalType ? ' selected' : '').'" data-tab="journal-'.$journalType.'" href="'.\company\CompanyUi::urlJournal($eCompany).'/?journalType='.$journalType.'">'.$translation.'</a>';
+					$h .= '<a class="tab-item'.($selectedJournalCode === $journalCode ? ' selected' : '').'" data-tab="journal-'.$journalCode.'" href="'.\company\CompanyUi::urlJournal($eCompany).'/?code='.$journalCode.'">'.OperationUi::p('journalCode')->values[$journalCode].'</a>';
 
 				}
 
 			$h .= '</div>';
 
-			foreach($journalTypes as $journalType => $translation) {
-				$h .= '<div class="tab-panel'.($selectedJournalType === $journalType ? ' selected' : '').'" data-tab="journal-'.$journalType.'">';
+			foreach(Operation::model()->getPropertyEnum('journalCode') as $journalCode) {
+				$h .= '<div class="tab-panel'.($selectedJournalCode === $journalCode ? ' selected' : '').'" data-tab="journal-'.$journalCode.'">';
 					$h .= $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search);
 				$h .= '</div>';
 			}
@@ -156,6 +144,15 @@ class JournalUi {
 		\accounting\FinancialYear $eFinancialYearSelected,
 		\Search $search = new \Search()
 	): string {
+
+		if($cOperation->empty() === TRUE) {
+
+			if($search->empty(['ids']) === TRUE) {
+				return '<div class="util-info">'.s("Aucune écriture n'a encore été enregistrée").'</div>';
+			}
+			return '<div class="util-info">'.s("Aucune écriture ne correspond à vos critères de recherche").'</div>';
+
+		}
 
 		\Asset::js('util', 'form.js');
 		\Asset::css('util', 'form.css');
@@ -454,13 +451,6 @@ class JournalUi {
 			}
 
 			$h .= $buttonDelete;
-		} else {
-
-			$h .= '<a href="'.$cashflowLink.'" class="btn btn-outline-secondary" data-dropdown-id="operation-trash-'.$eOperation['id'].'" data-dropdown-hover="true" data-dropdown="bottom-start" data-dropdown-offset-x="-25">'.\Asset::icon('trash').'</a>';
-
-			$h .= '<div data-dropdown-id="operation-trash-'.$eOperation['id'].'-list" class="dropdown-list bg-secondary">';
-				$h .= '<a href="'.$cashflowLink.'" class="dropdown-item">'.s("Allez sur l'opération bancaire et annulez les écritures liées.").'</a>';
-			$h .= '</div>';
 
 		}
 

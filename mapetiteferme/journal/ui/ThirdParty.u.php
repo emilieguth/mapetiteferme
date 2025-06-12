@@ -22,6 +22,15 @@ class ThirdPartyUi {
 
 	}
 
+	public function getOperationDescription(ThirdParty $eThirdParty, string $operationType): string {
+
+		return match($operationType) {
+			Operation::CREDIT => s("Client {name}", ['name' => $eThirdParty['name']]),
+			Operation::DEBIT => s("Fournisseur {name}", ['name' => $eThirdParty['name']]),
+		};
+
+	}
+
 	public function create(\company\Company $eCompany, ThirdParty $eThirdParty): \Panel {
 
 		$form = new \util\FormUi();

@@ -51,5 +51,21 @@ class ThirdPartyLib extends ThirdPartyCrud {
 
 	}
 
+	public static function getNextThirdPartyAccountLabel(string $field, string $prefix): string {
+
+		$eThirdParty = ThirdParty::model()
+			->select($field)
+			->where($field, 'LIKE', $prefix.'%')
+			->sort([$field => SORT_DESC])
+			->get();
+
+		if($eThirdParty->empty()) {
+			return $prefix.'001';
+		}
+
+		return $eThirdParty[$field] + 1;
+
+	}
+
 }
 ?>

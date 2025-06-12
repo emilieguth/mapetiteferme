@@ -19,6 +19,9 @@ Setting::register('accounting', [
 	'cashAccountClass' => '5310', // caisse
 	'defaultBankAccountLabel' => '5121',
 
+	'thirdAccountSupplierDebtClass' => '401',
+	'thirdAccountCustomerReceivableClass' => '411',
+
 	'nonDepreciableAssetClass' => '2125',
 
 	'shippingChargeAccountClass' => '624',
@@ -47,10 +50,10 @@ Setting::register('accounting', [
 
 	// Classement des classes par journal
 	'classesByJournal' => [
-		'cashflow' => ['5'],
-		'buy' => ['60', '61', '62', '63', '64', '44566'],
-		'sell' => ['70', '71', '72', '74', '44571'],
-		'misc' => ['28', '29', '65', '68', '69'],
+		\journal\Operation::BAN => ['5'],
+		\journal\Operation::ACH => ['60', '61', '62', '63', '64', '44566'],
+		\journal\Operation::VEN => ['70', '71', '72', '74', '44571'],
+		\journal\Operation::OD => ['28', '29', '65', '68', '69'],
 	]
 
 ]);

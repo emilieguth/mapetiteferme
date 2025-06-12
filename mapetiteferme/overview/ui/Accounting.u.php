@@ -185,8 +185,8 @@ class AccountingUi {
 
 				$h .= '<tr'.($isTotal === TRUE ? ' class="row-header"' : '').'>';
 
-				$h .= '<td>'.($isTotal === TRUE ? \s("Totaux") : \encode($balance['accountLabel'])).'</td>';
-				$h .= '<td>'.($isTotal === TRUE ? \s("comptes") : \encode($balance['description'])).'</td>';
+				$h .= '<td>'.($isTotal === TRUE ? s("Totaux") : \encode($balance['accountLabel'])).'</td>';
+				$h .= '<td>'.($isTotal === TRUE ? s("comptes") : \encode($balance['description'])).'</td>';
 				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['startDebit'], '')).'</td>';
 				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['startCredit'], '')).'</td>';
 				$h .= '<td class="text-end util-unit">'.(new OverviewUi()->number($balance['moveDebit'], '')).'</td>';

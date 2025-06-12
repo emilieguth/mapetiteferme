@@ -212,5 +212,23 @@ class AccountLib extends AccountCrud {
 
 	}
 
+	public static function getJournalCodeByClass(string $searchClass): ?string {
+
+		foreach(\Setting::get('accounting\classesByJournal') as $journal => $classes) {
+
+			foreach($classes as $class) {
+
+				if(mb_substr($searchClass, 0, mb_strlen($class)) === $class) {
+					return $journal;
+				}
+
+			}
+
+		}
+
+		return NULL;
+
+	}
+
 }
 ?>

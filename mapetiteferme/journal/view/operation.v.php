@@ -14,7 +14,7 @@ new JsonView('addOperation', function($data, AjaxTemplate $t) {
 	$t->qs('#create-operation-list')->setAttribute('data-columns', $data->index + 1);
 	$t->qs('.create-operation[data-index="'.($data->index - 1).'"]')->insertAdjacentHtml(
 		'afterend',
-		new \journal\OperationUi()::getFieldsCreateGrid($form, $data->eOperation, $data->eFinancialYear, '['.$data->index.']', $defaultValues, [])
+		new \journal\OperationUi()::getFieldsCreateGrid($data->eCompany, $form, $data->eOperation, $data->eFinancialYear, '['.$data->index.']', $defaultValues, [])
 	);
 	$t->qs('#add-operation')->setAttribute('post-index', $data->index + 1);
 	if($data->index >= 4) {

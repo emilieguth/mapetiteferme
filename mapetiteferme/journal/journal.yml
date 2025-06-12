@@ -1,6 +1,7 @@
 Operation:
   id: serial32
   number: ?int32(0, NULL)
+  journalCode: ?enum(ACH, VEN, BAN, OD)
   # Compte concerné par l'opération
   account: accounting\Account
   accountLabel: text8(1, null) @collate(general)
@@ -34,6 +35,8 @@ Operation:
 ThirdParty:
   id: serial32
   name: text8(1, null) @collate(general)
+  clientAccountLabel: ?text8(1, null) @collate(general)
+  supplierAccountLabel: ?text8(1, null) @collate(general)
   UNIQUE: [
     ["name"]
   ]
