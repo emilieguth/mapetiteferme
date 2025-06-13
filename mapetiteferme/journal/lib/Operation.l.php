@@ -28,7 +28,7 @@ class OperationLib extends OperationCrud {
 			$model = Operation::model()
 				->whereDate('>=', fn() => $search->get('financialYear')['startDate'], if: $search->has('financialYear'))
 				->whereDate('<=', fn() => $search->get('financialYear')['endDate'], if: $search->has('financialYear'))
-				->whereJournalCode('=', $search->get('journalCode'), if: $search->has('journalCode'));
+				->whereJournalCode('=', $search->get('journalCode'), if: $search->has('journalCode') and $search->get('journalCode') !== NULL);
 
 		} else {
 

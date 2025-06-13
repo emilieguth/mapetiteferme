@@ -107,17 +107,19 @@ class JournalUi {
 	): string {
 
 		if($eCompany->isCashAccounting()) {
-			return $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search);
+			return $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search, NULL);
 		}
 
-		$selectedJournalCode = GET('code', 'string', \journal\Operation::ACH);
+		$selectedJournalCode = GET('code');
 		if(in_array($selectedJournalCode, Operation::model()->getPropertyEnum('journalCode')) === FALSE) {
-			$selectedJournalCode = \journal\Operation::ACH;
+			$selectedJournalCode = NULL;
 		}
 
 		$h = '<div class="tabs-h" id="journals">';
 
 			$h .= '<div class="tabs-item">';
+
+				$h .= '<a class="tab-item'.($selectedJournalCode === NULL ? ' selected' : '').'" data-tab="journal" href="'.\company\CompanyUi::urlJournal($eCompany).'/">'.s("Général").'</a>';
 
 				foreach(Operation::model()->getPropertyEnum('journalCode') as $journalCode) {
 
@@ -127,9 +129,13 @@ class JournalUi {
 
 			$h .= '</div>';
 
+			$h .= '<div class="tab-panel'.($selectedJournalCode === NULL ? ' selected' : '').'" data-tab="journal">';
+				$h .= $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search, $selectedJournalCode);
+			$h .= '</div>';
+
 			foreach(Operation::model()->getPropertyEnum('journalCode') as $journalCode) {
 				$h .= '<div class="tab-panel'.($selectedJournalCode === $journalCode ? ' selected' : '').'" data-tab="journal-'.$journalCode.'">';
-					$h .= $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search);
+					$h .= $this->getTableContainer($eCompany, $cOperation, $eFinancialYearSelected, $search, $selectedJournalCode);
 				$h .= '</div>';
 			}
 
@@ -142,7 +148,8 @@ class JournalUi {
 		\company\Company $eCompany,
 		\Collection $cOperation,
 		\accounting\FinancialYear $eFinancialYearSelected,
-		\Search $search = new \Search()
+		\Search $search = new \Search(),
+		?string $selectedJournalCode = NULL
 	): string {
 
 		if($cOperation->empty() === TRUE) {
@@ -176,6 +183,11 @@ class JournalUi {
 							}
 						$h .= '</th>';
 						$h .= '<th>'.s("# Opération bancaire").'</th>';
+
+						if($eCompany->isAccrualAccounting() and $selectedJournalCode === NULL) {
+							$h .= '<th>'.s("Journal").'</th>';
+						}
+
 						$h .= '<th>';
 							$label = s("Pièce comptable");
 							$h .= ($search ? $search->linkSort('document', $label) : $label);
@@ -222,6 +234,17 @@ class JournalUi {
 								}
 							$h .= '</td>';
 
+							if($eCompany->isAccrualAccounting() and $selectedJournalCode === NULL) {
+								$h .= '<td>';
+
+									if($eOperation['journalCode']) {
+										$h .= '<a href="'.\company\CompanyUi::urlJournal($eCompany).'/?code='.$eOperation['journalCode'].'">'.mb_strtoupper($eOperation['journalCode']).'</a>';
+									} else {
+										$h .= '-';
+									}
+
+								$h .= '</td>';
+							}
 							$h .= '<td>';
 								$h .= '<div class="operation-info">';
 									if($canUpdate === TRUE) {

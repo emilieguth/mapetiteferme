@@ -39,9 +39,9 @@ new Page(function($data) {
 
 		if($data->eCompany->isAccrualAccounting()) {
 
-			$code = GET('code',  'string', \journal\Operation::ACH);
+			$code = GET('code');
 			if(in_array($code, \journal\Operation::model()->getProperty('journalCode')) === FALSE) {
-				$code = \journal\Operation::ACH;
+				$code = NULL;
 			}
 			$search->set('journalCode', $code);
 
